@@ -1,6 +1,6 @@
+import { runMigration } from '@/db';
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { runMigration } from '../db';
 
 async function main() {
   try {
