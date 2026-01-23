@@ -1,0 +1,43 @@
+'use server';
+
+import { unstable_cache } from 'next/cache';
+import { getCompaniesInputSchema } from '@/lib/validations/company.schema';
+import { fetchCompaniesFromDB, getTotalCompaniesCount } from '@/lib/db/queries/companies.queries';
+import type { PaginatedResponse, CompanyListItem, GetCompaniesInput } from '@/types/company';
+import { CACHE_CONFIG, getCacheKey } from './cache';
+
+async function getCompaniesCore(
+  input: GetCompaniesInput
+): Promise<PaginatedResponse<CompanyListItem>> {
+  const validated = getCompaniesInputSchema.parse(input);
+  const { cursor, limit } = validated;
+
+  const [{ companies, nextCursor, hasMore }, total] = await Promise.all([
+    fetchCompaniesFromDB({ cursor, limit }),
+    getTotalCompaniesCount(),
+  ]);
+
+  return {
+    data: companies,
+    nextCursor,
+    hasMore,
+    total,
+  };
+}
+
+export async function getCompanies(
+  input: GetCompaniesInput = {}
+): Promise<PaginatedResponse<CompanyListItem>> {
+  const validated = getCompaniesInputSchema.parse(input);
+
+  const getCached = unstable_cache(
+    async () => getCompaniesCore(validated),
+    getCacheKey(validated.cursor, validated.limit),
+    {
+      tags: CACHE_CONFIG.COMPANIES_LIST.tags,
+      revalidate: CACHE_CONFIG.COMPANIES_LIST.revalidate,
+    }
+  );
+
+  return getCached();
+}
