@@ -6,22 +6,30 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:migrate": "dotenvx run -- tsx scripts/run-migration.ts",
+    "db:ingest-yc": "dotenvx run -- tsx scripts/ingest-yc-companies.ts",
+    "db:test": "dotenvx run -- tsx scripts/test-queries.ts"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
     "next": "16.1.4",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "skills": "^1.0.10"
   },
   "devDependencies": {
+    "@dotenvx/dotenvx": "^1.52.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "@types/pg": "^8.16.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.1.4",
+    "pg": "^8.17.2",
     "tailwindcss": "^4",
+    "tsx": "^4.19.2",
     "typescript": "^5"
   }
 }
