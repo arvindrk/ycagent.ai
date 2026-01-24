@@ -182,6 +182,42 @@ This file guides AI coding agents on context-efficient skill loading for this pr
 
 ---
 
+## MCP Tools
+
+Model Context Protocol tools provide specialized integrations for documentation, database operations, framework diagnostics, and deployment. Use proactively when task patterns match.
+
+### OpenAI Developer Docs
+
+**Auto-use when:** Working with OpenAI API, ChatGPT Apps SDK, function calling, assistants, embeddings, fine-tuning (no explicit request needed)  
+**Key functions:** `search_openai_docs`, `fetch_openai_doc`, `get_openapi_spec`  
+**Pattern:** Search topic → fetch URL with anchor → implement with exact schemas
+
+### Neon
+
+**Auto-use when:** Database errors, schema migrations, slow queries, query optimization, branch operations  
+**Key functions:** `run_sql`, `prepare_database_migration`, `list_projects`, `create_branch`, `list_slow_queries`  
+**Pattern:** Check existing schema → execute changes → verify results
+
+### next-devtools
+
+**Auto-use when:** Next.js build failures, runtime errors, compilation issues, debugging  
+**Key functions:** `nextjs_index` (discover server), `nextjs_call` (get_errors, get_routes, clear_cache)  
+**Pattern:** Index dev server → call diagnostics → fix issues → verify
+
+### shadcn
+
+**Use before:** Creating new UI components, checking existing patterns  
+**Key functions:** `search_items_in_registries`, `view_items_in_registries`, `get_item_examples_from_registries`, `get_add_command_for_items`  
+**Pattern:** Search component → view examples → install with CLI command
+
+### vercel
+
+**Use for:** Deployments, environment configuration, domain management, build logs  
+**Key functions:** `deploy_to_vercel`, `get_deployment`, `list_projects`, `get_deployment_build_logs`  
+**Pattern:** Deploy/diagnose as needed for production operations
+
+---
+
 ## Adding New Skills
 
 **Detection:**
@@ -218,13 +254,15 @@ done
 1. Read this AGENTS.md file
 2. Scan `.agents/skills/` for available skills
 3. Load skill names and descriptions (minimal context)
-4. Keep skill catalog in memory
+4. Check MCP tools catalog for task-relevant integrations
+5. Keep skill catalog in memory
 
 **During Development:**
 1. Match task to relevant skills based on triggers
-2. Load full skill content when task relevance is high
-3. Reference detailed files (AGENTS.md, rules/*.md) only when applying specific patterns
-4. Unload non-relevant skills to manage context
+2. Auto-invoke MCP tools for matching patterns (OpenAI docs, Next.js errors, database ops)
+3. Load full skill content when task relevance is high
+4. Reference detailed files (AGENTS.md, rules/*.md) only when applying specific patterns
+5. Unload non-relevant skills to manage context
 
 **Context Budget Guidelines:**
 - Essential skills (react-best-practices for React projects): Keep loaded
@@ -237,12 +275,17 @@ done
 
 **Framework:** Next.js (React)  
 **Design System:** Linear (Custom implementation)  
+**Database:** Neon (PostgreSQL with vector search)  
 **Primary Skills:** react-best-practices (always relevant), linear-design-system (for all UI work)  
-**Secondary Skills:** frontend-design (for new pages/apps), web-design-guidelines (for audits/reviews)
+**Secondary Skills:** frontend-design (for new pages/apps), web-design-guidelines (for audits/reviews)  
+**MCP Tools:** OpenAI docs (auto), next-devtools (errors), Neon (database), shadcn (components), vercel (deploy)
 
 **Default Behavior:**
 - Apply react-best-practices patterns by default for all React/Next.js code
 - Load linear-design-system when creating/modifying UI components (highest priority for UI)
+- Auto-use OpenAI docs MCP for any OpenAI API implementation
+- Auto-use next-devtools for Next.js diagnostics and error resolution
+- Auto-use Neon MCP for database migrations, schema changes, and query optimization
 - Load frontend-design only when creating entirely new pages/apps without design system constraints
 - Load web-design-guidelines only when explicitly requested or reviewing UI
 
