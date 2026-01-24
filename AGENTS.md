@@ -118,6 +118,70 @@ This file guides AI coding agents on context-efficient skill loading for this pr
 
 ---
 
+### linear-design-system
+
+**Location:** `.agents/skills/linear-design-system/`
+
+**When to Load:**
+- Adding new UI components to the design system
+- Modifying design tokens (colors, typography, spacing, shadows, motion, radius)
+- Validating component implementation against design system rules
+- Migrating existing components to use design system tokens
+- Creating Linear-styled components (Button, Card, Badge, Input, etc.)
+- Reviewing code for design system compliance
+- Ensuring components follow Linear interaction patterns
+
+**Primary Reference:** `.agents/skills/linear-design-system/SKILL.md`
+- Comprehensive guide for maintaining Linear design system
+- Token management and component creation patterns
+- Validation rules and migration strategies
+- Component structure with cva() and forwardRef patterns
+
+**Supporting Documentation:**
+- `TOKENS.md` - Complete token reference with usage examples
+  - Colors (backgrounds, text, borders, accent, status)
+  - Typography (font scales, weights, letter spacing)
+  - Spacing (8px-based scale)
+  - Radius (xs to full)
+  - Shadows (elevation levels)
+  - Motion (durations and easings)
+- `COMPONENTS.md` - Component patterns and implementation examples
+  - Button, Badge, Card, Input templates
+  - Compound component patterns
+  - Variant composition with cva()
+- `VALIDATION.md` - Validation rules and checklists
+  - Automated validation scripts
+  - Code review checklists
+  - Common violations and fixes
+
+**Key Principles:**
+- **Token-first development** - Never hardcode design values, always use tokens
+- **Linear interaction patterns** - `active:scale-[0.97]` transform on interactive elements
+- **Background layering** - Use increasing layers for depth (primary → secondary → tertiary → quaternary)
+- **Precise typography** - Negative letter spacing, specific font weights (400, 510, 538)
+- **Smooth transitions** - `transition-fast` (150ms) or `transition-base` (200ms)
+- **Focus states** - Accent-colored rings on focus-visible
+- **Component structure** - Use cva(), forwardRef, TypeScript types
+
+**Design System Assets:**
+- Tokens location: `src/lib/design-system/tokens/`
+- Components location: `src/components/ui/`
+- Configuration: `tailwind.config.ts`, `src/app/globals.css`
+- Demo page: `src/app/design-system/page.tsx`
+
+**Source Data:**
+- Extracted from Linear.app production tokens
+- JSON files in `output/linear.app/` directory
+
+**Loading Approach:**
+- Load SKILL.md when creating or modifying components
+- Reference TOKENS.md for specific token values and usage patterns
+- Use COMPONENTS.md for implementation patterns and templates
+- Apply VALIDATION.md for code review and quality checks
+- This skill takes precedence over frontend-design for UI work in this project
+
+---
+
 ## Adding New Skills
 
 **Detection:**
@@ -172,12 +236,14 @@ done
 ## Project Context
 
 **Framework:** Next.js (React)  
-**Primary Skills:** react-best-practices (always relevant), frontend-design (for new UI)  
-**Secondary Skills:** web-design-guidelines (for audits/reviews)
+**Design System:** Linear (Custom implementation)  
+**Primary Skills:** react-best-practices (always relevant), linear-design-system (for all UI work)  
+**Secondary Skills:** frontend-design (for new pages/apps), web-design-guidelines (for audits/reviews)
 
 **Default Behavior:**
 - Apply react-best-practices patterns by default for all React/Next.js code
-- Load frontend-design when creating new components/pages
+- Load linear-design-system when creating/modifying UI components (highest priority for UI)
+- Load frontend-design only when creating entirely new pages/apps without design system constraints
 - Load web-design-guidelines only when explicitly requested or reviewing UI
 
 ---
