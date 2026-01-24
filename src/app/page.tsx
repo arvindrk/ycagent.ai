@@ -2,10 +2,24 @@ import { Suspense } from 'react';
 import { getCompanies } from '@/lib/api/companies/get-companies';
 import { CompaniesGrid } from '@/components/companies/companies-grid';
 import { CompaniesLoading } from '@/components/companies/companies-loading';
+import { CompaniesPagination } from '@/components/companies/companies-pagination';
 import { ThemeToggle } from '@/components/theme-toggle';
 
-export default async function HomePage() {
-  const { data: companies, total } = await getCompanies({ limit: 24 });
+interface SearchParams {
+  page?: string;
+}
+
+interface HomePageProps {
+  searchParams: Promise<SearchParams>;
+}
+
+export default async function HomePage({ searchParams }: HomePageProps) {
+  const params = await searchParams;
+  const page = params.page ? parseInt(params.page, 10) : 1;
+  const limit = 24;
+
+  const { data: companies, total } = await getCompanies({ page, limit });
+  const totalPages = Math.ceil(total / limit);
 
   return (
     <div className="min-h-screen bg-background">
@@ -34,6 +48,13 @@ export default async function HomePage() {
         <Suspense fallback={<CompaniesLoading />}>
           <CompaniesGrid companies={companies} />
         </Suspense>
+
+        <CompaniesPagination
+          currentPage={page}
+          totalPages={totalPages}
+          totalCount={total}
+          pageSize={limit}
+        />
       </main>
     </div>
   );

@@ -5,6 +5,7 @@ import type { CompanyListItem } from '@/types/company';
 
 interface FetchCompaniesParams {
   cursor?: string;
+  page?: number;
   limit: number;
 }
 
@@ -17,7 +18,7 @@ interface FetchCompaniesResult {
 export const fetchCompaniesFromDB = cache(
   async (params: FetchCompaniesParams): Promise<FetchCompaniesResult> => {
     const sql = getDBClient();
-    const { cursor, limit } = params;
+    const { cursor, page, limit } = params;
 
     const rows = cursor
       ? await sql`
@@ -28,6 +29,16 @@ export const fetchCompaniesFromDB = cache(
           WHERE id < ${cursor}
           ORDER BY batch DESC, id DESC
           LIMIT ${limit + 1}
+        `
+      : page
+      ? await sql`
+          SELECT 
+            id, name, slug, website, logo_url, one_liner, 
+            tags, batch, is_hiring, all_locations
+          FROM companies
+          ORDER BY batch DESC, id DESC
+          LIMIT ${limit + 1}
+          OFFSET ${(page - 1) * limit}
         `
       : await sql`
           SELECT 

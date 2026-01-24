@@ -10,10 +10,10 @@ async function getCompaniesCore(
   input: GetCompaniesInput
 ): Promise<PaginatedResponse<CompanyListItem>> {
   const validated = getCompaniesInputSchema.parse(input);
-  const { cursor, limit } = validated;
+  const { cursor, page, limit } = validated;
 
   const [{ companies, nextCursor, hasMore }, total] = await Promise.all([
-    fetchCompaniesFromDB({ cursor, limit }),
+    fetchCompaniesFromDB({ cursor, page, limit }),
     getTotalCompaniesCount(),
   ]);
 
@@ -32,7 +32,7 @@ export async function getCompanies(
 
   const getCached = unstable_cache(
     async () => getCompaniesCore(validated),
-    getCacheKey(validated.cursor, validated.limit),
+    getCacheKey(validated.cursor ?? `page-${validated.page}`, validated.limit),
     {
       tags: CACHE_CONFIG.COMPANIES_LIST.tags,
       revalidate: CACHE_CONFIG.COMPANIES_LIST.revalidate,
