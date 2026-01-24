@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { getCompanies } from '@/lib/api/companies/get-companies';
 import { CompaniesGrid } from '@/components/companies/companies-grid';
 import { CompaniesLoading } from '@/components/companies/companies-loading';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 export default async function HomePage() {
   const { data: companies, total } = await getCompanies({ limit: 24 });
@@ -19,8 +20,11 @@ export default async function HomePage() {
                 Discover companies from Y Combinator&apos;s portfolio
               </p>
             </div>
-            <div className="text-sm text-muted-foreground">
-              {total.toLocaleString()} companies
+            <div className="flex items-center gap-6">
+              <div className="text-sm text-muted-foreground">
+                {total.toLocaleString()} companies
+              </div>
+              <ThemeToggle />
             </div>
           </div>
         </div>
