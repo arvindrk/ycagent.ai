@@ -1,0 +1,1756 @@
+{
+  "url": "https://linear.app/",
+  "extractedAt": "2026-01-24T02:07:46.207Z",
+  "logo": {
+    "source": "svg",
+    "url": "https://linear.app/customers",
+    "width": 160,
+    "height": 49.765625,
+    "safeZone": {
+      "top": 0,
+      "right": 0,
+      "bottom": 0,
+      "left": 0
+    }
+  },
+  "favicons": [
+    {
+      "type": "icon",
+      "url": "https://linear.app/favicon.ico",
+      "sizes": "any"
+    },
+    {
+      "type": "icon",
+      "url": "https://linear.app/static/favicon.svg",
+      "sizes": null
+    },
+    {
+      "type": "apple-touch-icon",
+      "url": "https://linear.app/static/apple-touch-icon.png?v=2",
+      "sizes": "180x180"
+    },
+    {
+      "type": "apple-touch-icon",
+      "url": "https://linear.app/static/apple-touch-icon.png?v=2",
+      "sizes": "180x180"
+    },
+    {
+      "type": "og:image",
+      "url": "https://linear.app/static/og/homepage-2024.jpg",
+      "sizes": null
+    },
+    {
+      "type": "twitter:image",
+      "url": "https://linear.app/static/og/homepage-2024.jpg",
+      "sizes": null
+    }
+  ],
+  "colors": {
+    "semantic": {
+      "primary": "rgb(247, 248, 248)",
+      "secondary": "rgb(40, 40, 44)"
+    },
+    "palette": [
+      {
+        "color": "rgb(247, 248, 248)",
+        "normalized": "#f7f8f8",
+        "count": 4307,
+        "confidence": "high",
+        "sources": [
+          "hide-tablet",
+          "hide-laptop",
+          "[object"
+        ],
+        "lch": "lch(97.51% 0.35 199.39)",
+        "oklch": "oklch(97.84% 0.001 197.14)"
+      },
+      {
+        "color": "rgb(138, 143, 152)",
+        "normalized": "#8a8f98",
+        "count": 315,
+        "confidence": "high",
+        "sources": [
+          "show-hover",
+          "hide-mobile"
+        ],
+        "lch": "lch(59.26% 5.39 270.35)",
+        "oklch": "oklch(64.88% 0.015 262.36)"
+      },
+      {
+        "color": "rgb(98, 102, 109)",
+        "normalized": "#62666d",
+        "count": 68,
+        "confidence": "high",
+        "sources": [],
+        "lch": "lch(43.07% 4.47 269.88)",
+        "oklch": "oklch(50.92% 0.012 261.77)"
+      },
+      {
+        "color": "rgba(255, 255, 255, 0.08)",
+        "normalized": "#ffffff",
+        "count": 1,
+        "confidence": "medium",
+        "sources": [
+          "hover/focus"
+        ]
+      },
+      {
+        "color": "rgb(255, 255, 255)",
+        "normalized": "#ffffff",
+        "count": 1,
+        "confidence": "medium",
+        "sources": [
+          "hover/focus"
+        ]
+      },
+      {
+        "color": "rgb(40, 40, 44)",
+        "normalized": "#28282c",
+        "count": 1,
+        "confidence": "medium",
+        "sources": [
+          "hover/focus"
+        ]
+      }
+    ],
+    "cssVariables": {
+      "--color-line-tertiary": {
+        "value": "#18191a",
+        "lch": "lch(8.69% 0.89 256.08)",
+        "oklch": "oklch(21.27% 0.003 247.94)"
+      },
+      "--color-white": {
+        "value": "#fff",
+        "lch": "lch(100% 0 158.2)",
+        "oklch": "oklch(100% 0 89.88)"
+      },
+      "--color-accent": {
+        "value": "#7170ff",
+        "lch": "lch(54.36% 81.56 299.03)",
+        "oklch": "oklch(62.25% 0.207 278.85)"
+      },
+      "--color-line-secondary": {
+        "value": "#202122",
+        "lch": "lch(12.67% 0.86 255.97)",
+        "oklch": "oklch(24.71% 0.002 247.92)"
+      },
+      "--color-bg-level-3": {
+        "value": "#191a1b",
+        "lch": "lch(9.19% 0.89 256.07)",
+        "oklch": "oklch(21.71% 0.002 247.94)"
+      },
+      "--color-line-primary": {
+        "value": "#37393a",
+        "lch": "lch(23.82% 1.11 236.07)",
+        "oklch": "oklch(34.3% 0.003 228.88)"
+      },
+      "--color-bg-quinary": {
+        "value": "#282828",
+        "lch": "lch(16.11% 0 158.2)",
+        "oklch": "oklch(27.68% 0 89.88)"
+      },
+      "--color-border-secondary": {
+        "value": "#34343a",
+        "lch": "lch(21.91% 4.03 291.08)",
+        "oklch": "oklch(32.74% 0.011 285.81)"
+      },
+      "--color-accent-tint": {
+        "value": "#18182f",
+        "lch": "lch(9.42% 17.07 295.58)",
+        "oklch": "oklch(22.2% 0.044 282.18)"
+      },
+      "--color-accent-hover": {
+        "value": "#828fff",
+        "lch": "lch(63.02% 62.45 293.33)",
+        "oklch": "oklch(69.06% 0.164 276.24)"
+      },
+      "--header-bg": {
+        "value": "rgba(11,11,11,.8)",
+        "lch": "lch(3.02% 0 158.2 / 0.8)",
+        "oklch": "oklch(14.96% 0 89.88 / 0.8)"
+      },
+      "--color-line-quaternary": {
+        "value": "#141515",
+        "lch": "lch(6.68% 0.46 199.41)",
+        "oklch": "oklch(19.46% 0.002 197.03)"
+      },
+      "--color-black": {
+        "value": "#000",
+        "lch": "lch(0% 0 0)",
+        "oklch": "oklch(0% 0 0)"
+      },
+      "--color-border-tertiary": {
+        "value": "#3e3e44",
+        "lch": "lch(26.41% 3.92 290.97)",
+        "oklch": "oklch(36.61% 0.01 285.88)"
+      },
+      "--color-bg-level-1": {
+        "value": "#0f1011",
+        "lch": "lch(4.63% 0.67 256.67)",
+        "oklch": "oklch(17.23% 0.003 247.98)"
+      },
+      "--color-overlay-primary": {
+        "value": "rgba(0,0,0,.9)",
+        "lch": "lch(0% 0 0 / 0.9)",
+        "oklch": "oklch(0% 0 0 / 0.9)"
+      },
+      "--color-linear-plan": {
+        "value": "#68cc58",
+        "lch": "lch(74.08% 70.47 136.88)",
+        "oklch": "oklch(75.92% 0.181 140.99)"
+      },
+      "--color-border-primary": {
+        "value": "#23252a",
+        "lch": "lch(14.67% 3.64 276.49)",
+        "oklch": "oklch(26.45% 0.01 268.31)"
+      },
+      "--color-orange": {
+        "value": "#fc7840",
+        "lch": "lch(65.36% 70.91 48.59)",
+        "oklch": "oklch(71.9% 0.176 42.05)"
+      },
+      "--color-red": {
+        "value": "#eb5757",
+        "lch": "lch(57.24% 64.93 28.45)",
+        "oklch": "oklch(65.34% 0.183 23.68)"
+      },
+      "--color-line-tint": {
+        "value": "#141516",
+        "lch": "lch(6.71% 0.83 256.49)",
+        "oklch": "oklch(19.5% 0.003 247.96)"
+      },
+      "--color-green": {
+        "value": "#4cb782",
+        "lch": "lch(67.29% 46.8 157.45)",
+        "oklch": "oklch(70.29% 0.127 158.89)"
+      },
+      "--color-blue": {
+        "value": "#4ea7fc",
+        "lch": "lch(66.73% 49.97 270.16)",
+        "oklch": "oklch(71.21% 0.151 249.88)"
+      },
+      "--color-bg-tertiary": {
+        "value": "#232326",
+        "lch": "lch(13.82% 2.14 290.79)",
+        "oklch": "oklch(25.74% 0.006 286)"
+      },
+      "--color-brand-bg": {
+        "value": "#5e6ad2",
+        "lch": "lch(48.68% 60.83 294.64)",
+        "oklch": "oklch(56.74% 0.159 275.21)"
+      },
+      "--color-bg-quaternary": {
+        "value": "#28282c",
+        "lch": "lch(16.26% 2.8 290.92)",
+        "oklch": "oklch(27.85% 0.007 285.92)"
+      },
+      "--color-bg-marketing": {
+        "value": "#010102",
+        "lch": "lch(0.29% 0.4 290.17)",
+        "oklch": "oklch(6.92% 0.008 284.11)"
+      },
+      "--color-linear-security": {
+        "value": "#7a7fad",
+        "lch": "lch(54.38% 26.5 289.68)",
+        "oklch": "oklch(61% 0.07 279.3)"
+      },
+      "--color-bg-primary": {
+        "value": "#08090a",
+        "lch": "lch(2.43% 0.49 255.42)",
+        "oklch": "oklch(13.9% 0.003 246.26)"
+      },
+      "--color-yellow": {
+        "value": "#f2c94c",
+        "lch": "lch(82.47% 65.27 88.58)",
+        "oklch": "oklch(84.96% 0.146 90.49)"
+      },
+      "--color-linear-build": {
+        "value": "#d4b144",
+        "lch": "lch(73.46% 58.33 89.05)",
+        "oklch": "oklch(77.16% 0.131 90.98)"
+      },
+      "--color-bg-secondary": {
+        "value": "#1c1c1f",
+        "lch": "lch(10.38% 2.21 290.89)",
+        "oklch": "oklch(22.77% 0.006 285.93)"
+      }
+    }
+  },
+  "typography": {
+    "styles": [
+      {
+        "context": "heading-1",
+        "family": "Inter Variable",
+        "fallbacks": "SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue",
+        "size": "64px (4.00rem)",
+        "weight": 510,
+        "lineHeight": "1.06",
+        "spacing": "-1.408px",
+        "transform": null,
+        "fontFeatures": "\"cv01\", \"ss03\""
+      },
+      {
+        "context": "heading-1",
+        "family": "Inter Variable",
+        "fallbacks": "SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue",
+        "size": "56px (3.50rem)",
+        "weight": 538,
+        "lineHeight": "1.10",
+        "spacing": "-1.82px",
+        "transform": null,
+        "fontFeatures": "\"cv01\", \"ss03\""
+      },
+      {
+        "context": "heading-1",
+        "family": "Inter Variable",
+        "fallbacks": "SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue",
+        "size": "40px (2.50rem)",
+        "weight": 510,
+        "lineHeight": "1.10",
+        "spacing": "-0.88px",
+        "transform": null,
+        "fontFeatures": "\"cv01\", \"ss03\""
+      },
+      {
+        "context": "heading-1",
+        "family": "Inter Variable",
+        "fallbacks": "SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue",
+        "size": "24px (1.50rem)",
+        "weight": 510,
+        "lineHeight": "1.33",
+        "spacing": "-0.288px",
+        "transform": null,
+        "fontFeatures": "\"cv01\", \"ss03\""
+      },
+      {
+        "context": "heading-1",
+        "family": "Inter Variable",
+        "fallbacks": "SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue",
+        "size": "21px (1.31rem)",
+        "weight": 510,
+        "lineHeight": "1.33",
+        "spacing": "-0.252px",
+        "transform": null,
+        "fontFeatures": "\"cv01\", \"ss03\""
+      },
+      {
+        "context": "heading-1",
+        "family": "Inter Variable",
+        "fallbacks": "SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue",
+        "size": "21px (1.31rem)",
+        "weight": 510,
+        "lineHeight": "1.33",
+        "spacing": "-0.37px",
+        "transform": null,
+        "fontFeatures": "\"cv01\", \"ss03\""
+      },
+      {
+        "context": "heading-1",
+        "family": "Inter Variable",
+        "fallbacks": "SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue",
+        "size": "17px (1.06rem)",
+        "weight": 400,
+        "lineHeight": "1.60",
+        "spacing": null,
+        "transform": null,
+        "fontFeatures": "\"cv01\", \"ss03\""
+      },
+      {
+        "context": "heading-1",
+        "family": "Inter Variable",
+        "fallbacks": "SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue",
+        "size": "17px (1.06rem)",
+        "weight": 510,
+        "lineHeight": "1.44",
+        "spacing": null,
+        "transform": null,
+        "fontFeatures": "\"cv01\", \"ss03\""
+      },
+      {
+        "context": "button",
+        "family": "Inter Variable",
+        "fallbacks": "SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue",
+        "size": "17px (1.06rem)",
+        "weight": 510,
+        "lineHeight": "1.47",
+        "spacing": "-0.22px",
+        "transform": null,
+        "fontFeatures": "\"cv01\", \"ss03\""
+      },
+      {
+        "context": "heading-1",
+        "family": "Inter Variable",
+        "fallbacks": "SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue",
+        "size": "17px (1.06rem)",
+        "weight": 510,
+        "lineHeight": "1.40",
+        "spacing": "-0.204px",
+        "transform": null,
+        "fontFeatures": "\"cv01\", \"ss03\""
+      },
+      {
+        "context": "heading-1",
+        "family": "Inter Variable",
+        "fallbacks": "SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue",
+        "size": "16px (1.00rem)",
+        "weight": 400,
+        "lineHeight": "1.50",
+        "spacing": null,
+        "transform": null,
+        "fontFeatures": "\"cv01\", \"ss03\""
+      },
+      {
+        "context": "link",
+        "family": "Inter Variable",
+        "fallbacks": "SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue",
+        "size": "16px (1.00rem)",
+        "weight": 400,
+        "lineHeight": "1.50",
+        "spacing": null,
+        "transform": null,
+        "fontFeatures": "\"cv01\", \"ss03\""
+      },
+      {
+        "context": "button",
+        "family": "Inter Variable",
+        "fallbacks": "SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue",
+        "size": "16px (1.00rem)",
+        "weight": 400,
+        "lineHeight": "1.50",
+        "spacing": null,
+        "transform": null,
+        "fontFeatures": "\"cv01\", \"ss03\""
+      },
+      {
+        "context": "link",
+        "family": "Inter Variable",
+        "fallbacks": "SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue",
+        "size": "15px (0.94rem)",
+        "weight": 510,
+        "lineHeight": "2.67",
+        "spacing": null,
+        "transform": null,
+        "fontFeatures": "\"cv01\", \"ss03\""
+      },
+      {
+        "context": "heading-1",
+        "family": "Inter Variable",
+        "fallbacks": "SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue",
+        "size": "15px (0.94rem)",
+        "weight": 510,
+        "lineHeight": "2.67",
+        "spacing": null,
+        "transform": null,
+        "fontFeatures": "\"cv01\", \"ss03\""
+      },
+      {
+        "context": "heading-1",
+        "family": "Inter Variable",
+        "fallbacks": "SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue",
+        "size": "15px (0.94rem)",
+        "weight": 510,
+        "lineHeight": "1.60",
+        "spacing": "-0.165px",
+        "transform": null,
+        "fontFeatures": "\"cv01\", \"ss03\""
+      },
+      {
+        "context": "link",
+        "family": "Inter Variable",
+        "fallbacks": "SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue",
+        "size": "15px (0.94rem)",
+        "weight": 510,
+        "lineHeight": "1.60",
+        "spacing": "-0.165px",
+        "transform": null,
+        "fontFeatures": "\"cv01\", \"ss03\""
+      },
+      {
+        "context": "heading-1",
+        "family": "Inter Variable",
+        "fallbacks": "SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue",
+        "size": "15px (0.94rem)",
+        "weight": 400,
+        "lineHeight": "1.60",
+        "spacing": "-0.165px",
+        "transform": null,
+        "fontFeatures": "\"cv01\", \"ss03\""
+      },
+      {
+        "context": "button",
+        "family": "Inter Variable",
+        "fallbacks": "SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue",
+        "size": "15px (0.94rem)",
+        "weight": 510,
+        "lineHeight": "2.67",
+        "spacing": null,
+        "transform": null,
+        "fontFeatures": "\"cv01\", \"ss03\""
+      },
+      {
+        "context": "link",
+        "family": "Inter Variable",
+        "fallbacks": "SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue",
+        "size": "14px (0.88rem)",
+        "weight": 510,
+        "lineHeight": "1.50",
+        "spacing": null,
+        "transform": null,
+        "fontFeatures": "\"cv01\", \"ss03\""
+      },
+      {
+        "context": "caption",
+        "family": "Inter Variable",
+        "fallbacks": "SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue",
+        "size": "14px (0.88rem)",
+        "weight": 510,
+        "lineHeight": "1.50",
+        "spacing": "-0.182px",
+        "transform": null,
+        "fontFeatures": "\"cv01\", \"ss03\""
+      },
+      {
+        "context": "caption",
+        "family": "Inter Variable",
+        "fallbacks": "SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue",
+        "size": "14px (0.88rem)",
+        "weight": 400,
+        "lineHeight": "1.50",
+        "spacing": "-0.182px",
+        "transform": null,
+        "fontFeatures": "\"cv01\", \"ss03\""
+      },
+      {
+        "context": "link",
+        "family": "Inter Variable",
+        "fallbacks": "SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue",
+        "size": "14px (0.88rem)",
+        "weight": 510,
+        "lineHeight": "1.50",
+        "spacing": "-0.18px",
+        "transform": null,
+        "fontFeatures": "\"cv01\", \"ss03\""
+      },
+      {
+        "context": "button",
+        "family": "Inter Variable",
+        "fallbacks": "SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue",
+        "size": "13.3333px (0.83rem)",
+        "weight": 400,
+        "lineHeight": null,
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "link",
+        "family": "Inter Variable",
+        "fallbacks": "SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue",
+        "size": "13px (0.81rem)",
+        "weight": 510,
+        "lineHeight": "1.50",
+        "spacing": null,
+        "transform": null,
+        "fontFeatures": "\"cv01\", \"ss03\""
+      },
+      {
+        "context": "caption",
+        "family": "Inter Variable",
+        "fallbacks": "SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue",
+        "size": "13px (0.81rem)",
+        "weight": 400,
+        "lineHeight": "1.50",
+        "spacing": "-0.13px",
+        "transform": null,
+        "fontFeatures": "\"cv01\", \"ss03\""
+      },
+      {
+        "context": "caption",
+        "family": "Inter Variable",
+        "fallbacks": "SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue",
+        "size": "13px (0.81rem)",
+        "weight": 510,
+        "lineHeight": "1.50",
+        "spacing": "-0.13px",
+        "transform": null,
+        "fontFeatures": "\"cv01\", \"ss03\""
+      },
+      {
+        "context": "caption",
+        "family": "Berkeley Mono",
+        "fallbacks": "ui-monospace, SF Mono, Menlo",
+        "size": "13px (0.81rem)",
+        "weight": 400,
+        "lineHeight": "1.50",
+        "spacing": null,
+        "transform": null
+      },
+      {
+        "context": "link",
+        "family": "Inter Variable",
+        "fallbacks": "SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue",
+        "size": "13px (0.81rem)",
+        "weight": 400,
+        "lineHeight": "1.50",
+        "spacing": "-0.13px",
+        "transform": null,
+        "fontFeatures": "\"cv01\", \"ss03\""
+      },
+      {
+        "context": "caption",
+        "family": "Inter Variable",
+        "fallbacks": "SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue",
+        "size": "12px (0.75rem)",
+        "weight": 510,
+        "lineHeight": "1.50",
+        "spacing": "-0.12px",
+        "transform": null,
+        "fontFeatures": "\"cv01\", \"ss03\""
+      },
+      {
+        "context": "caption",
+        "family": "Inter Variable",
+        "fallbacks": "SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue",
+        "size": "12px (0.75rem)",
+        "weight": 510,
+        "lineHeight": "1.50",
+        "spacing": "-0.156px",
+        "transform": null,
+        "fontFeatures": "\"cv01\", \"ss03\""
+      },
+      {
+        "context": "caption",
+        "family": "Inter Variable",
+        "fallbacks": "SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue",
+        "size": "12px (0.75rem)",
+        "weight": 400,
+        "lineHeight": "1.50",
+        "spacing": "-0.12px",
+        "transform": null,
+        "fontFeatures": "\"cv01\", \"ss03\""
+      },
+      {
+        "context": "button",
+        "family": "Inter Variable",
+        "fallbacks": "SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue",
+        "size": "12px (0.75rem)",
+        "weight": 510,
+        "lineHeight": "2.67",
+        "spacing": null,
+        "transform": null,
+        "fontFeatures": "\"cv01\", \"ss03\""
+      },
+      {
+        "context": "caption",
+        "family": "Inter Variable",
+        "fallbacks": "SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue",
+        "size": "10px (0.63rem)",
+        "weight": 510,
+        "lineHeight": "1.40",
+        "spacing": "-0.204px",
+        "transform": null,
+        "fontFeatures": "\"cv01\", \"ss03\""
+      },
+      {
+        "context": "caption",
+        "family": "Inter Variable",
+        "fallbacks": "SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue",
+        "size": "10px (0.63rem)",
+        "weight": 400,
+        "lineHeight": "1.40",
+        "spacing": "-0.165px",
+        "transform": null,
+        "fontFeatures": "\"cv01\", \"ss03\""
+      }
+    ],
+    "sources": {
+      "googleFonts": [],
+      "adobeFonts": false,
+      "variableFonts": false
+    }
+  },
+  "spacing": {
+    "scaleType": "8px",
+    "commonValues": [
+      {
+        "px": "1px",
+        "rem": "0.06rem",
+        "count": 10,
+        "numericValue": 1
+      },
+      {
+        "px": "2px",
+        "rem": "0.13rem",
+        "count": 15,
+        "numericValue": 2
+      },
+      {
+        "px": "3px",
+        "rem": "0.19rem",
+        "count": 9,
+        "numericValue": 3
+      },
+      {
+        "px": "4px",
+        "rem": "0.25rem",
+        "count": 8,
+        "numericValue": 4
+      },
+      {
+        "px": "6px",
+        "rem": "0.38rem",
+        "count": 5,
+        "numericValue": 6
+      },
+      {
+        "px": "7px",
+        "rem": "0.44rem",
+        "count": 5,
+        "numericValue": 7
+      },
+      {
+        "px": "8px",
+        "rem": "0.50rem",
+        "count": 7,
+        "numericValue": 8
+      },
+      {
+        "px": "10px",
+        "rem": "0.63rem",
+        "count": 8,
+        "numericValue": 10
+      },
+      {
+        "px": "11px",
+        "rem": "0.69rem",
+        "count": 5,
+        "numericValue": 11
+      },
+      {
+        "px": "15px",
+        "rem": "0.94rem",
+        "count": 8,
+        "numericValue": 15
+      },
+      {
+        "px": "16px",
+        "rem": "1.00rem",
+        "count": 13,
+        "numericValue": 16
+      },
+      {
+        "px": "23px",
+        "rem": "1.44rem",
+        "count": 7,
+        "numericValue": 23
+      },
+      {
+        "px": "24px",
+        "rem": "1.50rem",
+        "count": 7,
+        "numericValue": 24
+      },
+      {
+        "px": "31px",
+        "rem": "1.94rem",
+        "count": 12,
+        "numericValue": 31
+      },
+      {
+        "px": "32px",
+        "rem": "2.00rem",
+        "count": 22,
+        "numericValue": 32
+      },
+      {
+        "px": "47px",
+        "rem": "2.94rem",
+        "count": 5,
+        "numericValue": 47
+      },
+      {
+        "px": "56px",
+        "rem": "3.50rem",
+        "count": 14,
+        "numericValue": 56
+      },
+      {
+        "px": "64px",
+        "rem": "4.00rem",
+        "count": 3,
+        "numericValue": 64
+      },
+      {
+        "px": "93.0312px",
+        "rem": "5.81rem",
+        "count": 6,
+        "numericValue": 93.0312
+      },
+      {
+        "px": "160px",
+        "rem": "10.00rem",
+        "count": 12,
+        "numericValue": 160
+      }
+    ]
+  },
+  "borderRadius": {
+    "values": [
+      {
+        "value": "1px",
+        "count": 3,
+        "elements": [
+          "div"
+        ],
+        "confidence": "low",
+        "numericValue": 1
+      },
+      {
+        "value": "2px 2px 2px 0px",
+        "count": 2,
+        "elements": [
+          "span"
+        ],
+        "confidence": "low",
+        "numericValue": 2
+      },
+      {
+        "value": "4px",
+        "count": 12,
+        "elements": [
+          "div",
+          "button"
+        ],
+        "confidence": "high",
+        "numericValue": 4
+      },
+      {
+        "value": "4px 1px 1px 4px",
+        "count": 1,
+        "elements": [
+          "span"
+        ],
+        "confidence": "low",
+        "numericValue": 4
+      },
+      {
+        "value": "5px",
+        "count": 1,
+        "elements": [
+          "button"
+        ],
+        "confidence": "low",
+        "numericValue": 5
+      },
+      {
+        "value": "6px",
+        "count": 11,
+        "elements": [
+          "Navigate to home",
+          "div",
+          "button"
+        ],
+        "confidence": "high",
+        "numericValue": 6
+      },
+      {
+        "value": "8px",
+        "count": 18,
+        "elements": [
+          "button",
+          "a",
+          "Visit Linear Agents page",
+          "div",
+          "Visit Linear Insights page"
+        ],
+        "confidence": "high",
+        "numericValue": 8
+      },
+      {
+        "value": "10px",
+        "count": 13,
+        "elements": [
+          "a",
+          "div"
+        ],
+        "confidence": "high",
+        "numericValue": 10
+      },
+      {
+        "value": "16px",
+        "count": 10,
+        "elements": [
+          "card",
+          "button"
+        ],
+        "confidence": "medium",
+        "numericValue": 16
+      },
+      {
+        "value": "18px",
+        "count": 3,
+        "elements": [
+          "div"
+        ],
+        "confidence": "low",
+        "numericValue": 18
+      },
+      {
+        "value": "30px",
+        "count": 3,
+        "elements": [
+          "button"
+        ],
+        "confidence": "low",
+        "numericValue": 30
+      },
+      {
+        "value": "9999px",
+        "count": 32,
+        "elements": [
+          "div",
+          "button",
+          "Previous slide",
+          "Next slide"
+        ],
+        "confidence": "high",
+        "numericValue": 9999
+      },
+      {
+        "value": "50%",
+        "count": 37,
+        "elements": [
+          "div",
+          "img"
+        ],
+        "confidence": "high",
+        "numericValue": 50
+      }
+    ]
+  },
+  "borders": {
+    "combinations": [
+      {
+        "width": "1px",
+        "style": "solid",
+        "color": "rgb(62, 62, 68)",
+        "count": 8,
+        "elements": [
+          "div",
+          "a",
+          "button"
+        ],
+        "confidence": "medium"
+      },
+      {
+        "width": "1px",
+        "style": "solid",
+        "color": "rgb(230, 230, 230)",
+        "count": 7,
+        "elements": [
+          "a"
+        ],
+        "confidence": "medium"
+      },
+      {
+        "width": "1px",
+        "style": "solid",
+        "color": "rgb(28, 28, 31)",
+        "count": 7,
+        "elements": [
+          "div"
+        ],
+        "confidence": "medium"
+      },
+      {
+        "width": "1px",
+        "style": "dashed",
+        "color": "rgb(62, 62, 68)",
+        "count": 5,
+        "elements": [
+          "button"
+        ],
+        "confidence": "medium"
+      },
+      {
+        "width": "1px",
+        "style": "solid",
+        "color": "rgba(255, 255, 255, 0.1)",
+        "count": 5,
+        "elements": [
+          "card",
+          "div"
+        ],
+        "confidence": "medium"
+      },
+      {
+        "width": "2px",
+        "style": "solid",
+        "color": "rgba(255, 255, 255, 0.05)",
+        "count": 3,
+        "elements": [
+          "button"
+        ],
+        "confidence": "low"
+      },
+      {
+        "width": "2px 0px",
+        "style": "solid none",
+        "color": "rgba(255, 255, 255, 0.05)",
+        "count": 3,
+        "elements": [
+          "div"
+        ],
+        "confidence": "low"
+      },
+      {
+        "width": "1px",
+        "style": "solid",
+        "color": "rgba(255, 255, 255, 0.05)",
+        "count": 2,
+        "elements": [
+          "div"
+        ],
+        "confidence": "low"
+      },
+      {
+        "width": "0px 0px 1px",
+        "style": "none none solid",
+        "color": "rgb(247, 248, 248)",
+        "count": 1,
+        "elements": [
+          "header"
+        ],
+        "confidence": "low"
+      },
+      {
+        "width": "1px",
+        "style": "solid",
+        "color": "rgb(30, 30, 30)",
+        "count": 1,
+        "elements": [
+          "div"
+        ],
+        "confidence": "low"
+      },
+      {
+        "width": "0px 0px 1px",
+        "style": "none none solid",
+        "color": "rgb(255, 255, 255)",
+        "count": 1,
+        "elements": [
+          "input"
+        ],
+        "confidence": "low"
+      },
+      {
+        "width": "1px",
+        "style": "solid",
+        "color": "rgb(38, 39, 40)",
+        "count": 1,
+        "elements": [
+          "button"
+        ],
+        "confidence": "low"
+      },
+      {
+        "width": "1px",
+        "style": "solid",
+        "color": "rgb(44, 144, 28)",
+        "count": 1,
+        "elements": [
+          "span"
+        ],
+        "confidence": "low"
+      },
+      {
+        "width": "1px",
+        "style": "solid",
+        "color": "rgb(98, 102, 109)",
+        "count": 1,
+        "elements": [
+          "div"
+        ],
+        "confidence": "low"
+      },
+      {
+        "width": "1px 0px 0px",
+        "style": "solid none none",
+        "color": "rgb(35, 37, 42)",
+        "count": 1,
+        "elements": [
+          "footer"
+        ],
+        "confidence": "low"
+      }
+    ]
+  },
+  "shadows": [
+    {
+      "shadow": "rgba(0, 0, 0, 0) 0px 8px 2px 0px, rgba(0, 0, 0, 0.01) 0px 5px 2px 0px, rgba(0, 0, 0, 0.04) 0px 3px 2px 0px, rgba(0, 0, 0, 0.07) 0px 1px 1px 0px, rgba(0, 0, 0, 0.08) 0px 0px 1px 0px",
+      "count": 7,
+      "confidence": "high"
+    },
+    {
+      "shadow": "rgba(0, 0, 0, 0.2) 0px 4px 24px 0px",
+      "count": 1,
+      "confidence": "low"
+    },
+    {
+      "shadow": "rgba(255, 255, 255, 0.04) 0px 1.503px 5.261px 0px inset, rgba(255, 255, 255, 0.1) 0px -0.752px 0.752px 0px inset",
+      "count": 1,
+      "confidence": "low"
+    },
+    {
+      "shadow": "rgba(255, 255, 255, 0.14) 0px -2.75px 4.75px 0px inset, rgba(255, 255, 255, 0.1) 0px -0.752px 0.752px 0px inset, rgba(0, 0, 0, 0.5) 0px 54px 73px 3px",
+      "count": 1,
+      "confidence": "low"
+    },
+    {
+      "shadow": "rgba(0, 0, 0, 0.35) 0px 7px 32px 0px",
+      "count": 1,
+      "confidence": "low"
+    }
+  ],
+  "components": {
+    "buttons": [
+      {
+        "states": {
+          "default": {
+            "backgroundColor": "rgb(230, 230, 230)",
+            "color": "rgb(8, 9, 10)",
+            "padding": "0px 12px",
+            "borderRadius": "8px",
+            "border": "1px solid rgb(230, 230, 230)",
+            "boxShadow": "rgba(0, 0, 0, 0) 0px 8px 2px 0px, rgba(0, 0, 0, 0.01) 0px 5px 2px 0px, rgba(0, 0, 0, 0.04) 0px 3px 2px 0px, rgba(0, 0, 0, 0.07) 0px 1px 1px 0px, rgba(0, 0, 0, 0.08) 0px 0px 1px 0px",
+            "outline": "rgba(0, 0, 0, 0) none 0px",
+            "transform": "none",
+            "opacity": "1"
+          },
+          "hover": {
+            "color": "var(--color-text-primary)",
+            "backgroundColor": "var(--tweet-bg-color-hover)",
+            "opacity": "1",
+            "transform": "translate(4px)"
+          },
+          "active": {
+            "transform": "scale(0.97)",
+            "color": "var(--color-text-tertiary)",
+            "backgroundColor": "rgba(255, 255, 255, 0.08)",
+            "opacity": "1"
+          },
+          "focus": {
+            "opacity": "1",
+            "transform": "none",
+            "boxShadow": "rgba(0, 0, 0, 0.1) 0px 4px 12px, rgba(0, 0, 0, 0.2) 0px 0px 0px 2px",
+            "backgroundColor": "var(--tweet-color-blue-primary-hover)",
+            "outline": "var(--focus-ring-outline)"
+          }
+        },
+        "fontWeight": "510",
+        "fontSize": "13px",
+        "classes": "Button-module__bZ-sGa__root Button-module__bZ-sGa_",
+        "confidence": "medium"
+      },
+      {
+        "states": {
+          "default": {
+            "backgroundColor": "rgb(20, 21, 22)",
+            "color": "rgb(247, 248, 248)",
+            "padding": "0px",
+            "borderRadius": "30px",
+            "border": "0px none rgb(247, 248, 248)",
+            "boxShadow": "none",
+            "outline": "rgba(0, 0, 0, 0) none 0px",
+            "transform": "none",
+            "opacity": "1"
+          },
+          "hover": {
+            "color": "var(--color-text-primary)"
+          },
+          "active": {
+            "transform": "scale(1)"
+          },
+          "focus": {
+            "boxShadow": "rgba(0, 0, 0, 0.1) 0px 4px 12px, rgba(0, 0, 0, 0.2) 0px 0px 0px 2px"
+          }
+        },
+        "fontWeight": "400",
+        "fontSize": "16px",
+        "classes": "DifferentCard-module__ZPfTEW__differentCard reset-",
+        "confidence": "high"
+      },
+      {
+        "states": {
+          "default": {
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(98, 102, 109)",
+            "padding": "0px 16px",
+            "borderRadius": "9999px",
+            "border": "2px solid rgba(255, 255, 255, 0.05)",
+            "boxShadow": "none",
+            "outline": "rgba(0, 0, 0, 0) none 0px",
+            "transform": "none",
+            "opacity": "1"
+          },
+          "hover": null,
+          "active": {
+            "transform": "scale(0.97)",
+            "color": "var(--color-text-primary)",
+            "backgroundColor": "rgba(255, 255, 255, 0.08)"
+          },
+          "focus": null
+        },
+        "fontWeight": "510",
+        "fontSize": "15px",
+        "classes": "IconButton-module__JkbYSq__root Button-module__bZ-",
+        "confidence": "medium"
+      },
+      {
+        "states": {
+          "default": {
+            "backgroundColor": "rgb(40, 40, 44)",
+            "color": "rgb(247, 248, 248)",
+            "padding": "0px 12px",
+            "borderRadius": "8px",
+            "border": "1px solid rgb(62, 62, 68)",
+            "boxShadow": "none",
+            "outline": "rgba(0, 0, 0, 0) none 0px",
+            "transform": "none",
+            "opacity": "1"
+          },
+          "hover": {
+            "color": "var(--color-text-primary)",
+            "backgroundColor": "var(--tweet-bg-color-hover)",
+            "opacity": "1",
+            "transform": "translate(4px)"
+          },
+          "active": {
+            "transform": "scale(0.97)",
+            "color": "var(--color-text-tertiary)",
+            "backgroundColor": "rgba(255, 255, 255, 0.08)",
+            "opacity": "1"
+          },
+          "focus": {
+            "opacity": "1",
+            "transform": "none",
+            "boxShadow": "rgba(0, 0, 0, 0.1) 0px 4px 12px, rgba(0, 0, 0, 0.2) 0px 0px 0px 2px",
+            "backgroundColor": "var(--tweet-color-blue-primary-hover)",
+            "outline": "var(--focus-ring-outline)"
+          }
+        },
+        "fontWeight": "510",
+        "fontSize": "13px",
+        "classes": "Button-module__bZ-sGa__root Button-module__bZ-sGa_",
+        "confidence": "medium"
+      },
+      {
+        "states": {
+          "default": {
+            "backgroundColor": "rgb(24, 26, 26)",
+            "color": "rgb(247, 248, 248)",
+            "padding": "0px 12px",
+            "borderRadius": "5px",
+            "border": "1px solid rgb(38, 39, 40)",
+            "boxShadow": "none",
+            "outline": "rgba(0, 0, 0, 0) none 0px",
+            "transform": "none",
+            "opacity": "1"
+          },
+          "hover": {
+            "color": "var(--color-text-primary)"
+          },
+          "active": {
+            "transform": "scale(1)",
+            "color": "var(--color-text-primary)",
+            "backgroundColor": "rgba(255, 255, 255, 0.16)"
+          },
+          "focus": {
+            "boxShadow": "rgba(0, 0, 0, 0.1) 0px 4px 12px, rgba(0, 0, 0, 0.2) 0px 0px 0px 2px"
+          }
+        },
+        "fontWeight": "510",
+        "fontSize": "12px",
+        "classes": "Button-module__bZ-sGa__root Button-module__bZ-sGa_",
+        "confidence": "high"
+      },
+      {
+        "states": {
+          "default": {
+            "backgroundColor": "rgb(35, 35, 38)",
+            "color": "rgb(247, 248, 248)",
+            "padding": "2px 6px",
+            "borderRadius": "6px",
+            "border": "0px none rgb(247, 248, 248)",
+            "boxShadow": "none",
+            "outline": "rgba(0, 0, 0, 0) none 0px",
+            "transform": "none",
+            "opacity": "1"
+          },
+          "hover": null,
+          "active": {
+            "backgroundColor": "rgba(255, 255, 255, 0.08)",
+            "transform": "scale(0.97)"
+          },
+          "focus": null
+        },
+        "fontWeight": "400",
+        "fontSize": "16px",
+        "classes": "ProjectOverview-module__C0ELRa__btn",
+        "confidence": "medium"
+      },
+      {
+        "states": {
+          "default": {
+            "backgroundColor": "rgb(15, 16, 17)",
+            "color": "rgb(247, 248, 248)",
+            "padding": "32px 24px",
+            "borderRadius": "16px",
+            "border": "0px none rgb(247, 248, 248)",
+            "boxShadow": "none",
+            "outline": "rgba(0, 0, 0, 0) none 0px",
+            "transform": "none",
+            "opacity": "1"
+          },
+          "hover": {
+            "color": "var(--color-text-primary)",
+            "backgroundColor": "var(--tweet-bg-color-hover)",
+            "opacity": "1",
+            "transform": "translate(4px)"
+          },
+          "active": {
+            "transform": "scale(0.97)",
+            "color": "var(--color-text-tertiary)",
+            "backgroundColor": "rgba(255, 255, 255, 0.08)",
+            "opacity": "1"
+          },
+          "focus": {
+            "opacity": "1",
+            "transform": "none",
+            "boxShadow": "rgba(0, 0, 0, 0.1) 0px 4px 12px, rgba(0, 0, 0, 0.2) 0px 0px 0px 2px",
+            "backgroundColor": "var(--tweet-color-blue-primary-hover)",
+            "outline": "var(--focus-ring-outline)"
+          }
+        },
+        "fontWeight": "400",
+        "fontSize": "16px",
+        "classes": "HomepageCarousel-module__U2qd5W__workflowCard Work",
+        "confidence": "medium"
+      },
+      {
+        "states": {
+          "default": {
+            "backgroundColor": "rgb(230, 230, 230)",
+            "color": "rgb(8, 9, 10)",
+            "padding": "0px 12px",
+            "borderRadius": "8px",
+            "border": "1px solid rgb(230, 230, 230)",
+            "boxShadow": "rgba(0, 0, 0, 0) 0px 8px 2px 0px, rgba(0, 0, 0, 0.01) 0px 5px 2px 0px, rgba(0, 0, 0, 0.04) 0px 3px 2px 0px, rgba(0, 0, 0, 0.07) 0px 1px 1px 0px, rgba(0, 0, 0, 0.08) 0px 0px 1px 0px",
+            "outline": "rgba(0, 0, 0, 0) none 0px",
+            "transform": "none",
+            "opacity": "1"
+          },
+          "hover": {
+            "color": "var(--color-text-primary)",
+            "backgroundColor": "var(--tweet-bg-color-hover)",
+            "opacity": "1",
+            "transform": "translate(4px)"
+          },
+          "active": {
+            "transform": "scale(0.97)",
+            "color": "var(--color-text-tertiary)",
+            "backgroundColor": "rgba(255, 255, 255, 0.08)",
+            "opacity": "1"
+          },
+          "focus": {
+            "opacity": "1",
+            "transform": "none",
+            "boxShadow": "rgba(0, 0, 0, 0.1) 0px 4px 12px, rgba(0, 0, 0, 0.2) 0px 0px 0px 2px",
+            "backgroundColor": "var(--tweet-color-blue-primary-hover)",
+            "outline": "var(--focus-ring-outline)"
+          }
+        },
+        "fontWeight": "510",
+        "fontSize": "13px",
+        "classes": "Button-module__bZ-sGa__root Button-module__bZ-sGa_",
+        "confidence": "medium",
+        "source": "dark-mode"
+      },
+      {
+        "states": {
+          "default": {
+            "backgroundColor": "rgb(20, 21, 22)",
+            "color": "rgb(247, 248, 248)",
+            "padding": "0px",
+            "borderRadius": "30px",
+            "border": "0px none rgb(247, 248, 248)",
+            "boxShadow": "none",
+            "outline": "rgba(0, 0, 0, 0) none 0px",
+            "transform": "none",
+            "opacity": "1"
+          },
+          "hover": {
+            "color": "var(--color-text-primary)"
+          },
+          "active": {
+            "transform": "scale(1)"
+          },
+          "focus": {
+            "boxShadow": "rgba(0, 0, 0, 0.1) 0px 4px 12px, rgba(0, 0, 0, 0.2) 0px 0px 0px 2px"
+          }
+        },
+        "fontWeight": "400",
+        "fontSize": "16px",
+        "classes": "DifferentCard-module__ZPfTEW__differentCard reset-",
+        "confidence": "high",
+        "source": "dark-mode"
+      },
+      {
+        "states": {
+          "default": {
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(98, 102, 109)",
+            "padding": "0px 16px",
+            "borderRadius": "9999px",
+            "border": "2px solid rgba(255, 255, 255, 0.05)",
+            "boxShadow": "none",
+            "outline": "rgba(0, 0, 0, 0) none 0px",
+            "transform": "none",
+            "opacity": "1"
+          },
+          "hover": null,
+          "active": {
+            "transform": "scale(0.97)",
+            "color": "var(--color-text-primary)",
+            "backgroundColor": "rgba(255, 255, 255, 0.08)"
+          },
+          "focus": null
+        },
+        "fontWeight": "510",
+        "fontSize": "15px",
+        "classes": "IconButton-module__JkbYSq__root Button-module__bZ-",
+        "confidence": "medium",
+        "source": "dark-mode"
+      },
+      {
+        "states": {
+          "default": {
+            "backgroundColor": "rgb(40, 40, 44)",
+            "color": "rgb(247, 248, 248)",
+            "padding": "0px 12px",
+            "borderRadius": "8px",
+            "border": "1px solid rgb(62, 62, 68)",
+            "boxShadow": "none",
+            "outline": "rgba(0, 0, 0, 0) none 0px",
+            "transform": "none",
+            "opacity": "1"
+          },
+          "hover": {
+            "color": "var(--color-text-primary)",
+            "backgroundColor": "var(--tweet-bg-color-hover)",
+            "opacity": "1",
+            "transform": "translate(4px)"
+          },
+          "active": {
+            "transform": "scale(0.97)",
+            "color": "var(--color-text-tertiary)",
+            "backgroundColor": "rgba(255, 255, 255, 0.08)",
+            "opacity": "1"
+          },
+          "focus": {
+            "opacity": "1",
+            "transform": "none",
+            "boxShadow": "rgba(0, 0, 0, 0.1) 0px 4px 12px, rgba(0, 0, 0, 0.2) 0px 0px 0px 2px",
+            "backgroundColor": "var(--tweet-color-blue-primary-hover)",
+            "outline": "var(--focus-ring-outline)"
+          }
+        },
+        "fontWeight": "510",
+        "fontSize": "13px",
+        "classes": "Button-module__bZ-sGa__root Button-module__bZ-sGa_",
+        "confidence": "medium",
+        "source": "dark-mode"
+      },
+      {
+        "states": {
+          "default": {
+            "backgroundColor": "rgb(24, 26, 26)",
+            "color": "rgb(247, 248, 248)",
+            "padding": "0px 12px",
+            "borderRadius": "5px",
+            "border": "1px solid rgb(38, 39, 40)",
+            "boxShadow": "none",
+            "outline": "rgba(0, 0, 0, 0) none 0px",
+            "transform": "none",
+            "opacity": "1"
+          },
+          "hover": {
+            "color": "var(--color-text-primary)"
+          },
+          "active": {
+            "transform": "scale(1)",
+            "color": "var(--color-text-primary)",
+            "backgroundColor": "rgba(255, 255, 255, 0.16)"
+          },
+          "focus": {
+            "boxShadow": "rgba(0, 0, 0, 0.1) 0px 4px 12px, rgba(0, 0, 0, 0.2) 0px 0px 0px 2px"
+          }
+        },
+        "fontWeight": "510",
+        "fontSize": "12px",
+        "classes": "Button-module__bZ-sGa__root Button-module__bZ-sGa_",
+        "confidence": "high",
+        "source": "dark-mode"
+      },
+      {
+        "states": {
+          "default": {
+            "backgroundColor": "rgb(35, 35, 38)",
+            "color": "rgb(247, 248, 248)",
+            "padding": "2px 6px",
+            "borderRadius": "6px",
+            "border": "0px none rgb(247, 248, 248)",
+            "boxShadow": "none",
+            "outline": "rgba(0, 0, 0, 0) none 0px",
+            "transform": "none",
+            "opacity": "1"
+          },
+          "hover": null,
+          "active": {
+            "backgroundColor": "rgba(255, 255, 255, 0.08)",
+            "transform": "scale(0.97)"
+          },
+          "focus": null
+        },
+        "fontWeight": "400",
+        "fontSize": "16px",
+        "classes": "ProjectOverview-module__C0ELRa__btn",
+        "confidence": "medium",
+        "source": "dark-mode"
+      },
+      {
+        "states": {
+          "default": {
+            "backgroundColor": "rgb(15, 16, 17)",
+            "color": "rgb(247, 248, 248)",
+            "padding": "32px 24px",
+            "borderRadius": "16px",
+            "border": "0px none rgb(247, 248, 248)",
+            "boxShadow": "none",
+            "outline": "rgba(0, 0, 0, 0) none 0px",
+            "transform": "none",
+            "opacity": "1"
+          },
+          "hover": {
+            "color": "var(--color-text-primary)",
+            "backgroundColor": "var(--tweet-bg-color-hover)",
+            "opacity": "1",
+            "transform": "translate(4px)"
+          },
+          "active": {
+            "transform": "scale(0.97)",
+            "color": "var(--color-text-tertiary)",
+            "backgroundColor": "rgba(255, 255, 255, 0.08)",
+            "opacity": "1"
+          },
+          "focus": {
+            "opacity": "1",
+            "transform": "none",
+            "boxShadow": "rgba(0, 0, 0, 0.1) 0px 4px 12px, rgba(0, 0, 0, 0.2) 0px 0px 0px 2px",
+            "backgroundColor": "var(--tweet-color-blue-primary-hover)",
+            "outline": "var(--focus-ring-outline)"
+          }
+        },
+        "fontWeight": "400",
+        "fontSize": "16px",
+        "classes": "HomepageCarousel-module__U2qd5W__workflowCard Work",
+        "confidence": "medium",
+        "source": "dark-mode"
+      }
+    ],
+    "inputs": {
+      "text": [],
+      "checkbox": [],
+      "radio": [],
+      "select": []
+    },
+    "links": [
+      {
+        "color": "rgb(255, 255, 255)",
+        "textDecoration": "none",
+        "fontWeight": "510",
+        "states": {
+          "default": {
+            "color": "rgb(255, 255, 255)",
+            "textDecoration": "none"
+          },
+          "hover": {
+            "color": "var(--color-text-primary)"
+          }
+        }
+      },
+      {
+        "color": "rgb(247, 248, 248)",
+        "textDecoration": "none",
+        "fontWeight": "400",
+        "states": {
+          "default": {
+            "color": "rgb(247, 248, 248)",
+            "textDecoration": "none"
+          },
+          "hover": {
+            "color": "var(--color-text-primary)"
+          }
+        }
+      },
+      {
+        "color": "rgb(138, 143, 152)",
+        "textDecoration": "none",
+        "fontWeight": "510",
+        "states": {
+          "default": {
+            "color": "rgb(138, 143, 152)",
+            "textDecoration": "none"
+          },
+          "hover": {
+            "color": "var(--color-text-primary)"
+          }
+        }
+      },
+      {
+        "color": "rgb(8, 9, 10)",
+        "textDecoration": "none",
+        "fontWeight": "510",
+        "states": {
+          "default": {
+            "color": "rgb(8, 9, 10)",
+            "textDecoration": "none"
+          },
+          "hover": {
+            "color": "var(--color-text-primary)"
+          }
+        }
+      },
+      {
+        "color": "rgb(255, 255, 255)",
+        "textDecoration": "none",
+        "fontWeight": "510",
+        "states": {
+          "default": {
+            "color": "rgb(255, 255, 255)",
+            "textDecoration": "none"
+          },
+          "hover": {
+            "color": "var(--color-text-primary)"
+          }
+        },
+        "source": "dark-mode"
+      },
+      {
+        "color": "rgb(247, 248, 248)",
+        "textDecoration": "none",
+        "fontWeight": "400",
+        "states": {
+          "default": {
+            "color": "rgb(247, 248, 248)",
+            "textDecoration": "none"
+          },
+          "hover": {
+            "color": "var(--color-text-primary)"
+          }
+        },
+        "source": "dark-mode"
+      },
+      {
+        "color": "rgb(138, 143, 152)",
+        "textDecoration": "none",
+        "fontWeight": "510",
+        "states": {
+          "default": {
+            "color": "rgb(138, 143, 152)",
+            "textDecoration": "none"
+          },
+          "hover": {
+            "color": "var(--color-text-primary)"
+          }
+        },
+        "source": "dark-mode"
+      },
+      {
+        "color": "rgb(8, 9, 10)",
+        "textDecoration": "none",
+        "fontWeight": "510",
+        "states": {
+          "default": {
+            "color": "rgb(8, 9, 10)",
+            "textDecoration": "none"
+          },
+          "hover": {
+            "color": "var(--color-text-primary)"
+          }
+        },
+        "source": "dark-mode"
+      }
+    ],
+    "badges": {
+      "all": [],
+      "byVariant": {
+        "error": [],
+        "warning": [],
+        "success": [],
+        "info": [],
+        "neutral": []
+      }
+    }
+  },
+  "breakpoints": [
+    {
+      "px": "600px"
+    },
+    {
+      "px": "640px"
+    },
+    {
+      "px": "641px"
+    },
+    {
+      "px": "700px"
+    },
+    {
+      "px": "768px"
+    },
+    {
+      "px": "769px"
+    },
+    {
+      "px": "1024px"
+    },
+    {
+      "px": "1025px"
+    },
+    {
+      "px": "1280px"
+    },
+    {
+      "px": "1281px"
+    },
+    {
+      "px": "1400px"
+    },
+    {
+      "px": "1536px"
+    }
+  ],
+  "iconSystem": [],
+  "frameworks": [
+    {
+      "name": "Radix UI",
+      "confidence": "high",
+      "evidence": "13 Radix primitives"
+    },
+    {
+      "name": "Element Plus/UI",
+      "confidence": "high",
+      "evidence": "23 el- components"
+    }
+  ]
+}
