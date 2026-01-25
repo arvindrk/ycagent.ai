@@ -1,9 +1,3 @@
-/**
- * Linear Design System - Spacing Tokens
- * Extracted from linear.app production
- * Base: 8px scale with irregular jumps
- */
-
 export const spacing = {
   0: '0',
   px: '1px',

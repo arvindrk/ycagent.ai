@@ -1,8 +1,3 @@
-/**
- * Linear Design System - Border Radius Tokens
- * Extracted from linear.app production
- */
-
 export const radius = {
   none: '0',
   xs: '1px',

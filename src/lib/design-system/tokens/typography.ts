@@ -1,8 +1,3 @@
-/**
- * Linear Design System - Typography Tokens
- * Extracted from linear.app production
- */
-
 export const fontFamilies = {
   sans: 'Inter Variable, SF Pro Display, -apple-system, system-ui, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue, sans-serif',
   mono: 'Berkeley Mono, ui-monospace, SF Mono, Menlo, monospace',
@@ -56,7 +51,6 @@ export const letterSpacings = {
 } as const;
 
 export const typographyStyles = {
-  // Display headings
   'display-xl': {
     fontSize: fontSizes['7xl'],
     fontWeight: fontWeights.medium,
@@ -76,7 +70,6 @@ export const typographyStyles = {
     letterSpacing: letterSpacings.tight,
   },
 
-  // Headings
   'heading-xl': {
     fontSize: fontSizes['4xl'],
     fontWeight: fontWeights.medium,
@@ -102,7 +95,6 @@ export const typographyStyles = {
     letterSpacing: letterSpacings.normal,
   },
 
-  // Body text
   'body-lg': {
     fontSize: fontSizes.xl,
     fontWeight: fontWeights.regular,
@@ -122,7 +114,6 @@ export const typographyStyles = {
     letterSpacing: letterSpacings.small,
   },
 
-  // UI text
   'button-lg': {
     fontSize: fontSizes['2xl'],
     fontWeight: fontWeights.medium,
@@ -142,7 +133,6 @@ export const typographyStyles = {
     letterSpacing: letterSpacings.normal,
   },
 
-  // Caption text
   'caption-md': {
     fontSize: fontSizes.md,
     fontWeight: fontWeights.medium,
@@ -168,7 +158,6 @@ export const typographyStyles = {
     letterSpacing: letterSpacings.widest,
   },
 
-  // Mono
   'mono-base': {
     fontFamily: fontFamilies.mono,
     fontSize: fontSizes.base,
@@ -178,7 +167,6 @@ export const typographyStyles = {
   },
 } as const;
 
-// OpenType font features for Inter Variable
 export const fontFeatures = {
   inter: '"cv01", "ss03"',
 } as const;

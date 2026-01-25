@@ -1,7 +1,3 @@
-/**
- * Vendor-agnostic embedding provider interface
- * Allows easy swapping between OpenAI, Cohere, Anthropic, local models, etc.
- */
 export interface EmbeddingProvider {
   name: string;
   dimensions: number;

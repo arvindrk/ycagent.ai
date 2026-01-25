@@ -1,8 +1,3 @@
-/**
- * Linear Design System - Motion Tokens
- * Based on Linear's interaction patterns
- */
-
 export const transitions = {
   none: 'none',
   fast: '100ms',

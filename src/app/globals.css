@@ -3,17 +3,9 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/**
- * Linear Design System
- * Production-grade design tokens from linear.app
- */
-
 :root {
-  /* Colors - Dark theme (default) */
   --color-white: #ffffff;
   --color-black: #000000;
-
-  /* Backgrounds */
   --color-bg-primary: #08090a;
   --color-bg-secondary: #1c1c1f;
   --color-bg-tertiary: #232326;
@@ -22,51 +14,31 @@
   --color-bg-marketing: #010102;
   --color-bg-level-1: #0f1011;
   --color-bg-level-3: #191a1b;
-
-  /* Text */
   --color-text-primary: #f7f8f8;
   --color-text-secondary: #8a8f98;
   --color-text-tertiary: #62666d;
-
-  /* Borders */
   --color-border-primary: #23252a;
   --color-border-secondary: #34343a;
   --color-border-tertiary: #3e3e44;
-
-  /* Lines */
   --color-line-primary: #37393a;
   --color-line-secondary: #202122;
   --color-line-tertiary: #18191a;
   --color-line-quaternary: #141515;
   --color-line-tint: #141516;
-
-  /* Accent */
   --color-accent: #7170ff;
   --color-accent-hover: #828fff;
   --color-accent-tint: #18182f;
-
-  /* Brand */
   --color-brand-bg: #5e6ad2;
-
-  /* Status */
   --color-green: #4cb782;
   --color-blue: #4ea7fc;
   --color-red: #eb5757;
   --color-orange: #fc7840;
   --color-yellow: #f2c94c;
-
-  /* Linear Products */
   --color-linear-plan: #68cc58;
   --color-linear-build: #d4b144;
   --color-linear-security: #7a7fad;
-
-  /* Overlay */
   --color-overlay-primary: rgba(0, 0, 0, 0.9);
-
-  /* Header */
   --header-bg: rgba(11, 11, 11, 0.8);
-
-  /* Border Radius */
   --radius-none: 0;
   --radius-xs: 1px;
   --radius-sm: 4px;
@@ -75,29 +47,22 @@
   --radius-xl: 10px;
   --radius-2xl: 16px;
   --radius-full: 9999px;
-
-  /* Shadows */
   --shadow-sm: rgba(0, 0, 0, 0) 0px 8px 2px 0px, rgba(0, 0, 0, 0.01) 0px 5px 2px 0px, rgba(0, 0, 0, 0.04) 0px 3px 2px 0px, rgba(0, 0, 0, 0.07) 0px 1px 1px 0px, rgba(0, 0, 0, 0.08) 0px 0px 1px 0px;
   --shadow-md: rgba(0, 0, 0, 0.2) 0px 4px 24px 0px;
   --shadow-lg: rgba(0, 0, 0, 0.35) 0px 7px 32px 0px;
   --shadow-focus: rgba(0, 0, 0, 0.1) 0px 4px 12px, rgba(0, 0, 0, 0.2) 0px 0px 0px 2px;
   --shadow-inner-glow: rgba(255, 255, 255, 0.04) 0px 1.503px 5.261px 0px inset, rgba(255, 255, 255, 0.1) 0px -0.752px 0.752px 0px inset;
-
-  /* Transitions */
   --transition-fast: 100ms;
   --transition-base: 150ms;
   --transition-normal: 200ms;
   --transition-slow: 300ms;
   --transition-slower: 500ms;
-
-  /* Easings */
   --ease-in: cubic-bezier(0.4, 0, 1, 1);
   --ease-out: cubic-bezier(0, 0, 0.2, 1);
   --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Light Theme Overrides */
 .light {
   --color-bg-primary: #ffffff;
   --color-bg-secondary: #f7f8f8;
@@ -113,9 +78,7 @@
   --color-border-tertiary: #e6e6e6;
 }
 
-/* Tailwind Theme Integration */
 @theme inline {
-  /* Map Linear tokens to Tailwind utilities */
   --color-background: var(--color-bg-primary);
   --color-foreground: var(--color-text-primary);
   --color-card: var(--color-bg-secondary);
@@ -151,7 +114,6 @@
     font-family: var(--font-geist-sans), 'Inter Variable', 'SF Pro Display', -apple-system, system-ui, sans-serif;
   }
 
-  /* Smooth transitions */
   * {
     transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
     transition-timing-function: var(--ease-out);
@@ -166,8 +128,6 @@
 }
 
 @layer utilities {
-
-  /* Linear-specific utilities */
   .linear-shadow-sm {
     box-shadow: var(--shadow-sm);
   }
@@ -193,7 +153,6 @@
     transform: scale(0.97);
   }
 
-  /* Background layers */
   .bg-layer-1 {
     background-color: var(--color-bg-level-1);
   }
