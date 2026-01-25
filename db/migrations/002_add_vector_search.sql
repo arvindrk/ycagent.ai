@@ -4,8 +4,8 @@
 -- 1. Enable pgvector extension
 CREATE EXTENSION IF NOT EXISTS vector;
 
--- 2. Add vector column for embeddings (1536 dimensions for text-embedding-3-small)
-ALTER TABLE companies ADD COLUMN embedding vector(1536);
+-- 2. Add vector column for embeddings (768 dimensions for text-embedding-3-small)
+ALTER TABLE companies ADD COLUMN embedding vector(768);
 
 -- 3. Add full-text search support (lightweight fallback)
 -- Generated column that combines multiple text fields with different weights
