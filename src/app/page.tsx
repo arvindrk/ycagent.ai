@@ -3,6 +3,7 @@ import { getCompanies } from '@/lib/api/companies/get-companies';
 import { CompaniesGrid } from '@/components/companies/companies-grid';
 import { CompaniesLoading } from '@/components/companies/companies-loading';
 import { CompaniesPagination } from '@/components/companies/companies-pagination';
+import { SearchWrapper } from '@/components/search/search-wrapper';
 import { ThemeToggle } from '@/components/theme-toggle';
 
 interface SearchParams {
@@ -45,16 +46,18 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        <Suspense fallback={<CompaniesLoading />}>
-          <CompaniesGrid companies={companies} />
-        </Suspense>
+        <SearchWrapper>
+          <Suspense fallback={<CompaniesLoading />}>
+            <CompaniesGrid companies={companies} />
+          </Suspense>
 
-        <CompaniesPagination
-          currentPage={page}
-          totalPages={totalPages}
-          totalCount={total}
-          pageSize={limit}
-        />
+          <CompaniesPagination
+            currentPage={page}
+            totalPages={totalPages}
+            totalCount={total}
+            pageSize={limit}
+          />
+        </SearchWrapper>
       </main>
     </div>
   );
