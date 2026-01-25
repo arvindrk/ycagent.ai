@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { searchCompanies, getSearchCount } from '@/lib/search/query';
 import { parseSearchFilters } from '@/lib/search/filters/parse';
+import { generateEmbedding } from '@/lib/search/embeddings/generate';
 import { searchInputSchema } from '@/lib/validations/search.schema';
 
 export const runtime = 'edge';
@@ -14,14 +15,16 @@ export async function GET(request: NextRequest) {
     const validatedParams = searchInputSchema.parse(rawParams);
     const filters = parseSearchFilters(validatedParams);
 
+    const embedding = await generateEmbedding(validatedParams.q);
+
     const [results, total] = await Promise.all([
       searchCompanies({
         query: validatedParams.q,
         filters,
         limit: validatedParams.limit,
         offset: validatedParams.offset,
-      }),
-      getSearchCount(validatedParams.q, filters),
+      }, embedding),
+      getSearchCount(filters, embedding),
     ]);
 
     const queryTime = Date.now() - startTime;

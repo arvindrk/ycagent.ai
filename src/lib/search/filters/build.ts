@@ -1,70 +1,74 @@
-import type { NeonQueryFunction } from '@neondatabase/serverless';
 import type { ParsedFilters } from './parse';
 
-type SQLFragment = ReturnType<
-  ReturnType<typeof import('@neondatabase/serverless').neon>['sql']
->;
-
-export function buildFilterClauses(
-  sql: NeonQueryFunction<false, false>,
-  filters: ParsedFilters
-): SQLFragment[] {
-  const clauses: SQLFragment[] = [];
+export function buildFilterSQL(
+  filters: ParsedFilters,
+  paramOffset = 0
+): {
+  sql: string;
+  values: (string | number | boolean | string[])[];
+} {
+  const conditions: string[] = [];
+  const values: (string | number | boolean | string[])[] = [];
 
   if (filters.batch) {
-    clauses.push(sql`batch = ${filters.batch}`);
+    values.push(filters.batch);
+    conditions.push(`batch = $${paramOffset + values.length}`);
   }
 
   if (filters.stage) {
-    clauses.push(sql`stage = ${filters.stage}`);
+    values.push(filters.stage);
+    conditions.push(`stage = $${paramOffset + values.length}`);
   }
 
   if (filters.status) {
-    clauses.push(sql`status = ${filters.status}`);
+    values.push(filters.status);
+    conditions.push(`status = $${paramOffset + values.length}`);
   }
 
   if (filters.tags && filters.tags.length > 0) {
-    clauses.push(sql`tags ?| ${filters.tags}`);
+    values.push(filters.tags);
+    conditions.push(`tags ?| $${paramOffset + values.length}`);
   }
 
   if (filters.industries && filters.industries.length > 0) {
-    clauses.push(sql`industries ?| ${filters.industries}`);
+    values.push(filters.industries);
+    conditions.push(`industries ?| $${paramOffset + values.length}`);
   }
 
   if (filters.regions && filters.regions.length > 0) {
-    clauses.push(sql`regions ?| ${filters.regions}`);
+    values.push(filters.regions);
+    conditions.push(`regions ?| $${paramOffset + values.length}`);
   }
 
   if (filters.team_size_min !== undefined) {
-    clauses.push(sql`team_size >= ${filters.team_size_min}`);
+    values.push(filters.team_size_min);
+    conditions.push(`team_size >= $${paramOffset + values.length}`);
   }
 
   if (filters.team_size_max !== undefined) {
-    clauses.push(sql`team_size <= ${filters.team_size_max}`);
+    values.push(filters.team_size_max);
+    conditions.push(`team_size <= $${paramOffset + values.length}`);
   }
 
   if (filters.is_hiring !== undefined) {
-    clauses.push(sql`is_hiring = ${filters.is_hiring}`);
+    values.push(filters.is_hiring);
+    conditions.push(`is_hiring = $${paramOffset + values.length}`);
   }
 
   if (filters.is_nonprofit !== undefined) {
-    clauses.push(sql`is_nonprofit = ${filters.is_nonprofit}`);
+    values.push(filters.is_nonprofit);
+    conditions.push(`is_nonprofit = $${paramOffset + values.length}`);
   }
 
   if (filters.location) {
-    clauses.push(sql`all_locations ILIKE ${'%' + filters.location + '%'}`);
+    values.push(`%${filters.location}%`);
+    conditions.push(`all_locations ILIKE $${paramOffset + values.length}`);
   }
 
-  return clauses;
-}
+  const whereSQL =
+    conditions.length > 0
+      ? `${conditions.join(' AND ')} AND embedding IS NOT NULL`
+      : 'embedding IS NOT NULL';
 
-export function buildWhereClause(
-  sql: NeonQueryFunction<false, false>,
-  clauses: SQLFragment[]
-): SQLFragment {
-  if (clauses.length === 0) {
-    return sql`WHERE embedding IS NOT NULL`;
-  }
-
-  return sql`WHERE ${sql.join(clauses, sql` AND `)} AND embedding IS NOT NULL`;
+  return { sql: whereSQL, values };
 }

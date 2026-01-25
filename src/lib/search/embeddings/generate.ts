@@ -1,15 +1,16 @@
+import { cache } from 'react';
 import { getEmbeddingProvider } from '../../embeddings/providers';
 
-const embeddingConfig = {
-  provider: 'openai' as const,
+const DEFAULT_EMBEDDING_CONFIG = {
+  provider: 'openai',
   dimensions: 768,
-};
+} as const;
 
-const embeddingProvider = getEmbeddingProvider(embeddingConfig);
+const embeddingProvider = getEmbeddingProvider(DEFAULT_EMBEDDING_CONFIG);
 
-export async function generateEmbedding(text: string): Promise<number[]> {
+export const generateEmbedding = cache(async (text: string): Promise<number[]> => {
   return embeddingProvider.generate(text);
-}
+});
 
 export async function generateEmbeddingsBatch(
   texts: string[]

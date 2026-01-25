@@ -1,19 +1,4 @@
-export interface RawSearchParams {
-  q: string;
-  batch?: string;
-  stage?: string;
-  status?: string;
-  tags?: string;
-  industries?: string;
-  regions?: string;
-  team_size_min?: string;
-  team_size_max?: string;
-  is_hiring?: string;
-  is_nonprofit?: string;
-  location?: string;
-  limit?: string;
-  offset?: string;
-}
+import type { SearchInput } from '@/lib/validations/search.schema';
 
 export interface ParsedFilters {
   batch?: string;
@@ -37,13 +22,13 @@ function parseArrayFilter(value: string | undefined): string[] | undefined {
     .filter(Boolean);
 }
 
-function parseBooleanFilter(value: string | undefined): boolean | undefined {
+function parseBooleanFilter(value: 'true' | 'false' | undefined): boolean | undefined {
   if (value === 'true') return true;
   if (value === 'false') return false;
   return undefined;
 }
 
-export function parseSearchFilters(params: RawSearchParams): ParsedFilters {
+export function parseSearchFilters(params: SearchInput): ParsedFilters {
   return {
     batch: params.batch,
     stage: params.stage,
@@ -51,12 +36,8 @@ export function parseSearchFilters(params: RawSearchParams): ParsedFilters {
     tags: parseArrayFilter(params.tags),
     industries: parseArrayFilter(params.industries),
     regions: parseArrayFilter(params.regions),
-    team_size_min: params.team_size_min
-      ? Number(params.team_size_min)
-      : undefined,
-    team_size_max: params.team_size_max
-      ? Number(params.team_size_max)
-      : undefined,
+    team_size_min: params.team_size_min,
+    team_size_max: params.team_size_max,
     is_hiring: parseBooleanFilter(params.is_hiring),
     is_nonprofit: parseBooleanFilter(params.is_nonprofit),
     location: params.location,

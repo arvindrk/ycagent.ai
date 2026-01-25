@@ -1,7 +1,6 @@
 import { getDBClient } from '../db/client';
-import { generateEmbedding } from './embeddings/generate';
-import { buildFilterClauses, buildWhereClause } from './filters/build';
 import { SEARCH_SCORING, HNSW_CONFIG } from './scoring/weights';
+import { buildFilterSQL } from './filters/build';
 import type { ParsedFilters } from './filters/parse';
 
 export interface SearchParams {
@@ -33,59 +32,70 @@ export interface SearchResult {
 }
 
 export async function searchCompanies(
-  params: SearchParams
+  params: SearchParams,
+  embedding: number[]
 ): Promise<SearchResult[]> {
   const { query, filters, limit, offset } = params;
   const sql = getDBClient();
 
-  const embeddingPromise = generateEmbedding(query);
-  const filterClauses = buildFilterClauses(sql, filters);
-  const whereClause = buildWhereClause(sql, filterClauses);
-  const queryEmbedding = await embeddingPromise;
+  const embeddingJSON = JSON.stringify(embedding);
 
-  await sql`SET hnsw.ef_search = ${HNSW_CONFIG.EF_SEARCH}`;
+  await sql.query(`SET hnsw.ef_search = ${HNSW_CONFIG.EF_SEARCH}`);
 
-  const results = await sql<SearchResult[]>`
+  const filterConditions = buildFilterSQL(filters, 2);
+  const values: (string | number | boolean | string[])[] = [
+    embeddingJSON,
+    query,
+    ...filterConditions.values,
+    limit,
+    offset,
+  ];
+
+  const queryText = `
     SELECT 
       id, name, slug, website, logo_url, one_liner,
       tags, industries, regions, batch, team_size,
       all_locations, is_hiring, stage,
-      (1 - (embedding <=> ${JSON.stringify(queryEmbedding)}::vector)) AS semantic_score,
-      similarity(name, ${query}) AS name_score,
-      ts_rank_cd(search_vector, plainto_tsquery('english', ${query})) AS text_score,
+      (1 - (embedding <=> $1::vector)) AS semantic_score,
+      similarity(name, $2) AS name_score,
+      ts_rank_cd(search_vector, plainto_tsquery('english', $2)) AS text_score,
       (
-        (1 - (embedding <=> ${JSON.stringify(queryEmbedding)}::vector)) * ${SEARCH_SCORING.SEMANTIC_WEIGHT} + 
-        similarity(name, ${query}) * ${SEARCH_SCORING.NAME_WEIGHT} +
-        ts_rank_cd(search_vector, plainto_tsquery('english', ${query})) * ${SEARCH_SCORING.FULLTEXT_WEIGHT}
+        (1 - (embedding <=> $1::vector)) * ${SEARCH_SCORING.SEMANTIC_WEIGHT} + 
+        similarity(name, $2) * ${SEARCH_SCORING.NAME_WEIGHT} +
+        ts_rank_cd(search_vector, plainto_tsquery('english', $2)) * ${SEARCH_SCORING.FULLTEXT_WEIGHT}
       ) AS final_score
-      
     FROM companies
-    ${whereClause}
+    WHERE ${filterConditions.sql}
     ORDER BY final_score DESC
-    LIMIT ${limit}
-    OFFSET ${offset}
+    LIMIT $${values.length - 1}
+    OFFSET $${values.length}
   `;
 
-  return results;
+  const results = await sql.query(queryText, values);
+  return results as SearchResult[];
 }
 
 export async function getSearchCount(
-  query: string,
-  filters: ParsedFilters
+  filters: ParsedFilters,
+  embedding: number[]
 ): Promise<number> {
   const sql = getDBClient();
 
-  const embeddingPromise = generateEmbedding(query);
-  const filterClauses = buildFilterClauses(sql, filters);
-  const whereClause = buildWhereClause(sql, filterClauses);
-  const queryEmbedding = await embeddingPromise;
+  const embeddingJSON = JSON.stringify(embedding);
 
-  const result = await sql`
+  const filterConditions = buildFilterSQL(filters, 1);
+  const values: (string | number | boolean | string[])[] = [
+    embeddingJSON,
+    ...filterConditions.values,
+  ];
+
+  const queryText = `
     SELECT COUNT(*)::int as count
     FROM companies
-    ${whereClause}
-    AND (1 - (embedding <=> ${JSON.stringify(queryEmbedding)}::vector)) >= ${SEARCH_SCORING.MIN_SEMANTIC_SCORE}
+    WHERE ${filterConditions.sql}
+      AND (1 - (embedding <=> $1::vector)) >= ${SEARCH_SCORING.MIN_SEMANTIC_SCORE}
   `;
 
+  const result = await sql.query(queryText, values);
   return result[0].count;
 }
