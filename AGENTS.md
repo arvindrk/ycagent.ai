@@ -5,22 +5,37 @@ This file guides AI coding agents on context-efficient skill loading for this pr
 ## Skill Loading Strategy
 
 **Progressive Loading:**
+
 1. Load skill names and descriptions at session start (minimal context)
 2. Load full skill content only when task triggers match
 3. For large skills, reference detailed files only when specifically needed
 
 **Context Efficiency:**
+
 - Keep commonly-used skills in active context
 - Load specialized skills on-demand
-- Reference supporting files (AGENTS.md, rules/*.md) only when applying specific patterns
+- Reference supporting files (AGENTS.md, rules/\*.md) only when applying specific patterns
 
 ## Available Skills
+
+## Trigger.dev Documentation
+
+Comprehensive Trigger.dev v4 documentation is available in `.cursor/rules/`:
+
+- **Basic Tasks** (`.cursor/rules/trigger.basic.mdc`) - Task definitions, triggering, waits, debouncing
+- **Advanced Tasks** (`.cursor/rules/trigger.advanced-tasks.mdc`) - Tags, batching, concurrency, queues, error handling, idempotency
+- **Configuration** (`.cursor/rules/trigger.config.mdc`) - Build extensions, Prisma, Python, Playwright, FFmpeg
+- **Realtime** (`.cursor/rules/trigger.realtime.mdc`) - Real-time monitoring, React hooks, streams
+
+**When to Load:** Working with Trigger.dev tasks, scheduling, or realtime features  
+**Pattern:** Reference specific rule files when implementing Trigger.dev features
 
 ### react-best-practices
 
 **Location:** `.agents/skills/react-best-practices/`
 
 **When to Load:**
+
 - Writing/editing React components or Next.js pages
 - Implementing data fetching (client or server-side)
 - Performance optimization requests
@@ -29,12 +44,14 @@ This file guides AI coding agents on context-efficient skill loading for this pr
 - Bundle size or load time optimization
 
 **Primary Reference:** `.agents/skills/react-best-practices/AGENTS.md` (65KB, 2400+ lines)
+
 - Contains all 45+ rules with detailed examples
 - Organized by priority: Critical → High → Medium → Low
 
 **Categories (8):**
+
 1. Eliminating Waterfalls (CRITICAL) - `async-*` rules
-2. Bundle Size Optimization (CRITICAL) - `bundle-*` rules  
+2. Bundle Size Optimization (CRITICAL) - `bundle-*` rules
 3. Server-Side Performance (HIGH) - `server-*` rules
 4. Client-Side Data Fetching (MEDIUM-HIGH) - `client-*` rules
 5. Re-render Optimization (MEDIUM) - `rerender-*` rules
@@ -43,6 +60,7 @@ This file guides AI coding agents on context-efficient skill loading for this pr
 8. Advanced Patterns (LOW) - `advanced-*` rules
 
 **Loading Approach:**
+
 - Start with AGENTS.md overview for context
 - Reference specific rules from `rules/*.md` when applying patterns
 - Prioritize Critical/High impact rules for optimization tasks
@@ -54,16 +72,19 @@ This file guides AI coding agents on context-efficient skill loading for this pr
 **Location:** `.agents/skills/web-design-guidelines/`
 
 **When to Load:**
+
 - UI/UX code review requests
 - "Review my UI/design/accessibility"
 - Auditing for best practices
 - Checking compliance with web standards
 
 **Primary Reference:** `.agents/skills/web-design-guidelines/SKILL.md`
+
 - Instructions to fetch latest guidelines from Vercel's web-interface-guidelines repo
 - URL: `https://raw.githubusercontent.com/vercel-labs/web-interface-guidelines/main/command.md`
 
 **Categories Covered:**
+
 - Accessibility (ARIA, semantic HTML, keyboard navigation)
 - Focus states and visual indicators
 - Forms (autocomplete, validation, errors)
@@ -77,6 +98,7 @@ This file guides AI coding agents on context-efficient skill loading for this pr
 - Internationalization
 
 **Loading Approach:**
+
 - Fetch fresh guidelines when review is requested
 - Apply rules to specified files/patterns
 - Output findings in `file:line` format
@@ -88,6 +110,7 @@ This file guides AI coding agents on context-efficient skill loading for this pr
 **Location:** `.agents/skills/frontend-design/`
 
 **When to Load:**
+
 - Building new UI components/pages from scratch
 - Creating landing pages, dashboards, web apps
 - "Make this beautiful/polished/production-grade"
@@ -95,10 +118,12 @@ This file guides AI coding agents on context-efficient skill loading for this pr
 - Styling/beautifying existing UI
 
 **Primary Reference:** `.agents/skills/frontend-design/SKILL.md`
+
 - Self-contained design philosophy (no external dependencies)
 - Focused on creating distinctive, non-generic aesthetics
 
 **Design Principles:**
+
 - **Bold aesthetic direction** - Choose clear conceptual vision (minimal, maximalist, brutalist, etc.)
 - **Typography** - Distinctive, characterful fonts (avoid Inter, Roboto, Arial)
 - **Color & Theme** - Cohesive palettes with dominant colors + sharp accents
@@ -107,11 +132,13 @@ This file guides AI coding agents on context-efficient skill loading for this pr
 - **Visual Details** - Gradients, textures, patterns, shadows, custom effects
 
 **Anti-patterns to Avoid:**
+
 - Generic AI aesthetics (purple gradients on white, overused fonts)
 - Cookie-cutter layouts and components
 - Predictable, context-agnostic designs
 
 **Loading Approach:**
+
 - Load SKILL.md before starting UI work
 - Apply design thinking: understand purpose → choose bold direction → execute with precision
 - Match implementation complexity to aesthetic vision
@@ -123,6 +150,7 @@ This file guides AI coding agents on context-efficient skill loading for this pr
 **Location:** `.agents/skills/linear-design-system/`
 
 **When to Load:**
+
 - Adding new UI components to the design system
 - Modifying design tokens (colors, typography, spacing, shadows, motion, radius)
 - Validating component implementation against design system rules
@@ -132,29 +160,32 @@ This file guides AI coding agents on context-efficient skill loading for this pr
 - Ensuring components follow Linear interaction patterns
 
 **Primary Reference:** `.agents/skills/linear-design-system/SKILL.md`
+
 - Comprehensive guide for maintaining Linear design system
 - Token management and component creation patterns
 - Validation rules and migration strategies
 - Component structure with cva() and forwardRef patterns
 
 **Supporting Documentation:**
+
 - `TOKENS.md` - Complete token reference with usage examples
-  - Colors (backgrounds, text, borders, accent, status)
-  - Typography (font scales, weights, letter spacing)
-  - Spacing (8px-based scale)
-  - Radius (xs to full)
-  - Shadows (elevation levels)
-  - Motion (durations and easings)
+    - Colors (backgrounds, text, borders, accent, status)
+    - Typography (font scales, weights, letter spacing)
+    - Spacing (8px-based scale)
+    - Radius (xs to full)
+    - Shadows (elevation levels)
+    - Motion (durations and easings)
 - `COMPONENTS.md` - Component patterns and implementation examples
-  - Button, Badge, Card, Input templates
-  - Compound component patterns
-  - Variant composition with cva()
+    - Button, Badge, Card, Input templates
+    - Compound component patterns
+    - Variant composition with cva()
 - `VALIDATION.md` - Validation rules and checklists
-  - Automated validation scripts
-  - Code review checklists
-  - Common violations and fixes
+    - Automated validation scripts
+    - Code review checklists
+    - Common violations and fixes
 
 **Key Principles:**
+
 - **Token-first development** - Never hardcode design values, always use tokens
 - **Linear interaction patterns** - `active:scale-[0.97]` transform on interactive elements
 - **Background layering** - Use increasing layers for depth (primary → secondary → tertiary → quaternary)
@@ -164,16 +195,19 @@ This file guides AI coding agents on context-efficient skill loading for this pr
 - **Component structure** - Use cva(), forwardRef, TypeScript types
 
 **Design System Assets:**
+
 - Tokens location: `src/lib/design-system/tokens/`
 - Components location: `src/components/ui/`
 - Configuration: `tailwind.config.ts`, `src/app/globals.css`
 - Demo page: `src/app/design-system/page.tsx`
 
 **Source Data:**
+
 - Extracted from Linear.app production tokens
 - JSON files in `output/linear.app/` directory
 
 **Loading Approach:**
+
 - Load SKILL.md when creating or modifying components
 - Reference TOKENS.md for specific token values and usage patterns
 - Use COMPONENTS.md for implementation patterns and templates
@@ -231,6 +265,7 @@ When a new skill is added to `.agents/skills/`, update this file with:
 6. **Loading Approach** (how to efficiently use the skill's content)
 
 **Auto-Detection Process:**
+
 ```bash
 # Scan for new skills
 ls -d .agents/skills/*/ | while read skill_dir; do
@@ -242,6 +277,7 @@ done
 ```
 
 **Skill File Priority:**
+
 1. Look for `AGENTS.md` (comprehensive reference like react-best-practices)
 2. Fall back to `SKILL.md` (standard skill definition)
 3. Fall back to `README.md` (general documentation)
@@ -251,6 +287,7 @@ done
 ## Session Workflow
 
 **At Session Start:**
+
 1. Read this AGENTS.md file
 2. Scan `.agents/skills/` for available skills
 3. Load skill names and descriptions (minimal context)
@@ -258,13 +295,15 @@ done
 5. Keep skill catalog in memory
 
 **During Development:**
+
 1. Match task to relevant skills based on triggers
 2. Auto-invoke MCP tools for matching patterns (OpenAI docs, Next.js errors, database ops)
 3. Load full skill content when task relevance is high
-4. Reference detailed files (AGENTS.md, rules/*.md) only when applying specific patterns
+4. Reference detailed files (AGENTS.md, rules/\*.md) only when applying specific patterns
 5. Unload non-relevant skills to manage context
 
 **Context Budget Guidelines:**
+
 - Essential skills (react-best-practices for React projects): Keep loaded
 - Specialized skills (web-design-guidelines, frontend-design): Load on-demand
 - Detailed references: Load specific sections/rules as needed
@@ -281,6 +320,7 @@ done
 **MCP Tools:** OpenAI docs (auto), next-devtools (errors), Neon (database), shadcn (components), vercel (deploy)
 
 **Default Behavior:**
+
 - Apply react-best-practices patterns by default for all React/Next.js code
 - Load linear-design-system when creating/modifying UI components (highest priority for UI)
 - Auto-use OpenAI docs MCP for any OpenAI API implementation
@@ -291,4 +331,4 @@ done
 
 ---
 
-*This file should be kept in sync with `.agents/skills/` directory contents. Update whenever skills are added or removed.*
+_This file should be kept in sync with `.agents/skills/` directory contents. Update whenever skills are added or removed._
