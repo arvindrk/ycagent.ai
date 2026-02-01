@@ -1,4 +1,4 @@
-import { sql } from '../db';
+import { sql } from '../src/lib/db/client';
 
 async function runTestQueries() {
   console.log('Running test queries...\n');

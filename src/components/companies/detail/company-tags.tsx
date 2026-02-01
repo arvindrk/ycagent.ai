@@ -1,13 +1,12 @@
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { getCompany } from '@/lib/data/companies/get-company';
+import type { Company } from '@/types/company';
 
 interface CompanyTagsProps {
-  id: string;
+  company: Company;
 }
 
-export async function CompanyTags({ id }: CompanyTagsProps) {
-  const company = await getCompany(id);
+export function CompanyTags({ company }: CompanyTagsProps) {
 
   const hasIndustries = company.industries && company.industries.length > 0;
   const hasTags = company.tags && company.tags.length > 0;

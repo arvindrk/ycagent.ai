@@ -1,14 +1,14 @@
 import { neon, type NeonQueryFunction } from '@neondatabase/serverless';
+import { Pool } from 'pg';
+import { getEnv } from '../env';
 
 let clientInstance: NeonQueryFunction<false, false> | null = null;
 
 export function getDBClient(): NeonQueryFunction<false, false> {
-  if (!process.env.DATABASE_URL) {
-    throw new Error('DATABASE_URL environment variable is not set');
-  }
+  const env = getEnv();
 
   if (!clientInstance) {
-    clientInstance = neon(process.env.DATABASE_URL);
+    clientInstance = neon(env.DATABASE_URL);
   }
 
   return clientInstance;
@@ -17,9 +17,30 @@ export function getDBClient(): NeonQueryFunction<false, false> {
 export function createDBClient(
   connectionString?: string
 ): NeonQueryFunction<false, false> {
-  if (!connectionString && !process.env.DATABASE_URL) {
-    throw new Error('DATABASE_URL or connectionString is required');
+  if (connectionString) {
+    return neon(connectionString);
   }
 
-  return neon(connectionString || process.env.DATABASE_URL!);
+  const env = getEnv();
+  return neon(env.DATABASE_URL);
+}
+
+export const sql = getDBClient();
+
+export async function runMigration(migrationSql: string) {
+  const env = getEnv();
+
+  const pool = new Pool({
+    connectionString: env.DATABASE_URL,
+  });
+
+  try {
+    await pool.query(migrationSql);
+    console.log('Migration completed successfully');
+  } catch (error) {
+    console.error('Migration failed:', error);
+    throw error;
+  } finally {
+    await pool.end();
+  }
 }

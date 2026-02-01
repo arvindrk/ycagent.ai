@@ -1,13 +1,12 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Calendar, Users, MapPin, Briefcase } from 'lucide-react';
-import { getCompany } from '@/lib/data/companies/get-company';
+import type { Company } from '@/types/company';
 
 interface CompanyStatsProps {
-  id: string;
+  company: Company;
 }
 
-export async function CompanyStats({ id }: CompanyStatsProps) {
-  const company = await getCompany(id);
+export function CompanyStats({ company }: CompanyStatsProps) {
 
   const stats = [
     company.founded_at && {

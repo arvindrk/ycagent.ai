@@ -1,4 +1,4 @@
-import { sql } from '../db';
+import { sql } from '../src/lib/db/client';
 
 interface YCCompany {
   id: number;
@@ -31,43 +31,43 @@ interface YCCompany {
 
 async function fetchYCCompanies(): Promise<YCCompany[]> {
   console.log('Fetching YC companies from API...');
-  
+
   const MAX_RETRIES = 3;
   const TIMEOUT_MS = 60000;
-  
+
   for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
-      
+
       const response = await fetch(
         'https://yc-oss.github.io/api/companies/all.json',
         { signal: controller.signal }
       );
-      
+
       clearTimeout(timeoutId);
-      
+
       if (!response.ok) {
         throw new Error(`Failed to fetch YC companies: ${response.statusText}`);
       }
-      
+
       const companies = await response.json();
       console.log(`Fetched ${companies.length} companies`);
       return companies;
-      
+
     } catch (error) {
       console.error(`Attempt ${attempt}/${MAX_RETRIES} failed:`, error);
-      
+
       if (attempt === MAX_RETRIES) {
         throw new Error(`Failed to fetch after ${MAX_RETRIES} attempts`);
       }
-      
+
       const delay = attempt * 2000;
       console.log(`Retrying in ${delay / 1000}s...`);
       await new Promise(resolve => setTimeout(resolve, delay));
     }
   }
-  
+
   throw new Error('Unreachable');
 }
 
@@ -76,12 +76,12 @@ function validateYCCompany(yc: YCCompany): boolean {
     console.warn(`Invalid company data: missing required fields`, { id: yc.id, name: yc.name, slug: yc.slug });
     return false;
   }
-  
+
   if (yc.name.length > 255) {
     console.warn(`Company name too long: ${yc.name.substring(0, 50)}...`);
     return false;
   }
-  
+
   return true;
 }
 
@@ -119,14 +119,14 @@ function transformYCCompany(yc: YCCompany) {
 
 async function upsertCompanies(companies: ReturnType<typeof transformYCCompany>[]) {
   console.log(`Upserting ${companies.length} companies...`);
-  
+
   const BATCH_SIZE = 50;
   let successCount = 0;
   let errorCount = 0;
-  
+
   for (let i = 0; i < companies.length; i += BATCH_SIZE) {
     const batch = companies.slice(i, i + BATCH_SIZE);
-    
+
     try {
       for (const company of batch) {
         await sql`
@@ -168,42 +168,42 @@ async function upsertCompanies(companies: ReturnType<typeof transformYCCompany>[
             last_synced_at = NOW()
         `;
       }
-      
+
       successCount += batch.length;
       console.log(`Progress: ${successCount}/${companies.length} companies upserted`);
-      
+
     } catch (error) {
       errorCount += batch.length;
       console.error(`Failed to upsert batch ${i / BATCH_SIZE + 1}:`, error);
       console.error(`Companies in failed batch: ${batch.map(c => c.name).join(', ')}`);
-      
+
       if (errorCount > companies.length * 0.1) {
         throw new Error(`Too many failures: ${errorCount}/${companies.length}. Aborting.`);
       }
     }
   }
-  
+
   console.log(`\nUpsert complete: ${successCount} successful, ${errorCount} failed`);
 }
 
 async function main() {
   const startTime = Date.now();
-  
+
   try {
     console.log('Starting YC company ingestion...\n');
-    
+
     const ycCompanies = await fetchYCCompanies();
-    
+
     const validCompanies = ycCompanies.filter(validateYCCompany);
     console.log(`Validated: ${validCompanies.length}/${ycCompanies.length} companies passed validation\n`);
-    
+
     const transformedCompanies = validCompanies.map(transformYCCompany);
-    
+
     await upsertCompanies(transformedCompanies);
-    
+
     const result = await sql`SELECT COUNT(*) as count FROM companies WHERE source = 'yc'`;
     console.log(`\nTotal YC companies in database: ${result[0].count}`);
-    
+
     const duration = ((Date.now() - startTime) / 1000).toFixed(2);
     console.log(`\n✅ Ingestion completed successfully in ${duration}s!`);
   } catch (error) {

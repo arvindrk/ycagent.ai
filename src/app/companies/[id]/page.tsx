@@ -32,7 +32,7 @@ export default async function CompanyDetailPage({
 }: PageProps) {
   const { id } = await params;
   const { tab } = await searchParams;
-  
+
   const company = await getCompany(id);
 
   return (
@@ -57,19 +57,10 @@ export default async function CompanyDetailPage({
 
         <main id="main-content" className="space-y-8">
           <article className="space-y-8">
-            <Suspense fallback={<Skeleton className="h-32" />}>
-              <CompanyHeader id={id} />
-            </Suspense>
-
-            <Suspense fallback={<Skeleton className="h-24" />}>
-              <CompanyStats id={id} />
-            </Suspense>
-
+            <CompanyHeader company={company} />
+            <CompanyStats company={company} />
             <CompanyDescription company={company} />
-
-            <Suspense fallback={<Skeleton className="h-32" />}>
-              <CompanyTags id={id} />
-            </Suspense>
+            <CompanyTags company={company} />
           </article>
 
           <CompanyTabs company={company} activeTab={tab} />

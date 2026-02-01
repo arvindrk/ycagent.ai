@@ -1,4 +1,4 @@
-import { runMigration } from '../db';
+import { runMigration } from '../src/lib/db/client';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
@@ -8,7 +8,7 @@ async function main() {
 
     console.log(`Running migration: ${migrationFile}\n`);
 
-    const migrationPath = join(__dirname, '../db/migrations', migrationFile);
+    const migrationPath = join(__dirname, '../src/lib/db/migrations', migrationFile);
     const migrationSql = readFileSync(migrationPath, 'utf-8');
 
     await runMigration(migrationSql);

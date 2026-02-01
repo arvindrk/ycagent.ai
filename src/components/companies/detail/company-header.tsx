@@ -3,10 +3,10 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { ExternalLink, Building2 } from 'lucide-react';
-import { getCompany } from '@/lib/data/companies/get-company';
+import type { Company } from '@/types/company';
 
 interface CompanyHeaderProps {
-  id: string;
+  company: Company;
 }
 
 function formatBatch(batch: string): string {
@@ -39,9 +39,7 @@ function formatRelativeTime(dateString: string): string {
   return `${Math.floor(diffDays / 365)}\u00A0years ago`;
 }
 
-export async function CompanyHeader({ id }: CompanyHeaderProps) {
-  const company = await getCompany(id);
-
+export function CompanyHeader({ company }: CompanyHeaderProps) {
   return (
     <header className="space-y-6">
       <div className="flex flex-col md:flex-row items-start gap-6">
