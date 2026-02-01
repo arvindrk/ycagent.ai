@@ -1,8 +1,11 @@
+'use client';
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import type { CompanyListItem } from '@/types/company';
 import { Building2, MapPin } from 'lucide-react';
 import Image from 'next/image';
+import { useState } from 'react';
 
 interface CompanyCardProps {
   company: CompanyListItem;
@@ -25,6 +28,7 @@ function formatBatch(batch: string): string {
 }
 
 export function CompanyCard({ company }: CompanyCardProps) {
+  const [imageError, setImageError] = useState(false);
   const displayTags = company.tags.slice(0, 3);
   const hasMoreTags = company.tags.length > 3;
 
@@ -36,11 +40,12 @@ export function CompanyCard({ company }: CompanyCardProps) {
             {company.logo_url ? (
               <div className="w-12 h-12 rounded bg-muted flex items-center justify-center flex-shrink-0 overflow-hidden">
                 <Image
-                  src={company.logo_url}
+                  src={imageError ? '/yc.png' : company.logo_url}
                   alt={`${company.name} logo`}
                   width={48}
                   height={48}
-                  className="object-contain"
+                  className={`object-contain ${imageError ? 'grayscale opacity-60' : ''}`}
+                  onError={() => setImageError(true)}
                 />
               </div>
             ) : (
