@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import type { CompanyListItem } from '@/types/company';
@@ -33,7 +34,13 @@ export function CompanyCard({ company }: CompanyCardProps) {
   const hasMoreTags = company.tags.length > 3;
 
   return (
-    <Card className="flex flex-col h-full transition-shadow hover:shadow-md">
+    <Link
+      href={`/companies/${company.id}`}
+      prefetch={false}
+      className="block transition-shadow hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-lg"
+      aria-label={`View details for ${company.name}`}
+    >
+      <Card className="flex flex-col h-full transition-shadow hover:shadow-md">
       <CardHeader className="space-y-2">
         <div className="flex items-start justify-between gap-2">
           <div className="flex items-center gap-3 min-w-0 flex-1">
@@ -103,5 +110,6 @@ export function CompanyCard({ company }: CompanyCardProps) {
         )}
       </CardContent>
     </Card>
+    </Link>
   );
 }

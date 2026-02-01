@@ -39,7 +39,7 @@ export function Pagination({
 
       <div className="flex items-center gap-2">
         <Button
-          variant="outline"
+          variant="secondary"
           size="sm"
           onClick={onPrevious}
           disabled={!hasPrevious || isLoading}
@@ -54,7 +54,7 @@ export function Pagination({
         </div>
 
         <Button
-          variant="outline"
+          variant="secondary"
           size="sm"
           onClick={onNext}
           disabled={!hasMore || isLoading}
