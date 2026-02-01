@@ -3,8 +3,9 @@
 import { useRouter, usePathname } from 'next/navigation';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
-import { Search, GitCompare } from 'lucide-react';
+import { GitCompare } from 'lucide-react';
 import CompanyDetailsTab from './tabs/company-details-tab';
+import { ResearchContainer } from '@/components/research/research-container';
 import type { Company } from '@/types/company';
 
 interface CompanyTabsProps {
@@ -38,14 +39,7 @@ export function CompanyTabs({ company, activeTab = 'details' }: CompanyTabsProps
       </TabsContent>
 
       <TabsContent value="research" className="mt-6">
-        <Alert>
-          <Search className="w-5 h-5" aria-hidden="true" />
-          <AlertTitle>Deep Research Coming Soon</AlertTitle>
-          <AlertDescription>
-            Trigger a research run to analyze: product signals, team insights,
-            funding history, hiring activity, and press coverage.
-          </AlertDescription>
-        </Alert>
+        <ResearchContainer company={company} />
       </TabsContent>
 
       <TabsContent value="similar" className="mt-6">
