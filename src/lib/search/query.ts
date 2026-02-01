@@ -1,13 +1,12 @@
 import { getDBClient } from '../db/client';
-import { SEARCH_SCORING, HNSW_CONFIG } from './scoring/weights';
+import { HNSW_CONFIG, TIER_META, type TierKey } from './scoring/weights';
 import { buildFilterSQL } from './filters/build';
 import type { ParsedFilters } from './filters/parse';
 
 export interface SearchParams {
   query: string;
   filters: ParsedFilters;
-  limit: number;
-  offset: number;
+  limit?: number;
 }
 
 export interface SearchResult {
@@ -29,13 +28,16 @@ export interface SearchResult {
   name_score: number;
   text_score: number;
   final_score: number;
+  tier: TierKey;
+  tier_label: string;
+  tier_order: number;
 }
 
 export async function searchCompanies(
   params: SearchParams,
   embedding: number[]
 ): Promise<SearchResult[]> {
-  const { query, filters, limit, offset } = params;
+  const { query, filters, limit = 50 } = params;
   const sql = getDBClient();
 
   const embeddingJSON = JSON.stringify(embedding);
@@ -47,8 +49,6 @@ export async function searchCompanies(
     embeddingJSON,
     query,
     ...filterConditions.values,
-    limit,
-    offset,
   ];
 
   const queryText = `
@@ -59,43 +59,41 @@ export async function searchCompanies(
       (1 - (embedding <=> $1::vector)) AS semantic_score,
       similarity(name, $2) AS name_score,
       ts_rank_cd(search_vector, plainto_tsquery('english', $2)) AS text_score,
+      CASE
+        WHEN similarity(name, $2) >= 0.9 THEN 'exact_match'
+        WHEN (1 - (embedding <=> $1::vector)) >= 0.7 THEN 'high_confidence'
+        WHEN (1 - (embedding <=> $1::vector)) >= 0.5 THEN 'strong_match'
+        WHEN (1 - (embedding <=> $1::vector)) >= 0.3 THEN 'relevant'
+        ELSE 'keyword_match'
+      END AS tier,
       (
-        (1 - (embedding <=> $1::vector)) * ${SEARCH_SCORING.SEMANTIC_WEIGHT} + 
-        similarity(name, $2) * ${SEARCH_SCORING.NAME_WEIGHT} +
-        ts_rank_cd(search_vector, plainto_tsquery('english', $2)) * ${SEARCH_SCORING.FULLTEXT_WEIGHT}
-      ) AS final_score
+        (1 - (embedding <=> $1::vector)) * 0.8 + 
+        similarity(name, $2) * 0.15 +
+        ts_rank_cd(search_vector, plainto_tsquery('english', $2)) * 0.05
+      ) * 
+      CASE
+        WHEN similarity(name, $2) >= 0.9 THEN 2.5
+        WHEN (1 - (embedding <=> $1::vector)) >= 0.7 THEN 1.5
+        WHEN (1 - (embedding <=> $1::vector)) >= 0.5 THEN 1.0
+        WHEN (1 - (embedding <=> $1::vector)) >= 0.3 THEN 0.8
+        ELSE 0.5
+      END AS final_score
     FROM companies
     WHERE ${filterConditions.sql}
+      AND (
+        (1 - (embedding <=> $1::vector)) >= 0.25
+        OR similarity(name, $2) >= 0.7
+      )
     ORDER BY final_score DESC
-    LIMIT $${values.length - 1}
-    OFFSET $${values.length}
+    LIMIT ${limit}
   `;
 
   const results = await sql.query(queryText, values);
-  return results as SearchResult[];
+
+  return results.map(row => ({
+    ...row,
+    tier_label: TIER_META[row.tier as TierKey].label,
+    tier_order: TIER_META[row.tier as TierKey].order,
+  })) as SearchResult[];
 }
 
-export async function getSearchCount(
-  filters: ParsedFilters,
-  embedding: number[]
-): Promise<number> {
-  const sql = getDBClient();
-
-  const embeddingJSON = JSON.stringify(embedding);
-
-  const filterConditions = buildFilterSQL(filters, 1);
-  const values: (string | number | boolean | string[])[] = [
-    embeddingJSON,
-    ...filterConditions.values,
-  ];
-
-  const queryText = `
-    SELECT COUNT(*)::int as count
-    FROM companies
-    WHERE ${filterConditions.sql}
-      AND (1 - (embedding <=> $1::vector)) >= ${SEARCH_SCORING.MIN_SEMANTIC_SCORE}
-  `;
-
-  const result = await sql.query(queryText, values);
-  return result[0].count;
-}

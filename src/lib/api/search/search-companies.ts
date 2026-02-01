@@ -5,14 +5,13 @@ import type { SearchCompaniesParams, SearchResponse } from './types';
 export async function searchCompanies(
   params: SearchCompaniesParams
 ): Promise<SearchResponse> {
-  const { q, limit = 100, offset = 0 } = params;
+  const { q, limit = 50 } = params;
 
   if (!q || q.trim().length === 0) {
     return {
       data: [],
       total: 0,
       limit,
-      offset,
       query_time_ms: 0,
     };
   }
@@ -20,7 +19,6 @@ export async function searchCompanies(
   const searchParams = new URLSearchParams({
     q: q.trim(),
     limit: limit.toString(),
-    offset: offset.toString(),
   });
 
   const baseUrl =

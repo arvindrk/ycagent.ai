@@ -1,40 +1,53 @@
-export const SEARCH_SCORING = {
-  SEMANTIC_WEIGHT: 0.8,
-  NAME_WEIGHT: 0.15,
-  FULLTEXT_WEIGHT: 0.05,
-
-  MIN_SEMANTIC_SCORE: 0.1,
-  MIN_NAME_SCORE: 0.3,
-  MIN_TOTAL_SCORE: 0.05,
-} as const;
-
 export const HNSW_CONFIG = {
   EF_SEARCH: 200,
 } as const;
 
-export function calculateFinalScore(
-  semanticScore: number,
-  nameScore: number,
-  textScore: number
-): number {
-  return (
-    semanticScore * SEARCH_SCORING.SEMANTIC_WEIGHT +
-    nameScore * SEARCH_SCORING.NAME_WEIGHT +
-    textScore * SEARCH_SCORING.FULLTEXT_WEIGHT
-  );
-}
+export const TIER_META = {
+  exact_match: {
+    label: 'Exact Match',
+    order: 1,
+    icon: 'Target',
+    color: 'text-accent',
+    bgColor: 'bg-accent-tint',
+    borderColor: 'border-accent/30',
+    description: 'Perfect name match',
+  },
+  high_confidence: {
+    label: 'Highly Relevant',
+    order: 2,
+    icon: 'Sparkles',
+    color: 'text-blue',
+    bgColor: 'bg-blue-500/10',
+    borderColor: 'border-blue-500/30',
+    description: 'Highly semantically relevant',
+  },
+  strong_match: {
+    label: 'Strong Match',
+    order: 3,
+    icon: 'CheckCircle2',
+    color: 'text-green',
+    bgColor: 'bg-green-500/10',
+    borderColor: 'border-green-500/30',
+    description: 'Strong semantic match',
+  },
+  relevant: {
+    label: 'Relevant',
+    order: 4,
+    icon: 'Circle',
+    color: 'text-text-secondary',
+    bgColor: 'bg-bg-tertiary',
+    borderColor: 'border-primary',
+    description: 'Moderately relevant',
+  },
+  keyword_match: {
+    label: 'Keyword Match',
+    order: 5,
+    icon: 'Hash',
+    color: 'text-text-tertiary',
+    bgColor: 'bg-bg-secondary',
+    borderColor: 'border-primary',
+    description: 'Keyword matches only',
+  },
+} as const;
 
-export function meetsMinimumQuality(
-  semanticScore: number,
-  nameScore: number,
-  textScore: number
-): boolean {
-  const finalScore = calculateFinalScore(semanticScore, nameScore, textScore);
-
-  return (
-    finalScore >= SEARCH_SCORING.MIN_TOTAL_SCORE &&
-    (semanticScore >= SEARCH_SCORING.MIN_SEMANTIC_SCORE ||
-      nameScore >= SEARCH_SCORING.MIN_NAME_SCORE ||
-      textScore > 0)
-  );
-}
+export type TierKey = keyof typeof TIER_META;

@@ -13,8 +13,7 @@ export const searchInputSchema = z.object({
   is_hiring: z.enum(['true', 'false']).optional(),
   is_nonprofit: z.enum(['true', 'false']).optional(),
   location: z.string().optional(),
-  limit: z.coerce.number().int().min(1).max(100).default(20),
-  offset: z.coerce.number().int().min(0).default(0),
+  limit: z.coerce.number().int().min(1).max(50).default(50),
 });
 
 export type SearchInput = z.infer<typeof searchInputSchema>;
@@ -23,7 +22,6 @@ export const searchResponseSchema = z.object({
   data: z.array(z.any()),
   total: z.number(),
   limit: z.number(),
-  offset: z.number(),
   query_time_ms: z.number(),
 });
 

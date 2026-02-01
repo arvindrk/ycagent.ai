@@ -21,10 +21,12 @@ export interface SearchResult {
   name_score: number;
   text_score: number;
   final_score: number;
+  tier: string;
+  tier_label: string;
+  tier_order: number;
 }
 
 export interface SearchCompaniesParams {
   q: string;
   limit?: number;
-  offset?: number;
 }
