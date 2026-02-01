@@ -1,8 +1,8 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { searchCompanies } from '@/lib/api/search/search-companies';
-import type { SearchCompaniesParams } from '@/lib/api/search/types';
+import { searchCompanies } from '@/lib/data/search/search-companies';
+import type { SearchCompaniesParams } from '@/lib/data/search/types';
 
 export function useSearch(params: SearchCompaniesParams) {
   const { q, limit = 50 } = params;

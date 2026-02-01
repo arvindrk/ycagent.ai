@@ -4,7 +4,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Badge } from '@/components/ui/badge';
 import { Target, Sparkles, CheckCircle2, Circle, Hash } from 'lucide-react';
 import { CompaniesGrid } from '@/components/companies/companies-grid';
-import type { SearchResult } from '@/lib/api/search/types';
+import type { SearchResult } from '@/lib/data/search/types';
 
 interface TieredResultsDisplayProps {
   results: SearchResult[];
