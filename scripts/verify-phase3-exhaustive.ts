@@ -1,4 +1,4 @@
-import { searchCompanies, getSearchCount, type SearchResult } from '../src/lib/search/query';
+import { searchCompanies, type SearchResult } from '../src/lib/search/query';
 import { parseSearchFilters } from '../src/lib/search/filters/parse';
 import { generateEmbedding } from '../src/lib/search/embeddings/generate';
 
@@ -431,15 +431,12 @@ async function runTest(testCase: TestCase): Promise<TestResult> {
 
     const embedding = await generateEmbedding(testCase.query);
 
-    const [results, count] = await Promise.all([
-      searchCompanies({
-        query: testCase.query,
-        filters,
-        limit: testCase.minResults || 50,
-        offset: 0,
-      }, embedding),
-      getSearchCount(filters, embedding),
-    ]);
+    const results = await searchCompanies({
+      query: testCase.query,
+      filters,
+      limit: testCase.minResults || 50,
+    }, embedding);
+    const count = results.length;
 
     const timingMs = Date.now() - startTime;
 

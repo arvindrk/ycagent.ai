@@ -19,13 +19,13 @@ interface Company {
 async function main() {
   console.log('🚀 Starting embedding generation...\n');
 
-  const companies = await sql<Company[]>`
+  const companies = await sql`
     SELECT id, name, one_liner, long_description, tags, 
            industries, all_locations, batch
     FROM companies 
     WHERE embedding IS NULL
     ORDER BY created_at DESC
-  `;
+  ` as Company[];
 
   if (companies.length === 0) {
     console.log('✅ All companies already have embeddings');
