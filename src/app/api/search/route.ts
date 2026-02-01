@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import { searchCompanies, getSearchCount } from '@/lib/search/query';
+import { searchCompanies } from '@/lib/search/query';
 import { parseSearchFilters } from '@/lib/search/filters/parse';
 import { generateEmbedding } from '@/lib/search/embeddings/generate';
 import { searchInputSchema } from '@/lib/validations/search.schema';
@@ -17,23 +17,18 @@ export async function GET(request: NextRequest) {
 
     const embedding = await generateEmbedding(validatedParams.q);
 
-    const [results, total] = await Promise.all([
-      searchCompanies({
-        query: validatedParams.q,
-        filters,
-        limit: validatedParams.limit,
-        offset: validatedParams.offset,
-      }, embedding),
-      getSearchCount(filters, embedding),
-    ]);
+    const results = await searchCompanies({
+      query: validatedParams.q,
+      filters,
+      limit: validatedParams.limit,
+    }, embedding);
 
     const queryTime = Date.now() - startTime;
 
     return NextResponse.json({
       data: results,
-      total,
+      total: results.length,
       limit: validatedParams.limit,
-      offset: validatedParams.offset,
       query_time_ms: queryTime,
     });
   } catch (error) {

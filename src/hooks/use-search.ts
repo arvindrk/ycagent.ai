@@ -5,11 +5,11 @@ import { searchCompanies } from '@/lib/api/search/search-companies';
 import type { SearchCompaniesParams } from '@/lib/api/search/types';
 
 export function useSearch(params: SearchCompaniesParams) {
-  const { q, limit = 100, offset = 0 } = params;
+  const { q, limit = 50 } = params;
 
   return useQuery({
-    queryKey: ['search', q, limit, offset],
-    queryFn: () => searchCompanies({ q, limit, offset }),
+    queryKey: ['search', q, limit],
+    queryFn: () => searchCompanies({ q, limit }),
     enabled: q.trim().length > 0,
     staleTime: 5 * 60 * 1000,
     gcTime: 30 * 60 * 1000,

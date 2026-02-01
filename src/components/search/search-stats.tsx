@@ -31,7 +31,7 @@ export function SearchStats({
   return (
     <div className="flex items-center justify-between h-5">
       <p className="text-sm text-text-secondary">
-        Found{' '}
+        Showing{' '}
         <span className="font-medium text-text-primary">
           {total.toLocaleString()}
         </span>{' '}
