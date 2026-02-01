@@ -55,7 +55,7 @@ function PaginationLink({
       data-active={isActive}
       className={cn(
         buttonVariants({
-          variant: isActive ? "secondary" : "ghost",
+          variant: isActive ? "accent" : "ghost",
           size,
         }),
         className

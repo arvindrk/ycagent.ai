@@ -31,11 +31,11 @@ export function SearchStats({
   return (
     <div className="flex items-center justify-between h-5">
       <p className="text-sm text-text-secondary">
-        Showing{' '}
+        Showing top{' '}
         <span className="font-medium text-text-primary">
           {total.toLocaleString()}
         </span>{' '}
-        {total === 1 ? 'company' : 'companies'} for{' '}
+        {total === 1 ? 'result' : 'results'} for{' '}
         <span className="font-medium text-text-primary">&quot;{query}&quot;</span>
       </p>
       <p className="text-xs text-text-tertiary">{queryTime}ms</p>
