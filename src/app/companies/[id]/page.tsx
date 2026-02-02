@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { getCompany } from '@/lib/data/companies/get-company';
+import { getCompany } from '@/lib/api/companies/get-company';
 import { CompanyBreadcrumb } from '@/components/companies/detail/company-breadcrumb';
 import { CompanyHeader } from '@/components/companies/detail/company-header';
 import { CompanyStats } from '@/components/companies/detail/company-stats';

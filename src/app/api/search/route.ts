@@ -4,7 +4,7 @@ import { parseSearchFilters } from '@/lib/search/filters/parse';
 import { generateEmbedding } from '@/lib/search/embeddings/generate';
 import { searchInputSchema } from '@/lib/validations/search.schema';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 export async function GET(request: NextRequest) {
   const startTime = Date.now();

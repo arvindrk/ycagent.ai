@@ -5,7 +5,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { GitCompare } from 'lucide-react';
 import CompanyDetailsTab from './tabs/company-details-tab';
-import { ResearchContainer } from '@/components/research/research-container';
+import { DeepResearchContainer } from '@/components/deep-research/deep-research-container';
 import type { Company } from '@/types/company';
 
 interface CompanyTabsProps {
@@ -30,7 +30,7 @@ export function CompanyTabs({ company, activeTab = 'details' }: CompanyTabsProps
     <Tabs value={activeTab} onValueChange={handleTabChange}>
       <TabsList aria-label="Company information sections">
         <TabsTrigger value="details">Details</TabsTrigger>
-        <TabsTrigger value="research">Research Dossier</TabsTrigger>
+        <TabsTrigger value="research">Deep Research Dossier</TabsTrigger>
         <TabsTrigger value="similar">Similar Companies</TabsTrigger>
       </TabsList>
 
@@ -39,7 +39,7 @@ export function CompanyTabs({ company, activeTab = 'details' }: CompanyTabsProps
       </TabsContent>
 
       <TabsContent value="research" className="mt-6">
-        <ResearchContainer company={company} />
+        <DeepResearchContainer company={company} />
       </TabsContent>
 
       <TabsContent value="similar" className="mt-6">

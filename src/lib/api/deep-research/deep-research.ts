@@ -1,7 +1,7 @@
 import type { Company } from "@/types/company";
-import type { TriggerResearchRequest } from "@/lib/validations/research.schema";
+import type { TriggerDeepResearchRequest } from "@/lib/validations/deep-research.schema";
 
-export interface TriggerResearchResponse {
+export interface TriggerDeepResearchResponse {
   success: boolean;
   runId: string;
   publicAccessToken: string;
@@ -9,28 +9,28 @@ export interface TriggerResearchResponse {
   message: string;
 }
 
-export interface TriggerResearchError {
+export interface TriggerDeepResearchError {
   success: false;
   error: string;
   details?: string;
 }
 
-export class ResearchApiError extends Error {
+export class DeepResearchApiError extends Error {
   constructor(
     message: string,
     public statusCode: number,
     public details?: string
   ) {
     super(message);
-    this.name = "ResearchApiError";
+    this.name = "DeepResearchApiError";
   }
 }
 
-export async function triggerResearch(
+export async function triggerDeepResearch(
   company: Company,
   options: { forceRefresh?: boolean } = {}
-): Promise<TriggerResearchResponse> {
-  const payload: TriggerResearchRequest = {
+): Promise<TriggerDeepResearchResponse> {
+  const payload: TriggerDeepResearchRequest = {
     company: {
       companyId: company.id,
       companyName: company.name,
@@ -42,7 +42,7 @@ export async function triggerResearch(
     forceRefresh: options.forceRefresh ?? false,
   };
 
-  const response = await fetch("/api/research/trigger", {
+  const response = await fetch("/api/deep-research/trigger", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -51,8 +51,8 @@ export async function triggerResearch(
   const data = await response.json();
 
   if (!response.ok) {
-    throw new ResearchApiError(
-      data.error || "Failed to trigger research",
+    throw new DeepResearchApiError(
+      data.error || "Failed to trigger deep research",
       response.status,
       data.details
     );
@@ -61,13 +61,13 @@ export async function triggerResearch(
   return data;
 }
 
-export async function getResearchStatus(runId: string) {
-  const response = await fetch(`/api/research/status?runId=${runId}`);
+export async function getDeepResearchStatus(runId: string) {
+  const response = await fetch(`/api/deep-research/status?runId=${runId}`);
 
   if (!response.ok) {
     const data = await response.json();
-    throw new ResearchApiError(
-      data.error || "Failed to get research status",
+    throw new DeepResearchApiError(
+      data.error || "Failed to get deep research status",
       response.status
     );
   }

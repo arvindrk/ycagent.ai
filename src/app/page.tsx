@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { getCompanies } from '@/lib/data/companies/get-companies';
+import { getCompanies } from '@/lib/api/companies/get-companies';
 import { CompaniesGrid } from '@/components/companies/companies-grid';
 import { CompaniesLoading } from '@/components/companies/companies-loading';
 import { CompaniesPagination } from '@/components/companies/companies-pagination';

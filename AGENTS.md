@@ -79,7 +79,7 @@ Skills and MCP tools are automatically applied based on file patterns via Cursor
 3. Agent checks: shadcn MCP for existing Button implementations
 4. Agent applies: Performance patterns + Linear tokens + accessibility
 
-**Editing `src/trigger/research.ts`**:
+**Editing `src/trigger/deep-research.ts`**:
 
 1. Cursor loads: `trigger-patterns.mdc` + `mcp-tools.mdc`
 2. Agent references: `trigger` skill (basic.mdc or advanced-tasks.mdc)

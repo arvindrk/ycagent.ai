@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const companyResearchPayloadSchema = z.object({
+export const companyDeepResearchPayloadSchema = z.object({
   companyId: z.string().uuid('Invalid company ID format'),
   companyName: z.string().min(1, 'Company name is required'),
   companyWebsite: z.string().url().optional(),
@@ -9,12 +9,12 @@ export const companyResearchPayloadSchema = z.object({
   companyTags: z.array(z.string()).optional(),
 });
 
-export const triggerResearchRequestSchema = z.object({
-  company: companyResearchPayloadSchema,
+export const triggerDeepResearchRequestSchema = z.object({
+  company: companyDeepResearchPayloadSchema,
   forceRefresh: z.boolean().optional().default(false),
 });
 
-export const researchStepResultSchema = z.object({
+export const deepResearchStepResultSchema = z.object({
   step: z.number(),
   name: z.string(),
   status: z.enum(['completed', 'failed', 'skipped']),
@@ -23,17 +23,17 @@ export const researchStepResultSchema = z.object({
   durationMs: z.number(),
 });
 
-export const researchOutputSchema = z.object({
+export const deepResearchOutputSchema = z.object({
   companyId: z.string(),
   companyName: z.string(),
-  steps: z.array(researchStepResultSchema),
+  steps: z.array(deepResearchStepResultSchema),
   summary: z.string(),
   totalDurationMs: z.number(),
   completedAt: z.string(),
   cached: z.boolean(),
 });
 
-export type CompanyResearchPayload = z.infer<typeof companyResearchPayloadSchema>;
-export type TriggerResearchRequest = z.infer<typeof triggerResearchRequestSchema>;
-export type ResearchStepResult = z.infer<typeof researchStepResultSchema>;
-export type ResearchOutput = z.infer<typeof researchOutputSchema>;
+export type CompanyDeepResearchPayload = z.infer<typeof companyDeepResearchPayloadSchema>;
+export type TriggerDeepResearchRequest = z.infer<typeof triggerDeepResearchRequestSchema>;
+export type DeepResearchStepResult = z.infer<typeof deepResearchStepResultSchema>;
+export type DeepResearchOutput = z.infer<typeof deepResearchOutputSchema>;

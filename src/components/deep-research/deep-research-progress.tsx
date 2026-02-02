@@ -1,28 +1,28 @@
 "use client";
 
 import { useRealtimeRun } from "@trigger.dev/react-hooks";
-import type { researchOrchestrator } from "@/trigger/research-orchestrator";
+import type { deepResearchOrchestrator } from "@/trigger/deep-research-orchestrator";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 
-interface ResearchProgressProps {
+interface DeepResearchProgressProps {
   runId: string;
   accessToken: string;
   onComplete?: (output: unknown) => void;
 }
 
-export function ResearchProgress({
+export function DeepResearchProgress({
   runId,
   accessToken,
   onComplete,
-}: ResearchProgressProps) {
-  const { run, error: runError } = useRealtimeRun<typeof researchOrchestrator>(
+}: DeepResearchProgressProps) {
+  const { run, error: runError } = useRealtimeRun<typeof deepResearchOrchestrator>(
     runId,
     {
       accessToken,
       onComplete: (completedRun) => {
-        console.log("Research completed:", completedRun.output);
+        console.log("Deep research completed:", completedRun.output);
         onComplete?.(completedRun.output);
       },
     }
@@ -83,7 +83,7 @@ export function ResearchProgress({
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-lg-semibold text-text-primary">
-              Research Progress
+              Deep Research Progress
             </h3>
             <p className="text-sm-regular text-text-secondary mt-1">
               {run.metadata?.companyName as string}
@@ -174,7 +174,7 @@ export function ResearchProgress({
         {isFailed && (
           <div className="p-4 rounded-md bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800">
             <p className="text-sm-semibold text-text-danger">
-              Research task failed
+              Deep research task failed
             </p>
             <p className="text-xs-regular text-text-secondary mt-1">
               Please try again or contact support if the issue persists.

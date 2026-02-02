@@ -1,22 +1,22 @@
-# Architecture Improvements: Decoupled Research Orchestrator
+# Architecture Improvements: Decoupled Deep Research Orchestrator
 
 ## Summary of Changes
 
-Successfully refactored the research orchestrator to follow separation of concerns and best practices.
+Successfully refactored the deep research orchestrator to follow separation of concerns and best practices.
 
 ---
 
 ## Files Created (2 new)
 
-### 1. `src/lib/api/research.ts` (NEW)
+### 1. `src/lib/api/deep-research/deep-research.ts` (NEW)
 
 **Purpose:** Pure API client functions
 
 **Exports:**
 
-- `triggerResearch(company, options)` - Trigger research task
-- `getResearchStatus(runId)` - Get run status
-- `ResearchApiError` - Custom error class
+- `triggerDeepResearch(company, options)` - Trigger deep research task
+- `getDeepResearchStatus(runId)` - Get run status
+- `DeepResearchApiError` - Custom error class
 - Type interfaces for requests/responses
 
 **Benefits:**
@@ -28,7 +28,7 @@ Successfully refactored the research orchestrator to follow separation of concer
 
 ---
 
-### 2. `src/hooks/use-trigger-research.ts` (NEW)
+### 2. `src/hooks/use-trigger-deep-research.ts` (NEW)
 
 **Purpose:** React Query mutation hook
 
@@ -51,7 +51,7 @@ Successfully refactored the research orchestrator to follow separation of concer
 
 ## Files Updated (5 modified)
 
-### 3. `src/components/research/research-trigger-button.tsx` (UPDATED)
+### 3. `src/components/deep-research/deep-research-trigger-button.tsx` (UPDATED)
 
 **Changes:**
 
@@ -61,7 +61,7 @@ Successfully refactored the research orchestrator to follow separation of concer
 **Improvements:**
 
 - Removed: `useState`, manual fetch, try-catch, loading management
-- Added: `useTriggerResearch` hook
+- Added: `useTriggerDeepResearch` hook
 - Simpler: Component only handles UI rendering
 - React Query provides: `isPending`, `error`, `mutate()`
 
@@ -69,7 +69,7 @@ Successfully refactored the research orchestrator to follow separation of concer
 
 ---
 
-### 4. `src/trigger/research-orchestrator.ts` (UPDATED)
+### 4. `src/trigger/deep-research-orchestrator.ts` (UPDATED)
 
 **Changes:**
 
@@ -87,7 +87,7 @@ Successfully refactored the research orchestrator to follow separation of concer
 
 ---
 
-### 5. `src/app/api/research/trigger/route.ts` (UPDATED)
+### 5. `src/app/api/deep-research/trigger/route.ts` (UPDATED)
 
 **Changes:**
 
@@ -101,7 +101,7 @@ Successfully refactored the research orchestrator to follow separation of concer
 
 ---
 
-### 6. `src/app/api/research/status/route.ts` (UPDATED)
+### 6. `src/app/api/deep-research/status/route.ts` (UPDATED)
 
 **Changes:**
 
@@ -114,7 +114,7 @@ Successfully refactored the research orchestrator to follow separation of concer
 
 ---
 
-### 7. `src/components/research/research-container.tsx` (UPDATED)
+### 7. `src/components/deep-research/deep-research-container.tsx` (UPDATED)
 
 **Changes:**
 
@@ -178,10 +178,10 @@ Successfully refactored the research orchestrator to follow separation of concer
 
 ```typescript
 // Easy to test - no React dependencies
-test('triggerResearch sends correct payload', async () => {
+test('triggerDeepResearch sends correct payload', async () => {
     const mockCompany = { id: '123', name: 'Acme' };
-    await triggerResearch(mockCompany);
-    expect(fetch).toHaveBeenCalledWith('/api/research/trigger', {
+    await triggerDeepResearch(mockCompany);
+    expect(fetch).toHaveBeenCalledWith('/api/deep-research/trigger', {
         method: 'POST',
         body: expect.stringContaining('123'),
     });
@@ -192,8 +192,8 @@ test('triggerResearch sends correct payload', async () => {
 
 ```typescript
 // Test with React Query provider
-test('useTriggerResearch manages loading state', async () => {
-    const { result } = renderHook(() => useTriggerResearch());
+test('useTriggerDeepResearch manages loading state', async () => {
+    const { result } = renderHook(() => useTriggerDeepResearch());
     act(() => result.current.mutate({ company }));
     expect(result.current.isPending).toBe(true);
 });
@@ -204,9 +204,9 @@ test('useTriggerResearch manages loading state', async () => {
 ```typescript
 // Mock the hook, test UI only
 test('button shows loading state', () => {
-  vi.mock('@/hooks/use-trigger-research');
-  render(<ResearchTriggerButton company={company} />);
-  expect(screen.getByText('Starting Research...')).toBeInTheDocument();
+  vi.mock('@/hooks/use-trigger-deep-research');
+  render(<DeepResearchTriggerButton company={company} />);
+  expect(screen.getByText('Starting Deep Research...')).toBeInTheDocument();
 });
 ```
 
@@ -250,13 +250,13 @@ test('button shows loading state', () => {
 
 ```typescript
 // Before: Manual type annotation
-export const researchOrchestrator = task({
-  run: async (payload: CompanyResearchPayload) => { ... }
+export const deepResearchOrchestrator = task({
+  run: async (payload: CompanyDeepResearchPayload) => { ... }
 });
 
 // After: Schema validation
-export const researchOrchestrator = schemaTask({
-  schema: companyResearchPayloadSchema,  // ← Validates + infers type
+export const deepResearchOrchestrator = schemaTask({
+  schema: companyDeepResearchPayloadSchema,  // ← Validates + infers type
   run: async (payload) => { ... }        // ← Type auto-inferred
 });
 ```
@@ -266,7 +266,7 @@ export const researchOrchestrator = schemaTask({
 ```typescript
 catchError: async ({ error, ctx }) => {
     // Structured logging
-    logger.error('Research orchestration failed', {
+    logger.error('Deep research orchestration failed', {
         error: errorMessage,
         runId: ctx.run.id,
         attemptNumber: ctx.attempt.number,
@@ -314,7 +314,9 @@ catchError: async ({ error, ctx }) => {
 
 ```typescript
 // Reuse API client:
-const researches = await Promise.all(companies.map((c) => triggerResearch(c)));
+const researches = await Promise.all(
+    companies.map((c) => triggerDeepResearch(c))
+);
 ```
 
 ### 3. Add Optimistic Updates
@@ -323,7 +325,7 @@ const researches = await Promise.all(companies.map((c) => triggerResearch(c)));
 // In hook:
 onMutate: async (variables) => {
     // Show optimistic UI before API call
-    setLocalState('Research starting...');
+    setLocalState('Deep research starting...');
 };
 ```
 
@@ -357,7 +359,7 @@ onMutate: async (variables) => {
 
 Test these scenarios after implementation:
 
-- ✅ Single click triggers research
+- ✅ Single click triggers deep research
 - ✅ Double-click only triggers once (React Query deduplication)
 - ✅ Loading state shows correctly
 - ✅ Error messages display properly
@@ -365,7 +367,7 @@ Test these scenarios after implementation:
 - ✅ catchError logs errors with context
 - ✅ Metadata includes error details on failure
 - ✅ Component re-renders on state changes
-- ✅ Can trigger research from multiple components
+- ✅ Can trigger deep research from multiple components
 - ✅ Runtime declaration works in production
 
 ---

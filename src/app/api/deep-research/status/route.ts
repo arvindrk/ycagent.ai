@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { runs } from "@trigger.dev/sdk/v3";
-import type { researchOrchestrator } from "@/trigger/research-orchestrator";
+import type { deepResearchOrchestrator } from "@/trigger/deep-research-orchestrator";
 import { z } from 'zod';
 
 export const runtime = 'nodejs';
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     const rawParams = Object.fromEntries(searchParams);
     const { runId } = statusQuerySchema.parse(rawParams);
 
-    const run = await runs.retrieve<typeof researchOrchestrator>(runId);
+    const run = await runs.retrieve<typeof deepResearchOrchestrator>(runId);
 
     return NextResponse.json({
       success: true,
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Research status error:', error);
+    console.error('Deep Research status error:', error);
 
     if (error instanceof Error && error.name === 'ZodError') {
       return NextResponse.json(
@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: 'Failed to retrieve research status',
+        error: 'Failed to retrieve deep research status',
         message: error instanceof Error ? error.message : 'Unknown error',
       },
       { status: 500 }

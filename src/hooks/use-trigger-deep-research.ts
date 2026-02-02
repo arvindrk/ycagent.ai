@@ -1,13 +1,13 @@
 import { useMutation } from "@tanstack/react-query";
-import { triggerResearch, ResearchApiError } from "@/lib/api/research";
+import { triggerDeepResearch, DeepResearchApiError } from "@/lib/api/deep-research/deep-research";
 import type { Company } from "@/types/company";
 
-export interface UseTriggerResearchOptions {
+export interface UseTriggerDeepResearchOptions {
   onSuccess?: (data: { runId: string; accessToken: string }) => void;
-  onError?: (error: ResearchApiError) => void;
+  onError?: (error: DeepResearchApiError) => void;
 }
 
-export function useTriggerResearch(options?: UseTriggerResearchOptions) {
+export function useTriggerDeepResearch(options?: UseTriggerDeepResearchOptions) {
   return useMutation({
     mutationFn: async ({
       company,
@@ -16,7 +16,7 @@ export function useTriggerResearch(options?: UseTriggerResearchOptions) {
       company: Company;
       forceRefresh?: boolean;
     }) => {
-      return await triggerResearch(company, { forceRefresh });
+      return await triggerDeepResearch(company, { forceRefresh });
     },
     onSuccess: (data) => {
       options?.onSuccess?.({
@@ -25,8 +25,8 @@ export function useTriggerResearch(options?: UseTriggerResearchOptions) {
       });
     },
     onError: (error) => {
-      console.error("Research trigger error:", error);
-      options?.onError?.(error as ResearchApiError);
+      console.error("Deep research trigger error:", error);
+      options?.onError?.(error as DeepResearchApiError);
     },
     retry: false,
   });

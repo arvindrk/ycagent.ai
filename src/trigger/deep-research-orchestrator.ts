@@ -1,6 +1,6 @@
 import { schemaTask, logger, metadata, wait, idempotencyKeys, AbortTaskRunError } from "@trigger.dev/sdk/v3";
-import { companyResearchPayloadSchema } from "@/lib/validations/research.schema";
-import type { ResearchStepResult, ResearchOutput } from "@/lib/validations/research.schema";
+import { companyDeepResearchPayloadSchema } from "@/lib/validations/deep-research.schema";
+import type { DeepResearchStepResult, DeepResearchOutput } from "@/lib/validations/deep-research.schema";
 
 const RESEARCH_STEPS = [
   {
@@ -60,9 +60,9 @@ const RESEARCH_STEPS = [
   },
 ];
 
-export const researchOrchestrator = schemaTask({
-  id: "research-orchestrator",
-  schema: companyResearchPayloadSchema,
+export const deepResearchOrchestrator = schemaTask({
+  id: "deep-research-orchestrator",
+  schema: companyDeepResearchPayloadSchema,
   maxDuration: 300,
   retry: {
     maxAttempts: 3,
@@ -75,7 +75,7 @@ export const researchOrchestrator = schemaTask({
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
     const errorName = error instanceof Error ? error.name : "Error";
 
-    logger.error("Research orchestration failed", {
+    logger.error("Deep research orchestration failed", {
       error: errorMessage,
       errorName,
       runId: ctx.run.id,
@@ -95,7 +95,7 @@ export const researchOrchestrator = schemaTask({
     const startTime = Date.now();
     const { companyId, companyName } = payload;
 
-    logger.info("Starting research orchestration", {
+    logger.info("Starting deep research orchestration", {
       companyId,
       companyName,
       runId: ctx.run.id,
@@ -110,7 +110,7 @@ export const researchOrchestrator = schemaTask({
     metadata.set("progress", 0);
     metadata.set("startedAt", new Date().toISOString());
 
-    const stepResults: ResearchStepResult[] = [];
+    const stepResults: DeepResearchStepResult[] = [];
 
     for (let i = 0; i < RESEARCH_STEPS.length; i++) {
       const stepNum = i + 1;
@@ -135,7 +135,7 @@ export const researchOrchestrator = schemaTask({
         idempotencyKeyTTL: "1h",
       });
 
-      let stepResult: ResearchStepResult;
+      let stepResult: DeepResearchStepResult;
       try {
         const stepData = await step.action();
         const stepDuration = Date.now() - stepStartTime;
@@ -181,11 +181,11 @@ export const researchOrchestrator = schemaTask({
     const totalDuration = Date.now() - startTime;
     const completedAt = new Date().toISOString();
 
-    const output: ResearchOutput = {
+    const output: DeepResearchOutput = {
       companyId,
       companyName,
       steps: stepResults,
-      summary: `Completed ${stepResults.filter(s => s.status === 'completed').length}/${RESEARCH_STEPS.length} research steps successfully`,
+      summary: `Completed ${stepResults.filter(s => s.status === 'completed').length}/${RESEARCH_STEPS.length} deep research steps successfully`,
       totalDurationMs: totalDuration,
       completedAt,
       cached: false,
@@ -195,9 +195,9 @@ export const researchOrchestrator = schemaTask({
     metadata.set("completedAt", completedAt);
     metadata.set("progress", 100);
     metadata.set("totalDurationMs", totalDuration);
-    metadata.set("stepMessage", "All research steps completed successfully");
+    metadata.set("stepMessage", "All deep research steps completed successfully");
 
-    logger.info("Research orchestration completed", {
+    logger.info("Deep research orchestration completed", {
       companyId,
       runId: ctx.run.id,
       totalDurationMs: totalDuration,
