@@ -9,22 +9,6 @@ interface CompanyHeaderProps {
   company: Company;
 }
 
-function formatBatch(batch: string): string {
-  const seasonMap: Record<string, string> = {
-    Winter: 'W',
-    Summer: 'S',
-    Fall: 'F',
-    Spring: 'X',
-  };
-
-  const match = batch.match(/^(Winter|Summer|Fall|Spring)\s+(\d{4})$/);
-  if (!match) return batch;
-
-  const [, season, year] = match;
-  const shortYear = year.slice(-2);
-  return `${seasonMap[season]}${shortYear}`;
-}
-
 function formatRelativeTime(dateString: string): string {
   const date = new Date(dateString);
   const now = new Date();
@@ -72,10 +56,10 @@ export function CompanyHeader({ company }: CompanyHeaderProps) {
 
           <div className="flex flex-wrap items-center gap-2">
             {company.batch && (
-              <Badge variant="secondary">{formatBatch(company.batch)}</Badge>
+              <Badge variant="default">{company.batch}</Badge>
             )}
             {company.status && (
-              <Badge variant="outline">{company.status}</Badge>
+              <Badge variant="default">{company.status}</Badge>
             )}
             {company.is_hiring && (
               <Badge className="bg-green-500/10 text-green-700 border-green-500/20 hover:bg-green-500/20">
@@ -99,7 +83,7 @@ export function CompanyHeader({ company }: CompanyHeaderProps) {
               </Button>
             )}
             {company.source_url && (
-              <Button variant="secondary" asChild>
+              <Button variant="yc-accent" asChild>
                 <a
                   href={company.source_url}
                   target="_blank"

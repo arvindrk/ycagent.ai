@@ -40,7 +40,7 @@ export function CompanyCard({ company }: CompanyCardProps) {
       className="block transition-shadow hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-lg"
       aria-label={`View details for ${company.name}`}
     >
-      <Card className="flex flex-col h-full transition-shadow hover:shadow-md">
+      <Card variant="interactive" className="flex flex-col h-full">
         <CardHeader className="space-y-2">
           <div className="flex items-start justify-between gap-2">
             <div className="flex items-center gap-3 min-w-0 flex-1">

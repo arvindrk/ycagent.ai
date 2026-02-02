@@ -30,7 +30,7 @@ export function ResearchProgress({
 
   if (runError) {
     return (
-      <Card className="border-bg-quaternary bg-bg-secondary p-6">
+      <Card variant="elevated" className="p-6">
         <div className="text-text-danger">
           <p className="text-base-semibold">Error</p>
           <p className="text-sm-regular mt-2">
@@ -43,7 +43,7 @@ export function ResearchProgress({
 
   if (!run) {
     return (
-      <Card className="border-bg-quaternary bg-bg-secondary p-6">
+      <Card variant="elevated" className="p-6">
         <div className="space-y-4">
           <Skeleton className="h-4 w-3/4" />
           <Skeleton className="h-2 w-full" />
@@ -78,7 +78,7 @@ export function ResearchProgress({
   };
 
   return (
-    <Card className="border-bg-quaternary bg-bg-secondary p-6">
+    <Card className="p-6">
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
@@ -153,11 +153,10 @@ export function ResearchProgress({
                 {Array.isArray(run.output.steps) && run.output.steps.map((step: { status: string; name: string; durationMs: number }, idx: number) => (
                   <div key={idx} className="flex items-center gap-2">
                     <div
-                      className={`w-2 h-2 rounded-full ${
-                        step.status === "completed"
-                          ? "bg-accent-primary"
-                          : "bg-text-danger"
-                      }`}
+                      className={`w-2 h-2 rounded-full ${step.status === "completed"
+                        ? "bg-accent-primary"
+                        : "bg-text-danger"
+                        }`}
                     />
                     <span className="text-xs-regular text-text-primary">
                       {step.name}

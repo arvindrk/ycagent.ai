@@ -5,6 +5,7 @@ AI agent skill for maintaining, extending, and improving a Linear-based design s
 ## Quick Start
 
 This skill helps you:
+
 - ✨ Create new UI components following Linear's design patterns
 - 🎨 Manage design tokens (colors, typography, spacing, etc.)
 - ✅ Validate components against design system rules
@@ -38,25 +39,22 @@ Load this skill when you need to:
 ### Core Principles
 
 1. **Token-First**: Never hardcode values
-   ```tsx
-   ❌ className="bg-[#1c1c1f]"
-   ✅ className="bg-bg-secondary"
-   ```
 
-2. **Linear Interactions**: Use signature patterns
-   ```tsx
-   ✅ className="active:scale-[0.97] transition-fast"
-   ```
+    ```tsx
+    ❌ className="bg-[#1c1c1f]"
+    ✅ className="bg-bg-secondary"
+    ```
 
-3. **Background Layers**: Create depth
-   ```tsx
-   ✅ bg-bg-primary → bg-bg-secondary → bg-bg-tertiary
-   ```
+2. **Background Layers**: Create depth
 
-4. **Precise Typography**: Negative letter spacing
-   ```tsx
-   ✅ text-[24px] font-medium tracking-[-0.288px]
-   ```
+    ```tsx
+    ✅ bg-bg-primary → bg-bg-secondary → bg-bg-tertiary
+    ```
+
+3. **Precise Typography**: Negative letter spacing
+    ```tsx
+    ✅ text-[24px] font-medium tracking-[-0.288px]
+    ```
 
 ### Component Template
 
@@ -64,24 +62,25 @@ Load this skill when you need to:
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
-const componentVariants = cva(
-  "base classes",
-  {
-    variants: { /* */ },
-    defaultVariants: { /* */ },
-  }
-);
+const componentVariants = cva('base classes', {
+    variants: {
+        /* */
+    },
+    defaultVariants: {
+        /* */
+    },
+});
 
 interface ComponentProps extends VariantProps<typeof componentVariants> {}
 
 const Component = React.forwardRef<HTMLElement, ComponentProps>(
-  ({ className, variant, ...props }, ref) => (
-    <element
-      ref={ref}
-      className={cn(componentVariants({ variant, className }))}
-      {...props}
-    />
-  )
+    ({ className, variant, ...props }, ref) => (
+        <element
+            ref={ref}
+            className={cn(componentVariants({ variant, className }))}
+            {...props}
+        />
+    )
 );
 ```
 
@@ -111,7 +110,7 @@ const Component = React.forwardRef<HTMLElement, ComponentProps>(
 ### Validate Component
 
 1. Check for hardcoded values
-2. Verify Linear interaction patterns
+2. Verify proper hover and focus states
 3. Test focus/hover/active states
 4. Ensure theme compatibility
 5. Review accessibility

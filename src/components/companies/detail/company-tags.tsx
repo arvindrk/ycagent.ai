@@ -63,7 +63,7 @@ export function CompanyTags({ company }: CompanyTagsProps) {
           </h3>
           <div className="flex flex-wrap gap-2">
             {company.regions.map((region) => (
-              <Badge key={region} variant="secondary">
+              <Badge key={region} variant="outline">
                 {region}
               </Badge>
             ))}

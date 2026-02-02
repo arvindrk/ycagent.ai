@@ -16,19 +16,127 @@ This file guides AI coding agents on context-efficient skill loading for this pr
 - Load specialized skills on-demand
 - Reference supporting files (AGENTS.md, rules/\*.md) only when applying specific patterns
 
+## Automatic Pattern-Based Loading
+
+Skills and MCP tools are automatically applied based on file patterns via Cursor rules in `.cursor/rules/`:
+
+### File Pattern Mappings
+
+| File Pattern                                | Rule File              | Skills Loaded                                                | MCP Tools                 |
+| ------------------------------------------- | ---------------------- | ------------------------------------------------------------ | ------------------------- |
+| `*.tsx`, `*.jsx`                            | `react-patterns.mdc`   | react-best-practices                                         | next-devtools             |
+| `**/trigger/**/*.ts`                        | `trigger-patterns.mdc` | trigger                                                      | trigger (MCP)             |
+| `**/components/ui/**`, `**/app/**/page.tsx` | `ui-patterns.mdc`      | linear-design-system, frontend-design, web-design-guidelines | shadcn                    |
+| All files                                   | `mcp-tools.mdc`        | -                                                            | Auto-use based on context |
+
+### Rule Files
+
+1. **react-patterns.mdc** (`.cursor/rules/react-patterns.mdc`)
+    - **Globs**: `*.tsx`, `*.jsx`, `**/app/**/*.ts`
+    - **Skills**: react-best-practices
+    - **Focus**: Eliminate waterfalls, bundle optimization, server performance
+    - **Auto-applies**: CRITICAL patterns (Promise.all, direct imports, React.cache)
+
+2. **trigger-patterns.mdc** (`.cursor/rules/trigger-patterns.mdc`)
+    - **Globs**: `**/trigger/**/*.ts`
+    - **Skills**: trigger
+    - **Focus**: Task definitions, workflow orchestration, realtime
+    - **Critical rules**: Use SDK (not v2 API), check result.ok, no Promise.all with trigger
+
+3. **ui-patterns.mdc** (`.cursor/rules/ui-patterns.mdc`)
+    - **Globs**: `**/components/ui/**`, `**/app/**/page.tsx`, `**/components/**/*.tsx`
+    - **Skills**: linear-design-system (primary), frontend-design, web-design-guidelines
+    - **Focus**: Token-first design, Linear interactions, accessibility
+    - **Auto-applies**: Design tokens, component structure, ARIA patterns
+
+4. **mcp-tools.mdc** (`.cursor/rules/mcp-tools.mdc`)
+    - **Globs**: None (always applies)
+    - **Auto-invokes MCP tools** based on patterns:
+        - **Neon**: Database files (`**/db/**`, `*.sql`, migrations)
+        - **next-devtools**: Build failures, runtime errors
+        - **shadcn**: Component creation (`**/components/**`)
+        - **Vercel**: Deployment, `vercel.json`, env vars
+        - **openaiDeveloperDocs**: OpenAI API, embeddings (`**/embeddings/**`)
+        - **trigger**: Advanced Trigger.dev patterns
+        - **firecrawl**: Web scraping tasks
+        - **browsermcp**: UI testing, browser automation
+        - **hf-mcp-server**: Hugging Face models
+        - **fal**: AI image generation
+
+### How It Works
+
+1. **Automatic Application**: When you edit a file matching a glob pattern, Cursor automatically loads the corresponding rule
+2. **Skill Reference**: Rules reference skills in `.agents/skills/` for detailed patterns
+3. **MCP Tool Auto-Use**: The agent proactively uses MCP tools based on file patterns and task context (no explicit request needed)
+4. **Priority System**: Multiple rules can apply (e.g., React + UI patterns for `components/ui/Button.tsx`)
+
+### Example Workflow
+
+**Editing `src/components/ui/Button.tsx`**:
+
+1. Cursor loads: `react-patterns.mdc` + `ui-patterns.mdc` + `mcp-tools.mdc`
+2. Agent references: `react-best-practices` + `linear-design-system` + `web-design-guidelines`
+3. Agent checks: shadcn MCP for existing Button implementations
+4. Agent applies: Performance patterns + Linear tokens + accessibility
+
+**Editing `src/trigger/research.ts`**:
+
+1. Cursor loads: `trigger-patterns.mdc` + `mcp-tools.mdc`
+2. Agent references: `trigger` skill (basic.mdc or advanced-tasks.mdc)
+3. Agent auto-uses: trigger MCP for documentation lookups
+4. Agent applies: SDK patterns, retry strategies, error handling
+
+**Database migration**:
+
+1. Cursor loads: `mcp-tools.mdc`
+2. Agent auto-uses: Neon MCP (`prepare_database_migration`)
+3. Agent executes: Schema changes and validation
+
 ## Available Skills
 
-## Trigger.dev Documentation
+### trigger
 
-Comprehensive Trigger.dev v4 documentation is available in `.cursor/rules/`:
+**Location:** `.agents/skills/trigger/`
 
-- **Basic Tasks** (`.cursor/rules/trigger.basic.mdc`) - Task definitions, triggering, waits, debouncing
-- **Advanced Tasks** (`.cursor/rules/trigger.advanced-tasks.mdc`) - Tags, batching, concurrency, queues, error handling, idempotency
-- **Configuration** (`.cursor/rules/trigger.config.mdc`) - Build extensions, Prisma, Python, Playwright, FFmpeg
-- **Realtime** (`.cursor/rules/trigger.realtime.mdc`) - Real-time monitoring, React hooks, streams
+**When to Load:**
 
-**When to Load:** Working with Trigger.dev tasks, scheduling, or realtime features  
-**Pattern:** Reference specific rule files when implementing Trigger.dev features
+- Writing or modifying Trigger.dev tasks
+- Implementing background job processing
+- Setting up task scheduling and orchestration
+- Configuring retry strategies and error handling
+- Implementing realtime task monitoring
+- Optimizing task performance and concurrency
+- Setting up build configurations and extensions
+
+**Primary Reference:** `.agents/skills/trigger/SKILL.md`
+
+- Complete reference for Trigger.dev v4
+- Organized into 4 core documentation files
+
+**Documentation Files:**
+
+1. **basic.mdc** - Task definitions, triggering, waits, debouncing
+2. **advanced-tasks.mdc** - Tags, batching, concurrency, queues, error handling, idempotency
+3. **config.mdc** - Build extensions, Prisma, Python, Playwright, FFmpeg
+4. **realtime.mdc** - Real-time monitoring, React hooks, streams
+
+**Key Features:**
+
+- Task and schemaTask definitions with `@trigger.dev/sdk`
+- Triggering patterns: single, batch, debounced
+- Result handling with `triggerAndWait()`
+- Advanced patterns: tags, concurrency, idempotency
+- Build extensions for database, scripting, browser automation
+- Realtime monitoring with React hooks
+- Machine presets and performance tuning
+
+**Loading Approach:**
+
+- Load SKILL.md for overview and quick reference
+- Reference specific documentation files (basic.mdc, advanced-tasks.mdc, etc.) when implementing features
+- Apply patterns based on task complexity and requirements
+
+---
 
 ### react-best-practices
 
@@ -157,7 +265,7 @@ Comprehensive Trigger.dev v4 documentation is available in `.cursor/rules/`:
 - Migrating existing components to use design system tokens
 - Creating Linear-styled components (Button, Card, Badge, Input, etc.)
 - Reviewing code for design system compliance
-- Ensuring components follow Linear interaction patterns
+- Ensuring components follow Linear design principles
 
 **Primary Reference:** `.agents/skills/linear-design-system/SKILL.md`
 
@@ -187,7 +295,7 @@ Comprehensive Trigger.dev v4 documentation is available in `.cursor/rules/`:
 **Key Principles:**
 
 - **Token-first development** - Never hardcode design values, always use tokens
-- **Linear interaction patterns** - `active:scale-[0.97]` transform on interactive elements
+- **No hover movement** - Elements must not shift position on hover (use background, color, opacity, shadow changes only)
 - **Background layering** - Use increasing layers for depth (primary → secondary → tertiary → quaternary)
 - **Precise typography** - Negative letter spacing, specific font weights (400, 510, 538)
 - **Smooth transitions** - `transition-fast` (150ms) or `transition-base` (200ms)

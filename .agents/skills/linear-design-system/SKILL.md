@@ -1,6 +1,6 @@
 ---
 name: linear-design-system
-description: Maintain, extend, and improve the Linear design system. Add new UI components, modify design tokens, validate consistency, and ensure all components follow Linear's interaction patterns and aesthetic principles. Use when adding components, updating tokens, validating design system usage, or migrating components to the design system.
+description: Maintain, extend, and improve the Linear design system. Add new UI components, modify design tokens, validate consistency, and ensure all components follow Linear's design principles and aesthetic guidelines. Use when adding components, updating tokens, validating design system usage, or migrating components to the design system.
 version: 1.0.0
 author: YC Agent
 ---
@@ -12,6 +12,7 @@ This skill guides the creation, maintenance, and improvement of the Linear desig
 ## When to Use This Skill
 
 Load this skill when:
+
 - Adding new UI components to the design system
 - Modifying design tokens (colors, typography, spacing, shadows, etc.)
 - Validating component implementation against design system rules
@@ -33,58 +34,50 @@ Load this skill when:
 <div className="bg-bg-secondary text-text-primary rounded-md p-6">
 ```
 
-### 2. Linear Interaction Patterns
-
-All interactive components must follow Linear's signature patterns:
-
-**Active State**: `scale(0.97)` transform
-```tsx
-className="active:scale-[0.97]"
-```
-
 **Hover States**: Smooth transitions with subtle effects
+
 ```tsx
-className="hover:bg-bg-tertiary hover:shadow-md transition-base"
+className = 'hover:bg-bg-tertiary hover:shadow-md transition-base';
 ```
 
 **Focus States**: Accent-colored ring
+
 ```tsx
-className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+className =
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent';
 ```
 
-### 3. Background Layering
+### 2. Background Layering
 
 Use increasing background layers to create depth:
 
 ```tsx
 // Page background (darkest)
 <div className="bg-bg-primary">
-  // Card background
-  <Card className="bg-bg-secondary">
-    // Nested element
-    <div className="bg-bg-tertiary">
-      Content with depth
-    </div>
-  </Card>
+    // Card background
+    <Card className="bg-bg-secondary">
+        // Nested element
+        <div className="bg-bg-tertiary">Content with depth</div>
+    </Card>
 </div>
 ```
 
-### 4. Typography System
+### 3. Typography System
 
 Use Linear's precise typography with negative letter spacing:
 
 ```tsx
 // Display (hero sections)
-className="text-[64px] font-semibold tracking-[-1.408px]"
+className = 'text-[64px] font-semibold tracking-[-1.408px]';
 
 // Headings
-className="text-[24px] font-medium tracking-[-0.288px]"
+className = 'text-[24px] font-medium tracking-[-0.288px]';
 
 // Body
-className="text-[15px] leading-relaxed"
+className = 'text-[15px] leading-relaxed';
 
 // Caption
-className="text-[13px] text-text-secondary"
+className = 'text-[13px] text-text-secondary';
 ```
 
 ## Component Creation Workflow
@@ -109,48 +102,50 @@ import { cn } from '@/lib/utils';
 
 // 1. Define variants using cva
 const componentVariants = cva(
-  // Base classes (applied to all variants)
-  "inline-flex items-center justify-center rounded-md transition-base",
-  {
-    variants: {
-      variant: {
-        default: "bg-bg-secondary text-text-primary hover:bg-bg-tertiary",
-        primary: "bg-accent text-white hover:bg-accent-hover",
-      },
-      size: {
-        default: "h-10 px-4 py-2",
-        sm: "h-8 px-3 text-sm",
-        lg: "h-12 px-6 text-lg",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
-    },
-  }
+    // Base classes (applied to all variants)
+    'inline-flex items-center justify-center rounded-md transition-base',
+    {
+        variants: {
+            variant: {
+                default:
+                    'bg-bg-secondary text-text-primary hover:bg-bg-tertiary',
+                primary: 'bg-accent text-white hover:bg-accent-hover',
+            },
+            size: {
+                default: 'h-10 px-4 py-2',
+                sm: 'h-8 px-3 text-sm',
+                lg: 'h-12 px-6 text-lg',
+            },
+        },
+        defaultVariants: {
+            variant: 'default',
+            size: 'default',
+        },
+    }
 );
 
 // 2. Define TypeScript interface
 export interface ComponentProps
-  extends React.HTMLAttributes<HTMLElement>,
-    VariantProps<typeof componentVariants> {
-  asChild?: boolean;
+    extends
+        React.HTMLAttributes<HTMLElement>,
+        VariantProps<typeof componentVariants> {
+    asChild?: boolean;
 }
 
 // 3. Export component with forwardRef
 const Component = React.forwardRef<HTMLElement, ComponentProps>(
-  ({ className, variant, size, ...props }, ref) => {
-    return (
-      <element
-        ref={ref}
-        className={cn(componentVariants({ variant, size, className }))}
-        {...props}
-      />
-    );
-  }
+    ({ className, variant, size, ...props }, ref) => {
+        return (
+            <element
+                ref={ref}
+                className={cn(componentVariants({ variant, size, className }))}
+                {...props}
+            />
+        );
+    }
 );
 
-Component.displayName = "Component";
+Component.displayName = 'Component';
 
 export { Component, componentVariants };
 ```
@@ -159,26 +154,25 @@ export { Component, componentVariants };
 
 Ensure every interactive component includes:
 
-1. **Active state transform**:
-```tsx
-className="active:scale-[0.97]"
-```
+1. **Smooth transitions**:
 
-2. **Smooth transitions**:
 ```tsx
-className="transition-fast" // 150ms
+className = 'transition-fast'; // 150ms
 // or
-className="transition-base" // 200ms
+className = 'transition-base'; // 200ms
 ```
 
-3. **Focus ring**:
+2. **Focus ring**:
+
 ```tsx
-className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg-primary"
+className =
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg-primary';
 ```
 
-4. **Disabled state**:
+3. **Disabled state**:
+
 ```tsx
-className="disabled:opacity-50 disabled:pointer-events-none"
+className = 'disabled:opacity-50 disabled:pointer-events-none';
 ```
 
 ### Step 4: Create Variants
@@ -186,6 +180,7 @@ className="disabled:opacity-50 disabled:pointer-events-none"
 Common variant patterns in Linear's system:
 
 **Button Variants**:
+
 - `default`: Secondary background with hover
 - `primary`: Accent background
 - `secondary`: Tertiary background
@@ -194,6 +189,7 @@ Common variant patterns in Linear's system:
 - `destructive`: Red for dangerous actions
 
 **Badge Variants**:
+
 - `default`: Neutral gray
 - `success`: Green for positive states
 - `info`: Blue for informational
@@ -201,6 +197,7 @@ Common variant patterns in Linear's system:
 - `destructive`: Red for errors
 
 **Status Colors** (use semantic naming):
+
 ```tsx
 variant: {
   success: "bg-green/10 text-green border-green/20",
@@ -234,20 +231,22 @@ Update `/design-system` page to showcase the new component:
 When adding tokens to any file in `src/lib/design-system/tokens/`:
 
 1. **Edit the token file**:
+
 ```typescript
 // src/lib/design-system/tokens/colors.ts
 export const colors = {
-  // Existing tokens...
-  
-  // New token
-  newColor: {
-    default: '#7170ff',
-    hover: '#828fff',
-  },
+    // Existing tokens...
+
+    // New token
+    newColor: {
+        default: '#7170ff',
+        hover: '#828fff',
+    },
 };
 ```
 
 2. **Export from index**:
+
 ```typescript
 // src/lib/design-system/tokens/index.ts
 export * from './colors';
@@ -256,6 +255,7 @@ export * from './typography';
 ```
 
 3. **Update Tailwind config** if needed:
+
 ```typescript
 // tailwind.config.ts
 theme: {
@@ -268,15 +268,17 @@ theme: {
 ```
 
 4. **Add CSS variable** to globals.css:
+
 ```css
 :root {
-  --color-new-color: theme('colors.newColor.DEFAULT');
+    --color-new-color: theme('colors.newColor.DEFAULT');
 }
 ```
 
 ### Token Categories
 
 **Colors** (`colors.ts`):
+
 - Background layers (primary → quaternary)
 - Text hierarchy (primary → tertiary)
 - Borders (primary, secondary)
@@ -284,6 +286,7 @@ theme: {
 - Status colors (success, info, warning, destructive)
 
 **Typography** (`typography.ts`):
+
 - Font families (with OpenType features)
 - Font weights (400, 510, 538)
 - Type scales (display, heading, body, caption)
@@ -291,18 +294,22 @@ theme: {
 - Line heights
 
 **Spacing** (`spacing.ts`):
+
 - 8px-based scale with irregular jumps
 - Values: 0, 4, 8, 11, 16, 24, 32, 40, 48, 64, 80
 
 **Radius** (`radius.ts`):
+
 - xs (1px), sm (4px), md (6px), lg (8px), xl (10px), 2xl (16px), full (9999px)
 
 **Shadows** (`shadows.ts`):
+
 - Elevation levels (sm, md, lg)
 - Focus ring shadow
 - Inner glow effect
 
 **Motion** (`motion.ts`):
+
 - Durations (fast: 100ms, base: 150ms, normal: 200ms, slow: 300ms)
 - Easings (out, in, in-out, spring)
 
@@ -316,7 +323,8 @@ When reviewing or creating components, verify:
 - [ ] **TypeScript types** - Proper interfaces and props
 - [ ] **ForwardRef** - Component accepts refs for composition
 - [ ] **Variants with cva** - Uses `class-variance-authority`
-- [ ] **Linear interactions** - `scale(0.97)` on active states
+- [ ] **Interactive states** - Proper hover and active states
+- [ ] **No hover movement** - Elements don't shift on hover (no translate/scale/margin changes)
 - [ ] **Smooth transitions** - Uses `transition-fast` or `transition-base`
 - [ ] **Focus states** - Accent ring on focus-visible
 - [ ] **Disabled states** - Proper opacity and pointer-events
@@ -327,6 +335,7 @@ When reviewing or creating components, verify:
 ### Common Issues
 
 **Issue**: Hardcoded colors
+
 ```tsx
 // ❌ WRONG
 <div className="bg-[#1c1c1f]">
@@ -335,16 +344,8 @@ When reviewing or creating components, verify:
 <div className="bg-bg-secondary">
 ```
 
-**Issue**: Missing interaction patterns
-```tsx
-// ❌ WRONG
-<button className="bg-accent">
-
-// ✅ CORRECT
-<button className="bg-accent hover:bg-accent-hover active:scale-[0.97] transition-base">
-```
-
 **Issue**: Inconsistent spacing
+
 ```tsx
 // ❌ WRONG
 <div className="p-[15px]">
@@ -354,6 +355,7 @@ When reviewing or creating components, verify:
 ```
 
 **Issue**: Missing focus states
+
 ```tsx
 // ❌ WRONG
 <button className="bg-accent">
@@ -369,6 +371,7 @@ When reviewing or creating components, verify:
 To migrate a component to the design system:
 
 1. **Identify hardcoded values**:
+
 ```bash
 # Search for hardcoded colors
 grep -r "bg-\[#" src/components/
@@ -376,24 +379,17 @@ grep -r "text-\[#" src/components/
 ```
 
 2. **Map to tokens**:
+
 ```tsx
 // Before
-className="bg-[#1c1c1f] text-[#f7f8f8]"
+className = 'bg-[#1c1c1f] text-[#f7f8f8]';
 
 // After
-className="bg-bg-secondary text-text-primary"
+className = 'bg-bg-secondary text-text-primary';
 ```
 
-3. **Add interaction patterns**:
-```tsx
-// Before
-<button className="bg-blue-500 hover:bg-blue-600">
+3. **Update imports**:
 
-// After
-<button className="bg-accent hover:bg-accent-hover active:scale-[0.97] transition-base">
-```
-
-4. **Update imports**:
 ```tsx
 // Use design system components
 import { Button } from '@/components/ui/button';
@@ -410,38 +406,39 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const selectVariants = cva(
-  "flex items-center justify-between rounded-md border border-border-primary bg-bg-secondary px-3 py-2 text-sm text-text-primary transition-fast focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent disabled:opacity-50 disabled:pointer-events-none",
-  {
-    variants: {
-      size: {
-        default: "h-10",
-        sm: "h-8 text-xs",
-        lg: "h-12 text-base",
-      },
-    },
-    defaultVariants: {
-      size: "default",
-    },
-  }
+    'flex items-center justify-between rounded-md border border-border-primary bg-bg-secondary px-3 py-2 text-sm text-text-primary transition-fast focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent disabled:opacity-50 disabled:pointer-events-none',
+    {
+        variants: {
+            size: {
+                default: 'h-10',
+                sm: 'h-8 text-xs',
+                lg: 'h-12 text-base',
+            },
+        },
+        defaultVariants: {
+            size: 'default',
+        },
+    }
 );
 
 export interface SelectProps
-  extends React.SelectHTMLAttributes<HTMLSelectElement>,
-    VariantProps<typeof selectVariants> {}
+    extends
+        React.SelectHTMLAttributes<HTMLSelectElement>,
+        VariantProps<typeof selectVariants> {}
 
 const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
-  ({ className, size, ...props }, ref) => {
-    return (
-      <select
-        ref={ref}
-        className={cn(selectVariants({ size, className }))}
-        {...props}
-      />
-    );
-  }
+    ({ className, size, ...props }, ref) => {
+        return (
+            <select
+                ref={ref}
+                className={cn(selectVariants({ size, className }))}
+                {...props}
+            />
+        );
+    }
 );
 
-Select.displayName = "Select";
+Select.displayName = 'Select';
 
 export { Select, selectVariants };
 ```
@@ -497,7 +494,6 @@ function MyComponent() {
 // ❌ Hardcoded background color (#7170ff)
 // ❌ Hardcoded padding (p-4 should use design system scale)
 // ❌ Missing hover state
-// ❌ Missing active state transform
 // ❌ Missing focus ring
 // ❌ Missing disabled state
 // ❌ No transition
@@ -505,7 +501,7 @@ function MyComponent() {
 // Fixed version:
 function MyComponent() {
   return (
-    <button className="bg-accent text-white px-4 py-2 rounded-md hover:bg-accent-hover active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent transition-base disabled:opacity-50">
+    <button className="bg-accent text-white px-4 py-2 rounded-md hover:bg-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent transition-base disabled:opacity-50">
       Click me
     </button>
   );
@@ -570,6 +566,7 @@ Extends `React.HTMLAttributes<HTMLElement>` with:
 ### Source Data
 
 Design system extracted from:
+
 - `output/linear.app/2026-01-24T02-07-46-212Z.json`
 - `output/linear.app/2026-01-24T02-09-26-752Z.json`
 - `output/linear.app/2026-01-24T01-58-33-543Z.tokens.json`
@@ -578,22 +575,25 @@ Design system extracted from:
 ## Quick Commands
 
 ### Add a new component
+
 1. Create file in `src/components/ui/{name}.tsx`
 2. Use component template with `cva()` variants
-3. Apply Linear interaction patterns
+3. Apply proper hover and focus states
 4. Export from file
 5. Add to demo page
 
 ### Modify tokens
+
 1. Edit token file in `src/lib/design-system/tokens/`
 2. Verify export in `tokens/index.ts`
 3. Update Tailwind config if new token
 4. Add CSS variable to globals.css if needed
 
 ### Validate component
+
 1. Check for hardcoded values
 2. Verify token usage
-3. Check interaction patterns (scale, hover, focus)
+3. Check hover and focus states
 4. Test in dark/light themes
 5. Verify TypeScript types
 6. Test accessibility

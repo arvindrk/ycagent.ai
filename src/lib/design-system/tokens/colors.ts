@@ -41,6 +41,12 @@ export const colors = {
     tint: '#18182f',
   },
 
+  ycAccent: {
+    default: '#ff6600',
+    hover: '#ff8533',
+    active: '#cc5200',
+  },
+
   brand: {
     bg: '#5e6ad2',
   },
@@ -98,6 +104,9 @@ export const colorVars = {
   '--color-accent': colors.accent.default,
   '--color-accent-hover': colors.accent.hover,
   '--color-accent-tint': colors.accent.tint,
+  '--color-yc-accent': colors.ycAccent.default,
+  '--color-yc-accent-hover': colors.ycAccent.hover,
+  '--color-yc-accent-active': colors.ycAccent.active,
   '--color-brand-bg': colors.brand.bg,
   '--color-green': colors.status.green,
   '--color-blue': colors.status.blue,

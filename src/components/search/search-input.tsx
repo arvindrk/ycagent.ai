@@ -48,7 +48,7 @@ export function SearchInput({
           <button
             type="button"
             onClick={handleClear}
-            className="text-text-tertiary hover:text-text-primary transition-fast active:scale-[0.97]"
+            className="text-text-tertiary hover:text-text-primary transition-fast"
             aria-label="Clear search"
           >
             <X className="w-4 h-4" />

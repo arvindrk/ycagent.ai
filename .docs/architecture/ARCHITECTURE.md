@@ -376,7 +376,6 @@ User feedback indicates need for:
 
 - Token-first development (no hardcoded values)
 - Precise typography (negative letter spacing, specific weights)
-- Smooth micro-interactions (`active:scale-[0.97]`)
 - Background layering (primary → quaternary for depth)
 
 **Documented in:**

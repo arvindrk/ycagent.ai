@@ -47,7 +47,7 @@ export function CompanyStats({ company }: CompanyStatsProps) {
         {stats.map((stat) => {
           const Icon = stat.icon;
           return (
-            <Card key={stat.label} className="bg-bg-secondary border-border-primary">
+            <Card key={stat.label}>
               <CardContent className="p-6 space-y-2">
                 <div className="flex items-center gap-2 text-text-tertiary">
                   <Icon className="w-4 h-4" aria-hidden="true" />

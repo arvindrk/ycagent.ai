@@ -25,7 +25,7 @@ export default function CompanyDetailsTab({ company }: CompanyDetailsTabProps) {
 
   return (
     <div className="space-y-6">
-      <Card className="bg-bg-secondary border-border-primary">
+      <Card>
         <CardContent className="p-6 space-y-6">
           <div>
             <h3 className="text-[17px] font-medium mb-4">Data Source</h3>
@@ -69,16 +69,16 @@ export default function CompanyDetailsTab({ company }: CompanyDetailsTabProps) {
             </div>
           )}
 
-          {company.source_metadata && 
-            typeof company.source_metadata === 'object' && 
+          {company.source_metadata &&
+            typeof company.source_metadata === 'object' &&
             Object.keys(company.source_metadata).length > 0 && (
-            <div>
-              <h3 className="text-[17px] font-medium mb-3">Additional Metadata</h3>
-              <div className="text-[13px] text-text-tertiary font-mono bg-bg-tertiary p-4 rounded-md overflow-x-auto">
-                <pre>{JSON.stringify(company.source_metadata, null, 2)}</pre>
+              <div>
+                <h3 className="text-[17px] font-medium mb-3">Additional Metadata</h3>
+                <div className="text-[13px] text-text-tertiary font-mono bg-bg-tertiary p-4 rounded-md overflow-x-auto">
+                  <pre>{JSON.stringify(company.source_metadata, null, 2)}</pre>
+                </div>
               </div>
-            </div>
-          )}
+            )}
         </CardContent>
       </Card>
     </div>

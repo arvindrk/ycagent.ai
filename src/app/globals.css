@@ -28,6 +28,9 @@
   --color-accent: #7170ff;
   --color-accent-hover: #828fff;
   --color-accent-tint: #18182f;
+  --color-yc-accent: #ff6600;
+  --color-yc-accent-hover: #ff8533;
+  --color-yc-accent-active: #cc5200;
   --color-brand-bg: #5e6ad2;
   --color-green: #4cb782;
   --color-blue: #4ea7fc;
@@ -79,6 +82,7 @@
 }
 
 @theme inline {
+  /* Component aliases */
   --color-background: var(--color-bg-primary);
   --color-foreground: var(--color-text-primary);
   --color-card: var(--color-bg-secondary);
@@ -98,6 +102,63 @@
   --color-border: var(--color-border-primary);
   --color-input: var(--color-border-secondary);
   --color-ring: var(--color-accent);
+
+  /* Basic colors */
+  --color-white: var(--color-white);
+  --color-black: var(--color-black);
+
+  /* Background layers */
+  --color-bg-primary: var(--color-bg-primary);
+  --color-bg-secondary: var(--color-bg-secondary);
+  --color-bg-tertiary: var(--color-bg-tertiary);
+  --color-bg-quaternary: var(--color-bg-quaternary);
+  --color-bg-quinary: var(--color-bg-quinary);
+  --color-bg-marketing: var(--color-bg-marketing);
+  --color-bg-level-1: var(--color-bg-level-1);
+  --color-bg-level-3: var(--color-bg-level-3);
+
+  /* Text colors */
+  --color-text-primary: var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-text-tertiary: var(--color-text-tertiary);
+
+  /* Border colors */
+  --color-border-primary: var(--color-border-primary);
+  --color-border-secondary: var(--color-border-secondary);
+  --color-border-tertiary: var(--color-border-tertiary);
+
+  /* Line colors */
+  --color-line-primary: var(--color-line-primary);
+  --color-line-secondary: var(--color-line-secondary);
+  --color-line-tertiary: var(--color-line-tertiary);
+  --color-line-quaternary: var(--color-line-quaternary);
+  --color-line-tint: var(--color-line-tint);
+
+  /* Accent colors */
+  --color-accent-hover: var(--color-accent-hover);
+  --color-accent-tint: var(--color-accent-tint);
+  --color-yc-accent: var(--color-yc-accent);
+  --color-yc-accent-hover: var(--color-yc-accent-hover);
+  --color-yc-accent-active: var(--color-yc-accent-active);
+
+  /* Brand colors */
+  --color-brand-bg: var(--color-brand-bg);
+
+  /* Status colors */
+  --color-green: var(--color-green);
+  --color-blue: var(--color-blue);
+  --color-red: var(--color-red);
+  --color-orange: var(--color-orange);
+  --color-yellow: var(--color-yellow);
+
+  /* Linear colors */
+  --color-linear-plan: var(--color-linear-plan);
+  --color-linear-build: var(--color-linear-build);
+  --color-linear-security: var(--color-linear-security);
+
+  /* Other */
+  --color-overlay-primary: var(--color-overlay-primary);
+  --header-bg: var(--header-bg);
 
   /* Radius aliases */
   --radius: var(--radius-lg);

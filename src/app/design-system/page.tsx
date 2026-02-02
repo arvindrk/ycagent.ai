@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function DesignSystemPage() {
   return (
@@ -11,12 +12,17 @@ export default function DesignSystemPage() {
       <div className="max-w-7xl mx-auto space-y-12">
         {/* Header */}
         <div className="space-y-4">
-          <h1 className="text-[56px] font-semibold leading-tight tracking-[-1.82px]">
-            Linear Design System
-          </h1>
-          <p className="text-[17px] text-text-secondary leading-relaxed">
-            Production-ready components and tokens from Linear.app
-          </p>
+          <div className="flex items-start justify-between">
+            <div className="space-y-4">
+              <h1 className="text-[56px] font-semibold leading-tight tracking-[-1.82px]">
+                Linear Design System
+              </h1>
+              <p className="text-[17px] text-text-secondary leading-relaxed">
+                Production-ready components and tokens from Linear.app
+              </p>
+            </div>
+            <ThemeToggle />
+          </div>
         </div>
 
         {/* Colors */}
@@ -116,6 +122,7 @@ export default function DesignSystemPage() {
                 <Button variant="primary">Primary</Button>
                 <Button variant="secondary">Secondary</Button>
                 <Button variant="accent">Accent</Button>
+                <Button variant="yc-accent">YC Accent</Button>
                 <Button variant="ghost">Ghost</Button>
                 <Button variant="destructive">Destructive</Button>
               </div>
@@ -139,6 +146,64 @@ export default function DesignSystemPage() {
         <section className="space-y-6">
           <h2 className="text-[24px] font-medium tracking-[-0.288px]">Cards</h2>
 
+          {/* Card Variants */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Card Variants</CardTitle>
+              <CardDescription>Four card types for different use cases</CardDescription>
+            </CardHeader>
+            <CardContent className="grid md:grid-cols-2 gap-6">
+              <Card variant="default">
+                <CardHeader>
+                  <CardTitle>Default Card</CardTitle>
+                  <CardDescription>Standard card with primary background</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-text-secondary text-[14px]">
+                    Base card style with primary background and standard border. Used for general content.
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card variant="elevated">
+                <CardHeader>
+                  <CardTitle>Elevated Card</CardTitle>
+                  <CardDescription>Raised appearance for layered content</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-text-secondary text-[14px]">
+                    Secondary background creates depth. Perfect for nested cards or highlighted sections.
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card variant="interactive">
+                <CardHeader>
+                  <CardTitle>Interactive Card</CardTitle>
+                  <CardDescription>Enhanced hover for clickable cards</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-text-secondary text-[14px]">
+                    Includes enhanced hover effects. Ideal for cards that link to detail pages.
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card variant="ghost">
+                <CardHeader>
+                  <CardTitle>Ghost Card</CardTitle>
+                  <CardDescription>Minimal styling, transparent</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-text-secondary text-[14px]">
+                    Transparent background without borders. Used for subtle content grouping.
+                  </p>
+                </CardContent>
+              </Card>
+            </CardContent>
+          </Card>
+
+          {/* Card Examples */}
           <div className="grid md:grid-cols-3 gap-6">
             <Card>
               <CardHeader>
@@ -250,16 +315,16 @@ export default function DesignSystemPage() {
               <CardDescription>Try interacting with these elements</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="p-4 rounded-lg bg-bg-secondary hover:bg-[rgba(255,255,255,0.08)] active:scale-[0.97] transition-all cursor-pointer">
+              <div className="p-4 rounded-lg bg-bg-secondary hover:bg-[rgba(255,255,255,0.08)] transition-all cursor-pointer">
                 Hover and click me
               </div>
 
               <div className="flex gap-3">
-                <Button className="transition-transform hover:translate-x-1">
-                  Slide on hover
+                <Button className="hover:opacity-90 hover:shadow-md">
+                  Hover effects
                 </Button>
-                <Button className="transition-transform active:scale-[0.97]">
-                  Scale on active
+                <Button className="hover:bg-accent-hover">
+                  Background change
                 </Button>
               </div>
             </CardContent>
