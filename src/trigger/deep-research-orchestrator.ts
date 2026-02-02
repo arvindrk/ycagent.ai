@@ -1,4 +1,4 @@
-import { schemaTask, logger, metadata, wait, idempotencyKeys, AbortTaskRunError } from "@trigger.dev/sdk/v3";
+import { schemaTask, logger, metadata, wait, idempotencyKeys } from "@trigger.dev/sdk/v3";
 import { companyDeepResearchPayloadSchema } from "@/lib/validations/deep-research.schema";
 import type { DeepResearchStepResult, DeepResearchOutput } from "@/lib/validations/deep-research.schema";
 
