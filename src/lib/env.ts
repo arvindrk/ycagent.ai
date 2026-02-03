@@ -4,6 +4,7 @@ const envSchema = z.object({
   DATABASE_URL: z.string().url('DATABASE_URL must be a valid URL'),
   OPENAI_API_KEY: z.string().min(1, 'OPENAI_API_KEY is required'),
   TRIGGER_SECRET_KEY: z.string().min(1, 'TRIGGER_SECRET_KEY is required'),
+  SERPER_API_KEY: z.string().min(1, 'SERPER_API_KEY is required'),
   NODE_ENV: z
     .enum(['development', 'production', 'test'])
     .default('development'),
