@@ -4,7 +4,7 @@ import { join } from 'path';
 
 async function main() {
   try {
-    const migrationFile = process.argv[2] || '002_add_vector_search.sql';
+    const migrationFile = process.argv[2] || '007_create_discovered_urls_table.sql';
 
     console.log(`Running migration: ${migrationFile}\n`);
 

@@ -1,13 +1,7 @@
 import { z } from 'zod';
+import { companySchema } from './company.schema';
 
-export const companyDeepResearchPayloadSchema = z.object({
-  companyId: z.string().uuid('Invalid company ID format'),
-  companyName: z.string().min(1, 'Company name is required'),
-  companyWebsite: z.string().url().optional(),
-  companyDescription: z.string().optional(),
-  companyBatch: z.string().optional(),
-  companyTags: z.array(z.string()).optional(),
-});
+export const companyDeepResearchPayloadSchema = companySchema;
 
 export const triggerDeepResearchRequestSchema = z.object({
   company: companyDeepResearchPayloadSchema,

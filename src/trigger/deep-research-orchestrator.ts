@@ -1,10 +1,56 @@
 import { schemaTask, logger, metadata } from '@trigger.dev/sdk/v3';
 import { companyDeepResearchPayloadSchema } from '@/lib/validations/deep-research.schema';
-import type {
-  DeepResearchStepResult,
-  DeepResearchOutput,
-} from '@/lib/validations/deep-research.schema';
+import type { DeepResearchStepResult } from '@/lib/validations/deep-research.schema';
 import { discoveryAgent } from './discovery-agent';
+import { getScraperProvider } from '@/lib/scraping/factory';
+
+const getErrorMessage = (error: unknown): string =>
+  error instanceof Error ? error.message : 'Unknown error';
+
+async function executeStep<T>(
+  stepNumber: number,
+  stepName: string,
+  fn: () => Promise<T>,
+  buildSuccessData: (result: T) => Record<string, unknown>
+): Promise<DeepResearchStepResult> {
+  const startTime = Date.now();
+  metadata.set('currentStep', stepNumber);
+  metadata.set('currentStepName', stepName);
+
+  try {
+    const result = await fn();
+    const durationMs = Date.now() - startTime;
+    
+    const stepResult: DeepResearchStepResult = {
+      step: stepNumber,
+      name: stepName,
+      status: 'completed',
+      data: buildSuccessData(result),
+      timestamp: new Date().toISOString(),
+      durationMs,
+    };
+
+    console.log(`   ✓ ${stepName} completed in ${(durationMs / 1000).toFixed(2)}s`);
+    logger.info('step_completed', { step: stepNumber, name: stepName });
+    return stepResult;
+  } catch (error) {
+    const durationMs = Date.now() - startTime;
+    const errorMsg = getErrorMessage(error);
+    
+    const stepResult: DeepResearchStepResult = {
+      step: stepNumber,
+      name: stepName,
+      status: 'failed',
+      data: { error: errorMsg },
+      timestamp: new Date().toISOString(),
+      durationMs,
+    };
+
+    console.log(`   ✗ ${stepName} failed: ${errorMsg}`);
+    logger.error('step_failed', { step: stepNumber, name: stepName, error: errorMsg });
+    return stepResult;
+  }
+}
 
 export const deepResearchOrchestrator = schemaTask({
   id: 'deep-research-orchestrator',
@@ -12,108 +58,135 @@ export const deepResearchOrchestrator = schemaTask({
   maxDuration: 300,
   run: async (payload, { ctx }) => {
     const startTime = Date.now();
-    const { companyId, companyName } = payload;
+    const company = payload;
+    const runId = ctx.run.id;
 
-    logger.info('deep_research_started', { companyId, companyName });
+    console.log('\n🔬 [Orchestrator] Starting deep research');
+    console.log(`   Company: ${company.name} (${company.id})`);
+    console.log(`   Steps: ${company.source_url ? '2 (YC scrape + discovery)' : '1 (discovery only)'}`);
+    console.log(`   Run ID: ${runId}\n`);
 
+    logger.info('deep_research_started', {
+      companyId: company.id,
+      companyName: company.name,
+      hasSourceUrl: !!company.source_url,
+    });
+
+    const totalSteps = company.source_url ? 2 : 1;
     metadata.set('status', 'in_progress');
-    metadata.set('companyId', companyId);
-    metadata.set('companyName', companyName);
-    metadata.set('totalSteps', 1);
-    metadata.set('currentStep', 0);
+    metadata.set('companyId', company.id);
+    metadata.set('companyName', company.name);
+    metadata.set('totalSteps', totalSteps);
     metadata.set('startedAt', new Date().toISOString());
 
-    const stepResults: DeepResearchStepResult[] = [];
+    const steps: DeepResearchStepResult[] = [];
+    let currentStep = 0;
 
-    const stepStartTime = Date.now();
-    metadata.set('currentStep', 1);
-    metadata.set('currentStepName', 'Discovery Research');
-
-    try {
-      const result = await discoveryAgent.triggerAndWait({
-        companyId: payload.companyId,
-        domain: 'founder_profile',
-        companyName: payload.companyName,
-        companyWebsite: payload.companyWebsite,
-        companyDescription: payload.companyDescription,
-        companyBatch: payload.companyBatch,
-        companyTags: payload.companyTags,
-        config: {
-          maxDepth: 0,
-          maxBreadth: 2,
-          maxQueries: 1,
-          maxSources: 10,
-          platforms: ['google'],
-        },
-      });
-
-      if (!result.ok) {
-        throw new Error(`Discovery task failed`);
-      }
-
-      const stepResult: DeepResearchStepResult = {
-        step: 1,
-        name: 'Discovery Research',
-        status: 'completed',
-        data: {
-          domain: result.output.domain,
-          discoveryResearch: {
-            runId: result.output.runId,
-            status: result.output.status,
-            queriesExecuted: result.output.stats.queriesExecuted,
-            sourcesDiscovered: result.output.stats.sourcesDiscovered,
-            durationMs: result.output.stats.durationMs,
+    if (company.source_url) {
+      console.log(`📄 [Step ${currentStep}] Scraping YC source: ${company.source_url}`);
+      steps.push(
+        await executeStep(
+          currentStep++,
+          'YC Source Scrape',
+          async () => {
+            const provider = getScraperProvider('firecrawl');
+            const scrapeStartTime = Date.now();
+            
+            const result = await provider.scrape(company.source_url!);
+            const scrapeDuration = Date.now() - scrapeStartTime;
+            
+            if (!result.content || result.content.length === 0) {
+              throw new Error('YC source returned empty content');
+            }
+            
+            console.log(`   [YC Scrape] Retrieved ${(result.contentLength / 1024).toFixed(1)}KB in ${scrapeDuration}ms`);
+            
+            return {
+              url: company.source_url,
+              content: result.content,
+              contentLength: result.contentLength,
+              scrapeDurationMs: scrapeDuration,
+            };
           },
-        },
-        timestamp: new Date().toISOString(),
-        durationMs: Date.now() - stepStartTime,
-      };
-
-      stepResults.push(stepResult);
-      logger.info('step_completed', { step: 1, name: 'Discovery Research' });
-    } catch (error) {
-      const stepResult: DeepResearchStepResult = {
-        step: 1,
-        name: 'Discovery Research',
-        status: 'failed',
-        data: {
-          error: error instanceof Error ? error.message : 'Unknown error',
-        },
-        timestamp: new Date().toISOString(),
-        durationMs: Date.now() - stepStartTime,
-      };
-
-      stepResults.push(stepResult);
-      logger.error('step_failed', {
-        step: 1,
-        error: error instanceof Error ? error.message : 'Unknown error',
-      });
+          ({ url, content, contentLength, scrapeDurationMs }) => ({
+            url,
+            contentLength,
+            contentPreview: content.substring(0, 500),
+            scrapeDurationMs,
+          })
+        )
+      );
     }
+
+    console.log(`🔍 [Step ${currentStep}] Running discovery research`);
+    steps.push(
+      await executeStep(
+        currentStep++,
+        'Discovery Research',
+        async () => {
+          const result = await discoveryAgent.triggerAndWait({
+            companyId: company.id,
+            domain: 'founder_profile',
+            companyName: company.name,
+            companyWebsite: company.website || undefined,
+            companyDescription: company.long_description || undefined,
+            companyBatch: company.batch || undefined,
+            companyTags: company.tags,
+            config: {
+              maxDepth: 0,
+              maxBreadth: 2,
+              maxQueries: 1,
+              maxSources: 10,
+              platforms: ['google'],
+            },
+          });
+          if (!result.ok) throw new Error('Discovery task failed');
+          return result.output;
+        },
+        (output) => ({
+          domain: output.domain,
+          discoveryResearch: {
+            runId: output.runId,
+            status: output.status,
+            queriesExecuted: output.stats.queriesExecuted,
+            sourcesDiscovered: output.stats.sourcesDiscovered,
+            durationMs: output.stats.durationMs,
+          },
+        })
+      )
+    );
 
     const totalDuration = Date.now() - startTime;
     const completedAt = new Date().toISOString();
+    const completedSteps = steps.filter((s) => s.status === 'completed').length;
 
-    const output: DeepResearchOutput = {
-      companyId,
-      companyName,
-      steps: stepResults,
-      summary: `Completed ${stepResults.filter((s) => s.status === 'completed').length}/1 deep research steps`,
-      totalDurationMs: totalDuration,
-      completedAt,
-      cached: false,
-    };
+    console.log(`\n✅ [Orchestrator] Deep research completed in ${(totalDuration / 1000).toFixed(2)}s`);
+    console.log(`   Steps: ${completedSteps}/${totalSteps} successful`);
+    steps.forEach((step, i) => {
+      const icon = step.status === 'completed' ? '✓' : '✗';
+      console.log(`   ${icon} Step ${i}: ${step.name} (${step.status})`);
+    });
+    console.log('');
 
     metadata.set('status', 'completed');
     metadata.set('completedAt', completedAt);
     metadata.set('totalDurationMs', totalDuration);
 
     logger.info('deep_research_completed', {
-      companyId,
+      companyId: company.id,
       totalDurationMs: totalDuration,
-      successfulSteps: stepResults.filter((s) => s.status === 'completed')
-        .length,
+      successfulSteps: completedSteps,
+      totalSteps,
     });
 
-    return output;
+    return {
+      companyId: company.id,
+      companyName: company.name,
+      steps,
+      summary: `Completed ${completedSteps}/${totalSteps} deep research steps`,
+      totalDurationMs: totalDuration,
+      completedAt,
+      cached: false,
+    };
   },
 });

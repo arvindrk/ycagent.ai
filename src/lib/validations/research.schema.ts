@@ -84,6 +84,10 @@ export type DiscoveryTaskPayload = z.infer<typeof discoveryTaskPayloadSchema>;
 export const discoveryStatsSchema = z.object({
   queriesExecuted: z.number().int().min(0),
   sourcesDiscovered: z.number().int().min(0),
+  sourcesScraped: z.number().int().min(0).default(0),
+  sourcesFailed: z.number().int().min(0).default(0),
+  totalContentLength: z.number().int().min(0).default(0),
+  avgScrapeDurationMs: z.number().min(0).default(0),
   durationMs: z.number().int().min(0),
   currentDepth: z.number().int().min(0),
   budgetExhausted: z.boolean(),

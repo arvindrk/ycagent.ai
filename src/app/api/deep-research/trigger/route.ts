@@ -11,8 +11,8 @@ export async function POST(request: NextRequest) {
     const { company, forceRefresh } = triggerDeepResearchRequestSchema.parse(body);
 
     const idempotencyKey = forceRefresh
-      ? `deep-research_${company.companyId}_${Date.now()}`
-      : `deeep-research_${company.companyId}`;
+      ? `deep-research_${company.id}_${Date.now()}`
+      : `deep-research_${company.id}`;
 
     const handle = await tasks.trigger<typeof deepResearchOrchestrator>(
       "deep-research-orchestrator",
@@ -21,8 +21,8 @@ export async function POST(request: NextRequest) {
         idempotencyKey,
         idempotencyKeyTTL: "30d",
         tags: [
-          `company:${company.companyId}`,
-          `batch:${company.companyBatch || 'unknown'}`,
+          `company:${company.id}`,
+          `batch:${company.batch || 'unknown'}`,
         ],
       }
     );

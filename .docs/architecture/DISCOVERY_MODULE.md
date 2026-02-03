@@ -1,8 +1,31 @@
 # Discovery Module Architecture
 
-**Version:** 1.0  
-**Status:** Design  
-**Last Updated:** 2026-02-02
+**Version:** 1.1 (MVP Implementation)  
+**Status:** In Implementation  
+**Last Updated:** 2026-02-03
+
+---
+
+## ⚠️ MVP vs. Full Vision
+
+**Current implementation focuses on MVP with simplified scope:**
+
+| Feature                      | MVP Status     | Full Vision (Deferred)                 |
+| ---------------------------- | -------------- | -------------------------------------- |
+| **Table: `discovered_urls`** | ✅ Implemented | Renamed from `sources` for clarity     |
+| **Per-run deduplication**    | ✅ Implemented | `UNIQUE(run_id, url_hash)`             |
+| **Tool-agnostic scraping**   | ✅ Implemented | FireCrawl provider (swappable)         |
+| **Parallel scraping**        | ✅ Implemented | `Promise.all` + `Promise.allSettled`   |
+| **Error handling**           | ✅ Implemented | Transient vs. permanent classification |
+| **Global deduplication**     | ❌ Deferred    | Cross-run content caching              |
+| **LLM relevance scoring**    | ❌ Deferred    | Pre-scrape filtering                   |
+| **Content deduplication**    | ❌ Deferred    | `content_hash` based                   |
+| **Rate limiting**            | ❌ Deferred    | Domain-level throttling                |
+| **Insights extraction**      | ❌ Deferred    | `insights` table + LLM                 |
+| **Artifacts storage**        | ❌ Deferred    | `artifacts` table (screenshots, PDFs)  |
+| **Recursive discovery**      | ❌ Deferred    | Followup query generation              |
+
+**Rationale**: Start simple, validate core scraping workflow, iterate based on usage patterns.
 
 ---
 
@@ -98,13 +121,16 @@ Output: Aggregated insights + evidence artifacts + query tree
 ```
 research_runs (1) ──┬─→ (N) search_queries
                     │         │
-                    │         └─→ (N) sources
+                    │         └─→ (N) discovered_urls
                     │                  │
-                    │                  └─→ (N) insights
+                    │                  └─→ (N) insights (future)
                     │                           │
-                    │                           └─→ (1) search_queries (followup)
+                    │                           └─→ (1) search_queries (followup, future)
                     │
-                    └─→ (N) artifacts
+                    └─→ (N) artifacts (future)
+
+Note: insights and artifacts tables are deferred to future iterations.
+MVP focuses on: research_runs → search_queries → discovered_urls
 ```
 
 ### Table Definitions
@@ -323,48 +349,37 @@ depth=0: "Neon database product info" (parent_id=NULL)
 
 ---
 
-#### `sources`
+#### `discovered_urls`
 
-**Purpose**: Discovered URLs from search results, with scrape status and content.
+**Purpose**: URLs discovered from search results with scraping lifecycle tracking.
+
+**Table renamed from `sources` to `discovered_urls` for clarity** - better describes what it contains (URLs discovered during search).
+
+**MVP Implementation**: Simplified schema focusing on essential fields only. Advanced features (LLM relevance scoring, content-based deduplication, domain rate limiting) deferred to future iterations.
 
 ```sql
-CREATE TABLE sources (
+CREATE TABLE discovered_urls (
   -- Identity
   id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
   run_id UUID NOT NULL REFERENCES research_runs(id) ON DELETE CASCADE,
   query_id UUID NOT NULL REFERENCES search_queries(id) ON DELETE CASCADE,
 
-  -- Source identity
+  -- URL identity
   url TEXT NOT NULL,
   url_hash VARCHAR(64) NOT NULL,
-  -- SHA256(url) for fast deduplication
+  -- SHA256(url) for fast per-run deduplication
 
+  -- Discovery metadata (from search results)
   title TEXT,
   snippet TEXT,
-  -- Search result description/preview
-
-  source_type VARCHAR(50),
-  -- Values: webpage, linkedin_profile, github_repo, github_issue, tweet, pdf, youtube
-
-  -- Discovery metadata
   rank INTEGER,
   -- Position in search results (1-10)
 
   discovered_at TIMESTAMP DEFAULT NOW(),
 
-  -- LLM relevance scoring
-  relevance_score DECIMAL(3,2),
-  -- 0.00-1.00, from LLM evaluation
-
-  relevance_reasoning TEXT,
-  -- Why LLM selected this (for debugging)
-
-  selected BOOLEAN DEFAULT false,
-  -- In topK for scraping (e.g., top 3 of 10 results)
-
-  -- Scraping state
-  scrape_status VARCHAR(20) DEFAULT 'pending',
-  -- Values: pending, scraping, scraped, failed, blocked, timeout, skipped, budget_exceeded
+  -- Scraping lifecycle
+  scrape_status VARCHAR(20) NOT NULL DEFAULT 'pending',
+  -- Values: pending, scraping, scraped, failed, blocked, timeout
 
   scrape_attempt INTEGER DEFAULT 0,
   scraped_at TIMESTAMP,
@@ -372,73 +387,86 @@ CREATE TABLE sources (
 
   -- Scraped content
   content TEXT,
-  -- Cleaned markdown or structured text
-
-  raw_html TEXT,
-  -- Optional: full HTML for re-parsing later
+  -- Cleaned markdown
 
   content_length INTEGER,
 
-  -- Domain tracking (for future rate limiting)
-  domain VARCHAR(255),
+  -- Provider tracking (tool-agnostic design)
+  scraper_provider VARCHAR(50),
+  -- Values: 'firecrawl', 'puppeteer', 'playwright', etc.
 
-  -- Content deduplication
-  content_hash VARCHAR(64),
-  -- SHA256 of cleaned content
-
-  -- Error tracking
+  -- Error handling
   error_message TEXT,
   is_retryable BOOLEAN DEFAULT true,
 
+  -- Timestamps
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW(),
 
-  -- Prevent duplicate URLs per run
-  CONSTRAINT unique_url_per_run UNIQUE(run_id, url_hash)
+  -- Per-run deduplication (prevents scraping same URL twice in same run)
+  CONSTRAINT unique_url_per_run UNIQUE(run_id, url_hash),
+
+  CONSTRAINT check_scrape_status CHECK (
+    scrape_status IN ('pending', 'scraping', 'scraped', 'failed', 'blocked', 'timeout')
+  )
 );
 
-CREATE INDEX idx_sources_run_id ON sources(run_id);
-CREATE INDEX idx_sources_query_id ON sources(query_id);
-CREATE INDEX idx_sources_url_hash ON sources(url_hash);
-CREATE INDEX idx_sources_domain ON sources(domain);
-CREATE INDEX idx_sources_next_scrape
-  ON sources(run_id, scrape_status, discovered_at)
-  WHERE selected = true AND scrape_status = 'pending';
-CREATE INDEX idx_sources_content_hash
-  ON sources(content_hash)
-  WHERE content_hash IS NOT NULL;
+CREATE INDEX idx_discovered_urls_run_id ON discovered_urls(run_id);
+CREATE INDEX idx_discovered_urls_query_id ON discovered_urls(query_id);
+CREATE INDEX idx_discovered_urls_url_hash ON discovered_urls(url_hash);
+CREATE INDEX idx_discovered_urls_pending
+  ON discovered_urls(run_id, scrape_status, rank NULLS LAST)
+  WHERE scrape_status = 'pending';
+CREATE INDEX idx_discovered_urls_status
+  ON discovered_urls(run_id, scrape_status);
 ```
 
 **Key Design Decisions**:
 
-- `url_hash` enables fast O(1) duplicate detection within run
-- `selected` boolean separates "discovered" (10 results) from "scraped" (top 3)
-- `relevance_reasoning` stores LLM's explanation for debugging/auditing
-- `content_hash` enables cross-run content deduplication (future optimization)
-- `domain` column reserved for future rate limiting implementation
-- UNIQUE constraint prevents re-scraping same URL if query retries
+- **Per-run deduplication only**: `UNIQUE(run_id, url_hash)` prevents re-scraping same URL within a run, but allows same URL across different runs (no global cache for MVP)
+- **Tool-agnostic provider field**: `scraper_provider` enables swapping between FireCrawl, Puppeteer, Playwright, etc.
+- **Simplified schema**: Removed complexity from original design (LLM scoring, content hashing, domain tracking) - focus on core scraping functionality
+- **Status-based workflow**: Clear lifecycle from `pending` → `scraping` → `scraped`/`failed`
 
-**Lifecycle Flow**:
+**Deferred Features** (not in MVP):
+
+- ❌ LLM relevance scoring (`relevance_score`, `relevance_reasoning`, `selected`)
+- ❌ Cross-run content deduplication (`content_hash`)
+- ❌ Domain-based rate limiting (`domain` column)
+- ❌ Raw HTML storage (`raw_html`)
+- ❌ Source type classification (`source_type`)
+
+**Lifecycle Flow** (MVP):
 
 ```
-1. Query executes → sources inserted with scrape_status='pending'
-2. LLM scores → relevance_score populated, selected=true for topK
-3. Scraper runs → scrape_status='scraped', content populated
+1. Search executes → discovered_urls inserted with scrape_status='pending'
+2. Scraper picks up pending URLs → scrape_status='scraping'
+3. On success → scrape_status='scraped', content populated
 4. On error → scrape_status='failed', error_message populated
 ```
 
+**Future Enhancements**:
+
+- Global deduplication cache (separate `scraped_urls` table)
+- LLM-based relevance filtering before scraping
+- Content-based deduplication across runs
+- Per-domain rate limiting
+
 ---
 
-#### `insights`
+#### `insights` (Deferred to Future)
 
 **Purpose**: Extracted learnings from scraped content, with flexible metadata.
 
+**Status**: Not implemented in MVP. Future enhancement for insight extraction from scraped content.
+
 ```sql
+-- FUTURE: Not in MVP
 CREATE TABLE insights (
   -- Identity
   id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
   run_id UUID NOT NULL REFERENCES research_runs(id) ON DELETE CASCADE,
-  source_id UUID NOT NULL REFERENCES sources(id) ON DELETE CASCADE,
+  discovered_url_id UUID NOT NULL REFERENCES discovered_urls(id) ON DELETE CASCADE,
   query_id UUID REFERENCES search_queries(id) ON DELETE SET NULL,
 
   -- Insight content
@@ -553,16 +581,19 @@ CREATE INDEX idx_insights_followup
 
 ---
 
-#### `artifacts`
+#### `artifacts` (Deferred to Future)
 
 **Purpose**: Evidence storage (screenshots, PDFs, HTML snapshots).
 
+**Status**: Not implemented in MVP. Future enhancement for storing additional evidence artifacts.
+
 ```sql
+-- FUTURE: Not in MVP
 CREATE TABLE artifacts (
   -- Identity
   id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
   run_id UUID NOT NULL REFERENCES research_runs(id) ON DELETE CASCADE,
-  source_id UUID REFERENCES sources(id) ON DELETE SET NULL,
+  discovered_url_id UUID REFERENCES discovered_urls(id) ON DELETE SET NULL,
 
   -- Artifact details
   artifact_type VARCHAR(50) NOT NULL,
@@ -756,7 +787,7 @@ src/
 │      {url: "crunchbase.com/...", title: "...", snippet: "..."}│
 │      ...10 results                                           │
 │    ]                                                         │
-│    DB:     INSERT INTO sources (scrape_status='pending')     │
+│    DB:     INSERT INTO discovered_urls (scrape_status='pending') │
 │    DB:     UPDATE search_queries SET status='completed'      │
 └─────────────────────────┬────────────────────────────────────┘
                           │

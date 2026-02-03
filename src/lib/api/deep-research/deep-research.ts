@@ -31,14 +31,7 @@ export async function triggerDeepResearch(
   options: { forceRefresh?: boolean } = {}
 ): Promise<TriggerDeepResearchResponse> {
   const payload: TriggerDeepResearchRequest = {
-    company: {
-      companyId: company.id,
-      companyName: company.name,
-      companyWebsite: company.website ?? undefined,
-      companyDescription: company.one_liner ?? undefined,
-      companyBatch: company.batch ?? undefined,
-      companyTags: company.tags ?? undefined,
-    },
+    company,
     forceRefresh: options.forceRefresh ?? false,
   };
 
