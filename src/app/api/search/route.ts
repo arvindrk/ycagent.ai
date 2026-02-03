@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import { searchCompanies } from '@/lib/search/query';
-import { parseSearchFilters } from '@/lib/search/filters/parse';
-import { generateEmbedding } from '@/lib/search/embeddings/generate';
+import { searchCompanies } from '@/lib/semantic-search/query';
+import { parseSearchFilters } from '@/lib/semantic-search/filters/parse';
+import { generateEmbedding } from '@/lib/semantic-search/embeddings/generate';
 import { searchInputSchema } from '@/lib/validations/search.schema';
 
 export const runtime = 'nodejs';
