@@ -5,6 +5,7 @@ const envSchema = z.object({
   OPENAI_API_KEY: z.string().min(1, 'OPENAI_API_KEY is required'),
   TRIGGER_SECRET_KEY: z.string().min(1, 'TRIGGER_SECRET_KEY is required'),
   SERPER_API_KEY: z.string().min(1, 'SERPER_API_KEY is required'),
+  FIRE_CRAWL_API_KEY: z.string().min(1, 'FIRE_CRAWL_API_KEY is required'),
   NODE_ENV: z
     .enum(['development', 'production', 'test'])
     .default('development'),
