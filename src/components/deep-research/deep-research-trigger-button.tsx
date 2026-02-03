@@ -22,7 +22,7 @@ export function DeepResearchTriggerButton({
   });
 
   const handleTriggerDeepResearch = () => {
-    mutate({ company, forceRefresh: false });
+    mutate({ company, forceRefresh: true });
   };
 
   return (

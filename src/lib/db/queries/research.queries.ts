@@ -9,6 +9,7 @@ import type {
 
 interface CreateResearchRunParams {
   companyId: string;
+  domain?: string;
   config: DiscoveryConfig;
   seedData: DiscoverySeedData;
   triggerRunId?: string;
@@ -30,6 +31,7 @@ export async function createResearchRun(
   const sql = getDBClient();
   const {
     companyId,
+    domain,
     config,
     seedData,
     triggerRunId,
@@ -41,6 +43,7 @@ export async function createResearchRun(
   const rows = await sql`
     INSERT INTO research_runs (
       company_id,
+      domain,
       config,
       seed_data,
       trigger_run_id,
@@ -52,6 +55,7 @@ export async function createResearchRun(
       sources_discovered
     ) VALUES (
       ${companyId},
+      ${domain || null},
       ${JSON.stringify(config)},
       ${JSON.stringify(seedData)},
       ${triggerRunId || null},
@@ -118,6 +122,7 @@ export async function incrementQueryCounter(
 
 interface CreateSearchQueryParams {
   runId: string;
+  domain?: string;
   queryText: string;
   platform: SearchPlatform;
   depth: number;
@@ -138,11 +143,12 @@ export async function createSearchQuery(
   params: CreateSearchQueryParams
 ): Promise<CreateSearchQueryResult> {
   const sql = getDBClient();
-  const { runId, queryText, platform, depth, parentId } = params;
+  const { runId, domain, queryText, platform, depth, parentId } = params;
 
   const rows = await sql`
     INSERT INTO search_queries (
       run_id,
+      domain,
       query_text,
       platform,
       depth,
@@ -152,6 +158,7 @@ export async function createSearchQuery(
       results_count
     ) VALUES (
       ${runId},
+      ${domain || null},
       ${queryText},
       ${platform},
       ${depth},

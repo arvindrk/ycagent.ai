@@ -58,9 +58,18 @@ export const discoverySeedDataSchema = z.object({
 
 export type DiscoverySeedData = z.infer<typeof discoverySeedDataSchema>;
 
+export const researchDomainSchema = z.enum([
+  'vc_profile',
+  'founder_profile',
+  'product_info',
+]);
+
+export type ResearchDomain = z.infer<typeof researchDomainSchema>;
+
 export const discoveryTaskPayloadSchema = z.object({
   runId: z.string().uuid().optional(),
   companyId: z.string().uuid(),
+  domain: researchDomainSchema.optional().default('product_info'),
   companyName: z.string().optional(),
   companyWebsite: z.string().optional(),
   companyDescription: z.string().optional(),
@@ -86,6 +95,7 @@ export type DiscoveryStats = z.infer<typeof discoveryStatsSchema>;
 export const discoveryTaskOutputSchema = z.object({
   runId: z.string().uuid(),
   companyId: z.string().uuid(),
+  domain: researchDomainSchema,
   status: runStatusSchema,
   stats: discoveryStatsSchema,
   error: z

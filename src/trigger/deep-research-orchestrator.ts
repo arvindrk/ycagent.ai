@@ -32,6 +32,7 @@ export const deepResearchOrchestrator = schemaTask({
     try {
       const result = await discoveryTask.triggerAndWait({
         companyId: payload.companyId,
+        domain: 'founder_profile',
         companyName: payload.companyName,
         companyWebsite: payload.companyWebsite,
         companyDescription: payload.companyDescription,
@@ -39,7 +40,7 @@ export const deepResearchOrchestrator = schemaTask({
         companyTags: payload.companyTags,
         config: {
           maxDepth: 0,
-          maxBreadth: 1,
+          maxBreadth: 2,
           maxQueries: 1,
           maxSources: 10,
           platforms: ['google'],
@@ -47,7 +48,7 @@ export const deepResearchOrchestrator = schemaTask({
       });
 
       if (!result.ok) {
-        throw new Error(`Discovery task failed: ${result.error}`);
+        throw new Error(`Discovery task failed`);
       }
 
       const stepResult: DeepResearchStepResult = {
@@ -55,6 +56,7 @@ export const deepResearchOrchestrator = schemaTask({
         name: 'Discovery Research',
         status: 'completed',
         data: {
+          domain: result.output.domain,
           discoveryResearch: {
             runId: result.output.runId,
             status: result.output.status,
