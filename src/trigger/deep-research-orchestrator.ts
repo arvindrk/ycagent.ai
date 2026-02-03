@@ -4,7 +4,7 @@ import type {
   DeepResearchStepResult,
   DeepResearchOutput,
 } from '@/lib/validations/deep-research.schema';
-import { discoveryTask } from './discovery-task';
+import { discoveryAgent } from './discovery-agent';
 
 export const deepResearchOrchestrator = schemaTask({
   id: 'deep-research-orchestrator',
@@ -30,7 +30,7 @@ export const deepResearchOrchestrator = schemaTask({
     metadata.set('currentStepName', 'Discovery Research');
 
     try {
-      const result = await discoveryTask.triggerAndWait({
+      const result = await discoveryAgent.triggerAndWait({
         companyId: payload.companyId,
         domain: 'founder_profile',
         companyName: payload.companyName,

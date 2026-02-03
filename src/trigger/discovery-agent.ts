@@ -13,7 +13,7 @@ import {
 import { getSearchProvider } from '@/lib/discovery/search';
 import { generateSeedQuery } from '@/lib/discovery/domains/templates';
 
-export const discoveryTask = schemaTask({
+export const discoveryAgent = schemaTask({
   id: 'discovery-research',
   schema: discoveryTaskPayloadSchema,
   maxDuration: 600,
@@ -144,8 +144,8 @@ export const discoveryTask = schemaTask({
         rank: result.rank || index + 1,
         metadata: result.metadata,
       }));
-      // console.log(response.results);
-      // console.log(resultsJson);
+      console.log(response.results);
+      console.log(resultsJson);
       logger.info('search_results_debug', {
         domain,
         queryText,

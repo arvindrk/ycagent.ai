@@ -26,7 +26,7 @@ export async function searchCompanies(
       ? process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
       : '';
 
-  const url = `${baseUrl}/api/search?${searchParams.toString()}`;
+  const url = `${baseUrl}/api/semantic-search?${searchParams.toString()}`;
 
   try {
     const response = await fetch(url, {
