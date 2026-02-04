@@ -1,6 +1,6 @@
 import Firecrawl from '@mendable/firecrawl-js';
 import { getEnv } from '@/lib/env';
-import type { ScraperProvider, ScrapedContent } from '../types';
+import type { ScraperProvider, ScrapedContent, ScrapeOptions } from '../types';
 
 export class FirecrawlProvider implements ScraperProvider {
   readonly name = 'firecrawl';
@@ -12,18 +12,125 @@ export class FirecrawlProvider implements ScraperProvider {
     });
   }
 
-  async scrape(url: string): Promise<ScrapedContent> {
+  async scrape(url: string, options?: ScrapeOptions): Promise<ScrapedContent> {
     const startTime = Date.now();
 
     try {
-      const result = await this.client.scrape(url, {
-        formats: ['markdown'],
-        onlyMainContent: true,
-        timeout: 30000,
+      const format = options?.format || 'markdown';
+
+      if (format === 'json' && options?.jsonSchema) {
+        return await this.scrapeAsJson(url, options.jsonSchema, options.prompt);
+      }
+
+      return await this.scrapeAsMarkdown(url);
+
+    } catch (error) {
+      const durationMs = Date.now() - startTime;
+      const isRetryable = this.classifyError(error);
+
+      const enhancedError = Object.assign(
+        new Error(
+          `FireCrawl scrape failed for ${url}: ${error instanceof Error ? error.message : 'Unknown error'}`
+        ),
+        {
+          isRetryable,
+          originalError: error,
+          durationMs,
+        }
+      );
+
+      throw enhancedError;
+    }
+  }
+
+  private async scrapeAsJson(
+    url: string,
+    schema: object,
+    prompt?: string
+  ): Promise<ScrapedContent> {
+    const startTime = Date.now();
+
+    const result = await this.client.scrape(url, {
+      formats: [{
+        type: 'json',
+        schema,
+        prompt,
+      }],
+      onlyMainContent: true,
+      timeout: 60000,
+    });
+
+    const structuredData = result.json;
+    const content = JSON.stringify(structuredData, null, 2);
+    const durationMs = Date.now() - startTime;
+
+    return {
+      url,
+      content,
+      contentLength: content.length,
+      scrapedAt: new Date(),
+      durationMs,
+      metadata: {
+        format: 'json',
+        structuredData,
+        title: result.metadata?.title,
+        statusCode: result.metadata?.statusCode,
+      },
+    };
+  }
+
+  private async scrapeAsMarkdown(url: string): Promise<ScrapedContent> {
+    const startTime = Date.now();
+
+    const result = await this.client.scrape(url, {
+      formats: ['markdown'],
+      onlyMainContent: true,
+      timeout: 30000,
+    });
+
+    const content = result.markdown || '';
+    const durationMs = Date.now() - startTime;
+
+    return {
+      url,
+      content,
+      contentLength: content.length,
+      scrapedAt: new Date(),
+      durationMs,
+      metadata: {
+        format: 'markdown',
+        title: result.metadata?.title,
+        description: result.metadata?.description,
+        statusCode: result.metadata?.statusCode,
+      },
+    };
+  }
+
+  async extract(
+    url: string,
+    schema: object,
+    prompt?: string
+  ): Promise<ScrapedContent> {
+    const startTime = Date.now();
+
+    console.log(`[FirecrawlProvider] Starting extraction for ${url}`);
+
+    try {
+      const result = await this.client.extract({
+        urls: [url],
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        schema: schema as any,
+        prompt,
+        allowExternalLinks: false,
+        enableWebSearch: false,
       });
 
-      const content = result.markdown || '';
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const extractedData = (result as any).data?.[0];
+      const content = JSON.stringify(extractedData, null, 2);
       const durationMs = Date.now() - startTime;
+
+      console.log(`[FirecrawlProvider] Extraction completed in ${durationMs}ms`);
 
       return {
         url,
@@ -32,9 +139,8 @@ export class FirecrawlProvider implements ScraperProvider {
         scrapedAt: new Date(),
         durationMs,
         metadata: {
-          title: result.metadata?.title,
-          description: result.metadata?.description,
-          statusCode: result.metadata?.statusCode,
+          format: 'json',
+          structuredData: extractedData,
         },
       };
     } catch (error) {
@@ -43,7 +149,7 @@ export class FirecrawlProvider implements ScraperProvider {
 
       const enhancedError = Object.assign(
         new Error(
-          `FireCrawl scrape failed for ${url}: ${error instanceof Error ? error.message : 'Unknown error'}`
+          `FireCrawl extract failed for ${url}: ${error instanceof Error ? error.message : 'Unknown error'}`
         ),
         {
           isRetryable,

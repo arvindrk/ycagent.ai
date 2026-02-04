@@ -20,7 +20,7 @@ async function executeStep<T>(
   try {
     const result = await fn();
     const durationMs = Date.now() - startTime;
-    
+
     const stepResult: DeepResearchStepResult = {
       step: stepNumber,
       name: stepName,
@@ -36,7 +36,7 @@ async function executeStep<T>(
   } catch (error) {
     const durationMs = Date.now() - startTime;
     const errorMsg = getErrorMessage(error);
-    
+
     const stepResult: DeepResearchStepResult = {
       step: stepNumber,
       name: stepName,
@@ -63,7 +63,7 @@ export const deepResearchOrchestrator = schemaTask({
 
     console.log('\n🔬 [Orchestrator] Starting deep research');
     console.log(`   Company: ${company.name} (${company.id})`);
-    console.log(`   Steps: ${company.source_url ? '2 (YC scrape + discovery)' : '1 (discovery only)'}`);
+    console.log(`   Steps: ${company.source_url ? '2 (YC markdown scrape + discovery)' : '1 (discovery only)'}`);
     console.log(`   Run ID: ${runId}\n`);
 
     logger.info('deep_research_started', {
@@ -83,36 +83,39 @@ export const deepResearchOrchestrator = schemaTask({
     let currentStep = 0;
 
     if (company.source_url) {
-      console.log(`📄 [Step ${currentStep}] Scraping YC source: ${company.source_url}`);
+      console.log(`📄 [Step ${currentStep}] Scraping YC page as markdown`);
       steps.push(
         await executeStep(
           currentStep++,
-          'YC Source Scrape',
+          'YC Page Scrape',
           async () => {
             const provider = getScraperProvider('firecrawl');
             const scrapeStartTime = Date.now();
-            
+
             const result = await provider.scrape(company.source_url!);
+
             const scrapeDuration = Date.now() - scrapeStartTime;
-            
+
             if (!result.content || result.content.length === 0) {
-              throw new Error('YC source returned empty content');
+              throw new Error('YC scrape returned empty content');
             }
-            
-            console.log(`   [YC Scrape] Retrieved ${(result.contentLength / 1024).toFixed(1)}KB in ${scrapeDuration}ms`);
-            
+
+            console.log(`   [YC Scrape] Retrieved markdown in ${scrapeDuration}ms`);
+            console.log(`   📄 Content length: ${result.contentLength} chars`);
+
             return {
               url: company.source_url,
               content: result.content,
               contentLength: result.contentLength,
               scrapeDurationMs: scrapeDuration,
+              format: 'markdown',
             };
           },
-          ({ url, content, contentLength, scrapeDurationMs }) => ({
+          ({ url, contentLength, scrapeDurationMs, format }) => ({
             url,
             contentLength,
-            contentPreview: content.substring(0, 500),
             scrapeDurationMs,
+            format,
           })
         )
       );

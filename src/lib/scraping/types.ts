@@ -6,9 +6,16 @@ export type ScrapeStatus =
   | 'blocked'
   | 'timeout';
 
+export interface ScrapeOptions {
+  format?: 'markdown' | 'json';
+  jsonSchema?: object;
+  prompt?: string;
+}
+
 export interface ScraperProvider {
   readonly name: string;
-  scrape(url: string): Promise<ScrapedContent>;
+  scrape(url: string, options?: ScrapeOptions): Promise<ScrapedContent>;
+  extract(url: string, schema: object, prompt?: string): Promise<ScrapedContent>;
 }
 
 export interface ScrapedContent {
@@ -17,7 +24,14 @@ export interface ScrapedContent {
   contentLength: number;
   scrapedAt: Date;
   durationMs: number;
-  metadata?: Record<string, unknown>;
+  metadata?: {
+    format?: 'markdown' | 'json';
+    structuredData?: unknown;
+    title?: string;
+    description?: string;
+    statusCode?: number;
+    [key: string]: unknown;
+  };
 }
 
 export interface ScrapeResult {
