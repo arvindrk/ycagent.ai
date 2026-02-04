@@ -126,7 +126,7 @@ export class FirecrawlProvider implements ScraperProvider {
       });
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const extractedData = (result as any).data?.[0];
+      const extractedData = (result as any).data;
       const content = JSON.stringify(extractedData, null, 2);
       const durationMs = Date.now() - startTime;
 

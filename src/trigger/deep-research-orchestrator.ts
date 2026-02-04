@@ -1,6 +1,7 @@
 import { schemaTask, logger, metadata } from '@trigger.dev/sdk/v3';
 import { companyDeepResearchPayloadSchema } from '@/lib/validations/deep-research.schema';
 import type { DeepResearchStepResult } from '@/lib/validations/deep-research.schema';
+import { YC_EXTRACTION_SCHEMA, YC_EXTRACTION_PROMPT } from '@/lib/validations/yc-extraction.schema';
 import { discoveryAgent } from './discovery-agent';
 import { getScraperProvider } from '@/lib/scraping/factory';
 
@@ -63,7 +64,7 @@ export const deepResearchOrchestrator = schemaTask({
 
     console.log('\n🔬 [Orchestrator] Starting deep research');
     console.log(`   Company: ${company.name} (${company.id})`);
-    console.log(`   Steps: ${company.source_url ? '2 (YC markdown scrape + discovery)' : '1 (discovery only)'}`);
+    console.log(`   Steps: ${company.source_url ? '2 (YC extraction + discovery)' : '1 (discovery only)'}`);
     console.log(`   Run ID: ${runId}\n`);
 
     logger.info('deep_research_started', {
@@ -83,38 +84,44 @@ export const deepResearchOrchestrator = schemaTask({
     let currentStep = 0;
 
     if (company.source_url) {
-      console.log(`📄 [Step ${currentStep}] Scraping YC page as markdown`);
+      console.log(`📄 [Step ${currentStep}] Extracting structured data from YC page`);
       steps.push(
         await executeStep(
           currentStep++,
-          'YC Page Scrape',
+          'YC Page Extract',
           async () => {
             const provider = getScraperProvider('firecrawl');
-            const scrapeStartTime = Date.now();
+            const extractStartTime = Date.now();
 
-            const result = await provider.scrape(company.source_url!);
+            const result = await provider.extract(
+              company.source_url!,
+              YC_EXTRACTION_SCHEMA,
+              YC_EXTRACTION_PROMPT
+            );
 
-            const scrapeDuration = Date.now() - scrapeStartTime;
+            const extractDuration = Date.now() - extractStartTime;
+            const extractedData = result.metadata?.structuredData;
 
-            if (!result.content || result.content.length === 0) {
-              throw new Error('YC scrape returned empty content');
+            if (!extractedData) {
+              throw new Error('YC extract returned no structured data');
             }
 
-            console.log(`   [YC Scrape] Retrieved markdown in ${scrapeDuration}ms`);
-            console.log(`   📄 Content length: ${result.contentLength} chars`);
+            console.log(`   [YC Extract] Retrieved structured data in ${extractDuration}ms`);
+            console.log(`   📊 Extracted:`, JSON.stringify(extractedData, null, 2));
 
             return {
               url: company.source_url,
-              content: result.content,
+              extractedData,
               contentLength: result.contentLength,
-              scrapeDurationMs: scrapeDuration,
-              format: 'markdown',
+              extractDurationMs: extractDuration,
+              format: 'json',
             };
           },
-          ({ url, contentLength, scrapeDurationMs, format }) => ({
+          ({ url, extractedData, contentLength, extractDurationMs, format }) => ({
             url,
+            extractedData,
             contentLength,
-            scrapeDurationMs,
+            extractDurationMs,
             format,
           })
         )
