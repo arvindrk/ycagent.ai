@@ -12,6 +12,7 @@
         "db:test": "dotenvx run -- tsx scripts/test-queries.ts"
     },
     "dependencies": {
+        "@google/genai": "^1.40.0",
         "@mendable/firecrawl-js": "^4.12.0",
         "@neondatabase/serverless": "^1.0.2",
         "@radix-ui/react-accordion": "^1.2.12",
