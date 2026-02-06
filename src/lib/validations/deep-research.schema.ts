@@ -18,6 +18,7 @@ export const deepResearchStepResultSchema = z.object({
 });
 
 export const deepResearchOutputSchema = z.object({
+  runId: z.string().uuid(),
   companyId: z.string(),
   companyName: z.string(),
   steps: z.array(deepResearchStepResultSchema),

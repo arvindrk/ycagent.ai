@@ -69,6 +69,7 @@ export type ResearchDomain = z.infer<typeof researchDomainSchema>;
 export const discoveryTaskPayloadSchema = z.object({
   runId: z.string().uuid().optional(),
   companyId: z.string().uuid(),
+  parentRunId: z.string().uuid().optional(),
   domain: researchDomainSchema.optional().default('product_info'),
   companyName: z.string().optional(),
   companyWebsite: z.string().optional(),
@@ -157,6 +158,8 @@ export type SearchResponse = z.infer<typeof searchResponseSchema>;
 export const researchRunSchema = z.object({
   id: z.string().uuid(),
   companyId: z.string().uuid(),
+  parentRunId: z.string().uuid().optional().nullable(),
+  domain: researchDomainSchema.optional().nullable(),
   config: discoveryConfigSchema,
   seedData: discoverySeedDataSchema,
   triggerRunId: z.string().optional(),

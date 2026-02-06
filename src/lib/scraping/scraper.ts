@@ -1,8 +1,9 @@
-import type { ScraperProvider, ScrapeResult } from './types';
+import type { ScraperProvider, ScrapeResult, ScrapeStrategy, DiscoveredUrl, ScrapedContent } from './types';
 import {
   createDiscoveredUrls,
   batchUpdateScrapeStatus,
   getPendingUrls,
+  createScrapedUrl,
 } from '../db/queries/discovered-urls.queries';
 import { logger } from '@trigger.dev/sdk/v3';
 import type { ScrapeStats } from './types';
@@ -46,7 +47,10 @@ export class ScraperModule {
     });
   }
 
-  async scrapePendingUrls(runId: string): Promise<{ results: ScrapeResult[], stats: ScrapeStats }> {
+  async scrapePendingUrls(
+    runId: string,
+    strategySelector: (url: DiscoveredUrl) => ScrapeStrategy
+  ): Promise<{ results: ScrapeResult[], stats: ScrapeStats }> {
     const pending = await getPendingUrls(runId);
 
     if (pending.length === 0) {
@@ -66,9 +70,10 @@ export class ScraperModule {
     });
 
     const results = await Promise.allSettled(
-      pending.map((discoveredUrl) =>
-        this.scrapeUrl(discoveredUrl.id, discoveredUrl.url)
-      )
+      pending.map((discoveredUrl) => {
+        const strategy = strategySelector(discoveredUrl);
+        return this.scrapeUrl(discoveredUrl.id, discoveredUrl.url, strategy);
+      })
     );
 
     const scrapeResults: ScrapeResult[] = results.map((result, index) => {
@@ -120,18 +125,32 @@ export class ScraperModule {
 
   private async scrapeUrl(
     discoveredUrlId: string,
-    url: string
+    url: string,
+    strategy: ScrapeStrategy
   ): Promise<ScrapeResult> {
     const startTime = Date.now();
 
     try {
-      const scraped = await this.provider.scrape(url);
+      let scraped: ScrapedContent;
+
+      if (strategy.type === 'extract') {
+        scraped = await this.provider.extract(url, strategy.schema, strategy.prompt);
+      } else if (strategy.type === 'json') {
+        scraped = await this.provider.scrape(url, {
+          format: 'json',
+          jsonSchema: strategy.schema,
+          prompt: strategy.prompt,
+        });
+      } else {
+        scraped = await this.provider.scrape(url, { format: 'markdown' });
+      }
 
       logger.info('url_scraped', {
         discoveredUrlId,
         url,
         contentLength: scraped.contentLength,
         durationMs: Date.now() - startTime,
+        strategy: strategy.type,
       });
 
       return {
@@ -158,6 +177,7 @@ export class ScraperModule {
         url,
         error: errorMessage,
         durationMs: Date.now() - startTime,
+        strategy: strategy.type,
       });
 
       return {
@@ -167,6 +187,80 @@ export class ScraperModule {
         error: errorMessage,
         durationMs: Date.now() - startTime,
       };
+    }
+  }
+
+  async scrapeAndRecordUrl(
+    runId: string,
+    queryId: string | null,
+    url: string,
+    strategy: ScrapeStrategy
+  ): Promise<ScrapedContent> {
+    const startTime = Date.now();
+
+    console.log(`   [Scraper] Scraping URL: ${url} with strategy: ${strategy.type}`);
+    logger.info('scraping_url', {
+      runId,
+      queryId: queryId || 'direct',
+      url,
+      strategy: strategy.type,
+      provider: this.provider.name,
+    });
+
+    try {
+      let scraped: ScrapedContent;
+
+      if (strategy.type === 'extract') {
+        scraped = await this.provider.extract(url, strategy.schema, strategy.prompt);
+      } else if (strategy.type === 'json') {
+        scraped = await this.provider.scrape(url, {
+          format: 'json',
+          jsonSchema: strategy.schema,
+          prompt: strategy.prompt,
+        });
+      } else {
+        scraped = await this.provider.scrape(url, { format: 'markdown' });
+      }
+
+      await createScrapedUrl({
+        runId,
+        queryId,
+        url: scraped.url,
+        content: scraped.content,
+        contentLength: scraped.contentLength,
+        scraperProvider: this.provider.name,
+        scrapeDurationMs: scraped.durationMs,
+        title: scraped.metadata?.title,
+      });
+
+      const totalDuration = Date.now() - startTime;
+      console.log(`   [Scraper] Successfully scraped and recorded: ${url} (${totalDuration}ms)`);
+      logger.info('url_scraped_and_recorded', {
+        runId,
+        queryId: queryId || 'direct',
+        url,
+        contentLength: scraped.contentLength,
+        durationMs: totalDuration,
+        strategy: strategy.type,
+        provider: this.provider.name,
+      });
+
+      return scraped;
+    } catch (error) {
+      const durationMs = Date.now() - startTime;
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+
+      console.log(`   [Scraper] Failed to scrape: ${url} - ${errorMessage}`);
+      logger.error('scrape_and_record_failed', {
+        runId,
+        queryId: queryId || 'direct',
+        url,
+        error: errorMessage,
+        durationMs,
+        strategy: strategy.type,
+      });
+
+      throw error;
     }
   }
 

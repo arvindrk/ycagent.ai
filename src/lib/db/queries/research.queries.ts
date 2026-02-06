@@ -9,7 +9,8 @@ import type {
 
 interface CreateResearchRunParams {
   companyId: string;
-  domain?: string;
+  parentRunId?: string | null;
+  domain?: string | null;
   config: DiscoveryConfig;
   seedData: DiscoverySeedData;
   triggerRunId?: string;
@@ -21,6 +22,8 @@ interface CreateResearchRunParams {
 interface CreateResearchRunResult {
   id: string;
   companyId: string;
+  parentRunId?: string | null;
+  domain?: string | null;
   status: RunStatus;
   createdAt: Date;
 }
@@ -31,6 +34,7 @@ export async function createResearchRun(
   const sql = getDBClient();
   const {
     companyId,
+    parentRunId,
     domain,
     config,
     seedData,
@@ -43,6 +47,7 @@ export async function createResearchRun(
   const rows = await sql`
     INSERT INTO research_runs (
       company_id,
+      parent_run_id,
       domain,
       config,
       seed_data,
@@ -55,6 +60,7 @@ export async function createResearchRun(
       sources_discovered
     ) VALUES (
       ${companyId},
+      ${parentRunId || null},
       ${domain || null},
       ${JSON.stringify(config)},
       ${JSON.stringify(seedData)},
@@ -66,12 +72,14 @@ export async function createResearchRun(
       0,
       0
     )
-    RETURNING id, company_id, status, created_at
+    RETURNING id, company_id, parent_run_id, domain, status, created_at
   `;
 
   return {
     id: rows[0].id,
     companyId: rows[0].company_id,
+    parentRunId: rows[0].parent_run_id || null,
+    domain: rows[0].domain || null,
     status: rows[0].status,
     createdAt: new Date(rows[0].created_at),
   };
@@ -388,4 +396,68 @@ export async function completeDiscovery(
       WHERE id = ${runId}
     `,
   ]);
+}
+
+/**
+ * Get all child research runs for a parent orchestrator run
+ */
+export async function getChildResearchRuns(parentRunId: string): Promise<Array<{
+  id: string;
+  companyId: string;
+  domain: string | null;
+  status: RunStatus;
+  createdAt: Date;
+  completedAt: Date | null;
+}>> {
+  const sql = getDBClient();
+
+  const rows = await sql`
+    SELECT id, company_id, domain, status, created_at, completed_at
+    FROM research_runs
+    WHERE parent_run_id = ${parentRunId}
+    ORDER BY created_at
+  `;
+
+  return rows.map(row => ({
+    id: row.id,
+    companyId: row.company_id,
+    domain: row.domain,
+    status: row.status as RunStatus,
+    createdAt: new Date(row.created_at),
+    completedAt: row.completed_at ? new Date(row.completed_at) : null,
+  }));
+}
+
+/**
+ * Get orchestrator run for a company (most recent)
+ */
+export async function getOrchestratorRun(companyId: string): Promise<{
+  id: string;
+  companyId: string;
+  status: RunStatus;
+  createdAt: Date;
+  completedAt: Date | null;
+} | null> {
+  const sql = getDBClient();
+
+  const rows = await sql`
+    SELECT id, company_id, status, created_at, completed_at
+    FROM research_runs
+    WHERE company_id = ${companyId}
+      AND parent_run_id IS NULL
+      AND domain IS NULL
+    ORDER BY created_at DESC
+    LIMIT 1
+  `;
+
+  if (rows.length === 0) return null;
+
+  const row = rows[0];
+  return {
+    id: row.id,
+    companyId: row.company_id,
+    status: row.status as RunStatus,
+    createdAt: new Date(row.created_at),
+    completedAt: row.completed_at ? new Date(row.completed_at) : null,
+  };
 }

@@ -93,12 +93,13 @@ export const discoveryAgent = schemaTask({
   },
   run: async (payload, { ctx }): Promise<DiscoveryTaskOutput> => {
     const startTime = Date.now();
-    const { companyId, domain = 'product_info' } = payload;
+    const { companyId, parentRunId, domain = 'product_info' } = payload;
 
     console.log('\n🔍 [Discovery] Starting discovery research');
     console.log(`   Company ID: ${companyId}`);
+    console.log(`   Parent Run ID: ${parentRunId || 'none'}`);
     console.log(`   Domain: ${domain}`);
-    console.log(`   Run ID: ${ctx.run.id}`);
+    console.log(`   Trigger Run ID: ${ctx.run.id}`);
 
     logger.info('discovery_started', { companyId, domain });
     metadata.set('status', 'running');
@@ -127,6 +128,7 @@ export const discoveryAgent = schemaTask({
       metadata.set('currentStep', 'creating_research_run');
       const run = await createResearchRun({
         companyId,
+        parentRunId: parentRunId || null,
         domain,
         config,
         seedData: {
@@ -144,7 +146,10 @@ export const discoveryAgent = schemaTask({
       });
 
       console.log(`   ✓ Research run created: ${run.id}`);
-      logger.info('research_run_created', { runId: run.id, domain });
+      if (parentRunId) {
+        console.log(`   ✓ Linked to parent: ${parentRunId}`);
+      }
+      logger.info('research_run_created', { runId: run.id, parentRunId, domain });
       metadata.set('runId', run.id);
 
       metadata.set('currentStep', 'creating_search_query');
@@ -192,7 +197,7 @@ export const discoveryAgent = schemaTask({
       await scraper.discoverUrls(run.id, query.id, resultsWithRank);
       console.log(`   ⏳ Scraping ${resultsWithRank.length} URLs...`);
 
-      const { stats } = await scraper.scrapePendingUrls(run.id);
+      const { stats } = await scraper.scrapePendingUrls(run.id, () => ({ type: 'markdown' }));
       console.log(`   ✓ Scraping complete: ${stats.scraped} succeeded, ${stats.failed} failed`);
 
       metadata.set('urlsScraped', stats.scraped);

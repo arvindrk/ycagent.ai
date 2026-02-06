@@ -4,6 +4,8 @@ import type { DeepResearchStepResult } from '@/lib/validations/deep-research.sch
 import { YC_EXTRACTION_SCHEMA, YC_EXTRACTION_PROMPT } from '@/lib/validations/yc-extraction.schema';
 import { discoveryAgent } from './discovery-agent';
 import { getScraperProvider } from '@/lib/scraping/factory';
+import { ScraperModule } from '@/lib/scraping/scraper';
+import { createResearchRun, updateResearchRunStatus } from '@/lib/db/queries/research.queries';
 
 const getErrorMessage = (error: unknown): string =>
   error instanceof Error ? error.message : 'Unknown error';
@@ -60,12 +62,11 @@ export const deepResearchOrchestrator = schemaTask({
   run: async (payload, { ctx }) => {
     const startTime = Date.now();
     const company = payload;
-    const runId = ctx.run.id;
 
     console.log('\n🔬 [Orchestrator] Starting deep research');
     console.log(`   Company: ${company.name} (${company.id})`);
     console.log(`   Steps: ${company.source_url ? '2 (YC extraction + discovery)' : '1 (discovery only)'}`);
-    console.log(`   Run ID: ${runId}\n`);
+    console.log(`   Trigger Run ID: ${ctx.run.id}\n`);
 
     logger.info('deep_research_started', {
       companyId: company.id,
@@ -74,7 +75,40 @@ export const deepResearchOrchestrator = schemaTask({
     });
 
     const totalSteps = company.source_url ? 2 : 1;
+
+    const orchestratorRun = await createResearchRun({
+      companyId: company.id,
+      parentRunId: null,
+      domain: null,
+      config: {
+        maxDepth: 0,
+        maxBreadth: 1,
+        maxQueries: 1,
+        maxSources: totalSteps,
+        timeoutSeconds: 300,
+        platforms: ['google'],
+      },
+      seedData: {
+        name: company.name,
+        website: company.website || undefined,
+        description: company.long_description || undefined,
+        batch: company.batch || undefined,
+        tags: company.tags || [],
+        industries: [],
+      },
+      triggerRunId: ctx.run.id,
+      triggerIdempotencyKey: ctx.run.idempotencyKey || undefined,
+      status: 'running',
+      startedAt: new Date(),
+    });
+
+    const runId = orchestratorRun.id;
+
+    console.log(`   ✓ Orchestrator run created: ${runId}\n`);
+    logger.info('orchestrator_run_created', { runId, companyId: company.id });
+
     metadata.set('status', 'in_progress');
+    metadata.set('runId', runId);
     metadata.set('companyId', company.id);
     metadata.set('companyName', company.name);
     metadata.set('totalSteps', totalSteps);
@@ -91,29 +125,32 @@ export const deepResearchOrchestrator = schemaTask({
           'YC Page Extract',
           async () => {
             const provider = getScraperProvider('firecrawl');
-            const extractStartTime = Date.now();
+            const scraper = new ScraperModule(provider);
 
-            const result = await provider.extract(
+            const result = await scraper.scrapeAndRecordUrl(
+              runId,
+              null,
               company.source_url!,
-              YC_EXTRACTION_SCHEMA,
-              YC_EXTRACTION_PROMPT
+              {
+                type: 'extract',
+                schema: YC_EXTRACTION_SCHEMA,
+                prompt: YC_EXTRACTION_PROMPT,
+              }
             );
 
-            const extractDuration = Date.now() - extractStartTime;
             const extractedData = result.metadata?.structuredData;
 
             if (!extractedData) {
               throw new Error('YC extract returned no structured data');
             }
 
-            console.log(`   [YC Extract] Retrieved structured data in ${extractDuration}ms`);
             console.log(`   📊 Extracted:`, JSON.stringify(extractedData, null, 2));
 
             return {
               url: company.source_url,
               extractedData,
               contentLength: result.contentLength,
-              extractDurationMs: extractDuration,
+              extractDurationMs: result.durationMs,
               format: 'json',
             };
           },
@@ -136,6 +173,7 @@ export const deepResearchOrchestrator = schemaTask({
         async () => {
           const result = await discoveryAgent.triggerAndWait({
             companyId: company.id,
+            parentRunId: runId,
             domain: 'founder_profile',
             companyName: company.name,
             companyWebsite: company.website || undefined,
@@ -169,9 +207,18 @@ export const deepResearchOrchestrator = schemaTask({
     const totalDuration = Date.now() - startTime;
     const completedAt = new Date().toISOString();
     const completedSteps = steps.filter((s) => s.status === 'completed').length;
+    const allStepsCompleted = completedSteps === totalSteps;
+
+    await updateResearchRunStatus({
+      runId,
+      status: allStepsCompleted ? 'completed' : 'failed',
+      completedAt: new Date(),
+      errorMessage: allStepsCompleted ? undefined : 'Some steps failed',
+    });
 
     console.log(`\n✅ [Orchestrator] Deep research completed in ${(totalDuration / 1000).toFixed(2)}s`);
     console.log(`   Steps: ${completedSteps}/${totalSteps} successful`);
+    console.log(`   Run ID: ${runId}`);
     steps.forEach((step, i) => {
       const icon = step.status === 'completed' ? '✓' : '✗';
       console.log(`   ${icon} Step ${i}: ${step.name} (${step.status})`);
@@ -183,6 +230,7 @@ export const deepResearchOrchestrator = schemaTask({
     metadata.set('totalDurationMs', totalDuration);
 
     logger.info('deep_research_completed', {
+      runId,
       companyId: company.id,
       totalDurationMs: totalDuration,
       successfulSteps: completedSteps,
@@ -190,6 +238,7 @@ export const deepResearchOrchestrator = schemaTask({
     });
 
     return {
+      runId,
       companyId: company.id,
       companyName: company.name,
       steps,

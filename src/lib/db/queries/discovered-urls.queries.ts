@@ -248,29 +248,75 @@ export async function getScrapeStats(runId: string): Promise<ScrapeStats> {
   };
 }
 
+interface CreateScrapedUrlParams {
+  runId: string;
+  queryId?: string | null;
+  url: string;
+  content: string;
+  contentLength: number;
+  scraperProvider: string;
+  scrapeDurationMs: number;
+  title?: string;
+}
+
+/**
+ * Create discovered URL record with scraped content (for one-off scraping)
+ * Used when scraping happens outside normal discovery flow (e.g., direct extraction)
+ * queryId is optional - NULL for direct scrapes, UUID for search-discovered URLs
+ */
+export async function createScrapedUrl(
+  params: CreateScrapedUrlParams
+): Promise<DiscoveredUrl> {
+  const sql = getDBClient();
+  const { runId, queryId, url, content, contentLength, scraperProvider, scrapeDurationMs, title } = params;
+  const urlHash = generateUrlHash(url);
+
+  const rows = await sql`
+    INSERT INTO discovered_urls (
+      run_id, query_id, url, url_hash, title, scrape_status, 
+      content, content_length, scraper_provider, scrape_duration_ms, scraped_at
+    ) VALUES (
+      ${runId}, ${queryId || null}, ${url}, ${urlHash}, ${title || null}, 'scraped',
+      ${content}, ${contentLength}, ${scraperProvider}, ${scrapeDurationMs}, NOW()
+    )
+    ON CONFLICT (run_id, url_hash) DO UPDATE SET
+      title = COALESCE(EXCLUDED.title, discovered_urls.title),
+      scrape_status = 'scraped',
+      content = EXCLUDED.content,
+      content_length = EXCLUDED.content_length,
+      scraper_provider = EXCLUDED.scraper_provider,
+      scrape_duration_ms = EXCLUDED.scrape_duration_ms,
+      scraped_at = NOW(),
+      updated_at = NOW()
+    RETURNING *
+  `;
+
+  return mapRowToDiscoveredUrl(rows[0]);
+}
+
 /**
  * Map database row to DiscoveredUrl type
  */
-function mapRowToDiscoveredUrl(row: any): DiscoveredUrl {
+function mapRowToDiscoveredUrl(row: Record<string, unknown>): DiscoveredUrl {
   return {
-    id: row.id,
-    runId: row.run_id,
-    queryId: row.query_id,
-    url: row.url,
-    urlHash: row.url_hash,
-    title: row.title || undefined,
-    snippet: row.snippet || undefined,
-    rank: row.rank || undefined,
-    scrapeStatus: row.scrape_status,
-    content: row.content || undefined,
-    contentLength: row.content_length || undefined,
-    scraperProvider: row.scraper_provider || undefined,
-    errorMessage: row.error_message || undefined,
-    isRetryable: row.is_retryable,
-    scrapeAttempt: row.scrape_attempt,
-    discoveredAt: new Date(row.discovered_at),
-    scrapedAt: row.scraped_at ? new Date(row.scraped_at) : undefined,
-    createdAt: new Date(row.created_at),
-    updatedAt: new Date(row.updated_at),
+    id: row.id as string,
+    runId: row.run_id as string,
+    queryId: (row.query_id as string | null) || undefined,
+    url: row.url as string,
+    urlHash: row.url_hash as string,
+    title: (row.title as string | null) || undefined,
+    snippet: (row.snippet as string | null) || undefined,
+    rank: (row.rank as number | null) || undefined,
+    scrapeStatus: row.scrape_status as ScrapeStatus,
+    content: (row.content as string | null) || undefined,
+    contentLength: (row.content_length as number | null) || undefined,
+    scraperProvider: (row.scraper_provider as string | null) || undefined,
+    errorMessage: (row.error_message as string | null) || undefined,
+    isRetryable: (row.is_retryable as boolean | null) || undefined,
+    scrapeAttempt: row.scrape_attempt as number,
+    discoveredAt: new Date(row.discovered_at as Date | string),
+    scrapedAt: row.scraped_at ? new Date(row.scraped_at as Date | string) : undefined,
+    createdAt: new Date(row.created_at as Date | string),
+    updatedAt: new Date(row.updated_at as Date | string),
   };
 }

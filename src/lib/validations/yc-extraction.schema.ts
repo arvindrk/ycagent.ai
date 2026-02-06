@@ -37,17 +37,63 @@ export const YC_EXTRACTION_SCHEMA = {
         required: ['name'],
       },
     },
-    description: {
-      type: 'string',
-      description: 'One-liner about what the company does',
+    primaryPartner: {
+      type: 'object',
+      description: 'YC primary partner for this company',
+      properties: {
+        name: {
+          type: 'string',
+          description: 'Partner name',
+        },
+        url: {
+          type: 'string',
+          description: 'YC partner profile URL',
+        },
+      },
     },
-    problem: {
-      type: 'string',
-      description: 'The problem this company is solving',
+    companyLinks: {
+      type: 'object',
+      description: 'Company social media and web presence links',
+      properties: {
+        linkedin: {
+          type: 'string',
+          description: 'Company LinkedIn profile URL',
+        },
+        twitter: {
+          type: 'string',
+          description: 'Company Twitter/X profile URL',
+        },
+        github: {
+          type: 'string',
+          description: 'Company GitHub profile URL',
+        },
+      },
+    },
+    news: {
+      type: 'array',
+      description: 'Latest news items about the company',
+      items: {
+        type: 'object',
+        properties: {
+          title: {
+            type: 'string',
+            description: 'News headline or title',
+          },
+          url: {
+            type: 'string',
+            description: 'Link to the news article',
+          },
+          date: {
+            type: 'string',
+            description: 'Publication date',
+          },
+        },
+        required: ['title', 'url', 'date'],
+      },
     },
   },
-  required: ['founders', 'description', 'problem'],
+  required: ['founders'],
 } as const;
 
 export const YC_EXTRACTION_PROMPT =
-  'Extract founder information (name, role, bio, LinkedIn and Twitter links), company description, and problem statement from this YC company page';
+  'Extract founder information (name, role, bio, LinkedIn and Twitter links), YC primary partner (name and profile URL), company links (LinkedIn, Twitter, GitHub), and latest news from this YC company page';

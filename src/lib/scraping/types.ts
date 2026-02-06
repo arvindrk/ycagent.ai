@@ -12,6 +12,11 @@ export interface ScrapeOptions {
   prompt?: string;
 }
 
+export type ScrapeStrategy =
+  | { type: 'markdown' }
+  | { type: 'json'; schema: object; prompt?: string }
+  | { type: 'extract'; schema: object; prompt?: string };
+
 export interface ScraperProvider {
   readonly name: string;
   scrape(url: string, options?: ScrapeOptions): Promise<ScrapedContent>;
@@ -47,7 +52,7 @@ export interface ScrapeResult {
 export interface DiscoveredUrl {
   id: string;
   runId: string;
-  queryId: string;
+  queryId?: string;
   url: string;
   urlHash: string;
   title?: string;
