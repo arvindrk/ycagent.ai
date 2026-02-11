@@ -34,11 +34,11 @@ function formatRelativeTime(dateString: string): string {
   return `${Math.floor(diffDays / 365)}\u00A0years ago`;
 }
 
-export function CompanyHero({ 
-  company, 
-  onStartResearch, 
-  onStopResearch, 
-  isResearching = false 
+export function CompanyHero({
+  company,
+  onStartResearch,
+  onStopResearch,
+  isResearching = false
 }: CompanyHeroProps) {
   const stats = [
     company.founded_at && {
@@ -112,19 +112,6 @@ export function CompanyHero({
           </div>
 
           <div className="flex flex-wrap gap-3">
-            {company.website && (
-              <Button asChild>
-                <a
-                  href={company.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`Visit ${company.name} website`}
-                >
-                  Visit Website
-                  <ExternalLink className="w-4 h-4 ml-2" aria-hidden="true" />
-                </a>
-              </Button>
-            )}
             {company.source_url && (
               <Button variant="yc-accent" asChild>
                 <a
@@ -138,14 +125,26 @@ export function CompanyHero({
                 </a>
               </Button>
             )}
+            {company.website && (
+              <Button asChild>
+                <a
+                  href={company.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Visit ${company.name} website`}
+                >
+                  Visit Website
+                  <ExternalLink className="w-4 h-4 ml-2" aria-hidden="true" />
+                </a>
+              </Button>
+            )}
             {(onStartResearch || onStopResearch) && (
               <Button
-                variant={isResearching ? "destructive" : "default"}
+                variant={isResearching ? "destructive" : "accent"}
                 onClick={isResearching ? onStopResearch : onStartResearch}
                 aria-label={isResearching ? 'Stop research' : `Deep research ${company.name}`}
               >
                 {isResearching ? 'Stop Research' : `Deep Research ${company.name}`}
-                <ExternalLink className="w-4 h-4 ml-2" aria-hidden="true" />
               </Button>
             )}
           </div>

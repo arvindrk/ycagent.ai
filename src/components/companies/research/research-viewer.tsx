@@ -1,9 +1,9 @@
 "use client";
 
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { StreamChunk } from '@/lib/llm/types';
+import { StreamChunk, SSEEvent } from '@/lib/llm/types';
 import { Laptop, Activity, Square } from 'lucide-react';
 import { TimelineEvent } from './timeline-event';
 
@@ -26,6 +26,25 @@ export function ResearchViewer({
 
   useEffect(() => {
     eventsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [events]);
+
+  const processedEvents = useMemo(() => {
+    const result: Array<StreamChunk & { isCompleted?: boolean }> = [];
+    
+    events.forEach(event => {
+      if (event.type === SSEEvent.ACTION_COMPLETED) {
+        for (let i = result.length - 1; i >= 0; i--) {
+          if (result[i].type === SSEEvent.ACTION) {
+            result[i].isCompleted = true;
+            break;
+          }
+        }
+      } else {
+        result.push(event);
+      }
+    });
+    
+    return result;
   }, [events]);
 
   return (
@@ -89,11 +108,11 @@ export function ResearchViewer({
                   <div className="relative">
                     <div className="absolute left-2.5 top-0 bottom-0 w-0.5 border-l-2 border-border-secondary" />
                     <div className="space-y-4">
-                      {events.map((event, index) => (
+                      {processedEvents.map((event, index) => (
                         <TimelineEvent
                           key={index}
                           event={event}
-                          isLatest={index === events.length - 1 && isResearching}
+                          isLatest={index === processedEvents.length - 1 && isResearching}
                         />
                       ))}
                     </div>

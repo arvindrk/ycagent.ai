@@ -3,9 +3,9 @@
 import { CompanyHero } from './company-hero';
 import { CompanyAboutSection } from './company-about-section';
 import { CompanyTaxonomySection } from './company-taxonomy-section';
-import { ResearchViewer } from '../research/research-viewer';
 import { useDeepResearch } from '@/hooks/use-deep-research';
 import { Company } from '@/types/company';
+import { ResearchViewer } from '../research/research-viewer';
 
 interface CompanyDetailLayoutProps {
   company: Company;

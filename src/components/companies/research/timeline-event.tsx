@@ -57,7 +57,7 @@ function CircularProgress({ duration, className = '' }: CircularProgressProps) {
         strokeLinecap="round"
         transform="rotate(-90 8 8)"
         style={{
-          animation: `circular-progress ${duration}ms linear forwards`,
+          animation: `circular-progress ${duration * 1000}ms linear forwards`,
         }}
       />
     </svg>
@@ -139,7 +139,7 @@ function formatActionDetails(
     if (computerAction.action === 'wait') {
       return {
         tool: 'Action',
-        primary: `Waiting ${computerAction.duration}ms`,
+        primary: `Waiting ${computerAction.duration}s`,
         icon: Zap,
         duration: computerAction.duration,
       };
@@ -197,7 +197,7 @@ function getEventStyle(type: SSEEvent) {
         nodeBg: 'bg-bg-tertiary',
         icon: Brain,
         iconColor: 'text-blue',
-        label: 'THINKING',
+        label: 'REASONING',
         labelColor: 'text-blue',
         cardBg: 'bg-bg-quaternary',
       };
@@ -209,16 +209,6 @@ function getEventStyle(type: SSEEvent) {
         iconColor: 'text-accent',
         label: 'ACTION',
         labelColor: 'text-accent',
-        cardBg: 'bg-bg-quaternary',
-      };
-    case SSEEvent.ACTION_COMPLETED:
-      return {
-        nodeColor: 'border-green',
-        nodeBg: 'bg-bg-tertiary',
-        icon: CheckCircle,
-        iconColor: 'text-green',
-        label: 'COMPLETED',
-        labelColor: 'text-green',
         cardBg: 'bg-bg-quaternary',
       };
     case SSEEvent.ERROR:
@@ -314,14 +304,6 @@ export function TimelineEvent({ event, isLatest }: TimelineEventProps) {
           </div>
         );
 
-      case SSEEvent.ACTION_COMPLETED:
-        return (
-          <div className="flex-1">
-            <p className={`text-sm font-medium ${style.labelColor}`}>
-              Action completed
-            </p>
-          </div>
-        );
 
       case SSEEvent.ERROR:
         return (
@@ -357,14 +339,18 @@ export function TimelineEvent({ event, isLatest }: TimelineEventProps) {
 
   return (
     <div className="relative flex animate-slide-up-fade">
-      <div className="absolute left-0 top-0 flex items-center justify-center w-5 h-5">
-        <div
-          className={`relative w-3 h-3 rounded-full border-2 ${style.nodeColor} ${style.nodeBg} ${style.iconColor} ${isLatest ? 'animate-ripple-ring' : ''
-            }`}
-        >
-          <div className={`w-1 h-1 rounded-full bg-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${event.type === SSEEvent.DONE ? 'hidden' : ''
-            }`} />
-        </div>
+      <div className="absolute left-0 top-2.5 flex items-center justify-center w-5 h-5">
+        {event.type === SSEEvent.ACTION && event.isCompleted ? (
+          <CheckCircle className={`w-4 h-4 text-green ${isLatest ? 'animate-ripple-ring' : ''}`} />
+        ) : (
+          <div
+            className={`relative w-3 h-3 rounded-full border-2 ${style.nodeColor} ${style.nodeBg} ${style.iconColor} ${isLatest ? 'animate-ripple-ring' : ''
+              }`}
+          >
+            <div className={`w-1 h-1 rounded-full bg-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${event.type === SSEEvent.DONE ? 'hidden' : ''
+              }`} />
+          </div>
+        )}
       </div>
 
       <div className="ml-8 flex-1">

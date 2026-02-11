@@ -26,6 +26,7 @@ export interface StreamChunk {
   error?: string;
   action?: ComputerAction | BashCommand | TextEditorCommand;
   toolName?: string;
+  isCompleted?: boolean;
 }
 
 export type ComputerModel = "anthropic";
