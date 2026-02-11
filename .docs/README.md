@@ -9,15 +9,12 @@ This directory contains project documentation organized by category.
 Technical architecture and design decisions:
 
 - `ARCHITECTURE.md` - Core system architecture overview
-- `SEARCH_ARCHITECTURE.md` - Search system design and implementation
-- `ARCHITECTURE_IMPROVEMENTS.md` - Planned improvements and refactoring
-- `SIMPLIFIED_SEARCH.md` - Simplified search approach documentation
+- `SIMPLIFIED_SEARCH.md` - Simplified semantic search implementation
 
 ### `/features/`
 
 Feature-specific documentation:
 
-- `RESEARCH_ORCHESTRATOR.md` - Research orchestration system documentation
 - `SEARCH_UI_IMPLEMENTATION.md` - Search UI implementation details
 
 ## Root Documentation

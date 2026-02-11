@@ -1,17 +1,12 @@
-import { Suspense } from 'react';
 import { getCompany } from '@/lib/api/companies/get-company';
 import { CompanyBreadcrumb } from '@/components/companies/detail/company-breadcrumb';
 import { CompanyHeader } from '@/components/companies/detail/company-header';
-import { CompanyStats } from '@/components/companies/detail/company-stats';
 import { CompanyDescription } from '@/components/companies/detail/company-description';
 import { CompanyTags } from '@/components/companies/detail/company-tags';
-import { CompanyTabs } from '@/components/companies/detail/company-tabs';
-import { Skeleton } from '@/components/ui/skeleton';
-import { ThemeToggle } from '@/components/theme-toggle';
+import { PageHeader } from '@/components/layout/page-header';
 
 interface PageProps {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ tab?: string }>;
 }
 
 export async function generateMetadata({ params }: PageProps) {
@@ -26,13 +21,8 @@ export async function generateMetadata({ params }: PageProps) {
   };
 }
 
-export default async function CompanyDetailPage({
-  params,
-  searchParams,
-}: PageProps) {
+export default async function CompanyDetailPage({ params }: PageProps) {
   const { id } = await params;
-  const { tab } = await searchParams;
-
   const company = await getCompany(id);
 
   return (
@@ -44,13 +34,7 @@ export default async function CompanyDetailPage({
         Skip to main content
       </a>
 
-      <header className="border-b border-border-primary">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center justify-end">
-            <ThemeToggle />
-          </div>
-        </div>
-      </header>
+      <PageHeader showBackLink />
 
       <div className="container mx-auto px-4 py-8">
         <CompanyBreadcrumb companyName={company.name} />
@@ -58,12 +42,9 @@ export default async function CompanyDetailPage({
         <main id="main-content" className="space-y-8">
           <article className="space-y-8">
             <CompanyHeader company={company} />
-            <CompanyStats company={company} />
             <CompanyDescription company={company} />
             <CompanyTags company={company} />
           </article>
-
-          <CompanyTabs company={company} activeTab={tab} />
         </main>
       </div>
     </div>

@@ -1,10 +1,10 @@
 # Architecture and System Design
 
-**YC Agent - Current Implementation (v0.1)**
+**YC Search Platform - Current Implementation (v1.0)**
 
 ## Overview
 
-A Next.js-based platform for browsing and researching Y Combinator companies. The current implementation focuses on core data ingestion and display, with a pragmatic, single-layer data model optimized for iteration speed.
+A Next.js-based semantic search platform for Y Combinator companies. The implementation features hybrid search (semantic + lexical + name matching) with tiered confidence results, using a single normalized company table with vector embeddings.
 
 ---
 
@@ -52,16 +52,11 @@ companies (
 
 **Rationale for Unified Model:**
 
-- Faster iteration: single source of truth
-- Simpler queries: no joins for basic display
-- Adequate for current scale (thousands of companies)
-- Can migrate to multi-layer later when adding crawled artifacts
-
-**Deferred:**
-
-- Separate artifact storage (HTML/PDFs/screenshots)
-- Claims/knowledge graph layer
-- Research job execution tracking
+- Single source of truth for all company data
+- No joins required for search or display
+- Adequate for current scale (5,600+ companies)
+- Vector embeddings stored directly in company table
+- Simple and maintainable architecture
 
 ---
 
@@ -183,17 +178,11 @@ app/page.tsx (RSC)
 **Current Features:**
 
 - Server-side rendering (SSR) with streaming
-- Suspense boundaries for loading states
-- URL-based pagination (`?page=N`)
+- Semantic search with debounced input
+- Tiered results display (accordion UI)
+- Company detail pages
 - Dark/light mode toggle
-
-**Deferred Features:**
-
-- Search input (UI ready, backend not connected)
-- Filters (batch, hiring, location, tags)
-- Infinite scroll (cursor pagination backend exists)
-- Optimistic updates
-- Real-time data sync
+- Responsive design (Linear design system)
 
 ---
 
@@ -215,93 +204,88 @@ const sql = neon(process.env.DATABASE_URL);
 
 **Migration Management:**
 
-- SQL files in `db/migrations/`
+- SQL files in `src/lib/db/migrations/`
 - Run via: `npm run db:migrate` (`tsx scripts/run-migration.ts`)
-- Manual execution (no migration framework like Drizzle/Prisma)
+- Manual execution (no ORM)
 
-**Indexes (Optimization for Read-Heavy Workload):**
+**Indexes (Optimized for Search):**
 
 ```sql
+-- Core indexes
 idx_companies_source         ON companies(source)
 idx_companies_is_hiring      ON companies(is_hiring) WHERE is_hiring = true
 idx_companies_tags           ON companies USING GIN(tags jsonb_path_ops)
+
+-- Search indexes
 idx_companies_name_trgm      ON companies USING GIN(name gin_trgm_ops)
+idx_companies_search         ON companies USING GIN(search_vector)
+idx_companies_embedding      ON companies USING ivfflat(embedding vector_cosine_ops)
 ```
 
-**Future Needs:**
+**Extensions:**
 
-- Full-text search index (tsvector for descriptions)
-- Vector embeddings column for semantic search
-- Indexes on batch, regions, industries
+- `pgvector` - Vector similarity search
+- `pg_trgm` - Trigram matching for fuzzy search
 
 ---
 
-## F) Search Architecture (Planned, Not Implemented)
+## F) Search Architecture (Implemented)
 
-**Current State:** No search functionality. UI shows all companies with pagination only.
+**Current State:** Production-ready hybrid search with tiered confidence results.
 
-**Planned Approach:**
+### Implementation
 
-### 1. Filter Extraction (Deterministic)
+Single SQL query combining three search methods:
 
-Parse structured filters from query:
+1. **Semantic Search** - Vector similarity using pgvector
+   - OpenAI embeddings (text-embedding-3-small, 1536 dimensions)
+   - Cosine distance: `1 - (embedding <=> query_embedding)`
+   - Primary ranking signal (0.8 weight)
 
-- Batch: "W24", "Winter 2024", "2024" → normalized
-- Boolean: "hiring", "nonprofit"
-- Geographic: locations/regions
-- Industry/tags
+2. **Name Matching** - Fuzzy text matching
+   - PostgreSQL trigram similarity (`pg_trgm`)
+   - Perfect for company name searches
+   - Secondary ranking signal (0.15 weight)
 
-### 2. Lexical Search (Postgres Full-Text)
+3. **Full-Text Search** - Keyword matching
+   - PostgreSQL tsvector with `ts_rank_cd`
+   - Searches name, description, tags
+   - Tertiary ranking signal (0.05 weight)
 
-```sql
-WHERE
-  to_tsvector('english', name || ' ' || one_liner || ' ' || long_description)
-  @@ plainto_tsquery('english', $query)
-ORDER BY ts_rank(...)
-```
+### Tier System
 
-**Weighted fields:**
+Results organized into 5 confidence tiers:
 
-- A-weight: name, one_liner (highest)
-- B-weight: tags, industries
-- C-weight: long_description
-- D-weight: locations
+| Tier | Criteria | Multiplier | Display |
+|------|----------|------------|---------|
+| Exact Match | name ≥ 0.9 | 2.5x | 🎯 Purple |
+| High Confidence | semantic ≥ 0.7 | 1.5x | ✨ Blue |
+| Strong Match | semantic ≥ 0.5 | 1.0x | ✓ Green |
+| Relevant | semantic ≥ 0.3 | 0.8x | ○ Gray |
+| Keyword Match | fallback | 0.5x | # Light gray |
 
-### 3. Semantic Search (Future)
+### Quality Controls
 
-- Store embeddings: `vector(1536)` column (OpenAI ada-002)
-- Query: `ORDER BY embedding <=> $query_embedding`
-- Hybrid ranking: RRF (reciprocal rank fusion) of lexical + semantic
+- Minimum semantic score: 0.25 OR name score: 0.7
+- Maximum 50 results per query
+- Results ordered by final score (base score × tier multiplier)
+- Query time: ~400-600ms average
 
-**Implementation Priority:**
-
-1. Lexical search (GIN index ready)
-2. Basic filters (batch, is_hiring)
-3. Semantic search (requires embedding generation pipeline)
+See [SIMPLIFIED_SEARCH.md](SIMPLIFIED_SEARCH.md) for full implementation details.
 
 ---
 
-## G) Research Agent (Not Implemented)
+## G) Future Enhancements (Not Planned)
 
-**Original Plan:** Autonomous crawler with budget controls, artifact storage, and claim extraction.
+**Current Scope:** Semantic search over YC company data only.
 
-**Current Status:** Not started. YC data is sufficient for MVP.
+**Potential Future Extensions:**
 
-**Deferred Architecture:**
-
-- Job orchestration (task queue, retries)
-- Artifact storage (S3/Vercel Blob for HTML/PDFs)
-- Knowledge graph (claims with provenance)
-- Frontier crawling (priority queue, domain politeness)
-- Browser automation (Playwright/Puppeteer)
-
-**When to Implement:**
-User feedback indicates need for:
-
-- Company research beyond YC metadata
-- Funding round tracking
-- Hiring signal detection
-- Competitive analysis
+- Multi-source data (Crunchbase, LinkedIn, HackerNews)
+- Advanced filters (batch, location, hiring status, tags)
+- User accounts and saved searches
+- Real-time data refresh (currently manual sync)
+- Company comparison features
 
 ---
 
@@ -410,93 +394,72 @@ User feedback indicates need for:
 
 ## L) Current Limitations & Known Gaps
 
-1. **No Search:** Users must manually page through companies
-2. **No Filters:** Cannot narrow by batch, location, hiring status
-3. **Static Data:** No refresh mechanism (manual script run)
-4. **Single Source:** Only YC data (no Crunchbase, LinkedIn, etc.)
-5. **No Research:** No crawling or enrichment beyond YC API
-6. **No Auth:** Public read-only, no user accounts
-7. **No Analytics:** No tracking of searches, views, clicks
+1. **No Advanced Filters:** Cannot narrow by batch, location, hiring status (semantic search only)
+2. **Static Data:** No automatic refresh (manual script run required)
+3. **Single Source:** Only YC data (no Crunchbase, LinkedIn, etc.)
+4. **No Auth:** Public read-only, no user accounts
+5. **No Analytics:** No tracking of searches, views, clicks
+6. **No Save/Bookmarks:** Cannot save companies or searches
 
 ---
 
-## M) Migration Path: From MVP to Full Vision
+## M) Implementation Milestones
 
-**Phase 1 (Current): Browse YC Companies**
+**Phase 1: Data Foundation** ✅ Complete
 
-- ✅ Ingest YC data
-- ✅ Display with pagination
-- ✅ Basic UI with design system
+- ✅ Ingest YC data (5,600+ companies)
+- ✅ Generate embeddings (OpenAI text-embedding-3-small)
+- ✅ Setup vector search (pgvector)
+- ✅ Create search indexes
 
-**Phase 2: Search & Filter**
+**Phase 2: Search Implementation** ✅ Complete
 
-- Add full-text search (Postgres `tsvector`)
-- Implement filters (batch, hiring, location, tags)
-- Add search result relevance tuning
+- ✅ Hybrid search (semantic + lexical + name)
+- ✅ Tiered confidence system
+- ✅ Search UI with debouncing
+- ✅ Result quality tuning
 
-**Phase 3: Multi-Source Enrichment**
+**Phase 3: UI/UX Polish** ✅ Complete
 
-- Add Crunchbase ingestion
-- Integrate HN mentions
-- Manual curation tools
+- ✅ Linear-inspired design system
+- ✅ Company detail pages
+- ✅ Dark mode support
+- ✅ Responsive design
 
-**Phase 4: Research Agent**
+**Future Considerations:**
 
-- Implement job orchestration
-- Add artifact storage
-- Build claim extraction pipeline
-- Deploy crawler with budget controls
-
-**Phase 5: Collaboration Features**
-
-- User accounts & saved searches
-- Shared company lists
-- Notes and annotations
-- Team workspaces
+- Advanced filters (batch, location, hiring)
+- Multi-source data integration
+- User accounts and saved searches
+- Real-time data refresh
 
 ---
 
-## N) Data Model Evolution Path
+## N) Data Model (Current State)
 
-**Current:** Single `companies` table
-
-**Next:** Add search index
+**Single Table Architecture:** `companies` table with vector embeddings
 
 ```sql
-ALTER TABLE companies
-ADD COLUMN search_vector tsvector
-GENERATED ALWAYS AS (
-  setweight(to_tsvector('english', name), 'A') ||
-  setweight(to_tsvector('english', coalesce(one_liner, '')), 'A') ||
-  setweight(to_tsvector('english', coalesce(long_description, '')), 'C')
-) STORED;
-
-CREATE INDEX idx_companies_search ON companies USING GIN(search_vector);
-```
-
-**Future:** Multi-layer model
-
-```sql
-artifacts (
-  id, url, content_type, fetched_at,
-  content_hash, storage_key, status
-)
-
-claims (
-  id, artifact_id, subject, predicate, object,
-  confidence, extractor_version, evidence_snippet
-)
-
-jobs (
-  id, company_id, user_id, status,
-  budgets JSONB, created_at, completed_at
-)
-
-tasks (
-  id, job_id, type, url, status,
-  retry_count, error_reason
+companies (
+  -- Core fields
+  id, name, slug, website, logo_url, one_liner, long_description,
+  
+  -- Metadata
+  batch, team_size, stage, status, tags, industries, regions,
+  
+  -- Search columns
+  search_vector tsvector,              -- Full-text search
+  embedding vector(1536),              -- Semantic search (OpenAI)
+  
+  -- Provenance
+  source, source_id, source_url, source_metadata,
+  
+  -- Timestamps
+  created_at, updated_at, last_synced_at
 )
 ```
+
+**No additional tables.** Simple, maintainable, sufficient for semantic search use case.
 
 ---
 
@@ -549,30 +512,39 @@ DATABASE_URL=postgresql://...  # Neon connection string
 
 ---
 
-## Q) Open Questions & Decision Points
+## Q) Design Decisions & Trade-offs
 
-1. **Search Implementation Timeline**
-    - Block on filters or ship semantic search first?
-    - Use Postgres vectors or external service (Pinecone, Qdrant)?
+**1. Why Single Table?**
+- Simpler queries (no joins)
+- Faster iteration during development
+- Adequate for 5,600 companies
+- Can scale to 100K+ companies without issues
 
-2. **Data Refresh Strategy**
-    - Daily cron? Webhook-triggered? On-demand?
-    - Delta sync or full upsert?
+**2. Why Hybrid Search?**
+- Semantic alone misses exact name matches
+- Lexical alone misses conceptual matches
+- Combination provides best user experience
+- Tier system makes relevance transparent
 
-3. **Multi-Source Priority**
-    - Crunchbase (funding data) vs. LinkedIn (hiring signals) vs. HN (community interest)?
+**3. Why No Filters?**
+- Semantic search handles most filter needs naturally
+- Simpler UI and backend
+- Can add structured filters later if needed
 
-4. **Research Agent Scope**
-    - Focus on funding rounds, hiring pages, or general company research?
-    - Budget per company (pages, time, cost)?
+**4. Why OpenAI Embeddings?**
+- High quality (better than open source)
+- Fast inference (<100ms)
+- Reasonable cost ($0.13 per 1M tokens)
+- One-time generation (no ongoing costs)
 
-5. **Monetization Model**
-    - Free tier limits?
-    - Usage-based pricing for research agent?
-    - Team/enterprise features?
+**5. Why Neon + pgvector?**
+- Managed Postgres (zero ops)
+- Native vector support (no external service)
+- Low latency (single query)
+- Cost-effective (free tier sufficient)
 
 ---
 
-**Last Updated:** January 24, 2026  
-**Implementation Status:** Phase 1 (MVP) Complete  
-**Next Milestone:** Search & Filter (Phase 2)
+**Last Updated:** February 10, 2026  
+**Implementation Status:** Production-ready (v1.0)  
+**Current Focus:** Monitoring search quality and user feedback

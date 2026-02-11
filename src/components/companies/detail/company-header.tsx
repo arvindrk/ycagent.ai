@@ -1,8 +1,16 @@
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { ExternalLink, Building2 } from 'lucide-react';
+import {
+  ExternalLink,
+  Building2,
+  Calendar,
+  Users,
+  MapPin,
+  Briefcase,
+} from 'lucide-react';
 import type { Company } from '@/types/company';
 
 interface CompanyHeaderProps {
@@ -24,9 +32,36 @@ function formatRelativeTime(dateString: string): string {
 }
 
 export function CompanyHeader({ company }: CompanyHeaderProps) {
+  const stats = [
+    company.founded_at && {
+      icon: Calendar,
+      label: 'Founded',
+      value: new Date(company.founded_at).getFullYear(),
+    },
+    company.stage && {
+      icon: Briefcase,
+      label: 'Stage',
+      value: company.stage,
+    },
+    company.team_size && {
+      icon: Users,
+      label: 'Team Size',
+      value: `${company.team_size}\u00A0people`,
+    },
+    company.all_locations && {
+      icon: MapPin,
+      label: 'Location',
+      value: company.all_locations,
+    },
+  ].filter(Boolean) as Array<{
+    icon: typeof Calendar | typeof Briefcase | typeof Users | typeof MapPin;
+    label: string;
+    value: string | number;
+  }>;
+
   return (
     <header className="space-y-6">
-      <div className="flex flex-col md:flex-row items-start gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-[120px_1fr] lg:grid-cols-[120px_1fr_240px] gap-6">
         <Avatar className="w-[120px] h-[120px] rounded-lg flex-shrink-0">
           <AvatarImage
             src={company.logo_url || ''}
@@ -103,6 +138,27 @@ export function CompanyHeader({ company }: CompanyHeaderProps) {
             </p>
           )}
         </div>
+
+        {stats.length > 0 && (
+          <Card className="md:col-span-2 lg:col-span-1">
+            <CardContent className="p-6 space-y-4">
+              {stats.map((stat) => {
+                const Icon = stat.icon;
+                return (
+                  <div key={stat.label} className="space-y-1">
+                    <div className="flex items-center gap-2 text-text-tertiary">
+                      <Icon className="w-4 h-4" aria-hidden="true" />
+                      <span className="text-[13px]">{stat.label}</span>
+                    </div>
+                    <p className="text-base font-medium tabular-nums">
+                      {stat.value}
+                    </p>
+                  </div>
+                );
+              })}
+            </CardContent>
+          </Card>
+        )}
       </div>
 
       <Separator />
