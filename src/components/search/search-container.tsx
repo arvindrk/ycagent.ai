@@ -6,7 +6,6 @@ import { SearchStats } from './search-stats';
 import { SearchEmpty } from './search-empty';
 import { TieredResultsDisplay } from './tiered-results-display';
 import { CompaniesLoading } from '@/components/companies/companies-loading';
-import { useDebounce } from '@/hooks/use-debounce';
 import { useSearch } from '@/hooks/use-search';
 
 interface SearchContainerProps {
@@ -15,13 +14,12 @@ interface SearchContainerProps {
 
 export function SearchContainer({ onSearchStateChange }: SearchContainerProps) {
   const [searchQuery, setSearchQuery] = useState('');
-  const debouncedQuery = useDebounce(searchQuery, 300);
 
   const { data, isLoading, error } = useSearch({
-    q: debouncedQuery,
+    q: searchQuery,
   });
 
-  const hasQuery = debouncedQuery.trim().length > 0;
+  const hasQuery = searchQuery.trim().length > 0;
   const showLoading = searchQuery.length > 0 && isLoading;
 
   const handleSearchChange = (value: string) => {
@@ -47,7 +45,7 @@ export function SearchContainer({ onSearchStateChange }: SearchContainerProps) {
           <SearchStats
             total={data?.total}
             queryTime={data?.query_time_ms}
-            query={debouncedQuery}
+            query={searchQuery}
             isLoading={isLoading}
           />
 
@@ -60,7 +58,7 @@ export function SearchContainer({ onSearchStateChange }: SearchContainerProps) {
           )}
 
           {!isLoading && data && data.total === 0 && (
-            <SearchEmpty query={debouncedQuery} onClear={handleClearSearch} />
+            <SearchEmpty query={searchQuery} onClear={handleClearSearch} />
           )}
 
           {!isLoading && data && data.total > 0 && (
