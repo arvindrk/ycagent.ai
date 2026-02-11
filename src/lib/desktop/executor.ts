@@ -3,12 +3,14 @@ import { ResolutionScaler } from "./resolution";
 import { ComputerAction } from "./types";
 import { BashCommand } from "./types";
 import { TextEditorCommand } from "./types";
+import { NavigationManager, NavigatorRole } from "./navigation";
 import { BetaToolUseBlock } from "@anthropic-ai/sdk/resources/beta/messages/messages.mjs";
 
 export class ActionExecutor {
   constructor(
     private desktop: Sandbox,
-    private scaler: ResolutionScaler
+    private scaler: ResolutionScaler,
+    private navigationManager: NavigationManager
   ) { }
 
   async execute(tool: BetaToolUseBlock): Promise<void> {
@@ -27,6 +29,9 @@ export class ActionExecutor {
 
   private async executeComputer(action: ComputerAction): Promise<void> {
     switch (action.action) {
+      case "navigate":
+        await this.navigationManager.navigate(action.url, NavigatorRole.AGENT);
+        break;
       case "left_click": {
         const [x, y] = this.scaler.scaleToOriginal(action.coordinate);
         await this.desktop.leftClick(x, y);

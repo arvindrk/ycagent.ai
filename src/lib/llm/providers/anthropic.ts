@@ -7,6 +7,7 @@ import { StreamChunk } from "../types";
 import { SSEEvent } from "../types";
 import { ResolutionScaler } from "@/lib/desktop/resolution";
 import { ActionExecutor } from "@/lib/desktop/executor";
+import { NavigationManager, NavigatorRole } from "@/lib/desktop/navigation";
 import { BetaMessageParam } from "@anthropic-ai/sdk/resources/beta/messages/messages.mjs";
 import { BetaToolUseBlock } from "@anthropic-ai/sdk/resources/beta/messages/messages.mjs";
 import { BetaToolResultBlockParam } from "@anthropic-ai/sdk/resources/beta/messages/messages.mjs";
@@ -27,6 +28,7 @@ export class AnthropicComputerStreamer implements ComputerInteractionStreamerFac
   private systemPrompt: string;
   private scaler: ResolutionScaler;
   private executor: ActionExecutor;
+  private navigationManager: NavigationManager;
 
   constructor(config: AnthropicComputerConfig) {
     this.client = new Anthropic({
@@ -35,10 +37,11 @@ export class AnthropicComputerStreamer implements ComputerInteractionStreamerFac
     this.systemPrompt = SYSTEM_PROMPT;
     this.model = config.model || "claude-sonnet-4-5";
     this.scaler = new ResolutionScaler(config.desktop, config.resolution);
-    this.executor = new ActionExecutor(config.desktop, this.scaler);
+    this.navigationManager = new NavigationManager(config.desktop);
+    this.executor = new ActionExecutor(config.desktop, this.scaler, this.navigationManager);
   }
 
-  async *executeAgentLoop(messages: Message[], options?: ChatOptions): AsyncGenerator<StreamChunk> {
+  async *executeAgentLoop(messages: Message[], seedUrl?: string | undefined, options?: ChatOptions): AsyncGenerator<StreamChunk> {
     const { signal } = options || {};
 
     const anthropicMessages: BetaMessageParam[] = messages
@@ -49,6 +52,12 @@ export class AnthropicComputerStreamer implements ComputerInteractionStreamerFac
       }));
 
     try {
+      if (seedUrl) {
+        yield { type: SSEEvent.ACTION, action: { action: "navigate", url: seedUrl }, toolName: "computer" };
+        await this.navigationManager.navigate(seedUrl, NavigatorRole.SYSTEM);
+        yield { type: SSEEvent.ACTION_COMPLETED };
+      }
+
       while (true) {
         if (signal?.aborted) {
           yield { type: SSEEvent.DONE, content: "Stopped by user" };

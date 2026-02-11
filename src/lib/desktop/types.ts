@@ -1,6 +1,7 @@
 type Coordinate = [number, number];
 
 export type ComputerAction =
+  | { action: "navigate"; url: string }
   | { action: "key"; text: string }
   | { action: "type"; text: string }
   | { action: "mouse_move"; coordinate: Coordinate }

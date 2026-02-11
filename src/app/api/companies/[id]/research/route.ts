@@ -2,7 +2,7 @@ import { Sandbox } from "@e2b/desktop";
 import { NextRequest } from "next/server";
 import { StreamerFactory } from "@/lib/llm/factory";
 import { CreateResponseStream } from "@/lib/llm";
-import { SSEEvent } from "@/lib/llm/types";
+import { ComputerAgent, SSEEvent } from "@/lib/llm/types";
 import { StreamChunk } from "@/lib/llm/types";
 import { DESKTOP_TIMEOUT } from "@/lib/llm/constants";
 import { Company } from "@/types/company";
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
       });
       activeSandboxId = desktop.sandboxId;
       await desktop.stream.start();
-      vncUrl = desktop.stream.getUrl();
+      vncUrl = desktop.stream.getUrl({ viewOnly: true });
     } else {
       desktop = await Sandbox.connect(activeSandboxId);
     }
@@ -54,14 +54,14 @@ export async function POST(request: NextRequest) {
       return Response.json({ error: "Failed to connect to sandbox" }, { status: 500 });
     }
 
-    const streamer = StreamerFactory.getStreamer("anthropic", desktop, resolution);
+    const streamer = StreamerFactory.getStreamer(ComputerAgent.ANTHROPIC, desktop, resolution);
 
     const initialMessage = {
       role: "user" as const,
       content: `Find information about ${company.name}${company.website ? `. Their website is ${company.website}` : ""}`
     };
 
-    const agentStream = streamer.executeAgentLoop([initialMessage], { signal });
+    const agentStream = streamer.executeAgentLoop([initialMessage], company.website ?? undefined, { signal });
 
     if (!sandboxId && activeSandboxId && vncUrl) {
       async function* stream(): AsyncGenerator<StreamChunk> {

@@ -31,9 +31,10 @@ export interface StreamChunk {
 export type ComputerModel = "anthropic";
 
 export interface ComputerInteractionStreamerFacade {
-  executeAgentLoop(messages: Message[], options?: ChatOptions): AsyncGenerator<StreamChunk>;
+  executeAgentLoop(messages: Message[], seedUrl?: string | undefined, options?: ChatOptions): AsyncGenerator<StreamChunk>;
 }
 
-export interface LLMProvider {
-  executeAgentLoop(messages: Message[], options?: ChatOptions): AsyncGenerator<StreamChunk>;
+export enum ComputerAgent {
+  ANTHROPIC = "anthropic",
 }
+

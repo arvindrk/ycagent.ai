@@ -42,6 +42,10 @@
   --color-linear-security: #7a7fad;
   --color-overlay-primary: rgba(0, 0, 0, 0.9);
   --header-bg: rgba(11, 11, 11, 0.8);
+  --scrollbar-width: 6px;
+  --scrollbar-thumb-base: rgba(255, 255, 255, 0.1);
+  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.2);
+  --scrollbar-blur: 8px;
   --radius-none: 0;
   --radius-xs: 1px;
   --radius-sm: 4px;
@@ -79,6 +83,9 @@
   --color-border-primary: #e6e6e6;
   --color-border-secondary: #d0d0d0;
   --color-border-tertiary: #e6e6e6;
+
+  --scrollbar-thumb-base: rgba(0, 0, 0, 0.1);
+  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.2);
 }
 
 @theme inline {
@@ -186,6 +193,42 @@
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
   }
+
+  /* Scrollbar styles */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+
+  *:hover {
+    scrollbar-color: var(--scrollbar-thumb-base) transparent;
+  }
+
+  *::-webkit-scrollbar {
+    width: var(--scrollbar-width);
+    height: var(--scrollbar-width);
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb-base);
+    border-radius: 9999px;
+    backdrop-filter: blur(var(--scrollbar-blur));
+    transition: background var(--transition-base) var(--ease-out);
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *::-webkit-scrollbar-thumb {
+      transition: none;
+    }
+  }
 }
 
 @layer utilities {
@@ -224,5 +267,62 @@
 
   .bg-layer-3 {
     background-color: var(--color-bg-level-3);
+  }
+
+  /* Timeline animations */
+  @keyframes slide-up-fade {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes ripple-ring {
+    0% {
+      transform: scale(1);
+      opacity: 0.6;
+    }
+    100% {
+      transform: scale(2.5);
+      opacity: 0;
+    }
+  }
+
+  @keyframes circular-progress {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  .animate-slide-up-fade {
+    animation: slide-up-fade 0.3s ease-out;
+  }
+
+  .animate-ripple-ring::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border-radius: 50%;
+    border: 2px solid currentColor;
+    animation: ripple-ring 2s ease-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-slide-up-fade {
+      animation: none;
+    }
+    .animate-ripple-ring::before {
+      animation: none;
+    }
+    svg[style*="circular-progress"] {
+      animation: none !important;
+    }
   }
 }
