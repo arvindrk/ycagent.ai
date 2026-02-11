@@ -1,9 +1,7 @@
 import { getCompany } from '@/lib/api/companies/get-company';
-import { CompanyBreadcrumb } from '@/components/companies/detail/company-breadcrumb';
-import { CompanyHeader } from '@/components/companies/detail/company-header';
-import { CompanyDescription } from '@/components/companies/detail/company-description';
-import { CompanyTags } from '@/components/companies/detail/company-tags';
+import { DetailBreadcrumb } from '@/components/companies/detail/detail-breadcrumb';
 import { PageHeader } from '@/components/layout/page-header';
+import { CompanyDetailLayout } from '@/components/companies/detail/company-detail-layout';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -37,14 +35,10 @@ export default async function CompanyDetailPage({ params }: PageProps) {
       <PageHeader showBackLink />
 
       <div className="container mx-auto px-4 py-8">
-        <CompanyBreadcrumb companyName={company.name} />
+        <DetailBreadcrumb companyName={company.name} />
 
         <main id="main-content" className="space-y-8">
-          <article className="space-y-8">
-            <CompanyHeader company={company} />
-            <CompanyDescription company={company} />
-            <CompanyTags company={company} />
-          </article>
+          <CompanyDetailLayout company={company} />
         </main>
       </div>
     </div>

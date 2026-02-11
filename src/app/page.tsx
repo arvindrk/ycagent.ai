@@ -1,8 +1,8 @@
 import { Suspense } from 'react';
 import { getCompanies } from '@/lib/api/companies/get-companies';
-import { CompaniesGrid } from '@/components/companies/companies-grid';
-import { CompaniesLoading } from '@/components/companies/companies-loading';
-import { CompaniesPagination } from '@/components/companies/companies-pagination';
+import { CompanyListGrid } from '@/components/companies/list/company-list-grid';
+import { CompanyListSkeleton } from '@/components/companies/list/company-list-skeleton';
+import { CompanyListPagination } from '@/components/companies/list/company-list-pagination';
 import { SearchWrapper } from '@/components/search/search-wrapper';
 import { PageHeader } from '@/components/layout/page-header';
 
@@ -32,11 +32,11 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
       <main className="container mx-auto px-4 py-8">
         <SearchWrapper>
-          <Suspense fallback={<CompaniesLoading />}>
-            <CompaniesGrid companies={companies} />
+          <Suspense fallback={<CompanyListSkeleton />}>
+            <CompanyListGrid companies={companies} />
           </Suspense>
 
-          <CompaniesPagination
+          <CompanyListPagination
             currentPage={page}
             totalPages={totalPages}
             totalCount={total}

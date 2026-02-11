@@ -6,11 +6,11 @@ import { Button } from '@/components/ui/button';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import type { Company } from '@/types/company';
 
-interface CompanyDescriptionProps {
+interface CompanyAboutSectionProps {
   company: Company;
 }
 
-export function CompanyDescription({ company }: CompanyDescriptionProps) {
+export function CompanyAboutSection({ company }: CompanyAboutSectionProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const description = company.long_description || company.one_liner;

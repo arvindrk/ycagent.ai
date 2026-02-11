@@ -5,7 +5,7 @@ import { SearchInput } from './search-input';
 import { SearchStats } from './search-stats';
 import { SearchEmpty } from './search-empty';
 import { TieredResultsDisplay } from './tiered-results-display';
-import { CompaniesLoading } from '@/components/companies/companies-loading';
+import { CompanyListSkeleton } from '@/components/companies/list/company-list-skeleton';
 import { useSearch } from '@/hooks/use-search';
 
 interface SearchContainerProps {
@@ -49,7 +49,7 @@ export function SearchContainer({ onSearchStateChange }: SearchContainerProps) {
             isLoading={isLoading}
           />
 
-          {isLoading && <CompaniesLoading />}
+          {isLoading && <CompanyListSkeleton />}
 
           {!isLoading && error && (
             <div className="text-center py-8 text-destructive">

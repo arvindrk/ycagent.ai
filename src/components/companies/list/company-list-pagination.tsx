@@ -12,19 +12,19 @@ import {
   PaginationPrevious,
 } from '@/components/ui/pagination';
 
-interface CompaniesPaginationProps {
+interface CompanyListPaginationProps {
   currentPage: number;
   totalPages: number;
   totalCount: number;
   pageSize: number;
 }
 
-export function CompaniesPagination({
+export function CompanyListPagination({
   currentPage,
   totalPages,
   totalCount,
   pageSize,
-}: CompaniesPaginationProps) {
+}: CompanyListPaginationProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 

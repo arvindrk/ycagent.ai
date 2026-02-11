@@ -8,11 +8,11 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 
-interface CompanyBreadcrumbProps {
+interface DetailBreadcrumbProps {
   companyName: string;
 }
 
-export function CompanyBreadcrumb({ companyName }: CompanyBreadcrumbProps) {
+export function DetailBreadcrumb({ companyName }: DetailBreadcrumbProps) {
   return (
     <Breadcrumb className="mb-6">
       <BreadcrumbList>

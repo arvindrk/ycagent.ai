@@ -12,6 +12,8 @@
         "db:test": "dotenvx run -- tsx scripts/test-queries.ts"
     },
     "dependencies": {
+        "@anthropic-ai/sdk": "^0.74.0",
+        "@e2b/desktop": "^2.2.2",
         "@google/genai": "^1.40.0",
         "@mendable/firecrawl-js": "^4.12.0",
         "@neondatabase/serverless": "^1.0.2",
@@ -34,6 +36,7 @@
         "openai": "^6.16.0",
         "react": "19.2.3",
         "react-dom": "19.2.3",
+        "sharp": "^0.34.5",
         "skills": "^1.3.1",
         "tailwind-merge": "^3.4.0",
         "tailwindcss-animate": "^1.0.7",

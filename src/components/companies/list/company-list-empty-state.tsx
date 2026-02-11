@@ -1,6 +1,6 @@
 import { Building2 } from 'lucide-react';
 
-export function CompaniesEmpty() {
+export function CompanyListEmptyState() {
   return (
     <div className="flex flex-col items-center justify-center py-20 text-center">
       <div className="rounded-full bg-muted p-6 mb-4">

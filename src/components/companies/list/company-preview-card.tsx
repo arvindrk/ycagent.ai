@@ -8,7 +8,7 @@ import { Building2, MapPin } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 
-interface CompanyCardProps {
+interface CompanyPreviewCardProps {
   company: CompanyListItem;
 }
 
@@ -28,7 +28,7 @@ function formatBatch(batch: string): string {
   return `${seasonMap[season]}${shortYear}`;
 }
 
-export function CompanyCard({ company }: CompanyCardProps) {
+export function CompanyPreviewCard({ company }: CompanyPreviewCardProps) {
   const [imageError, setImageError] = useState(false);
   const displayTags = company.tags.slice(0, 3);
   const hasMoreTags = company.tags.length > 3;

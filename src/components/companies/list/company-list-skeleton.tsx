@@ -1,11 +1,11 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 
-interface CompaniesLoadingProps {
+interface CompanyListSkeletonProps {
   count?: number;
 }
 
-export function CompaniesLoading({ count = 24 }: CompaniesLoadingProps) {
+export function CompanyListSkeleton({ count = 24 }: CompanyListSkeletonProps) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {Array.from({ length: count }).map((_, i) => (

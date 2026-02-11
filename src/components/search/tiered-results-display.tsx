@@ -3,7 +3,7 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
 import { Target, Sparkles, CheckCircle2, Circle, Hash } from 'lucide-react';
-import { CompaniesGrid } from '@/components/companies/companies-grid';
+import { CompanyListGrid } from '@/components/companies/list/company-list-grid';
 import type { SearchResult } from '@/lib/api/semantic-search/types';
 
 interface TieredResultsDisplayProps {
@@ -109,7 +109,7 @@ export function TieredResultsDisplay({ results }: TieredResultsDisplayProps) {
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="pt-4">
-                  <CompaniesGrid companies={tierGroup.results} />
+                  <CompanyListGrid companies={tierGroup.results} />
                 </AccordionContent>
               </AccordionItem>
               {index < sortedTiers.length - 1 && (

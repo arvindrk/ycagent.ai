@@ -13,8 +13,11 @@ import {
 } from 'lucide-react';
 import type { Company } from '@/types/company';
 
-interface CompanyHeaderProps {
+interface CompanyHeroProps {
   company: Company;
+  onStartResearch?: () => void;
+  onStopResearch?: () => void;
+  isResearching?: boolean;
 }
 
 function formatRelativeTime(dateString: string): string {
@@ -31,7 +34,12 @@ function formatRelativeTime(dateString: string): string {
   return `${Math.floor(diffDays / 365)}\u00A0years ago`;
 }
 
-export function CompanyHeader({ company }: CompanyHeaderProps) {
+export function CompanyHero({ 
+  company, 
+  onStartResearch, 
+  onStopResearch, 
+  isResearching = false 
+}: CompanyHeroProps) {
   const stats = [
     company.founded_at && {
       icon: Calendar,
@@ -128,6 +136,16 @@ export function CompanyHeader({ company }: CompanyHeaderProps) {
                   View on YC
                   <ExternalLink className="w-4 h-4 ml-2" aria-hidden="true" />
                 </a>
+              </Button>
+            )}
+            {(onStartResearch || onStopResearch) && (
+              <Button
+                variant={isResearching ? "destructive" : "default"}
+                onClick={isResearching ? onStopResearch : onStartResearch}
+                aria-label={isResearching ? 'Stop research' : `Deep research ${company.name}`}
+              >
+                {isResearching ? 'Stop Research' : `Deep Research ${company.name}`}
+                <ExternalLink className="w-4 h-4 ml-2" aria-hidden="true" />
               </Button>
             )}
           </div>

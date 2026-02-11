@@ -2,11 +2,11 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import type { Company } from '@/types/company';
 
-interface CompanyTagsProps {
+interface CompanyTaxonomySectionProps {
   company: Company;
 }
 
-export function CompanyTags({ company }: CompanyTagsProps) {
+export function CompanyTaxonomySection({ company }: CompanyTaxonomySectionProps) {
 
   const hasIndustries = company.industries && company.industries.length > 0;
   const hasTags = company.tags && company.tags.length > 0;
