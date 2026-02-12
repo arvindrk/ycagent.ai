@@ -6,13 +6,17 @@ const MAX_HEIGHT = 800;
 const MIN_WIDTH = 800;
 const MIN_HEIGHT = 600;
 
+export type Resolution = [number, number];
+
+export const DEFAULT_RESOLUTION: Resolution = [1024, 768];
+
 export class ResolutionScaler {
   private desktop: Sandbox;
-  private originalResolution: [number, number];
-  private scaledResolution: [number, number];
+  private originalResolution: Resolution;
+  private scaledResolution: Resolution;
   private scaleFactor: number;
 
-  constructor(desktop: Sandbox, originalResolution: [number, number]) {
+  constructor(desktop: Sandbox, originalResolution: Resolution) {
     this.desktop = desktop;
     this.originalResolution = originalResolution;
 
@@ -21,11 +25,11 @@ export class ResolutionScaler {
     this.scaleFactor = scaleFactor;
   }
 
-  getScaledResolution(): [number, number] {
+  getScaledResolution(): Resolution {
     return this.scaledResolution;
   }
 
-  scaleToOriginal(coord: [number, number]): [number, number] {
+  scaleToOriginal(coord: Resolution): Resolution {
     return [
       Math.round(coord[0] / this.scaleFactor),
       Math.round(coord[1] / this.scaleFactor)
@@ -47,8 +51,8 @@ export class ResolutionScaler {
       .toBuffer();
   }
 
-  private calculateScaled(original: [number, number]): {
-    scaledResolution: [number, number];
+  private calculateScaled(original: Resolution): {
+    scaledResolution: Resolution;
     scaleFactor: number;
   } {
     const [w, h] = original;

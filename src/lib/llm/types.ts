@@ -18,7 +18,11 @@ export enum SSEEvent {
   REASONING = 'reasoning',
 }
 
-export type AgentAction = ComputerAction | BashCommand | TextEditorCommand | GoogleSearchCommand | WebCrawlerCommand;
+export type AgentAction = ComputerAction
+  | BashCommand
+  | TextEditorCommand
+  | GoogleSearchCommand
+  | WebCrawlerCommand;
 
 export interface StreamChunk {
   type: SSEEvent;

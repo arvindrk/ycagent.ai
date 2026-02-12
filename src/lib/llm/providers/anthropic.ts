@@ -5,7 +5,7 @@ import { Message } from "../types";
 import { ChatOptions } from "../types";
 import { StreamChunk } from "../types";
 import { SSEEvent } from "../types";
-import { ResolutionScaler } from "@/lib/sandbox-desktop/resolution";
+import { ResolutionScaler, Resolution } from "@/lib/sandbox-desktop/resolution";
 import { ActionExecutor } from "@/lib/sandbox-desktop/executor";
 import { NavigationManager, NavigatorRole } from "@/lib/sandbox-desktop/navigation";
 import { BetaMessageParam } from "@anthropic-ai/sdk/resources/beta/messages/messages.mjs";
@@ -21,7 +21,7 @@ interface AnthropicComputerConfig {
   apiKey?: string;
   model?: string;
   desktop: Sandbox;
-  resolution: [number, number];
+  resolution: Resolution;
 }
 
 export class AnthropicComputerStreamer implements ComputerInteractionStreamerFacade {

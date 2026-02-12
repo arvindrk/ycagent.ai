@@ -53,7 +53,6 @@ export function useDeepResearch(company: Company) {
         body: JSON.stringify({
           company,
           sandboxId: sandboxId || undefined,
-          resolution: [1024, 768]
         }),
         signal: abortControllerRef.current.signal,
       });

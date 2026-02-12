@@ -3,15 +3,19 @@
 import { CompanyHero } from './company-hero';
 import { CompanyAboutSection } from './company-about-section';
 import { CompanyTaxonomySection } from './company-taxonomy-section';
-import { useDeepResearch } from '@/hooks/use-deep-research';
+import { useDeepResearchTrigger } from '@/hooks/use-deep-research-trigger';
 import { Company } from '@/types/company';
 import { ResearchViewer } from '../research/research-viewer';
 
 interface CompanyDetailLayoutProps {
   company: Company;
+  researchAccessToken: string;
 }
 
-export function CompanyDetailLayout({ company }: CompanyDetailLayoutProps) {
+export function CompanyDetailLayout({ 
+  company,
+  researchAccessToken,
+}: CompanyDetailLayoutProps) {
   const {
     isResearching,
     vncUrl,
@@ -19,7 +23,7 @@ export function CompanyDetailLayout({ company }: CompanyDetailLayoutProps) {
     startResearch,
     stopResearch,
     researchContainerRef
-  } = useDeepResearch(company);
+  } = useDeepResearchTrigger({ company, accessToken: researchAccessToken });
 
   return (
     <>
