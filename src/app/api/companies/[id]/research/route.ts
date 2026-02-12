@@ -6,6 +6,19 @@ import type { researchOrchestrator } from "@/trigger/research-orchestrator";
 import type { Company } from "@/types/company.types";
 import { DEFAULT_RESOLUTION, Resolution } from "@/types/sandbox.types";
 
+async function createSandbox(resolution: Resolution) {
+  return Sandbox.create({
+    resolution,
+    dpi: 96,
+    timeoutMs: DESKTOP_TIMEOUT,
+  });
+}
+
+async function startStreamAndGetUrl(desktop: Sandbox) {
+  await desktop.stream.start();
+  return desktop.stream.getUrl({ viewOnly: true });
+}
+
 export async function POST(request: NextRequest) {
   const { company, resolution = DEFAULT_RESOLUTION, sandboxId } = await request.json() as {
     company: Company;
@@ -23,31 +36,16 @@ export async function POST(request: NextRequest) {
 
   try {
     let desktop: Sandbox;
-    let vncUrl: string;
-
     if (sandboxId) {
       try {
         desktop = await Sandbox.connect(sandboxId);
-        await desktop.stream.start();
-        vncUrl = desktop.stream.getUrl({ viewOnly: true });
       } catch {
-        desktop = await Sandbox.create({
-          resolution,
-          dpi: 96,
-          timeoutMs: DESKTOP_TIMEOUT,
-        });
-        await desktop.stream.start();
-        vncUrl = desktop.stream.getUrl({ viewOnly: true });
+        desktop = await createSandbox(resolution);
       }
     } else {
-      desktop = await Sandbox.create({
-        resolution,
-        dpi: 96,
-        timeoutMs: DESKTOP_TIMEOUT,
-      });
-      await desktop.stream.start();
-      vncUrl = desktop.stream.getUrl({ viewOnly: true });
+      desktop = await createSandbox(resolution);
     }
+    const vncUrl = await startStreamAndGetUrl(desktop);
 
     const handle = await tasks.trigger<typeof researchOrchestrator>(
       "research-orchestrator",
