@@ -1,4 +1,4 @@
-import { ComputerAction, BashCommand, TextEditorCommand } from '@/lib/desktop/types';
+import { ComputerAction, BashCommand, TextEditorCommand } from '@/lib/sandbox-desktop/types';
 
 export interface Message {
   role: 'user' | 'assistant' | 'system';

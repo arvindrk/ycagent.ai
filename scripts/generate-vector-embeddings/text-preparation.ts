@@ -1,4 +1,4 @@
-import type { Company } from './types';
+import type { Company } from '../../src/lib/embeddings/types';
 
 export function createEmbeddingText(company: Company): string {
   const parts = [

@@ -1,4 +1,4 @@
-import type { SearchInput } from '@/lib/validations/search.schema';
+import type { SearchInput } from '@/lib/schemas/search.schema';
 
 export interface ParsedFilters {
   batch?: string;

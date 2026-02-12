@@ -18,7 +18,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { StreamChunk, SSEEvent } from '@/lib/llm/types';
-import { ComputerAction, BashCommand, TextEditorCommand } from '@/lib/desktop/types';
+import { ComputerAction, BashCommand, TextEditorCommand } from '@/lib/sandbox-desktop/types';
 
 interface TimelineEventProps {
   event: StreamChunk;

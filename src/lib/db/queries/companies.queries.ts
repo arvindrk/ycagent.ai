@@ -1,6 +1,6 @@
 import { cache } from 'react';
 import { getDBClient } from '../client';
-import { companyListItemSchema, companySchema } from '@/lib/validations/company.schema';
+import { companyListItemSchema, companySchema } from '@/lib/schemas/company.schema';
 import type { CompanyListItem, Company } from '@/types/company';
 
 interface FetchCompaniesParams {
@@ -31,7 +31,7 @@ export const fetchCompaniesFromDB = cache(
           LIMIT ${limit + 1}
         `
       : page
-      ? await sql`
+        ? await sql`
           SELECT 
             id, name, slug, website, logo_url, one_liner, 
             tags, batch, is_hiring, all_locations
@@ -40,7 +40,7 @@ export const fetchCompaniesFromDB = cache(
           LIMIT ${limit + 1}
           OFFSET ${(page - 1) * limit}
         `
-      : await sql`
+        : await sql`
           SELECT 
             id, name, slug, website, logo_url, one_liner, 
             tags, batch, is_hiring, all_locations
@@ -75,13 +75,13 @@ export const getTotalCompaniesCount = cache(async (): Promise<number> => {
 export const fetchCompanyById = cache(
   async (id: string): Promise<Company | null> => {
     const sql = getDBClient();
-    
+
     const rows = await sql`
       SELECT * FROM companies WHERE id = ${id} LIMIT 1
     `;
-    
+
     if (rows.length === 0) return null;
-    
+
     return companySchema.parse(rows[0]);
   }
 );

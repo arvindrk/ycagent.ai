@@ -3,7 +3,7 @@
 import { searchCompanies as dbSearchCompanies } from '@/lib/semantic-search/query';
 import { parseSearchFilters } from '@/lib/semantic-search/filters/parse';
 import { generateEmbedding } from '@/lib/semantic-search/embeddings/generate';
-import { searchInputSchema } from '@/lib/validations/search.schema';
+import { searchInputSchema } from '@/lib/schemas/search.schema';
 import type { SearchCompaniesParams, SearchResponse } from './types';
 
 export async function searchCompanies(
@@ -13,7 +13,7 @@ export async function searchCompanies(
 
   try {
     const validatedParams = searchInputSchema.parse(params);
-    
+
     if (!validatedParams.q || validatedParams.q.trim().length === 0) {
       return {
         data: [],

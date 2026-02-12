@@ -1,6 +1,6 @@
 import { neon } from '@neondatabase/serverless';
 import OpenAI from 'openai';
-import { createEmbeddingText } from '../src/lib/embeddings/text-preparation';
+import { createEmbeddingText } from './text-preparation';
 
 const sql = neon(process.env.DATABASE_URL!);
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });

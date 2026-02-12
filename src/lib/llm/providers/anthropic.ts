@@ -5,13 +5,13 @@ import { Message } from "../types";
 import { ChatOptions } from "../types";
 import { StreamChunk } from "../types";
 import { SSEEvent } from "../types";
-import { ResolutionScaler } from "@/lib/desktop/resolution";
-import { ActionExecutor } from "@/lib/desktop/executor";
-import { NavigationManager, NavigatorRole } from "@/lib/desktop/navigation";
+import { ResolutionScaler } from "@/lib/sandbox-desktop/resolution";
+import { ActionExecutor } from "@/lib/sandbox-desktop/executor";
+import { NavigationManager, NavigatorRole } from "@/lib/sandbox-desktop/navigation";
 import { BetaMessageParam } from "@anthropic-ai/sdk/resources/beta/messages/messages.mjs";
 import { BetaToolUseBlock } from "@anthropic-ai/sdk/resources/beta/messages/messages.mjs";
 import { BetaToolResultBlockParam } from "@anthropic-ai/sdk/resources/beta/messages/messages.mjs";
-import { ComputerAction } from "@/lib/desktop/types";
+import { ComputerAction } from "@/lib/sandbox-desktop/types";
 import { extractErrorMessage } from "@/lib/utils";
 import { SYSTEM_PROMPT } from "../constants";
 

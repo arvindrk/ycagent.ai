@@ -1,4 +1,4 @@
-import type { SearchInput, SearchResponse } from '@/lib/validations/search.schema';
+import type { SearchInput, SearchResponse } from '@/lib/schemas/search.schema';
 
 export type { SearchInput, SearchResponse };
 

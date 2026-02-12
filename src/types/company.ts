@@ -4,7 +4,7 @@ import {
   companyListItemSchema,
   getCompaniesInputSchema,
   paginatedResponseSchema,
-} from '@/lib/validations/company.schema';
+} from '@/lib/schemas/company.schema';
 
 export type Company = z.infer<typeof companySchema>;
 

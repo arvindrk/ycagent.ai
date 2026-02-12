@@ -1,7 +1,7 @@
 'use server';
 
 import { unstable_cache } from 'next/cache';
-import { getCompaniesInputSchema } from '@/lib/validations/company.schema';
+import { getCompaniesInputSchema } from '@/lib/schemas/company.schema';
 import { fetchCompaniesFromDB, getTotalCompaniesCount } from '@/lib/db/queries/companies.queries';
 import type { PaginatedResponse, CompanyListItem, GetCompaniesInput } from '@/types/company';
 import { CACHE_CONFIG, getCacheKey } from './cache';
