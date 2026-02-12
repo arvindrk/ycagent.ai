@@ -31,3 +31,7 @@ export type WebCrawlerCommand = {
   formats?: ('markdown' | 'html' | 'rawHtml' | 'links')[];
   onlyMainContent?: boolean;
 };
+
+export type Resolution = [number, number];
+
+export const DEFAULT_RESOLUTION: Resolution = [1024, 768];
