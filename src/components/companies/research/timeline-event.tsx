@@ -18,8 +18,8 @@ import {
   Bug,
   type LucideIcon,
 } from 'lucide-react';
-import { StreamChunk, SSEEvent, AgentAction } from '@/lib/llm/types';
-import { ComputerAction, BashCommand, TextEditorCommand, GoogleSearchCommand, WebCrawlerCommand } from '@/lib/sandbox-desktop/types';
+import { StreamChunk, SSEEvent, AgentAction } from '@/types/llm.types';
+import { ComputerAction, BashCommand, TextEditorCommand, GoogleSearchCommand, WebCrawlerCommand } from '@/types/sandbox.types';
 import { GoogleIcon } from '@/components/icons/google-icon';
 
 interface TimelineEventProps {

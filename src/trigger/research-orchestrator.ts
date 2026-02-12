@@ -1,7 +1,7 @@
 import { task, metadata } from "@trigger.dev/sdk/v3";
 import { deepResearchAgent } from "./deep-research-agent";
-import type { Company } from "@/types/company";
-import { Resolution } from "@/lib/sandbox-desktop/types";
+import type { Company } from "@/types/company.types";
+import { Resolution } from "@/types/sandbox.types";
 
 export interface ResearchOrchestratorPayload {
   company: Company,

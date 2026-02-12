@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import type { CompanyListItem } from '@/types/company';
+import type { CompanyListItem } from '@/types/company.types';
 import { Building2, MapPin } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';

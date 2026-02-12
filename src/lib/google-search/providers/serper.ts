@@ -1,4 +1,4 @@
-import type { SearchProvider, SearchConfig, SearchOptions, SearchResult, SearchResultItem } from '../types';
+import type { SearchProvider, SearchConfig, SearchOptions, SearchResult, SearchResultItem } from '@/types/google-search.types';
 
 export class SerperSearchProvider implements SearchProvider {
   name = 'serper';

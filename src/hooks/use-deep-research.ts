@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
-import { StreamChunk, SSEEvent } from '@/lib/llm/types';
-import { Company } from '@/types/company';
+import { StreamChunk, SSEEvent } from '@/types/llm.types';
+import { Company } from '@/types/company.types';
 
 export function useDeepResearch(company: Company) {
   const [isResearching, setIsResearching] = useState(false);

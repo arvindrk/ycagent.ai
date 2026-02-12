@@ -1,4 +1,4 @@
-import type { EmbeddingProvider, EmbeddingConfig } from '../types';
+import type { EmbeddingProvider, EmbeddingConfig } from '@/types/embedding.types';
 import { OpenAIEmbeddingProvider } from './openai';
 
 export function getEmbeddingProvider(

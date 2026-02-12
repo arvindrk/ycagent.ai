@@ -1,6 +1,6 @@
 import { Sandbox } from "@e2b/desktop";
 import sharp from "sharp";
-import { Resolution } from "./types";
+import { Resolution } from "@/types/sandbox.types";
 
 const MAX_WIDTH = 1280;
 const MAX_HEIGHT = 800;

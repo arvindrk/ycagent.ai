@@ -1,8 +1,8 @@
 import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import { useRealtimeRunWithStreams } from "@trigger.dev/react-hooks";
 import type { researchOrchestrator } from '@/trigger/research-orchestrator';
-import { StreamChunk, SSEEvent } from '@/lib/llm/types';
-import { Company } from '@/types/company';
+import { StreamChunk, SSEEvent } from '@/types/llm.types';
+import { Company } from '@/types/company.types';
 
 interface UseDeepResearchTriggerProps {
   company: Company;

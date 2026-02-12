@@ -4,7 +4,7 @@ import { CompanyHero } from './company-hero';
 import { CompanyAboutSection } from './company-about-section';
 import { CompanyTaxonomySection } from './company-taxonomy-section';
 import { useDeepResearchTrigger } from '@/hooks/use-deep-research-trigger';
-import { Company } from '@/types/company';
+import { Company } from '@/types/company.types';
 import { ResearchViewer } from '../research/research-viewer';
 
 interface CompanyDetailLayoutProps {
@@ -12,7 +12,7 @@ interface CompanyDetailLayoutProps {
   researchAccessToken: string;
 }
 
-export function CompanyDetailLayout({ 
+export function CompanyDetailLayout({
   company,
   researchAccessToken,
 }: CompanyDetailLayoutProps) {

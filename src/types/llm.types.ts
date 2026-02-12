@@ -1,4 +1,4 @@
-import { ComputerAction, BashCommand, TextEditorCommand, GoogleSearchCommand, WebCrawlerCommand } from '@/lib/sandbox-desktop/types';
+import { ComputerAction, BashCommand, TextEditorCommand, GoogleSearchCommand, WebCrawlerCommand } from '@/types/sandbox.types';
 
 export interface Message {
   role: 'user' | 'assistant' | 'system';

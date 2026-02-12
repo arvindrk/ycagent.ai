@@ -6,7 +6,7 @@ import type {
   ScrapeResult,
   MapOptions,
   MapResult
-} from '../types';
+} from '@/types/crawler.types';
 import {
   CrawlerError,
   RateLimitError,
@@ -60,7 +60,7 @@ export class FirecrawlCrawlerProvider implements CrawlerProvider {
       });
 
       const urls = response.links?.map((link) => link.url) || [];
-      
+
       return {
         url,
         provider: this.name,
@@ -74,7 +74,7 @@ export class FirecrawlCrawlerProvider implements CrawlerProvider {
 
   private handleError(error: unknown): Error {
     const message = error instanceof Error ? error.message : String(error);
-    
+
     if (message.includes('rate limit')) {
       return new RateLimitError(this.name);
     }

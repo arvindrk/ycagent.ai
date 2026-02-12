@@ -11,7 +11,7 @@ import {
   MapPin,
   Briefcase,
 } from 'lucide-react';
-import type { Company } from '@/types/company';
+import type { Company } from '@/types/company.types';
 
 interface CompanyHeroProps {
   company: Company;

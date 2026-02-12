@@ -4,7 +4,7 @@ import { searchCompanies as dbSearchCompanies } from '@/lib/semantic-search/quer
 import { parseSearchFilters } from '@/lib/semantic-search/filters/parse';
 import { generateEmbedding } from '@/lib/semantic-search/embeddings/generate';
 import { searchInputSchema } from '@/lib/schemas/search.schema';
-import type { SearchCompaniesParams, SearchResponse } from './types';
+import type { SearchCompaniesParams, SearchResponse } from '@/types/semantic-search.types';
 
 export async function searchCompanies(
   params: SearchCompaniesParams

@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import type { Company } from '@/types/company';
+import type { Company } from '@/types/company.types';
 
 interface CompanyTaxonomySectionProps {
   company: Company;

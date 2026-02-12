@@ -1,5 +1,5 @@
 import OpenAI from 'openai';
-import type { EmbeddingProvider, EmbeddingConfig } from '../types';
+import type { EmbeddingProvider, EmbeddingConfig } from '@/types/embedding.types';
 
 export class OpenAIEmbeddingProvider implements EmbeddingProvider {
   name = 'openai';

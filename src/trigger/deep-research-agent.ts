@@ -2,9 +2,9 @@ import { task } from "@trigger.dev/sdk/v3";
 import { Sandbox } from "@e2b/desktop";
 import { researchStream } from "./streams";
 import { StreamerFactory } from "@/lib/llm/factory";
-import { ComputerAgent, SSEEvent } from "@/lib/llm/types";
+import { ComputerAgent, SSEEvent } from "@/types/llm.types";
 import { ResearchOrchestratorPayload } from "./research-orchestrator";
-import { DEFAULT_RESOLUTION } from "@/lib/sandbox-desktop/types";
+import { DEFAULT_RESOLUTION } from "@/types/sandbox.types";
 
 export const deepResearchAgent = task({
   id: "deep-research-agent",

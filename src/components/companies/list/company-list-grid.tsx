@@ -1,6 +1,6 @@
 import { CompanyPreviewCard } from './company-preview-card';
 import { CompanyListEmptyState } from './company-list-empty-state';
-import type { CompanyListItem } from '@/types/company';
+import type { CompanyListItem } from '@/types/company.types';
 
 interface CompanyListGridProps {
   companies: CompanyListItem[];

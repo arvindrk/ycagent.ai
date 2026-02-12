@@ -3,7 +3,7 @@
 import { useRef, useEffect, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { StreamChunk, SSEEvent } from '@/lib/llm/types';
+import { StreamChunk, SSEEvent } from '@/types/llm.types';
 import { Laptop, Activity, Square } from 'lucide-react';
 import { TimelineEvent } from './timeline-event';
 
@@ -30,7 +30,7 @@ export function ResearchViewer({
 
   const processedEvents = useMemo(() => {
     const result: Array<StreamChunk & { isCompleted?: boolean }> = [];
-    
+
     events.forEach(event => {
       if (event.type === SSEEvent.ACTION_COMPLETED) {
         for (let i = result.length - 1; i >= 0; i--) {
@@ -43,7 +43,7 @@ export function ResearchViewer({
         result.push(event);
       }
     });
-    
+
     return result;
   }, [events]);
 

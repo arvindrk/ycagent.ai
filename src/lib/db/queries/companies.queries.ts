@@ -1,7 +1,7 @@
 import { cache } from 'react';
 import { getDBClient } from '../client';
 import { companyListItemSchema, companySchema } from '@/lib/schemas/company.schema';
-import type { CompanyListItem, Company } from '@/types/company';
+import type { CompanyListItem, Company } from '@/types/company.types';
 
 interface FetchCompaniesParams {
   cursor?: string;

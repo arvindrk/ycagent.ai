@@ -1,4 +1,4 @@
-import { StreamChunk } from "./types";
+import { StreamChunk } from "@/types/llm.types";
 
 const formatSSE = (chunk: StreamChunk): string => (`data: ${JSON.stringify(chunk)}\n\n`);
 

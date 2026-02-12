@@ -1,8 +1,8 @@
 import { Sandbox } from "@e2b/desktop";
 import { ResolutionScaler } from "./resolution";
-import { ComputerAction, GoogleSearchCommand, WebCrawlerCommand } from "./types";
-import { BashCommand } from "./types";
-import { TextEditorCommand } from "./types";
+import { ComputerAction, GoogleSearchCommand, WebCrawlerCommand } from "@/types/sandbox.types";
+import { BashCommand } from "@/types/sandbox.types";
+import { TextEditorCommand } from "@/types/sandbox.types";
 import { NavigationManager, NavigatorRole } from "./navigation";
 import { BetaToolUseBlock } from "@anthropic-ai/sdk/resources/beta/messages/messages.mjs";
 import { getSearchProvider } from "@/lib/google-search";
@@ -134,10 +134,10 @@ export class ActionExecutor {
     const onlyMainContent = input.onlyMainContent ?? true;
 
     const results = await Promise.allSettled(
-      urls.map(url => 
-        crawler.scrape(url, { 
-          formats, 
-          onlyMainContent 
+      urls.map(url =>
+        crawler.scrape(url, {
+          formats,
+          onlyMainContent
         })
       )
     );
@@ -169,7 +169,7 @@ export class ActionExecutor {
     });
 
     const summary = `Scraped ${successCount}/${urls.length} URLs successfully${failCount > 0 ? ` (${failCount} failed)` : ''}`;
-    
+
     return [summary, '', '---', '', ...output].join('\n');
   }
 }

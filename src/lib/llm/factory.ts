@@ -1,7 +1,7 @@
 import { Sandbox } from "@e2b/desktop";
-import { ComputerModel, ComputerInteractionStreamerFacade } from "./types";
+import { ComputerModel, ComputerInteractionStreamerFacade } from "@/types/llm.types";
 import { AnthropicComputerStreamer } from "./providers/anthropic";
-import { Resolution } from "../sandbox-desktop/types";
+import { Resolution } from "@/types/sandbox.types";
 
 export class StreamerFactory {
   static getStreamer(

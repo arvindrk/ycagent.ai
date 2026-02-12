@@ -1,4 +1,4 @@
-import type { SearchProvider, SearchConfig } from './types';
+import type { SearchProvider, SearchConfig } from '@/types/google-search.types';
 import { SerperSearchProvider } from './providers/serper';
 
 export function getSearchProvider(config: SearchConfig): SearchProvider {

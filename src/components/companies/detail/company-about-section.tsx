@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, ChevronUp } from 'lucide-react';
-import type { Company } from '@/types/company';
+import type { Company } from '@/types/company.types';
 
 interface CompanyAboutSectionProps {
   company: Company;
