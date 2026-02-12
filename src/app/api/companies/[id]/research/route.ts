@@ -7,9 +7,10 @@ import type { Company } from "@/types/company.types";
 import { DEFAULT_RESOLUTION, Resolution } from "@/types/sandbox.types";
 
 export async function POST(request: NextRequest) {
-  const { company, resolution = DEFAULT_RESOLUTION } = await request.json() as {
+  const { company, resolution = DEFAULT_RESOLUTION, sandboxId } = await request.json() as {
     company: Company;
     resolution?: Resolution;
+    sandboxId?: string;
   };
 
   if (!process.env.E2B_API_KEY) {
@@ -21,14 +22,32 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const desktop = await Sandbox.create({
-      resolution,
-      dpi: 96,
-      timeoutMs: DESKTOP_TIMEOUT,
-    });
+    let desktop: Sandbox;
+    let vncUrl: string;
 
-    await desktop.stream.start();
-    const vncUrl = desktop.stream.getUrl({ viewOnly: true });
+    if (sandboxId) {
+      try {
+        desktop = await Sandbox.connect(sandboxId);
+        await desktop.stream.start();
+        vncUrl = desktop.stream.getUrl({ viewOnly: true });
+      } catch {
+        desktop = await Sandbox.create({
+          resolution,
+          dpi: 96,
+          timeoutMs: DESKTOP_TIMEOUT,
+        });
+        await desktop.stream.start();
+        vncUrl = desktop.stream.getUrl({ viewOnly: true });
+      }
+    } else {
+      desktop = await Sandbox.create({
+        resolution,
+        dpi: 96,
+        timeoutMs: DESKTOP_TIMEOUT,
+      });
+      await desktop.stream.start();
+      vncUrl = desktop.stream.getUrl({ viewOnly: true });
+    }
 
     const handle = await tasks.trigger<typeof researchOrchestrator>(
       "research-orchestrator",

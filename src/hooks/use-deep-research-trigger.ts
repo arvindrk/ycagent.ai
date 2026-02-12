@@ -1,7 +1,8 @@
 import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
-import { useRealtimeRunWithStreams } from "@trigger.dev/react-hooks";
+import { useRealtimeRun, useRealtimeStream } from "@trigger.dev/react-hooks";
 import type { researchOrchestrator } from '@/trigger/research-orchestrator';
-import { StreamChunk, SSEEvent } from '@/types/llm.types';
+import { researchStream } from '@/trigger/streams';
+import { SSEEvent } from '@/types/llm.types';
 import { Company } from '@/types/company.types';
 
 interface UseDeepResearchTriggerProps {
@@ -9,22 +10,24 @@ interface UseDeepResearchTriggerProps {
   accessToken: string;
 }
 
-type ResearchStreams = {
-  "research-stream": StreamChunk;
-};
-
 export function useDeepResearchTrigger({ company, accessToken }: UseDeepResearchTriggerProps) {
   const [runId, setRunId] = useState<string | null>(null);
   const [initialVncUrl, setInitialVncUrl] = useState<string | null>(null);
+  const sandboxIdRef = useRef<string | null>(null);
   const researchContainerRef = useRef<HTMLDivElement>(null);
 
-  const { run, streams, error } = useRealtimeRunWithStreams<typeof researchOrchestrator, ResearchStreams>(
-    runId || "",
-    {
-      accessToken,
-      enabled: !!runId,
-    }
-  );
+  const runIdOrEmpty = runId || "";
+  const opts = { accessToken, enabled: !!runId };
+
+  const { run, error: runError } = useRealtimeRun<typeof researchOrchestrator>(runIdOrEmpty, opts);
+
+  const { parts, error: streamError } = useRealtimeStream(researchStream, runIdOrEmpty, {
+    ...opts,
+    timeoutInSeconds: 600,
+    throttleInMs: 16,
+  });
+
+  const error = runError ?? streamError;
 
   useEffect(() => {
     if (error) {
@@ -42,12 +45,12 @@ export function useDeepResearchTrigger({ company, accessToken }: UseDeepResearch
   }, [run]);
 
   const events = useMemo(() => {
-    const streamData = streams["research-stream"] || [];
+    const streamData = parts ?? [];
     if (streamData.length > 0) {
       console.log(`[useDeepResearchTrigger] Received ${streamData.length} events`);
     }
     return streamData;
-  }, [streams]);
+  }, [parts]);
 
   const vncUrl = useMemo(() => {
     // Priority: initial response > stream event > run output
@@ -75,7 +78,7 @@ export function useDeepResearchTrigger({ company, accessToken }: UseDeepResearch
       const response = await fetch(`/api/companies/${company.id}/research`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ company }),
+        body: JSON.stringify({ company, sandboxId: sandboxIdRef.current ?? undefined }),
       });
 
       if (!response.ok) {
@@ -84,9 +87,9 @@ export function useDeepResearchTrigger({ company, accessToken }: UseDeepResearch
         return;
       }
 
-      const { runId: newRunId, sandboxId, vncUrl } = await response.json();
+      const { runId: newRunId, sandboxId: newSandboxId, vncUrl } = await response.json();
       console.log('[useDeepResearchTrigger] Task triggered, runId:', newRunId);
-      console.log('[useDeepResearchTrigger] Sandbox created:', sandboxId, 'VNC:', vncUrl);
+      sandboxIdRef.current = newSandboxId;
       setInitialVncUrl(vncUrl);
       setRunId(newRunId);
     } catch (error) {
