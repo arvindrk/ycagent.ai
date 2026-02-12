@@ -14,6 +14,7 @@ import { BetaToolResultBlockParam } from "@anthropic-ai/sdk/resources/beta/messa
 import { ComputerAction } from "@/lib/sandbox-desktop/types";
 import { extractErrorMessage } from "@/lib/utils";
 import { SYSTEM_PROMPT } from "../constants";
+import { googleSearchTool } from "@/lib/schemas/google-search.tool.schema";
 
 interface AnthropicComputerConfig {
   apiKey?: string;
@@ -82,10 +83,11 @@ export class AnthropicComputerStreamer implements ComputerInteractionStreamerFac
               type: "bash_20250124",
               name: "bash",
             },
-            {
-              type: "text_editor_20250728",
-              name: "str_replace_based_edit_tool",
-            }
+            // {
+            //   type: "text_editor_20250728",
+            //   name: "str_replace_based_edit_tool",
+            // },
+            googleSearchTool,
           ],
           betas: ["computer-use-2025-01-24"],
           thinking: { type: "enabled", budget_tokens: 1024 },
@@ -125,27 +127,35 @@ export class AnthropicComputerStreamer implements ComputerInteractionStreamerFac
             toolName: tool.name
           };
 
-          await this.executor.execute(tool);
+          const textResult = await this.executor.execute(tool);
 
           yield { type: SSEEvent.ACTION_COMPLETED };
 
-          const screenshot = await this.scaler.takeScreenshot();
-          const base64 = screenshot.toString("base64");
+          if (textResult) {
+            toolResults.push({
+              type: "tool_result",
+              tool_use_id: tool.id,
+              content: textResult
+            });
+          } else {
+            const screenshot = await this.scaler.takeScreenshot();
+            const base64 = screenshot.toString("base64");
 
-          toolResults.push({
-            type: "tool_result",
-            tool_use_id: tool.id,
-            content: [
-              {
-                type: "image",
-                source: {
-                  type: "base64",
-                  media_type: "image/png",
-                  data: base64
+            toolResults.push({
+              type: "tool_result",
+              tool_use_id: tool.id,
+              content: [
+                {
+                  type: "image",
+                  source: {
+                    type: "base64",
+                    media_type: "image/png",
+                    data: base64
+                  }
                 }
-              }
-            ]
-          });
+              ]
+            });
+          }
         }
 
         if (toolResults.length > 0) {

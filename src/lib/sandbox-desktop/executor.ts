@@ -1,10 +1,11 @@
 import { Sandbox } from "@e2b/desktop";
 import { ResolutionScaler } from "./resolution";
-import { ComputerAction } from "./types";
+import { ComputerAction, GoogleSearchCommand } from "./types";
 import { BashCommand } from "./types";
 import { TextEditorCommand } from "./types";
 import { NavigationManager, NavigatorRole } from "./navigation";
 import { BetaToolUseBlock } from "@anthropic-ai/sdk/resources/beta/messages/messages.mjs";
+import { getSearchProvider } from "@/lib/google-search";
 
 export class ActionExecutor {
   constructor(
@@ -13,17 +14,19 @@ export class ActionExecutor {
     private navigationManager: NavigationManager
   ) { }
 
-  async execute(tool: BetaToolUseBlock): Promise<void> {
+  async execute(tool: BetaToolUseBlock): Promise<string | void> {
     switch (tool.name) {
       case "computer":
         await this.executeComputer(tool.input as ComputerAction);
-        break;
+        return;
       case "bash":
         await this.executeBash(tool.input as BashCommand);
-        break;
+        return;
       case "str_replace_editor":
         await this.executeEditor(tool.input as TextEditorCommand);
-        break;
+        return;
+      case "google_search":
+        return await this.executeSearch(tool.input as GoogleSearchCommand);
     }
   }
 
@@ -107,5 +110,16 @@ export class ActionExecutor {
         break;
       }
     }
+  }
+
+  private async executeSearch(input: GoogleSearchCommand): Promise<string> {
+    const provider = getSearchProvider({ provider: 'serper' });
+    const results = await provider.search(input.query, {
+      numResults: input.num_results || 10
+    });
+
+    return results.results
+      .map(r => `[Position ${r.position}] ${r.title}\n${r.link}\n${r.snippet}`)
+      .join('\n\n');
   }
 }

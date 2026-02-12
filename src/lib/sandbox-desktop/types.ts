@@ -21,3 +21,6 @@ export type TextEditorCommand =
   | { command: "create"; path: string; file_text: string }
   | { command: "str_replace"; path: string; old_str: string; new_str: string }
   | { command: "insert"; path: string; insert_line: number; new_str: string };
+
+export type GoogleSearchCommand =
+  | { query: string; num_results?: number };

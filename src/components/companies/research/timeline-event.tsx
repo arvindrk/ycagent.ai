@@ -18,7 +18,8 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { StreamChunk, SSEEvent } from '@/lib/llm/types';
-import { ComputerAction, BashCommand, TextEditorCommand } from '@/lib/sandbox-desktop/types';
+import { ComputerAction, BashCommand, TextEditorCommand, GoogleSearchCommand } from '@/lib/sandbox-desktop/types';
+import { GoogleIcon } from '@/components/icons/google-icon';
 
 interface TimelineEventProps {
   event: StreamChunk;
@@ -64,12 +65,24 @@ function CircularProgress({ duration, className = '' }: CircularProgressProps) {
   );
 }
 
+type IconType = LucideIcon | typeof GoogleIcon;
+
 function formatActionDetails(
-  action: ComputerAction | BashCommand | TextEditorCommand,
+  action: ComputerAction | BashCommand | TextEditorCommand | GoogleSearchCommand,
   toolName?: string
-): { tool: string; primary: string; secondary?: string; icon: LucideIcon; duration?: number } {
+): { tool: string; primary: string; secondary?: string; icon: IconType; duration?: number } {
   if (!toolName) {
     return { tool: 'action', primary: 'Unknown action', icon: Zap };
+  }
+
+  if (toolName === 'google_search') {
+    const searchAction = action as GoogleSearchCommand;
+    return {
+      tool: 'Google Search',
+      primary: searchAction.query,
+      secondary: searchAction.num_results ? `${searchAction.num_results} results` : undefined,
+      icon: GoogleIcon,
+    };
   }
 
   if (toolName === 'bash') {

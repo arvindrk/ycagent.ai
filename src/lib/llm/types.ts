@@ -1,4 +1,4 @@
-import { ComputerAction, BashCommand, TextEditorCommand } from '@/lib/sandbox-desktop/types';
+import { ComputerAction, BashCommand, TextEditorCommand, GoogleSearchCommand } from '@/lib/sandbox-desktop/types';
 
 export interface Message {
   role: 'user' | 'assistant' | 'system';
@@ -24,7 +24,7 @@ export interface StreamChunk {
   vncUrl?: string;
   content?: string;
   error?: string;
-  action?: ComputerAction | BashCommand | TextEditorCommand;
+  action?: ComputerAction | BashCommand | TextEditorCommand | GoogleSearchCommand;
   toolName?: string;
   isCompleted?: boolean;
 }
