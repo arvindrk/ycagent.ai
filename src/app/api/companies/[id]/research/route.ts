@@ -4,7 +4,7 @@ import { Sandbox } from "@e2b/desktop";
 import { DESKTOP_TIMEOUT } from "@/lib/llm/constants";
 import type { researchOrchestrator } from "@/trigger/research-orchestrator";
 import type { Company } from "@/types/company";
-import { DEFAULT_RESOLUTION, Resolution } from "@/lib/sandbox-desktop/resolution";
+import { DEFAULT_RESOLUTION, Resolution } from "@/lib/sandbox-desktop/types";
 
 export async function POST(request: NextRequest) {
   const { company, resolution = DEFAULT_RESOLUTION } = await request.json() as {

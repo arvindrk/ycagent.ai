@@ -1,14 +1,11 @@
 import { Sandbox } from "@e2b/desktop";
 import sharp from "sharp";
+import { Resolution } from "./types";
 
 const MAX_WIDTH = 1280;
 const MAX_HEIGHT = 800;
 const MIN_WIDTH = 800;
 const MIN_HEIGHT = 600;
-
-export type Resolution = [number, number];
-
-export const DEFAULT_RESOLUTION: Resolution = [1024, 768];
 
 export class ResolutionScaler {
   private desktop: Sandbox;

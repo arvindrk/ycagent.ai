@@ -4,7 +4,7 @@ import { researchStream } from "./streams";
 import { StreamerFactory } from "@/lib/llm/factory";
 import { ComputerAgent, SSEEvent } from "@/lib/llm/types";
 import { ResearchOrchestratorPayload } from "./research-orchestrator";
-import { DEFAULT_RESOLUTION } from "@/lib/sandbox-desktop/resolution";
+import { DEFAULT_RESOLUTION } from "@/lib/sandbox-desktop/types";
 
 export const deepResearchAgent = task({
   id: "deep-research-agent",
