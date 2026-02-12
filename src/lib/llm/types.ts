@@ -1,4 +1,4 @@
-import { ComputerAction, BashCommand, TextEditorCommand, GoogleSearchCommand } from '@/lib/sandbox-desktop/types';
+import { ComputerAction, BashCommand, TextEditorCommand, GoogleSearchCommand, WebCrawlerCommand } from '@/lib/sandbox-desktop/types';
 
 export interface Message {
   role: 'user' | 'assistant' | 'system';
@@ -18,13 +18,15 @@ export enum SSEEvent {
   REASONING = 'reasoning',
 }
 
+export type AgentAction = ComputerAction | BashCommand | TextEditorCommand | GoogleSearchCommand | WebCrawlerCommand;
+
 export interface StreamChunk {
   type: SSEEvent;
   sandboxId?: string;
   vncUrl?: string;
   content?: string;
   error?: string;
-  action?: ComputerAction | BashCommand | TextEditorCommand | GoogleSearchCommand;
+  action?: AgentAction;
   toolName?: string;
   isCompleted?: boolean;
 }

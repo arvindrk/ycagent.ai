@@ -24,3 +24,10 @@ export type TextEditorCommand =
 
 export type GoogleSearchCommand =
   | { query: string; num_results?: number };
+
+export type WebCrawlerCommand = {
+  urls: string[];
+  limit?: number;
+  formats?: ('markdown' | 'html' | 'rawHtml' | 'links')[];
+  onlyMainContent?: boolean;
+};

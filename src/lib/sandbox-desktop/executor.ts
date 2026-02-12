@@ -1,11 +1,12 @@
 import { Sandbox } from "@e2b/desktop";
 import { ResolutionScaler } from "./resolution";
-import { ComputerAction, GoogleSearchCommand } from "./types";
+import { ComputerAction, GoogleSearchCommand, WebCrawlerCommand } from "./types";
 import { BashCommand } from "./types";
 import { TextEditorCommand } from "./types";
 import { NavigationManager, NavigatorRole } from "./navigation";
 import { BetaToolUseBlock } from "@anthropic-ai/sdk/resources/beta/messages/messages.mjs";
 import { getSearchProvider } from "@/lib/google-search";
+import { getCrawlerProvider } from "@/lib/crawler";
 
 export class ActionExecutor {
   constructor(
@@ -27,6 +28,8 @@ export class ActionExecutor {
         return;
       case "google_search":
         return await this.executeSearch(tool.input as GoogleSearchCommand);
+      case "web_crawler":
+        return await this.executeCrawler(tool.input as WebCrawlerCommand);
     }
   }
 
@@ -121,5 +124,52 @@ export class ActionExecutor {
     return results.results
       .map(r => `[Position ${r.position}] ${r.title}\n${r.link}\n${r.snippet}`)
       .join('\n\n');
+  }
+
+  private async executeCrawler(input: WebCrawlerCommand): Promise<string> {
+    const crawler = getCrawlerProvider();
+    const limit = Math.min(input.limit || 3, 10);
+    const urls = input.urls.slice(0, limit);
+    const formats = input.formats || ['markdown'];
+    const onlyMainContent = input.onlyMainContent ?? true;
+
+    const results = await Promise.allSettled(
+      urls.map(url => 
+        crawler.scrape(url, { 
+          formats, 
+          onlyMainContent 
+        })
+      )
+    );
+
+    const output: string[] = [];
+    let successCount = 0;
+    let failCount = 0;
+
+    results.forEach((result, i) => {
+      if (result.status === 'fulfilled') {
+        const data = result.value;
+        successCount++;
+        output.push(
+          `[URL ${i + 1}/${urls.length}] ${data.url}`,
+          `Status: Success`,
+          ``,
+          data.markdown || data.html || '(no content)',
+          ``
+        );
+      } else {
+        failCount++;
+        output.push(
+          `[URL ${i + 1}/${urls.length}] ${urls[i]}`,
+          `Status: Failed`,
+          `Error: ${result.reason?.message || 'unknown error'}`,
+          ``
+        );
+      }
+    });
+
+    const summary = `Scraped ${successCount}/${urls.length} URLs successfully${failCount > 0 ? ` (${failCount} failed)` : ''}`;
+    
+    return [summary, '', '---', '', ...output].join('\n');
   }
 }

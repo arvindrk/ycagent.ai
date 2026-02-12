@@ -15,10 +15,11 @@ import {
   FileEdit,
   FileText,
   Globe,
+  Bug,
   type LucideIcon,
 } from 'lucide-react';
-import { StreamChunk, SSEEvent } from '@/lib/llm/types';
-import { ComputerAction, BashCommand, TextEditorCommand, GoogleSearchCommand } from '@/lib/sandbox-desktop/types';
+import { StreamChunk, SSEEvent, AgentAction } from '@/lib/llm/types';
+import { ComputerAction, BashCommand, TextEditorCommand, GoogleSearchCommand, WebCrawlerCommand } from '@/lib/sandbox-desktop/types';
 import { GoogleIcon } from '@/components/icons/google-icon';
 
 interface TimelineEventProps {
@@ -68,7 +69,7 @@ function CircularProgress({ duration, className = '' }: CircularProgressProps) {
 type IconType = LucideIcon | typeof GoogleIcon;
 
 function formatActionDetails(
-  action: ComputerAction | BashCommand | TextEditorCommand | GoogleSearchCommand,
+  action: AgentAction,
   toolName?: string
 ): { tool: string; primary: string; secondary?: string; icon: IconType; duration?: number } {
   if (!toolName) {
@@ -82,6 +83,16 @@ function formatActionDetails(
       primary: searchAction.query,
       secondary: searchAction.num_results ? `${searchAction.num_results} results` : undefined,
       icon: GoogleIcon,
+    };
+  }
+
+  if (toolName === 'web_crawler') {
+    const crawlerAction = action as WebCrawlerCommand;
+    return {
+      tool: 'Web Crawler',
+      primary: `${crawlerAction.urls.length} URL${crawlerAction.urls.length > 1 ? 's' : ''}`,
+      secondary: crawlerAction.urls[0] || undefined,
+      icon: Bug,
     };
   }
 

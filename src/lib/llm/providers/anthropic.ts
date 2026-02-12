@@ -15,6 +15,7 @@ import { ComputerAction } from "@/lib/sandbox-desktop/types";
 import { extractErrorMessage } from "@/lib/utils";
 import { SYSTEM_PROMPT } from "../constants";
 import { googleSearchTool } from "@/lib/schemas/google-search.tool.schema";
+import { webCrawlerTool } from "@/lib/schemas/web-crawler.tool.schema";
 
 interface AnthropicComputerConfig {
   apiKey?: string;
@@ -88,6 +89,7 @@ export class AnthropicComputerStreamer implements ComputerInteractionStreamerFac
             //   name: "str_replace_based_edit_tool",
             // },
             googleSearchTool,
+            webCrawlerTool,
           ],
           betas: ["computer-use-2025-01-24"],
           thinking: { type: "enabled", budget_tokens: 1024 },
