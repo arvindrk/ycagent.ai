@@ -3,7 +3,7 @@ import { getCompanies } from '@/lib/api/companies/get-companies';
 import { CompanyListGrid } from '@/components/companies/list/company-list-grid';
 import { CompanyListSkeleton } from '@/components/companies/list/company-list-skeleton';
 import { CompanyListPagination } from '@/components/companies/list/company-list-pagination';
-import { SearchWrapper } from '@/components/search/search-wrapper';
+import { SearchWrapper } from '@/components/companies/semantic-search/search-wrapper';
 import { PageHeader } from '@/components/layout/page-header';
 
 interface SearchParams {
