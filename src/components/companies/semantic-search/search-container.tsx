@@ -7,6 +7,7 @@ import { SearchEmpty } from './search-empty';
 import { TieredResultsDisplay } from './tiered-results-display';
 import { CompanyListSkeleton } from '@/components/companies/list/company-list-skeleton';
 import { useSearch } from '@/hooks/use-search';
+import { useDebouncedValue } from '@/hooks/use-debounced-value';
 
 interface SearchContainerProps {
   onSearchStateChange: (isSearching: boolean) => void;
@@ -14,9 +15,10 @@ interface SearchContainerProps {
 
 export function SearchContainer({ onSearchStateChange }: SearchContainerProps) {
   const [searchQuery, setSearchQuery] = useState('');
+  const debouncedQuery = useDebouncedValue(searchQuery, 300);
 
   const { data, isLoading, error } = useSearch({
-    q: searchQuery,
+    q: debouncedQuery,
   });
 
   const hasQuery = searchQuery.trim().length > 0;

@@ -15,11 +15,13 @@ export class OpenAIEmbeddingProvider implements BaseEmbeddingProvider {
     this.dimensions = config.dimensions;
   }
 
-  async generate(text: string): Promise<number[]> {
+  async generate(text: string, signal?: AbortSignal): Promise<number[]> {
     const response = await this.client.embeddings.create({
       model: this.model,
       input: text,
       dimensions: this.dimensions,
+    }, {
+      signal,
     });
 
     return response.data[0].embedding;

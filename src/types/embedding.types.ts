@@ -1,7 +1,7 @@
 export interface BaseEmbeddingProvider {
   name: string;
   dimensions: number;
-  generate(text: string): Promise<number[]>;
+  generate(text: string, signal?: AbortSignal): Promise<number[]>;
   generateBatch(texts: string[]): Promise<number[][]>;
 }
 
