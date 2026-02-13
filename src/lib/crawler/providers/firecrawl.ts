@@ -1,11 +1,12 @@
 import Firecrawl from '@mendable/firecrawl-js';
-import type {
-  CrawlerProvider,
-  CrawlerConfig,
-  ScrapeOptions,
-  ScrapeResult,
-  MapOptions,
-  MapResult
+import {
+  type BaseCrawlerProvider,
+  type CrawlerConfig,
+  type ScrapeOptions,
+  type ScrapeResult,
+  type MapOptions,
+  type MapResult,
+  CrawlerProvider
 } from '@/types/crawler.types';
 import {
   CrawlerError,
@@ -13,8 +14,8 @@ import {
   AuthenticationError
 } from '../errors';
 
-export class FirecrawlCrawlerProvider implements CrawlerProvider {
-  name = 'firecrawl';
+export class FirecrawlCrawlerProvider implements BaseCrawlerProvider {
+  name = CrawlerProvider.FIRECRAWL;
   private client: Firecrawl;
 
   constructor(config?: CrawlerConfig) {

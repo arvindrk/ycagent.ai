@@ -1,3 +1,5 @@
+export const DEFAULT_DESKTOP_TIMEOUT = 300_000;
+
 export const DEFAULT_SYSTEM_PROMPT = `
 You are a helpful assistant that can use a computer to help the user with their tasks.
 You can use the computer to search the web, write code, and more.
@@ -24,4 +26,3 @@ IMPORTANT NOTES:
 Please help the user effectively by observing the current state of the computer and taking appropriate actions.
 `;
 
-export const DEFAULT_DESKTOP_TIMEOUT = 300_000;

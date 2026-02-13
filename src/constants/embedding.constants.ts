@@ -1,5 +1,7 @@
+import { EmbeddingProvider } from "@/types/embedding.types";
+
 export const DEFAULT_EMBEDDING_CONFIG = {
-    provider: 'openai',
+    provider: EmbeddingProvider.OPENAI,
     dimensions: 768,
 } as const;
 

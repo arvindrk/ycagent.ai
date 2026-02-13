@@ -1,7 +1,7 @@
-import type { SearchProvider, SearchConfig, SearchOptions, SearchResult, SearchResultItem } from '@/types/google-search.types';
+import { SearchProvider, type BaseSearchProvider, type SearchConfig, type SearchOptions, type SearchResult, type SearchResultItem } from '@/types/google-search.types';
 
-export class SerperSearchProvider implements SearchProvider {
-  name = 'serper';
+export class SerperSearchProvider implements BaseSearchProvider {
+  name = SearchProvider.SERPER;
   private apiKey: string;
 
   constructor(config: SearchConfig) {

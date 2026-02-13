@@ -1,10 +1,14 @@
-export interface SearchProvider {
+export interface BaseSearchProvider {
   name: string;
   search(query: string, options?: SearchOptions): Promise<SearchResult>;
 }
 
+export enum SearchProvider {
+  SERPER = 'serper',
+}
+
 export interface SearchConfig {
-  provider: 'serper';
+  provider: SearchProvider;
   apiKey?: string;
 }
 

@@ -1,8 +1,9 @@
 import { ComputerAction, BashCommand, TextEditorCommand, GoogleSearchCommand, WebCrawlerCommand, Resolution } from '@/types/sandbox.types';
 import { Sandbox } from '@e2b/desktop';
 
+export type MessageRole = 'user' | 'assistant' | 'system';
 export interface Message {
-  role: 'user' | 'assistant' | 'system';
+  role: MessageRole;
   content: string;
 }
 
@@ -35,8 +36,6 @@ export interface StreamChunk {
   toolName?: string;
   isCompleted?: boolean;
 }
-
-export type ComputerModel = "anthropic";
 
 export interface BaseComputerStreamer {
   executeAgentLoop(messages: Message[], seedUrl?: string | undefined, options?: ChatOptions): AsyncGenerator<StreamChunk>;

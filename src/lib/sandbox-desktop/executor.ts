@@ -7,6 +7,7 @@ import { NavigationManager, NavigatorRole } from "./navigation";
 import { BetaToolUseBlock } from "@anthropic-ai/sdk/resources/beta/messages/messages.mjs";
 import { getSearchProvider } from "@/lib/google-search";
 import { getCrawlerProvider } from "@/lib/crawler";
+import { SearchProvider } from "@/types/google-search.types";
 
 export class ActionExecutor {
   constructor(
@@ -116,7 +117,7 @@ export class ActionExecutor {
   }
 
   private async executeSearch(input: GoogleSearchCommand): Promise<string> {
-    const provider = getSearchProvider({ provider: 'serper' });
+    const provider = getSearchProvider({ provider: SearchProvider.SERPER });
     const results = await provider.search(input.query, {
       numResults: input.num_results || 10
     });

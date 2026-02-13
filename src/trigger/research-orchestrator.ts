@@ -2,14 +2,15 @@ import { task, metadata } from "@trigger.dev/sdk/v3";
 import { deepResearchAgent } from "./deep-research-agent";
 import { DEFAULT_SYSTEM_PROMPT } from "@/constants/llm.constants";
 import { DeepResearchAgentPayload, ResearchOrchestratorPayload } from "@/types/trigger.types";
+import { Message } from "@/types/llm.types";
 
 export const researchOrchestrator = task({
   id: "research-orchestrator",
   run: async (payload: ResearchOrchestratorPayload) => {
     metadata.set("status", "starting");
 
-    const initialMessage = {
-      role: "user" as const,
+    const initialMessage: Message = {
+      role: "user",
       content: `Find information about ${payload.company.name}${payload.company.website ? `. Their website is ${payload.company.website}` : ""
         }`
     };

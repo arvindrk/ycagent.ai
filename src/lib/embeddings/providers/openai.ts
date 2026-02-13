@@ -1,8 +1,8 @@
 import OpenAI from 'openai';
-import type { EmbeddingProvider, EmbeddingConfig } from '@/types/embedding.types';
+import { EmbeddingProvider, type BaseEmbeddingProvider, type EmbeddingConfig } from '@/types/embedding.types';
 
-export class OpenAIEmbeddingProvider implements EmbeddingProvider {
-  name = 'openai';
+export class OpenAIEmbeddingProvider implements BaseEmbeddingProvider {
+  name = EmbeddingProvider.OPENAI;
   dimensions = 768;
   private client: OpenAI;
   private model: string;

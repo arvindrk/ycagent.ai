@@ -13,7 +13,7 @@ export class StreamerFactory {
     } = config;
 
     switch (provider) {
-      case "anthropic":
+      case LLMProvider.ANTHROPIC:
         return new AnthropicComputerStreamer({ desktop, resolution, systemPrompt });
       default:
         throw new Error(`Unknown Computer Agent provider: ${provider}`);

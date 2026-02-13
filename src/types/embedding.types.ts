@@ -1,12 +1,16 @@
-export interface EmbeddingProvider {
+export interface BaseEmbeddingProvider {
   name: string;
   dimensions: number;
   generate(text: string): Promise<number[]>;
   generateBatch(texts: string[]): Promise<number[][]>;
 }
 
+export enum EmbeddingProvider {
+  OPENAI = 'openai'
+}
+
 export interface EmbeddingConfig {
-  provider: 'openai' | 'cohere' | 'anthropic' | 'local';
+  provider: EmbeddingProvider;
   dimensions: 768;
   model?: string;
   apiKey?: string;

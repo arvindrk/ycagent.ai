@@ -1,11 +1,15 @@
-export interface CrawlerProvider {
+export interface BaseCrawlerProvider {
   name: string;
   scrape(url: string, options?: ScrapeOptions): Promise<ScrapeResult>;
   map(url: string, options?: MapOptions): Promise<MapResult>;
 }
 
+export enum CrawlerProvider {
+  FIRECRAWL = 'firecrawl'
+}
+
 export interface CrawlerConfig {
-  provider?: 'firecrawl';
+  provider?: CrawlerProvider;
   apiKey?: string;
 }
 
