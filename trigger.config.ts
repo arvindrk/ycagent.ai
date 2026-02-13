@@ -1,4 +1,5 @@
 import { defineConfig } from "@trigger.dev/sdk/v3";
+import { playwright } from "@trigger.dev/build/extensions/playwright";
 
 export default defineConfig({
   project: "proj_wlnmrtuwyncbptlijmkl",
@@ -17,6 +18,12 @@ export default defineConfig({
       factor: 2,
       randomize: true,
     },
+  },
+  build: {
+    extensions: [
+      playwright(),
+    ],
+    external: ["playwright-core", "playwright", "chromium-bidi"],
   },
   dirs: ["./src/trigger"],
 });
