@@ -39,5 +39,9 @@ export async function getCompanies(
     }
   );
 
-  return getCached();
+  try {
+    return await getCached();
+  } catch {
+    throw new Error('Unexpected Error. Please try again.');
+  }
 }

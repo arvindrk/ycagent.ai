@@ -4,11 +4,15 @@ import { fetchCompanyById } from '@/lib/db/queries/companies.queries';
 import type { Company } from '@/types/company.types';
 
 export const getCompany = cache(async (id: string): Promise<Company> => {
-  const company = await fetchCompanyById(id);
+  try {
+    const company = await fetchCompanyById(id);
 
-  if (!company) {
-    notFound();
+    if (!company) {
+      notFound();
+    }
+
+    return company;
+  } catch {
+    throw new Error('Unexpected Error. Please try again.');
   }
-
-  return company;
 });
