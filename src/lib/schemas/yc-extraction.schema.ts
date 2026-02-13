@@ -88,7 +88,6 @@ export const YC_EXTRACTION_SCHEMA = {
             description: 'Publication date',
           },
         },
-        required: ['title', 'url', 'date'],
       },
     },
   },

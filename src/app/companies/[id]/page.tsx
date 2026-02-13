@@ -1,4 +1,4 @@
-import { getCompany } from '@/lib/api/companies/get-company';
+import { getCompany } from '@/lib/api/companies/get-companies';
 import { DetailBreadcrumb } from '@/components/companies/detail/detail-breadcrumb';
 import { PageHeader } from '@/components/layout/page-header';
 import { CompanyDetailLayout } from '@/components/companies/detail/company-detail-layout';

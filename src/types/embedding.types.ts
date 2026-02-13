@@ -21,14 +21,3 @@ export interface EmbeddingResult {
   dimensions: number;
   provider: string;
 }
-
-export interface Company {
-  id?: string;
-  name: string;
-  one_liner: string | null;
-  long_description: string | null;
-  tags: string[];
-  industries: string[];
-  all_locations: string | null;
-  batch: string | null;
-}
