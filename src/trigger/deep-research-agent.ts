@@ -2,16 +2,20 @@ import { task } from "@trigger.dev/sdk/v3";
 import { Sandbox } from "@e2b/desktop";
 import { researchStream } from "./streams";
 import { StreamerFactory } from "@/lib/llm/factory";
-import { ComputerAgent, SSEEvent } from "@/types/llm.types";
-import { ResearchOrchestratorPayload } from "./research-orchestrator";
+import { LLMProvider, SSEEvent } from "@/types/llm.types";
 import { DEFAULT_RESOLUTION } from "@/types/sandbox.types";
+import { DeepResearchAgentPayload } from "@/types/trigger.types";
 
 export const deepResearchAgent = task({
   id: "deep-research-agent",
   maxDuration: 600,
-  run: async (payload: ResearchOrchestratorPayload) => {
-    const resolution = payload.resolution || DEFAULT_RESOLUTION;
-    const vncUrl = payload.vncUrl;
+  run: async (payload: DeepResearchAgentPayload) => {
+    const {
+      vncUrl,
+      systemPrompt,
+      initialMessage,
+      resolution = DEFAULT_RESOLUTION,
+    } = payload;
     let desktop: Sandbox;
 
     try {
@@ -29,17 +33,12 @@ export const deepResearchAgent = task({
       throw new Error(`Sandbox connection failed: ${errorMessage}`);
     }
 
-    const streamer = StreamerFactory.getStreamer(
-      ComputerAgent.ANTHROPIC,
+    const streamer = StreamerFactory.getStreamer({
+      provider: LLMProvider.ANTHROPIC,
       desktop,
-      resolution
-    );
-
-    const initialMessage = {
-      role: "user" as const,
-      content: `Find information about ${payload.company.name}${payload.company.website ? `. Their website is ${payload.company.website}` : ""
-        }`
-    };
+      resolution,
+      systemPrompt,
+    });
 
     const agentStream = streamer.executeAgentLoop(
       [initialMessage],

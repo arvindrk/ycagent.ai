@@ -1,21 +1,26 @@
 import { task, metadata } from "@trigger.dev/sdk/v3";
 import { deepResearchAgent } from "./deep-research-agent";
-import type { Company } from "@/types/company.types";
-import { Resolution } from "@/types/sandbox.types";
-
-export interface ResearchOrchestratorPayload {
-  company: Company,
-  sandboxId: string,
-  vncUrl: string,
-  resolution?: Resolution,
-}
+import { DEFAULT_SYSTEM_PROMPT } from "@/constants/llm.constants";
+import { DeepResearchAgentPayload, ResearchOrchestratorPayload } from "@/types/trigger.types";
 
 export const researchOrchestrator = task({
   id: "research-orchestrator",
   run: async (payload: ResearchOrchestratorPayload) => {
     metadata.set("status", "starting");
 
-    const result = await deepResearchAgent.triggerAndWait(payload);
+    const initialMessage = {
+      role: "user" as const,
+      content: `Find information about ${payload.company.name}${payload.company.website ? `. Their website is ${payload.company.website}` : ""
+        }`
+    };
+
+    const newPayload: DeepResearchAgentPayload = {
+      ...payload,
+      initialMessage,
+      systemPrompt: DEFAULT_SYSTEM_PROMPT,
+    }
+
+    const result = await deepResearchAgent.triggerAndWait(newPayload);
 
     if (!result.ok) {
       metadata.set("status", "failed");

@@ -1,4 +1,5 @@
-import { ComputerAction, BashCommand, TextEditorCommand, GoogleSearchCommand, WebCrawlerCommand } from '@/types/sandbox.types';
+import { ComputerAction, BashCommand, TextEditorCommand, GoogleSearchCommand, WebCrawlerCommand, Resolution } from '@/types/sandbox.types';
+import { Sandbox } from '@e2b/desktop';
 
 export interface Message {
   role: 'user' | 'assistant' | 'system';
@@ -37,11 +38,20 @@ export interface StreamChunk {
 
 export type ComputerModel = "anthropic";
 
-export interface ComputerInteractionStreamerFacade {
+export interface BaseComputerStreamer {
   executeAgentLoop(messages: Message[], seedUrl?: string | undefined, options?: ChatOptions): AsyncGenerator<StreamChunk>;
 }
 
-export enum ComputerAgent {
+export enum LLMProvider {
   ANTHROPIC = "anthropic",
+}
+
+export interface ComputerAgentConfig {
+  apiKey?: string;
+  provider?: LLMProvider;
+  model?: string;
+  desktop: Sandbox;
+  resolution: Resolution;
+  systemPrompt?: string;
 }
 

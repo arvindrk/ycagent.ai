@@ -1,10 +1,6 @@
 import { cache } from 'react';
 import { getEmbeddingProvider } from '../../embeddings/providers';
-
-const DEFAULT_EMBEDDING_CONFIG = {
-  provider: 'openai',
-  dimensions: 768,
-} as const;
+import { DEFAULT_EMBEDDING_CONFIG } from '@/constants/embedding.constants';
 
 const embeddingProvider = getEmbeddingProvider(DEFAULT_EMBEDDING_CONFIG);
 

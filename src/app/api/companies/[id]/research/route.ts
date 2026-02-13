@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { tasks } from "@trigger.dev/sdk/v3";
 import { Sandbox } from "@e2b/desktop";
-import { DESKTOP_TIMEOUT } from "@/lib/llm/constants";
+import { DEFAULT_DESKTOP_TIMEOUT } from "@/constants/llm.constants";
 import type { researchOrchestrator } from "@/trigger/research-orchestrator";
 import type { Company } from "@/types/company.types";
 import { DEFAULT_RESOLUTION, Resolution } from "@/types/sandbox.types";
@@ -10,7 +10,7 @@ async function createSandbox(resolution: Resolution) {
   return Sandbox.create({
     resolution,
     dpi: 96,
-    timeoutMs: DESKTOP_TIMEOUT,
+    timeoutMs: DEFAULT_DESKTOP_TIMEOUT,
   });
 }
 

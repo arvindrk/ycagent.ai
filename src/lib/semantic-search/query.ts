@@ -1,7 +1,8 @@
 import { getDBClient } from '../db/client';
-import { HNSW_CONFIG, TIER_META, type TierKey } from './scoring/weights';
+import { TIER_META, type TierKey } from './scoring/weights';
 import { buildFilterSQL } from './filters/build';
 import type { ParsedFilters } from './filters/parse';
+import { HNSW_CONFIG } from '@/constants/embedding.constants';
 
 export interface SearchParams {
   query: string;

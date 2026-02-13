@@ -1,6 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
-import { Sandbox } from "@e2b/desktop";
-import { ComputerInteractionStreamerFacade } from "@/types/llm.types";
+import { ComputerAgentConfig, BaseComputerStreamer } from "@/types/llm.types";
 import { Message } from "@/types/llm.types";
 import { ChatOptions } from "@/types/llm.types";
 import { StreamChunk } from "@/types/llm.types";
@@ -11,20 +10,13 @@ import { NavigationManager, NavigatorRole } from "@/lib/sandbox-desktop/navigati
 import { BetaMessageParam } from "@anthropic-ai/sdk/resources/beta/messages/messages.mjs";
 import { BetaToolUseBlock } from "@anthropic-ai/sdk/resources/beta/messages/messages.mjs";
 import { BetaToolResultBlockParam } from "@anthropic-ai/sdk/resources/beta/messages/messages.mjs";
-import { ComputerAction, Resolution } from "@/types/sandbox.types";
+import { ComputerAction } from "@/types/sandbox.types";
 import { extractErrorMessage } from "@/lib/utils";
-import { SYSTEM_PROMPT } from "../constants";
+import { DEFAULT_SYSTEM_PROMPT } from "../../../constants/llm.constants";
 import { googleSearchTool } from "@/lib/schemas/google-search.tool.schema";
 import { webCrawlerTool } from "@/lib/schemas/web-crawler.tool.schema";
 
-interface AnthropicComputerConfig {
-  apiKey?: string;
-  model?: string;
-  desktop: Sandbox;
-  resolution: Resolution;
-}
-
-export class AnthropicComputerStreamer implements ComputerInteractionStreamerFacade {
+export class AnthropicComputerStreamer implements BaseComputerStreamer {
   private client: Anthropic;
   private model: string;
   private systemPrompt: string;
@@ -32,11 +24,11 @@ export class AnthropicComputerStreamer implements ComputerInteractionStreamerFac
   private executor: ActionExecutor;
   private navigationManager: NavigationManager;
 
-  constructor(config: AnthropicComputerConfig) {
+  constructor(config: ComputerAgentConfig) {
     this.client = new Anthropic({
       apiKey: config.apiKey || process.env.ANTHROPIC_API_KEY
     });
-    this.systemPrompt = SYSTEM_PROMPT;
+    this.systemPrompt = config.systemPrompt || DEFAULT_SYSTEM_PROMPT;
     this.model = config.model || "claude-sonnet-4-5";
     this.scaler = new ResolutionScaler(config.desktop, config.resolution);
     this.navigationManager = new NavigationManager(config.desktop);
