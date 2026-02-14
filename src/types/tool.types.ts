@@ -1,7 +1,7 @@
 export interface StandardToolCall {
   id: string;
   name: string;
-  input: Record<string, any>;
+  input: Record<string, unknown>;
 }
 
 export interface StandardToolResult {
@@ -9,7 +9,7 @@ export interface StandardToolResult {
   content: ToolResultContent;
 }
 
-export type ToolResultContent = 
+export type ToolResultContent =
   | { type: 'text'; text: string }
   | { type: 'image'; base64: string; mediaType: 'image/png' | 'image/jpeg' };
 
@@ -18,7 +18,7 @@ export interface ToolSchema {
   description: string;
   inputSchema: {
     type: 'object';
-    properties: Record<string, any>;
+    properties: Record<string, unknown>;
     required?: string[];
   };
 }
