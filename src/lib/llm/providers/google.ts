@@ -117,14 +117,6 @@ export class GoogleComputerStreamer implements BaseComputerStreamer {
           }
         });
 
-        if (response.usageMetadata) {
-          console.log('Google usage:', {
-            thoughtsTokens: response.usageMetadata.thoughtsTokenCount,
-            outputTokens: response.usageMetadata.candidatesTokenCount,
-            totalTokens: response.usageMetadata.totalTokenCount
-          });
-        }
-
         const candidate = response.candidates?.[0];
         if (!candidate || !candidate.content) {
           yield { type: SSEEvent.DONE };
