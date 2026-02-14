@@ -4,10 +4,11 @@ import { ComputerAction, GoogleSearchCommand, WebCrawlerCommand } from "@/types/
 import { BashCommand } from "@/types/sandbox.types";
 import { TextEditorCommand } from "@/types/sandbox.types";
 import { NavigationManager, NavigatorRole } from "./navigation";
-import { BetaToolUseBlock } from "@anthropic-ai/sdk/resources/beta/messages/messages.mjs";
+import { StandardToolCall, StandardToolResult } from "@/types/tool.types";
 import { getSearchProvider } from "@/lib/google-search";
 import { getCrawlerProvider } from "@/lib/crawler";
 import { SearchProvider } from "@/types/google-search.types";
+import { CrawlerProvider } from "@/types/crawler.types";
 
 export class ActionExecutor {
   constructor(
@@ -16,22 +17,43 @@ export class ActionExecutor {
     private navigationManager: NavigationManager
   ) { }
 
-  async execute(tool: BetaToolUseBlock): Promise<string | void> {
-    switch (tool.name) {
+  async execute(toolCall: StandardToolCall): Promise<StandardToolResult> {
+    let textResult: string | undefined;
+
+    switch (toolCall.name) {
       case "computer":
-        await this.executeComputer(tool.input as ComputerAction);
-        return;
+        await this.executeComputer(toolCall.input as ComputerAction);
+        break;
       case "bash":
-        await this.executeBash(tool.input as BashCommand);
-        return;
+        await this.executeBash(toolCall.input as BashCommand);
+        break;
       case "str_replace_editor":
-        await this.executeEditor(tool.input as TextEditorCommand);
-        return;
+        await this.executeEditor(toolCall.input as TextEditorCommand);
+        break;
       case "google_search":
-        return await this.executeSearch(tool.input as GoogleSearchCommand);
+        textResult = await this.executeSearch(toolCall.input as GoogleSearchCommand);
+        break;
       case "web_crawler":
-        return await this.executeCrawler(tool.input as WebCrawlerCommand);
+        textResult = await this.executeCrawler(toolCall.input as WebCrawlerCommand);
+        break;
     }
+
+    if (textResult) {
+      return {
+        toolCallId: toolCall.id,
+        content: { type: 'text', text: textResult }
+      };
+    }
+
+    const screenshot = await this.scaler.takeScreenshot();
+    return {
+      toolCallId: toolCall.id,
+      content: {
+        type: 'image',
+        base64: screenshot.toString('base64'),
+        mediaType: 'image/png'
+      }
+    };
   }
 
   private async executeComputer(action: ComputerAction): Promise<void> {
@@ -122,17 +144,21 @@ export class ActionExecutor {
       numResults: input.num_results || 10
     });
 
-    return results.results
+    const returning = results.results
       .map(r => `[Position ${r.position}] ${r.title}\n${r.link}\n${r.snippet}`)
       .join('\n\n');
+
+
+    return returning;
   }
 
   private async executeCrawler(input: WebCrawlerCommand): Promise<string> {
-    const crawler = getCrawlerProvider();
+    const crawler = getCrawlerProvider({ provider: CrawlerProvider.FIRECRAWL });
     const limit = Math.min(input.limit || 3, 10);
     const urls = input.urls.slice(0, limit);
     const formats = input.formats || ['markdown'];
     const onlyMainContent = input.onlyMainContent ?? true;
+
 
     const results = await Promise.allSettled(
       urls.map(url =>
@@ -170,6 +196,7 @@ export class ActionExecutor {
     });
 
     const summary = `Scraped ${successCount}/${urls.length} URLs successfully${failCount > 0 ? ` (${failCount} failed)` : ''}`;
+
 
     return [summary, '', '---', '', ...output].join('\n');
   }

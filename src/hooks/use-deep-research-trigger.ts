@@ -55,7 +55,9 @@ export function useDeepResearchTrigger({ company, accessToken }: UseDeepResearch
   const vncUrl = useMemo(() => {
     // Priority: initial response > stream event > run output
     if (initialVncUrl) return initialVncUrl;
-    if (run?.output?.vncUrl) return run.output.vncUrl;
+    if (run?.output && Array.isArray(run.output) && run.output.length > 0) {
+      return run.output[0].vncUrl;
+    }
     const initEvent = events.find(e => e.type === SSEEvent.INIT);
     return initEvent?.vncUrl;
   }, [initialVncUrl, events, run]);

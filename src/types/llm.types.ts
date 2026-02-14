@@ -43,6 +43,7 @@ export interface BaseComputerStreamer {
 
 export enum LLMProvider {
   ANTHROPIC = "anthropic",
+  OPENAI = "openai",
 }
 
 export interface ComputerAgentConfig {

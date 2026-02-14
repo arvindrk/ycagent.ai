@@ -11,10 +11,11 @@ import { BetaMessageParam } from "@anthropic-ai/sdk/resources/beta/messages/mess
 import { BetaToolUseBlock } from "@anthropic-ai/sdk/resources/beta/messages/messages.mjs";
 import { BetaToolResultBlockParam } from "@anthropic-ai/sdk/resources/beta/messages/messages.mjs";
 import { ComputerAction } from "@/types/sandbox.types";
+import { StandardToolCall, StandardToolResult } from "@/types/tool.types";
 import { extractErrorMessage } from "@/lib/utils";
 import { DEFAULT_SYSTEM_PROMPT } from "../../../constants/llm.constants";
-import { googleSearchTool } from "@/lib/schemas/google-search.tool.schema";
-import { webCrawlerTool } from "@/lib/schemas/web-crawler.tool.schema";
+import { ALL_TOOLS } from "@/lib/tools/registry";
+import { toAnthropicToolSchema } from "@/lib/tools/adapters";
 
 export class AnthropicComputerStreamer implements BaseComputerStreamer {
   private client: Anthropic;
@@ -33,6 +34,57 @@ export class AnthropicComputerStreamer implements BaseComputerStreamer {
     this.scaler = new ResolutionScaler(config.desktop, config.resolution);
     this.navigationManager = new NavigationManager(config.desktop);
     this.executor = new ActionExecutor(config.desktop, this.scaler, this.navigationManager);
+  }
+
+  private getProviderTools() {
+    const [scaledWidth, scaledHeight] = this.scaler.getScaledResolution();
+
+    return [
+      {
+        type: "computer_20250124" as const,
+        name: "computer" as const,
+        display_width_px: scaledWidth,
+        display_height_px: scaledHeight,
+      },
+      {
+        type: "bash_20250124" as const,
+        name: "bash" as const,
+      },
+      ...ALL_TOOLS.map(toAnthropicToolSchema)
+    ];
+  }
+
+  private toStandardToolCall(block: BetaToolUseBlock): StandardToolCall {
+    return {
+      id: block.id,
+      name: block.name,
+      input: block.input as Record<string, unknown>
+    };
+  }
+
+  private toProviderToolResult(result: StandardToolResult): BetaToolResultBlockParam {
+    if (result.content.type === 'text') {
+      return {
+        type: "tool_result",
+        tool_use_id: result.toolCallId,
+        content: result.content.text
+      };
+    }
+
+    return {
+      type: "tool_result",
+      tool_use_id: result.toolCallId,
+      content: [
+        {
+          type: "image",
+          source: {
+            type: "base64",
+            media_type: result.content.mediaType,
+            data: result.content.base64
+          }
+        }
+      ]
+    };
   }
 
   async *executeAgentLoop(messages: Message[], seedUrl?: string | undefined, options?: ChatOptions): AsyncGenerator<StreamChunk> {
@@ -58,38 +110,18 @@ export class AnthropicComputerStreamer implements BaseComputerStreamer {
           break;
         }
 
-        const [scaledWidth, scaledHeight] = this.scaler.getScaledResolution();
-
         const response = await this.client.beta.messages.create({
           model: this.model,
           max_tokens: 4096,
           messages: anthropicMessages,
           system: this.systemPrompt,
-          tools: [
-            {
-              type: "computer_20250124",
-              name: "computer",
-              display_width_px: scaledWidth,
-              display_height_px: scaledHeight,
-            },
-            {
-              type: "bash_20250124",
-              name: "bash",
-            },
-            // {
-            //   type: "text_editor_20250728",
-            //   name: "str_replace_based_edit_tool",
-            // },
-            googleSearchTool,
-            webCrawlerTool,
-          ],
+          tools: this.getProviderTools(),
           betas: ["computer-use-2025-01-24"],
           thinking: { type: "enabled", budget_tokens: 1024 },
         }, { signal });
 
         const toolUses: BetaToolUseBlock[] = [];
         let textContent = "";
-
         for (const block of response.content) {
           if (block.type === "tool_use") {
             toolUses.push(block);
@@ -115,41 +147,19 @@ export class AnthropicComputerStreamer implements BaseComputerStreamer {
         const toolResults: BetaToolResultBlockParam[] = [];
 
         for (const tool of toolUses) {
+          const standardCall = this.toStandardToolCall(tool);
+
           yield {
             type: SSEEvent.ACTION,
-            action: tool.input as ComputerAction,
-            toolName: tool.name
+            action: standardCall.input as ComputerAction,
+            toolName: standardCall.name
           };
 
-          const textResult = await this.executor.execute(tool);
+          const result = await this.executor.execute(standardCall);
 
           yield { type: SSEEvent.ACTION_COMPLETED };
 
-          if (textResult) {
-            toolResults.push({
-              type: "tool_result",
-              tool_use_id: tool.id,
-              content: textResult
-            });
-          } else {
-            const screenshot = await this.scaler.takeScreenshot();
-            const base64 = screenshot.toString("base64");
-
-            toolResults.push({
-              type: "tool_result",
-              tool_use_id: tool.id,
-              content: [
-                {
-                  type: "image",
-                  source: {
-                    type: "base64",
-                    media_type: "image/png",
-                    data: base64
-                  }
-                }
-              ]
-            });
-          }
+          toolResults.push(this.toProviderToolResult(result));
         }
 
         if (toolResults.length > 0) {
