@@ -17,3 +17,11 @@ export function toOpenAIToolSchema(schema: ToolSchema) {
     strict: false
   };
 }
+
+export function toGoogleToolSchema(schema: ToolSchema) {
+  return {
+    name: schema.name,
+    description: schema.description,
+    parametersJsonSchema: schema.inputSchema
+  };
+}
