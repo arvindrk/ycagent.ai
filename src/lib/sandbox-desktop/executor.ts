@@ -139,6 +139,7 @@ export class ActionExecutor {
   }
 
   private async executeSearch(input: GoogleSearchCommand): Promise<string> {
+    this.navigationManager.navigate(`https://www.google.com/search?q=${input.query.split(" ").join("+")}`);
     const provider = getSearchProvider({ provider: SearchProvider.SERPER });
     const results = await provider.search(input.query, {
       numResults: input.num_results || 10
@@ -161,11 +162,13 @@ export class ActionExecutor {
 
 
     const results = await Promise.allSettled(
-      urls.map(url =>
-        crawler.scrape(url, {
+      urls.map(url => {
+        this.navigationManager.navigate(url);
+        return crawler.scrape(url, {
           formats,
           onlyMainContent
         })
+      }
       )
     );
 
