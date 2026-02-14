@@ -9,6 +9,7 @@ import { getSearchProvider } from "@/lib/google-search";
 import { getCrawlerProvider } from "@/lib/crawler";
 import { SearchProvider } from "@/types/google-search.types";
 import { CrawlerProvider } from "@/types/crawler.types";
+import { wait } from "@trigger.dev/sdk";
 
 export class ActionExecutor {
   constructor(
@@ -140,6 +141,7 @@ export class ActionExecutor {
 
   private async executeSearch(input: GoogleSearchCommand): Promise<string> {
     this.navigationManager.navigate(`https://www.google.com/search?q=${input.query.split(" ").join("+")}`);
+    await wait.for({ seconds: 0.5 });
     const provider = getSearchProvider({ provider: SearchProvider.SERPER });
     const results = await provider.search(input.query, {
       numResults: input.num_results || 10
@@ -162,8 +164,9 @@ export class ActionExecutor {
 
 
     const results = await Promise.allSettled(
-      urls.map(url => {
+      urls.map(async url => {
         this.navigationManager.navigate(url);
+        await wait.for({ seconds: 0.5 });
         return crawler.scrape(url, {
           formats,
           onlyMainContent
