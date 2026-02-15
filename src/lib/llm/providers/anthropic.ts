@@ -14,7 +14,7 @@ import { ComputerAction } from "@/types/sandbox.types";
 import { StandardToolCall, StandardToolResult } from "@/types/tool.types";
 import { extractErrorMessage } from "@/lib/utils";
 import { DEFAULT_SYSTEM_PROMPT } from "../../../constants/llm.constants";
-import { ALL_TOOLS } from "@/lib/tools/registry";
+import { ALL_TOOLS } from "@/lib/schemas/tool.schema";
 import { toAnthropicToolSchema } from "@/lib/tools/adapters";
 
 export class AnthropicComputerStreamer implements BaseComputerStreamer {

@@ -8,7 +8,7 @@ import { NavigationManager, NavigatorRole } from "@/lib/sandbox-desktop/navigati
 import { StandardToolCall, StandardToolResult } from "@/types/tool.types";
 import { ComputerAction } from "@/types/sandbox.types";
 import { extractErrorMessage } from "@/lib/utils";
-import { ALL_TOOLS } from "@/lib/tools/registry";
+import { ALL_TOOLS } from "@/lib/schemas/tool.schema";
 import { toOpenAIToolSchema } from "@/lib/tools/adapters";
 
 interface OpenAIToolCall {
@@ -81,6 +81,7 @@ export class OpenAIComputerStreamer implements BaseComputerStreamer {
   }
 
   private toProviderToolResult(result: StandardToolResult): OpenAIToolResult {
+    console.log(result.content.type);
     if (result.content.type === 'text') {
       return {
         call_id: result.toolCallId,
@@ -187,13 +188,13 @@ export class OpenAIComputerStreamer implements BaseComputerStreamer {
             };
 
             const result = await this.executor.execute(toolCall);
-
+            // console.log('Tool Result: ', result);
             yield { type: SSEEvent.ACTION_COMPLETED };
 
             toolResults.push(this.toProviderToolResult(result));
           }
         }
-
+        // console.log(toolResults);
         if (toolResults.length > 0) {
           response = await this.client.responses.create({
             model: this.model,
