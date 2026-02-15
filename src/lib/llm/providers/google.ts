@@ -155,17 +155,37 @@ export class GoogleComputerStreamer implements BaseComputerStreamer {
         for (const functionCall of functionCalls) {
           const standardCall = this.toStandardToolCall(functionCall);
 
-          yield {
-            type: SSEEvent.ACTION,
-            action: standardCall.input as ComputerAction,
-            toolName: standardCall.name
-          };
+          if (standardCall.name === 'format_result') {
+            yield {
+              type: SSEEvent.RESULT,
+              result: {
+                summary: (standardCall.input.summary as string) || '',
+                keyFindings: standardCall.input.keyFindings as string[] | undefined,
+                sources: (standardCall.input.sources as string[]) || [],
+                metadata: {}
+              }
+            };
 
-          const result = await this.executor.execute(standardCall);
+            toolResults.push({
+              functionResponse: {
+                id: standardCall.id,
+                name: 'format_result',
+                response: { output: 'Result formatted and sent to user' }
+              }
+            });
+          } else {
+            yield {
+              type: SSEEvent.ACTION,
+              action: standardCall.input as ComputerAction,
+              toolName: standardCall.name
+            };
 
-          yield { type: SSEEvent.ACTION_COMPLETED };
+            const result = await this.executor.execute(standardCall);
 
-          toolResults.push(this.toProviderToolResult(result));
+            yield { type: SSEEvent.ACTION_COMPLETED };
+
+            toolResults.push(this.toProviderToolResult(result));
+          }
         }
 
         if (toolResults.length > 0) {

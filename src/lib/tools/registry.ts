@@ -69,7 +69,33 @@ export const webCrawlerToolSchema: ToolSchema = {
   }
 };
 
+export const formatResultToolSchema: ToolSchema = {
+  name: "format_result",
+  description: "Format research findings into executive summary. Call this when you have completed research and want to present findings to the user. MUST include all sources/URLs you consulted.",
+  inputSchema: {
+    type: "object",
+    properties: {
+      summary: {
+        type: "string",
+        description: "2-3 paragraph executive summary of key findings"
+      },
+      keyFindings: {
+        type: "array",
+        items: { type: "string" },
+        description: "3-5 bullet points of most important discoveries"
+      },
+      sources: {
+        type: "array",
+        items: { type: "string" },
+        description: "All URLs and sources consulted during research. Required for credibility."
+      }
+    },
+    required: ["summary", "sources"]
+  }
+};
+
 export const ALL_TOOLS: ToolSchema[] = [
   googleSearchToolSchema,
-  webCrawlerToolSchema
+  webCrawlerToolSchema,
+  formatResultToolSchema
 ];

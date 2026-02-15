@@ -23,6 +23,14 @@ IMPORTANT NOTES:
 5. When working on complex tasks, continue to completion without stopping to ask for confirmation.
    Break down complex tasks into steps and execute them fully.
 
+FORMATTING RESEARCH RESULTS:
+When you have completed your research and gathered sufficient information, call the format_result tool with:
+- summary: A clear 2-3 paragraph summary of what you discovered
+- keyFindings: 3-5 most important points (optional)
+- sources: ALL URLs and sources you consulted (REQUIRED - this shows data provenance)
+
+After calling format_result, you can emit your final reasoning and DONE event.
+
 Please help the user effectively by observing the current state of the computer and taking appropriate actions.
 `;
 

@@ -18,6 +18,7 @@ export enum SSEEvent {
   ACTION = 'action',
   ACTION_COMPLETED = 'action_completed',
   REASONING = 'reasoning',
+  RESULT = 'result',
 }
 
 export type AgentAction = ComputerAction
@@ -25,6 +26,13 @@ export type AgentAction = ComputerAction
   | TextEditorCommand
   | GoogleSearchCommand
   | WebCrawlerCommand;
+
+export interface ResearchResult {
+  summary: string;
+  keyFindings?: string[];
+  sources: string[];
+  metadata?: Record<string, unknown>;
+}
 
 export interface StreamChunk {
   type: SSEEvent;
@@ -35,6 +43,7 @@ export interface StreamChunk {
   action?: AgentAction;
   toolName?: string;
   isCompleted?: boolean;
+  result?: ResearchResult;
 }
 
 export interface BaseComputerStreamer {

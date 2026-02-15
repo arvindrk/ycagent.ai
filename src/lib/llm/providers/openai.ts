@@ -150,7 +150,7 @@ export class OpenAIComputerStreamer implements BaseComputerStreamer {
             };
           }
         }
-
+        console.log(response.output);
         const toolCalls = response.output
           .map(item => this.toStandardToolCall(item as OpenAIToolCall))
           .filter((call): call is StandardToolCall => call !== null);
@@ -163,17 +163,35 @@ export class OpenAIComputerStreamer implements BaseComputerStreamer {
         const toolResults: OpenAIToolResult[] = [];
 
         for (const toolCall of toolCalls) {
-          yield {
-            type: SSEEvent.ACTION,
-            action: toolCall.input as ComputerAction,
-            toolName: toolCall.name
-          };
+          if (toolCall.name === 'format_result') {
+            yield {
+              type: SSEEvent.RESULT,
+              result: {
+                summary: (toolCall.input.summary as string) || '',
+                keyFindings: toolCall.input.keyFindings as string[] | undefined,
+                sources: (toolCall.input.sources as string[]) || [],
+                metadata: {}
+              }
+            };
 
-          const result = await this.executor.execute(toolCall);
+            toolResults.push({
+              call_id: toolCall.id,
+              type: "function_call_output",
+              output: "Result formatted and sent to user"
+            });
+          } else {
+            yield {
+              type: SSEEvent.ACTION,
+              action: toolCall.input as ComputerAction,
+              toolName: toolCall.name
+            };
 
-          yield { type: SSEEvent.ACTION_COMPLETED };
+            const result = await this.executor.execute(toolCall);
 
-          toolResults.push(this.toProviderToolResult(result));
+            yield { type: SSEEvent.ACTION_COMPLETED };
+
+            toolResults.push(this.toProviderToolResult(result));
+          }
         }
 
         if (toolResults.length > 0) {

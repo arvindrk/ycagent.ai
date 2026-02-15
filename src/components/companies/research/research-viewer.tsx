@@ -1,11 +1,13 @@
 "use client";
 
-import { useRef, useEffect, useMemo } from 'react';
+import { useRef, useEffect, useMemo, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { StreamChunk, SSEEvent } from '@/types/llm.types';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { StreamChunk, SSEEvent, ResearchResult } from '@/types/llm.types';
 import { Laptop, Activity, Square } from 'lucide-react';
 import { TimelineEvent } from './timeline-event';
+import { ResearchSummary } from './research-summary';
 
 interface ResearchViewerProps {
   companyName: string;
@@ -23,6 +25,7 @@ export function ResearchViewer({
   onStopResearch
 }: ResearchViewerProps) {
   const eventsEndRef = useRef<HTMLDivElement>(null);
+  const [userSelectedTab, setUserSelectedTab] = useState<'timeline' | 'summary' | null>(null);
 
   useEffect(() => {
     eventsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -46,6 +49,20 @@ export function ResearchViewer({
 
     return result;
   }, [events]);
+
+  const researchResult = useMemo((): ResearchResult | null => {
+    const resultEvent = events.find(e => e.type === SSEEvent.RESULT);
+    if (resultEvent?.result) {
+      return resultEvent.result;
+    }
+
+    return null;
+  }, [events]);
+
+  const activeTab = useMemo(() => {
+    if (userSelectedTab) return userSelectedTab;
+    return researchResult ? 'summary' : 'timeline';
+  }, [userSelectedTab, researchResult]);
 
   return (
     <Card>
@@ -72,9 +89,14 @@ export function ResearchViewer({
           <div className="flex flex-col lg:flex-row gap-6">
             <div className="lg:w-[60%] flex flex-col h-[600px] rounded-md">
               <div className="border-b border-border px-6 py-3 flex items-center justify-between">
-                <h3 className="text-sm font-medium text-text-primary">
-                  Research Timeline
-                </h3>
+                <Tabs value={activeTab} onValueChange={(v) => setUserSelectedTab(v as 'timeline' | 'summary')} className="flex-1">
+                  <TabsList variant="line">
+                    <TabsTrigger value="timeline">Timeline</TabsTrigger>
+                    <TabsTrigger value="summary" disabled={!researchResult}>
+                      Summary
+                    </TabsTrigger>
+                  </TabsList>
+                </Tabs>
                 <Button
                   onClick={onStopResearch}
                   disabled={!isResearching}
@@ -87,39 +109,47 @@ export function ResearchViewer({
                 </Button>
               </div>
 
-              <div
-                className="flex-1 overflow-y-auto p-6"
-                role="feed"
-                aria-label="Research event timeline"
-              >
-                {events.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center h-full opacity-40">
-                    <div className="relative">
-                      <div className="absolute left-2.5 top-0 bottom-0 w-0.5 border-l-2 border-dashed border-border-secondary" />
-                      <div className="space-y-8 ml-8">
-                        <div className="w-3 h-3 rounded-full border-2 border-border-secondary bg-bg-tertiary" />
-                        <div className="w-3 h-3 rounded-full border-2 border-border-secondary bg-bg-tertiary" />
-                        <div className="w-3 h-3 rounded-full border-2 border-border-secondary bg-bg-tertiary" />
+              <Tabs value={activeTab} onValueChange={(v) => setUserSelectedTab(v as 'timeline' | 'summary')} className="flex-1 flex flex-col overflow-y-auto">
+                <TabsContent value="timeline" className="flex-1 overflow-y-auto p-6 mt-0" role="feed" aria-label="Research event timeline">
+                  {events.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center h-full opacity-40">
+                      <div className="relative">
+                        <div className="absolute left-2.5 top-0 bottom-0 w-0.5 border-l-2 border-dashed border-border-secondary" />
+                        <div className="space-y-8 ml-8">
+                          <div className="w-3 h-3 rounded-full border-2 border-border-secondary bg-bg-tertiary" />
+                          <div className="w-3 h-3 rounded-full border-2 border-border-secondary bg-bg-tertiary" />
+                          <div className="w-3 h-3 rounded-full border-2 border-border-secondary bg-bg-tertiary" />
+                        </div>
                       </div>
+                      <p className="text-text-tertiary text-sm mt-6">Agent will appear here...</p>
                     </div>
-                    <p className="text-text-tertiary text-sm mt-6">Agent will appear here...</p>
-                  </div>
-                ) : (
-                  <div className="relative">
-                    <div className="absolute left-2.5 top-0 bottom-0 w-0.5 border-l-2 border-border-secondary" />
-                    <div className="space-y-4">
-                      {processedEvents.map((event, index) => (
-                        <TimelineEvent
-                          key={index}
-                          event={event}
-                          isLatest={index === processedEvents.length - 1 && isResearching}
-                        />
-                      ))}
+                  ) : (
+                    <div className="relative">
+                      <div className="absolute left-2.5 top-0 bottom-0 w-0.5 border-l-2 border-border-secondary" />
+                      <div className="space-y-4">
+                        {processedEvents.map((event, index) => (
+                          <TimelineEvent
+                            key={index}
+                            event={event}
+                            isLatest={index === processedEvents.length - 1 && isResearching}
+                          />
+                        ))}
+                      </div>
+                      <div ref={eventsEndRef} />
                     </div>
-                    <div ref={eventsEndRef} />
-                  </div>
-                )}
-              </div>
+                  )}
+                </TabsContent>
+
+                <TabsContent value="summary" className="flex-1 overflow-y-auto mt-0">
+                  {researchResult ? (
+                    <ResearchSummary result={researchResult} />
+                  ) : (
+                    <div className="flex items-center justify-center h-full text-text-tertiary text-sm">
+                      No summary available yet
+                    </div>
+                  )}
+                </TabsContent>
+              </Tabs>
             </div>
             <div className="lg:w-[40%]">
               <div className="relative w-full" style={{ paddingBottom: '75%' }}>
