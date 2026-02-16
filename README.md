@@ -2,11 +2,43 @@
 
 > A candidate-focused discovery and research platform for the Y Combinator ecosystem.
 
-**Status**: Work in progress
+**Status**: Active development • Core features implemented • Research agent operational
 
 ## Overview
 
 This platform helps candidates explore the YC company universe, search it naturally, and generate deep research dossiers on demand. It combines structured YC data with on-demand web research to provide evidence-backed intelligence about companies, teams, products, and hiring signals.
+
+## Tech Stack
+
+### Database & Search
+
+- **Neon Postgres** (serverless with connection pooling)
+- **pgvector** extension for semantic search
+- Hybrid search: semantic + lexical + name matching with tiered confidence results
+
+### Background Jobs & Orchestration
+
+- **Trigger.dev v4** for task orchestration and scheduling
+- **E2B Desktop** for sandboxed browser automation
+- Realtime streaming via Trigger streams (replaces SSE)
+
+### AI & LLM
+
+- **Multi-provider architecture**: Anthropic Claude (primary), Google Gemini, OpenAI
+- Factory pattern for provider switching
+- Streaming responses with tool use support
+- OpenAI embeddings for semantic search
+
+### Web Research
+
+- **Firecrawl** for web scraping and content extraction
+- **Serper** for Google search API
+- **Playwright** for browser automation (via E2B)
+
+### UI & Design
+
+- Custom **Linear-inspired design system** with token-first architecture
+- Dark mode support with next-themes
 
 ## Core User Journeys
 
@@ -33,7 +65,7 @@ The system interprets intent, extracts constraints, and returns ranked results w
 
 ### 3. On-Demand Deep Research
 
-Trigger a research agent for any company that crawls public sources to aggregate:
+Trigger an autonomous research agent for any company that orchestrates multi-stage research workflows and crawls public sources to aggregate:
 
 **Product & Positioning**
 
@@ -94,73 +126,213 @@ Every claim is traceable to captured artifacts. The platform prioritizes trustwo
 - Evolve: step-by-step agent trace UI (Manus-style)
 - Driven by stored event logs and artifacts
 
-## Current Scope (MVP)
+## Research Agent Architecture
 
-✅ **Implemented/In Progress**
+The deep research system uses **Trigger.dev v4** for background orchestration and **E2B Desktop** for sandboxed browser automation.
 
-- YC directory ingestion and browsing
-- Hybrid search (YC attributes + natural language)
-- User-triggered research runs
-- Progress tracking and observability
-- Evidence collection and storage
+### Task Orchestration
 
-**Upcoming**
+**Research Orchestrator** (`research-orchestrator` task)
+
+- Entry point for all research requests
+- Creates E2B Desktop sandbox with persistent browser
+- Triggers deep research agent as child task
+- Aggregates and streams events to frontend
+- Handles cancellation and cleanup
+
+**Deep Research Agent** (`deep-research-agent` task)
+
+- Connects to E2B Desktop sandbox
+- Executes multi-LLM agent loop with tool use
+- Streams events via Trigger streams (piped to parent)
+- Budget-bounded execution (time, pages, domains)
+- Automatic retries on failure
+
+### Multi-Stage Research Workflow
+
+1. **Search Phase**: Google search for company mentions and sources
+2. **Crawl Phase**: Firecrawl extracts content from discovered URLs
+3. **Analysis Phase**: LLM analyzes content for relevance and signals
+4. **Extraction Phase**: Structured data extraction using Zod schemas
+5. **Synthesis Phase**: Aggregate findings into research dossier
+
+### LLM Provider Architecture
+
+Factory pattern for swappable LLM providers:
+
+- **Anthropic Claude** (primary): Agent reasoning and tool use
+- **Google Gemini**: Alternative for high-throughput tasks
+- **OpenAI GPT**: Embeddings and legacy support
+
+All providers implement unified `Streamer` interface with tool calling support.
+
+### Sandboxed Browser Automation
+
+**E2B Desktop Sandbox**
+
+- Isolated Ubuntu environment with Chromium browser
+- VNC streaming for live observation (embedded in UI)
+- Playwright automation for navigation and interaction
+- Persistent across entire research run
+- Automatic cleanup on completion or cancellation
+
+### Budget Controls
+
+- **Time budget**: 600s max task duration (configurable)
+- **Domain budget**: Rate limiting per domain (politeness)
+- **Concurrency**: Single-threaded research (parallel-ready architecture)
+- **Stop conditions**: Diminishing returns detection, user cancellation
+
+## Features & Implementation Status
+
+### ✅ Fully Implemented
+
+**Company Discovery**
+
+- YC company directory with 5,600+ companies
+- Company detail pages with rich metadata and taxonomy
+- Batch-based browsing and pagination
+- Company preview cards with Linear-styled UI
+
+**Semantic Search**
+
+- Hybrid search combining semantic, lexical, and name matching
+- Tiered confidence results (High/Medium/Low)
+- Natural language query interpretation
+- Real-time search with debounced input
+- Query explanation and result scoring
+
+**Deep Research Agent**
+
+- Background research orchestration via Trigger.dev
+- Multi-stage workflow: search → crawl → analyze → extract
+- E2B Desktop sandbox for safe browser automation
+- Realtime streaming research UI with event timeline
+- VNC desktop viewer for live browser observation
+- Cancellable research runs (survives page refresh)
+
+### 🔄 In Progress
+
+- Research result caching and incremental refresh
+- Research artifact storage (screenshots, PDFs, raw HTML)
+- Founder profile extraction and entity recognition
+- Evidence confidence scoring
+
+### ⏸️ Planned (Not Started)
 
 - Resume upload and candidate profiles
-- Semantic/lexical candidate ↔ company matching
+- Semantic candidate ↔ company matching
 - Activity-based ranking and personalization
-- Advanced auth and role-based access
+- Advanced authentication and role-based access
+- Parallel research tasks (competitor analysis, market research)
+- Research history and saved searches
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+
-- Neon Postgres database
-- API keys for: OpenAI, Firecrawl, Serper, Trigger.dev
+- **Bun 1.3.4+** (recommended) or Node.js 18+
+- **Neon Postgres** database with pgvector extension
+- **Trigger.dev** account (free tier available)
+- **API keys**: E2B, Anthropic, Google Vertex, OpenAI, Firecrawl, Serper
 
 ### Setup
 
-1. Clone and install dependencies:
+1. **Install dependencies:**
 
 ```bash
-npm install
+bun install
 ```
 
-2. Copy environment template and add your keys:
+2. **Configure environment:**
 
 ```bash
 cp env.example .env.local
+# Edit .env.local with your API keys and database URL
 ```
 
-3. Run database migrations:
+3. **Run database migrations:**
 
 ```bash
-npm run db:migrate
+bun run db:migrate
 ```
 
-4. Start development server:
+4. **Ingest YC companies** (optional, for fresh data):
 
 ```bash
-npm run dev
+bun run db:ingest-yc
+```
+
+5. **Start development server:**
+
+```bash
+bun run dev
+```
+
+6. **Start Trigger.dev dev server** (in separate terminal):
+
+```bash
+bunx trigger.dev@latest dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000)
 
 ### Environment Variables
 
-See `env.example` for required configuration:
+**Getting API Keys:**
 
-- Database connection (Neon)
-- OpenAI API key (embeddings)
-- Firecrawl API key (web scraping)
-- Serper API key (search)
-- Trigger.dev credentials (background jobs)
-- `TEMP_API_PASSWORD` (optional) - Temporary password protection for expensive API endpoints during testing
+- **Neon**: [console.neon.tech](https://console.neon.tech) - Free tier includes pgvector
+- **Trigger.dev**: [cloud.trigger.dev](https://cloud.trigger.dev) - Free tier available
+- **E2B**: [e2b.dev](https://e2b.dev) - Sign up for Desktop sandbox access
+- **Anthropic**: [console.anthropic.com](https://console.anthropic.com) - Claude API
+- **Google Vertex**: [console.cloud.google.com](https://console.cloud.google.com) - Gemini API
+- **OpenAI**: [platform.openai.com](https://platform.openai.com) - GPT + Embeddings
+- **Firecrawl**: [firecrawl.dev](https://firecrawl.dev) - Web scraping API
+- **Serper**: [serper.dev](https://serper.dev) - Google search API
 
-## Documentation
+### Available Scripts
 
-- [Architecture](/.docs/architecture/ARCHITECTURE.md)
-- [Database Setup](/README_DB_SETUP.md)
-- [Discovery Module](/.docs/architecture/DISCOVERY_MODULE.md)
-- [Search Architecture](/.docs/architecture/SEARCH_ARCHITECTURE.md)
+**Development:**
+
+```bash
+bun run dev          # Start Next.js development server
+bun run build        # Build for production
+bun start            # Start production server
+bun run lint         # Run ESLint
+```
+
+**Database:**
+
+```bash
+bun run db:migrate       # Run database migrations
+bun run db:ingest-yc     # Ingest YC companies from API
+bun run db:test          # Test database queries
+```
+
+**Testing:**
+
+```bash
+bun run test:search      # Test semantic search functionality
+bun run test:crawler     # Test web crawler integration
+```
+
+**Trigger.dev:**
+
+```bash
+bunx trigger.dev@latest dev       # Start local Trigger dev server
+bunx trigger.dev@latest deploy    # Deploy tasks to production
+```
+
+**Note**: If you prefer npm, all commands work with `npm run` instead of `bun run`.
+
+## Support
+
+For issues and questions:
+
+1. Review Trigger.dev dashboard logs for task execution details
+2. Check browser console for frontend errors
+3. Verify environment variables are properly configured
+
+---
+
+Built with ❤️ for the YC community
