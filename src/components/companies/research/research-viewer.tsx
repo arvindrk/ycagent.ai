@@ -42,7 +42,7 @@ export function ResearchViewer({
             break;
           }
         }
-      } else {
+      } else if (event.type !== SSEEvent.RESULT) {
         result.push(event);
       }
     });
