@@ -116,7 +116,7 @@ export class GoogleComputerStreamer implements BaseComputerStreamer {
             tools: this.getProviderTools(),
             thinkingConfig: {
               includeThoughts: true,
-              thinkingBudget: 2048
+              thinkingBudget: 1024
             },
             abortSignal: signal,
           }

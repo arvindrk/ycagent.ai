@@ -309,17 +309,28 @@ export function TimelineEvent({ event, isLatest }: TimelineEventProps) {
           </div>
         );
 
-      case SSEEvent.REASONING:
+      case SSEEvent.REASONING: {
+        const content = event.content || '';
+        const [, heading, body] = content.match(/^\*\*(.+?)\*\*\s*([\s\S]*)/) || [null, null, content];
+
         return (
           <div className="flex-1">
             <div className={`text-xs font-medium uppercase tracking-wider mb-1 ${style.labelColor}`}>
               {style.label}
             </div>
-            <p className="text-sm text-text-primary leading-relaxed">
-              {event.content}
-            </p>
+            {heading && (
+              <h3 className={`text-sm font-bold mb-2`}>
+                {heading}
+              </h3>
+            )}
+            {body && (
+              <p className="text-sm text-text-primary leading-relaxed">
+                {body}
+              </p>
+            )}
           </div>
         );
+      }
 
       case SSEEvent.ACTION:
         if (event.action && event.toolName) {
