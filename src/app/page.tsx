@@ -5,6 +5,7 @@ import { CompanyListSkeleton } from '@/components/companies/list/company-list-sk
 import { CompanyListPagination } from '@/components/companies/list/company-list-pagination';
 import { SearchWrapper } from '@/components/companies/semantic-search/search-wrapper';
 import { PageHeader } from '@/components/layout/page-header';
+import { generateHomeMetadata } from '@/lib/seo/metadata';
 
 interface SearchParams {
   page?: string;
@@ -13,6 +14,8 @@ interface SearchParams {
 interface HomePageProps {
   searchParams: Promise<SearchParams>;
 }
+
+export const metadata = generateHomeMetadata();
 
 export default async function HomePage({ searchParams }: HomePageProps) {
   const params = await searchParams;

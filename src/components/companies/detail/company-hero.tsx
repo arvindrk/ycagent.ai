@@ -1,4 +1,4 @@
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -70,20 +70,23 @@ export function CompanyHero({
   return (
     <header className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-[120px_1fr] lg:grid-cols-[120px_1fr_240px] gap-6">
-        <Avatar className="w-[120px] h-[120px] rounded-lg flex-shrink-0">
-          <AvatarImage
-            src={company.logo_url || ''}
-            alt={`${company.name} logo`}
-            width={120}
-            height={120}
-          />
-          <AvatarFallback className="rounded-lg bg-bg-secondary">
+        <div className="w-[120px] h-[120px] rounded-lg bg-bg-secondary flex items-center justify-center flex-shrink-0 overflow-hidden">
+          {company.logo_url ? (
+            <Image
+              src={company.logo_url}
+              alt={`${company.name} logo`}
+              width={120}
+              height={120}
+              priority
+              className="object-contain"
+            />
+          ) : (
             <Building2
               className="w-12 h-12 text-text-tertiary"
               aria-hidden="true"
             />
-          </AvatarFallback>
-        </Avatar>
+          )}
+        </div>
 
         <div className="flex-1 space-y-4 min-w-0">
           <div>

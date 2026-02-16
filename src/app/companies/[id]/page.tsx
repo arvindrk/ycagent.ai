@@ -3,6 +3,7 @@ import { DetailBreadcrumb } from '@/components/companies/detail/detail-breadcrum
 import { PageHeader } from '@/components/layout/page-header';
 import { CompanyDetailLayout } from '@/components/companies/detail/company-detail-layout';
 import { createResearchAccessToken } from '@/app/actions/research';
+import { generateCompanyMetadata } from '@/lib/seo/metadata';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -11,13 +12,7 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps) {
   const { id } = await params;
   const company = await getCompany(id);
-
-  return {
-    title: `${company.name} | YC Companies`,
-    description:
-      company.one_liner ||
-      `Explore ${company.name} from Y Combinator's portfolio`,
-  };
+  return generateCompanyMetadata(company, `/companies/${id}`);
 }
 
 export default async function CompanyDetailPage({ params }: PageProps) {
