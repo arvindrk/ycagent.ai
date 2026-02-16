@@ -1,5 +1,6 @@
 import { ResearchResult } from '@/types/llm.types';
 import { ExternalLink } from 'lucide-react';
+import { FounderProfileView } from './founder-profile-view';
 
 interface ResearchSummaryProps {
   result: ResearchResult;
@@ -13,24 +14,12 @@ export function ResearchSummary({ result }: ResearchSummaryProps) {
           Executive Summary
         </h3>
         <div className="text-sm leading-relaxed whitespace-pre-wrap">
-          {result.summary}
+          {result.domain === 'founder_profile' ? result.executiveSummary : result.summary}
         </div>
       </section>
 
-      {result.keyFindings && result.keyFindings.length > 0 && (
-        <section>
-          <h3 className="text-accent font-medium text-text-primary mb-3">
-            Key Findings
-          </h3>
-          <ul className="space-y-2 text-sm">
-            {result.keyFindings.map((finding, i) => (
-              <li key={i} className="flex gap-2">
-                <span className="text-accent flex-shrink-0">•</span>
-                <span>{finding}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
+      {result.domain === 'founder_profile' && (
+        <FounderProfileView result={result} />
       )}
 
       <section>

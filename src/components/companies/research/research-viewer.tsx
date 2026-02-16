@@ -88,7 +88,7 @@ export function ResearchViewer({
         ) : (
           <div className="flex flex-col lg:flex-row gap-6">
             <div className="lg:w-[60%] flex flex-col h-[600px] rounded-md">
-              <div className="border-b border-border px-6 py-3 flex items-center justify-between">
+              <div className="px-6 py-3 flex items-center justify-between">
                 <Tabs value={activeTab} onValueChange={(v) => setUserSelectedTab(v as 'timeline' | 'summary')} className="flex-1">
                   <TabsList variant="line">
                     <TabsTrigger value="timeline">Timeline</TabsTrigger>
