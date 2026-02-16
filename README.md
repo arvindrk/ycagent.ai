@@ -156,6 +156,7 @@ See `env.example` for required configuration:
 - Firecrawl API key (web scraping)
 - Serper API key (search)
 - Trigger.dev credentials (background jobs)
+- `TEMP_API_PASSWORD` (optional) - Temporary password protection for expensive API endpoints during testing
 
 ## Documentation
 
