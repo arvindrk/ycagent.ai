@@ -106,6 +106,7 @@ export class GoogleComputerStreamer implements BaseComputerStreamer {
           yield { type: SSEEvent.DONE, content: "Stopped by user" };
           break;
         }
+        yield { type: SSEEvent.THINKING };
 
         const response = await this.client.models.generateContent({
           model: this.model,

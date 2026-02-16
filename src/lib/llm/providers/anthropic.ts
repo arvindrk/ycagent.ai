@@ -113,6 +113,7 @@ export class AnthropicComputerStreamer implements BaseComputerStreamer {
           yield { type: SSEEvent.DONE, content: "Stopped by user" };
           break;
         }
+        yield { type: SSEEvent.THINKING };
 
         const response = await this.client.beta.messages.create({
           model: this.model,

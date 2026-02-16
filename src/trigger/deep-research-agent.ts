@@ -34,7 +34,7 @@ export const deepResearchAgent = task({
     }
 
     const streamer = StreamerFactory.getStreamer({
-      provider: LLMProvider.OPENAI,
+      provider: LLMProvider.GOOGLE,
       desktop,
       resolution,
       systemPrompt,
