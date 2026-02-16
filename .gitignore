@@ -48,3 +48,5 @@ extracted-css/
 docs/*
 .docs/*
 .vscode/*
+.agents/*
+.cursor/*
