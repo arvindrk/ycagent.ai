@@ -69,33 +69,110 @@ export const webCrawlerToolSchema: ToolSchema = {
   }
 };
 
-export const formatResultToolSchema: ToolSchema = {
-  name: "format_result",
-  description: "Format research findings into executive summary. Call this when you have completed research and want to present findings to the user. MUST include all sources/URLs you consulted.",
+export const founderProfileResultToolSchema: ToolSchema = {
+  name: 'format_result_founder_profile',
+  description: 'Format founder research findings. Call this when you have completed founder research and want to present findings. MUST include all sources/URLs you consulted.',
   inputSchema: {
-    type: "object",
+    type: 'object',
     properties: {
-      summary: {
-        type: "string",
-        description: "2-3 paragraph executive summary of key findings"
+      domain: {
+        type: 'string',
+        enum: ['founder_profile'],
+        description: 'Domain identifier'
       },
-      keyFindings: {
-        type: "array",
-        items: { type: "string" },
-        description: "3-5 bullet points of most important discoveries"
+      executiveSummary: {
+        type: 'string',
+        description: 'Single-sentence synthesis of the founding team strength and composition'
+      },
+      founderRelationship: {
+        type: 'array',
+        items: { type: 'string' },
+        description: 'Bullet points about founder relationships: how long known each other, context of meeting, prior collaboration history, trust indicators',
+        minItems: 1,
+        maxItems: 3
+      },
+      complementarySkills: {
+        type: 'array',
+        items: { type: 'string' },
+        description: 'Bullet points about skill complementarity: technical vs business split, domain expertise coverage, skill gaps, experience alignment with problem',
+        minItems: 1,
+        maxItems: 3
+      },
+      socialPresence: {
+        type: 'array',
+        items: { type: 'string' },
+        description: 'Bullet points about social media presence and credibility: follower counts, thought leadership, publications, GitHub activity',
+        minItems: 1,
+        maxItems: 3
+      },
+      trackRecord: {
+        type: 'array',
+        items: { type: 'string' },
+        description: 'Bullet points about execution track record: previous companies, exits, successful collaborations, failures and learnings',
+        minItems: 1,
+        maxItems: 3
       },
       sources: {
-        type: "array",
-        items: { type: "string" },
-        description: "All URLs and sources consulted during research. Required for credibility."
+        type: 'array',
+        items: { type: 'string' },
+        description: 'All URLs and sources consulted during research. Required for credibility.'
+      },
+      founders: {
+        type: 'array',
+        description: 'Detailed profiles of individual founders',
+        items: {
+          type: 'object',
+          properties: {
+            name: { type: 'string', description: 'Full name of the founder' },
+            title: { type: 'string', description: 'Current title/role' },
+            education: {
+              type: 'array',
+              items: { type: 'string' },
+              description: 'Educational background (universities, degrees)'
+            },
+            previousCompanies: {
+              type: 'array',
+              items: { type: 'string' },
+              description: 'Previous companies or significant positions'
+            },
+            achievements: {
+              type: 'array',
+              items: { type: 'string' },
+              description: 'Notable achievements, awards, or recognition'
+            },
+            socialLinks: {
+              type: 'object',
+              properties: {
+                linkedin: { type: 'string' },
+                twitter: { type: 'string' },
+                github: { type: 'string' }
+              },
+              description: 'Social media and professional profiles'
+            }
+          },
+          required: ['name', 'title']
+        }
       }
     },
-    required: ["summary", "sources"]
+    required: ['domain', 'executiveSummary', 'founderRelationship', 'complementarySkills', 'socialPresence', 'trackRecord', 'sources', 'founders']
   }
 };
 
-export const ALL_TOOLS: ToolSchema[] = [
+export const SHARED_TOOLS: ToolSchema[] = [
   googleSearchToolSchema,
   webCrawlerToolSchema,
-  formatResultToolSchema
 ];
+
+export const DOMAIN_RESULT_TOOLS: Record<string, ToolSchema> = {
+  founder_profile: founderProfileResultToolSchema,
+};
+
+export function getToolsForDomain(domain: string): ToolSchema[] {
+  const resultTool = DOMAIN_RESULT_TOOLS[domain];
+  if (!resultTool) {
+    throw new Error(`Unknown research domain: ${domain}`);
+  }
+  return [...SHARED_TOOLS, resultTool];
+}
+
+

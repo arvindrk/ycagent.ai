@@ -2,6 +2,7 @@ import { task, metadata } from "@trigger.dev/sdk/v3";
 import { deepResearchAgent } from "./deep-research-agent";
 import { DOMAIN_REGISTRY, getResearchDomains } from "@/lib/research/domain-registry";
 import { DeepResearchAgentPayload, DomainResearchResult, ResearchOrchestratorPayload } from "@/types/trigger.types";
+import { getToolsForDomain } from "@/lib/schemas/tool.schema";
 
 export const researchOrchestrator = task({
   id: "research-orchestrator",
@@ -18,8 +19,9 @@ export const researchOrchestrator = task({
       const agentPayload: DeepResearchAgentPayload = {
         ...payload,
         domain: domainKey,
-        initialMessage: config.generateInitialMessage(payload.company),
         systemPrompt: config.systemPrompt,
+        tools: getToolsForDomain(domainKey),
+        initialMessage: config.generateInitialMessage(payload.company),
       };
 
       const result = await deepResearchAgent.triggerAndWait(agentPayload);

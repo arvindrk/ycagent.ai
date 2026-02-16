@@ -1,5 +1,6 @@
 import { ComputerAction, BashCommand, TextEditorCommand, GoogleSearchCommand, WebCrawlerCommand, Resolution } from '@/types/sandbox.types';
 import { Sandbox } from '@e2b/desktop';
+import { ToolSchema } from '@/types/tool.types';
 
 export type MessageRole = 'user' | 'assistant' | 'system';
 export interface Message {
@@ -27,12 +28,35 @@ export type AgentAction = ComputerAction
   | GoogleSearchCommand
   | WebCrawlerCommand;
 
-export interface ResearchResult {
+interface BaseResearchResult {
+  domain: string;
   summary: string;
-  keyFindings?: string[];
   sources: string[];
   metadata?: Record<string, unknown>;
 }
+
+export interface FounderProfileResult extends BaseResearchResult {
+  domain: 'founder_profile';
+  executiveSummary: string;
+  founderRelationship: string[];
+  complementarySkills: string[];
+  socialPresence: string[];
+  trackRecord: string[];
+  founders: Array<{
+    name: string;
+    title: string;
+    education?: string[];
+    previousCompanies?: string[];
+    achievements?: string[];
+    socialLinks?: {
+      linkedin?: string;
+      twitter?: string;
+      github?: string;
+    };
+  }>;
+}
+
+export type ResearchResult = FounderProfileResult;
 
 export interface StreamChunk {
   type: SSEEvent;
@@ -63,5 +87,6 @@ export interface ComputerAgentConfig {
   desktop: Sandbox;
   resolution: Resolution;
   systemPrompt?: string;
+  tools?: ToolSchema[];
 }
 

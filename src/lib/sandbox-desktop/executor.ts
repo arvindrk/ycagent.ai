@@ -37,9 +37,6 @@ export class ActionExecutor {
       case "web_crawler":
         textResult = await this.executeCrawler(toolCall.input as WebCrawlerCommand);
         break;
-      case "format_result":
-        textResult = this.executeFormatResult(toolCall.input);
-        break;
     }
 
     if (textResult) {
@@ -145,16 +142,23 @@ export class ActionExecutor {
   private async executeSearch(input: GoogleSearchCommand): Promise<string> {
     this.navigationManager.navigate(`https://www.google.com/search?q=${input.query.split(" ").join("+")}`);
     const provider = getSearchProvider({ provider: SearchProvider.SERPER });
-    const results = await provider.search(input.query, {
+    const response = await provider.search(input.query, {
       numResults: input.num_results || 10
     });
 
-    const returning = results.results
-      .map(r => `[Position ${r.position}] ${r.title}\n${r.link}\n${r.snippet}`)
+    if (response.results.length === 0) {
+      return `No search results found for query: "${input.query}"`;
+    }
+
+    const searchResults = response.results
+      .map(r => `[Position ${r.position}] \
+        Google Search Title: ${r.title}\n \
+        Search result URL to crawl for more info: ${r.link}\n \
+        Search decription: ${r.snippet}`)
       .join('\n\n');
 
     await wait.for({ seconds: 0.5 });
-    return returning;
+    return searchResults;
   }
 
   private async executeCrawler(input: WebCrawlerCommand): Promise<string> {
@@ -207,13 +211,5 @@ export class ActionExecutor {
 
 
     return [summary, '', '---', '', ...output].join('\n');
-  }
-
-  private executeFormatResult(input: Record<string, unknown>): string {
-    const summary = input.summary as string;
-    const sources = (input.sources as string[]) || [];
-    const keyFindingsCount = (input.keyFindings as string[] | undefined)?.length || 0;
-
-    return `Research result formatted successfully. Summary length: ${summary.length} characters, Key findings: ${keyFindingsCount}, Sources: ${sources.length}`;
   }
 }

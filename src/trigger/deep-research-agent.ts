@@ -38,6 +38,7 @@ export const deepResearchAgent = task({
       desktop,
       resolution,
       systemPrompt,
+      tools: payload.tools,
     });
 
     const agentStream = streamer.executeAgentLoop(
