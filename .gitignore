@@ -44,3 +44,7 @@ next-env.d.ts
 
 # design system extraction artifacts
 extracted-css/
+
+docs/*
+.docs/*
+.vscode/*
