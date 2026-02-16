@@ -72,7 +72,7 @@ export function ResearchViewer({
           Deep Research - {companyName}
         </CardTitle>
       </CardHeader>
-      <CardContent className='pl-0'>
+      <CardContent className=''>
         {!vncUrl ? (
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <Activity
@@ -88,7 +88,7 @@ export function ResearchViewer({
         ) : (
           <div className="flex flex-col lg:flex-row gap-6">
             <div className="lg:w-[60%] flex flex-col h-[600px] rounded-md">
-              <div className="px-6 py-3 flex items-center justify-between">
+              <div className="py-2 flex items-center justify-between">
                 <Tabs value={activeTab} onValueChange={(v) => setUserSelectedTab(v as 'timeline' | 'summary')} className="flex-1">
                   <TabsList variant="line">
                     <TabsTrigger value="timeline">Timeline</TabsTrigger>
@@ -110,7 +110,7 @@ export function ResearchViewer({
               </div>
 
               <Tabs value={activeTab} onValueChange={(v) => setUserSelectedTab(v as 'timeline' | 'summary')} className="flex-1 flex flex-col overflow-y-auto">
-                <TabsContent value="timeline" className="flex-1 overflow-y-auto p-6 mt-0" role="feed" aria-label="Research event timeline">
+                <TabsContent value="timeline" className="flex-1 overflow-y-auto mt-0" role="feed" aria-label="Research event timeline">
                   {events.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-full opacity-40">
                       <div className="relative">
