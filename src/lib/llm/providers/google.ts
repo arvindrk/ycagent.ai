@@ -7,8 +7,10 @@ import { StandardToolCall, StandardToolResult } from "@/types/tool.types";
 import { ComputerAction } from "@/types/sandbox.types";
 import { extractErrorMessage } from "@/lib/utils";
 import { DEFAULT_SYSTEM_PROMPT } from "@/constants/llm.constants";
-import { ALL_TOOLS } from "@/lib/schemas/tool.schema";
+import { ResearchResult } from "@/types/llm.types";
+import { SHARED_TOOLS } from "@/lib/schemas/tool.schema";
 import { toGoogleToolSchema } from "@/lib/tools/adapters";
+import { ToolSchema } from "@/types/tool.types";
 
 export class GoogleComputerStreamer implements BaseComputerStreamer {
   private client: GoogleGenAI;
@@ -17,6 +19,7 @@ export class GoogleComputerStreamer implements BaseComputerStreamer {
   private scaler: ResolutionScaler;
   private executor: ActionExecutor;
   private navigationManager: NavigationManager;
+  private tools: ToolSchema[];
 
   constructor(config: ComputerAgentConfig) {
     this.client = new GoogleGenAI({
@@ -25,10 +28,11 @@ export class GoogleComputerStreamer implements BaseComputerStreamer {
       apiVersion: 'v1beta'
     });
     this.systemPrompt = config.systemPrompt || DEFAULT_SYSTEM_PROMPT;
-    this.model = config.model || "gemini-3-flash-preview";
+    this.model = config.model || "gemini-3-pro-preview";
     this.scaler = new ResolutionScaler(config.desktop, config.resolution);
     this.navigationManager = new NavigationManager(config.desktop);
     this.executor = new ActionExecutor(config.desktop, this.scaler, this.navigationManager);
+    this.tools = config.tools || SHARED_TOOLS;
   }
 
   private getProviderTools(): Tool[] {
@@ -39,7 +43,7 @@ export class GoogleComputerStreamer implements BaseComputerStreamer {
       //   }
       // },
       {
-        functionDeclarations: ALL_TOOLS.map(toGoogleToolSchema)
+        functionDeclarations: this.tools.map(toGoogleToolSchema)
       }
     ];
   }
@@ -155,21 +159,16 @@ export class GoogleComputerStreamer implements BaseComputerStreamer {
         for (const functionCall of functionCalls) {
           const standardCall = this.toStandardToolCall(functionCall);
 
-          if (standardCall.name === 'format_result') {
+          if (standardCall.name.startsWith('format_result_')) {
             yield {
               type: SSEEvent.RESULT,
-              result: {
-                summary: (standardCall.input.summary as string) || '',
-                keyFindings: standardCall.input.keyFindings as string[] | undefined,
-                sources: (standardCall.input.sources as string[]) || [],
-                metadata: {}
-              }
+              result: standardCall.input as unknown as ResearchResult
             };
 
             toolResults.push({
               functionResponse: {
                 id: standardCall.id,
-                name: 'format_result',
+                name: standardCall.name,
                 response: { output: 'Result formatted and sent to user' }
               }
             });

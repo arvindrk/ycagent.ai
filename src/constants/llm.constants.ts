@@ -24,12 +24,11 @@ IMPORTANT NOTES:
    Break down complex tasks into steps and execute them fully.
 
 FORMATTING RESEARCH RESULTS:
-When you have completed your research and gathered sufficient information, call the format_result tool with:
-- summary: A clear 2-3 paragraph summary of what you discovered
-- keyFindings: 3-5 most important points (optional)
-- sources: ALL URLs and sources you consulted (REQUIRED - this shows data provenance)
+When you have completed your research and gathered sufficient information, call the appropriate format_result tool for your research domain.
+Each domain has its own result formatting tool that defines the required structure for that type of research.
+ALWAYS include all sources/URLs you consulted - this is REQUIRED to show data provenance.
 
-After calling format_result, you can emit your final reasoning and DONE event.
+After calling the format result tool, you can emit your final reasoning and DONE event.
 
 Please help the user effectively by observing the current state of the computer and taking appropriate actions.
 `;

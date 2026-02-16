@@ -8,8 +8,10 @@ import { NavigationManager, NavigatorRole } from "@/lib/sandbox-desktop/navigati
 import { StandardToolCall, StandardToolResult } from "@/types/tool.types";
 import { ComputerAction } from "@/types/sandbox.types";
 import { extractErrorMessage } from "@/lib/utils";
-import { ALL_TOOLS } from "@/lib/schemas/tool.schema";
+import { ResearchResult } from "@/types/llm.types";
+import { SHARED_TOOLS } from "@/lib/schemas/tool.schema";
 import { toOpenAIToolSchema } from "@/lib/tools/adapters";
+import { ToolSchema } from "@/types/tool.types";
 
 interface OpenAIToolCall {
   type: "computer_call" | "function_call";
@@ -32,6 +34,7 @@ export class OpenAIComputerStreamer implements BaseComputerStreamer {
   private scaler: ResolutionScaler;
   private executor: ActionExecutor;
   private navigationManager: NavigationManager;
+  private tools: ToolSchema[];
 
   constructor(config: ComputerAgentConfig) {
     this.client = new OpenAI({
@@ -42,6 +45,7 @@ export class OpenAIComputerStreamer implements BaseComputerStreamer {
     this.scaler = new ResolutionScaler(config.desktop, config.resolution);
     this.navigationManager = new NavigationManager(config.desktop);
     this.executor = new ActionExecutor(config.desktop, this.scaler, this.navigationManager);
+    this.tools = config.tools || SHARED_TOOLS;
   }
 
   private getProviderTools() {
@@ -54,7 +58,7 @@ export class OpenAIComputerStreamer implements BaseComputerStreamer {
       //   display_height: scaledHeight,
       //   environment: "linux" as const,
       // },
-      ...ALL_TOOLS.map(toOpenAIToolSchema)
+      ...this.tools.map(toOpenAIToolSchema)
     ];
   }
 
@@ -81,7 +85,6 @@ export class OpenAIComputerStreamer implements BaseComputerStreamer {
   }
 
   private toProviderToolResult(result: StandardToolResult): OpenAIToolResult {
-    console.log(result.content.type);
     if (result.content.type === 'text') {
       return {
         call_id: result.toolCallId,
@@ -151,7 +154,7 @@ export class OpenAIComputerStreamer implements BaseComputerStreamer {
             };
           }
         }
-        console.log(response.output);
+
         const toolCalls = response.output
           .map(item => this.toStandardToolCall(item as OpenAIToolCall))
           .filter((call): call is StandardToolCall => call !== null);
@@ -164,15 +167,11 @@ export class OpenAIComputerStreamer implements BaseComputerStreamer {
         const toolResults: OpenAIToolResult[] = [];
 
         for (const toolCall of toolCalls) {
-          if (toolCall.name === 'format_result') {
+          if (toolCall.name.startsWith('format_result_')) {
+            console.log('Formatted result: ', toolCall.input);
             yield {
               type: SSEEvent.RESULT,
-              result: {
-                summary: (toolCall.input.summary as string) || '',
-                keyFindings: toolCall.input.keyFindings as string[] | undefined,
-                sources: (toolCall.input.sources as string[]) || [],
-                metadata: {}
-              }
+              result: toolCall.input as unknown as ResearchResult
             };
 
             toolResults.push({
@@ -188,13 +187,11 @@ export class OpenAIComputerStreamer implements BaseComputerStreamer {
             };
 
             const result = await this.executor.execute(toolCall);
-            // console.log('Tool Result: ', result);
             yield { type: SSEEvent.ACTION_COMPLETED };
-
             toolResults.push(this.toProviderToolResult(result));
           }
         }
-        // console.log(toolResults);
+
         if (toolResults.length > 0) {
           response = await this.client.responses.create({
             model: this.model,

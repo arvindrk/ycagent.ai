@@ -13,9 +13,11 @@ import { BetaToolResultBlockParam } from "@anthropic-ai/sdk/resources/beta/messa
 import { ComputerAction } from "@/types/sandbox.types";
 import { StandardToolCall, StandardToolResult } from "@/types/tool.types";
 import { extractErrorMessage } from "@/lib/utils";
+import { ResearchResult } from "@/types/llm.types";
 import { DEFAULT_SYSTEM_PROMPT } from "../../../constants/llm.constants";
-import { ALL_TOOLS } from "@/lib/schemas/tool.schema";
+import { SHARED_TOOLS } from "@/lib/schemas/tool.schema";
 import { toAnthropicToolSchema } from "@/lib/tools/adapters";
+import { ToolSchema } from "@/types/tool.types";
 
 export class AnthropicComputerStreamer implements BaseComputerStreamer {
   private client: Anthropic;
@@ -24,6 +26,7 @@ export class AnthropicComputerStreamer implements BaseComputerStreamer {
   private scaler: ResolutionScaler;
   private executor: ActionExecutor;
   private navigationManager: NavigationManager;
+  private tools: ToolSchema[];
 
   constructor(config: ComputerAgentConfig) {
     this.client = new Anthropic({
@@ -34,6 +37,7 @@ export class AnthropicComputerStreamer implements BaseComputerStreamer {
     this.scaler = new ResolutionScaler(config.desktop, config.resolution);
     this.navigationManager = new NavigationManager(config.desktop);
     this.executor = new ActionExecutor(config.desktop, this.scaler, this.navigationManager);
+    this.tools = config.tools || SHARED_TOOLS;
   }
 
   private getProviderTools() {
@@ -50,7 +54,7 @@ export class AnthropicComputerStreamer implements BaseComputerStreamer {
         type: "bash_20250124" as const,
         name: "bash" as const,
       },
-      ...ALL_TOOLS.map(toAnthropicToolSchema)
+      ...this.tools.map(toAnthropicToolSchema)
     ];
   }
 
@@ -149,15 +153,10 @@ export class AnthropicComputerStreamer implements BaseComputerStreamer {
         for (const tool of toolUses) {
           const standardCall = this.toStandardToolCall(tool);
 
-          if (standardCall.name === 'format_result') {
+          if (standardCall.name.startsWith('format_result_')) {
             yield {
               type: SSEEvent.RESULT,
-              result: {
-                summary: (standardCall.input.summary as string) || '',
-                keyFindings: standardCall.input.keyFindings as string[] | undefined,
-                sources: (standardCall.input.sources as string[]) || [],
-                metadata: {}
-              }
+              result: standardCall.input as unknown as ResearchResult
             };
 
             toolResults.push({
