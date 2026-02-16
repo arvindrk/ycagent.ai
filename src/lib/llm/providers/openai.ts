@@ -120,6 +120,8 @@ export class OpenAIComputerStreamer implements BaseComputerStreamer {
         yield { type: SSEEvent.ACTION_COMPLETED };
       }
 
+      yield { type: SSEEvent.THINKING };
+
       let response = await this.client.responses.create({
         model: this.model,
         tools: this.getProviderTools(),
@@ -193,6 +195,8 @@ export class OpenAIComputerStreamer implements BaseComputerStreamer {
         }
 
         if (toolResults.length > 0) {
+          yield { type: SSEEvent.THINKING };
+
           response = await this.client.responses.create({
             model: this.model,
             previous_response_id: response.id,

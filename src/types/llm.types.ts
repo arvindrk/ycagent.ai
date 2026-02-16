@@ -15,11 +15,12 @@ export interface ChatOptions {
 export enum SSEEvent {
   INIT = 'init',
   ERROR = 'error',
-  DONE = 'done',
+  THINKING = 'thinking',
+  REASONING = 'reasoning',
   ACTION = 'action',
   ACTION_COMPLETED = 'action_completed',
-  REASONING = 'reasoning',
   RESULT = 'result',
+  DONE = 'done',
 }
 
 export type AgentAction = ComputerAction

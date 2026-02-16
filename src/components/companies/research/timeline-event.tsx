@@ -16,6 +16,7 @@ import {
   FileText,
   Globe,
   Bug,
+  Loader2,
   type LucideIcon,
 } from 'lucide-react';
 import { StreamChunk, SSEEvent, AgentAction } from '@/types/llm.types';
@@ -215,6 +216,16 @@ function formatActionDetails(
 
 function getEventStyle(type: SSEEvent) {
   switch (type) {
+    case SSEEvent.THINKING:
+      return {
+        nodeColor: 'border-text-tertiary',
+        nodeBg: 'bg-bg-tertiary',
+        icon: Loader2,
+        iconColor: 'text-text-tertiary',
+        label: 'THINKING',
+        labelColor: 'text-text-tertiary',
+        cardBg: 'bg-bg-quaternary',
+      };
     case SSEEvent.REASONING:
       return {
         nodeColor: 'border-blue',
@@ -273,6 +284,9 @@ export function TimelineEvent({ event, isLatest }: TimelineEventProps) {
   const Icon = style.icon;
 
   const getActionIcon = () => {
+    if (event.type === SSEEvent.THINKING) {
+      return <Loader2 className={`w-4 h-4 ${style.iconColor} flex-shrink-0 mt-0.5 animate-spin`} aria-hidden="true" />;
+    }
     if (event.type === SSEEvent.ACTION && event.action && event.toolName) {
       const details = formatActionDetails(event.action, event.toolName);
       if (details.duration) {
@@ -286,6 +300,15 @@ export function TimelineEvent({ event, isLatest }: TimelineEventProps) {
 
   const renderContent = () => {
     switch (event.type) {
+      case SSEEvent.THINKING:
+        return (
+          <div className="flex-1">
+            <p className="text-sm text-text-secondary">
+              Agent is thinking...
+            </p>
+          </div>
+        );
+
       case SSEEvent.REASONING:
         return (
           <div className="flex-1">

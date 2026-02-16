@@ -35,6 +35,15 @@ export function ResearchViewer({
     const result: Array<StreamChunk & { isCompleted?: boolean }> = [];
 
     events.forEach(event => {
+      if (event.type === SSEEvent.REASONING ||
+        event.type === SSEEvent.ACTION ||
+        event.type === SSEEvent.DONE) {
+        const lastThinkingIndex = result.findLastIndex(e => e.type === SSEEvent.THINKING);
+        if (lastThinkingIndex !== -1) {
+          result.splice(lastThinkingIndex, 1);
+        }
+      }
+
       if (event.type === SSEEvent.ACTION_COMPLETED) {
         for (let i = result.length - 1; i >= 0; i--) {
           if (result[i].type === SSEEvent.ACTION) {
