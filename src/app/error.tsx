@@ -19,7 +19,7 @@ export default function Error({
     <div className="min-h-screen bg-bg-primary">
       <PageHeader
         title="YC Companies"
-        description="Discover companies from Y Combinator's portfolio"
+        subtitle="Discover companies from Y Combinator's portfolio"
       />
 
       <div className="container mx-auto px-4 py-16">
