@@ -30,28 +30,19 @@ export function useDeepResearchTrigger({ company, accessToken }: UseDeepResearch
 
   const error = runError ?? streamError;
 
-  useEffect(() => {
-    if (error) {
-      console.error('[useDeepResearchTrigger] Realtime error:', error);
-    }
-  }, [error]);
-
-  useEffect(() => {
-    if (run) {
-      console.log('[useDeepResearchTrigger] Run status:', run.status);
-      if (run.status === "COMPLETED") {
-        console.log('[useDeepResearchTrigger] Run completed with output:', run.output);
-      }
-    }
-  }, [run]);
-
   const events = useMemo(() => {
     const streamData = parts ?? [];
-    if (streamData.length > 0) {
-      console.log(`[useDeepResearchTrigger] Received ${streamData.length} events`);
+    const allEvents = [...streamData, ...syntheticEvents];
+
+    if (error) {
+      allEvents.push({
+        type: SSEEvent.ERROR,
+        error: error.message
+      });
     }
-    return [...streamData, ...syntheticEvents];
-  }, [parts, syntheticEvents]);
+
+    return allEvents;
+  }, [parts, syntheticEvents, error]);
 
   const vncUrl = useMemo(() => {
     // Priority: initial response > stream event > run output
@@ -92,7 +83,6 @@ export function useDeepResearchTrigger({ company, accessToken }: UseDeepResearch
       }
 
       const { runId: newRunId, sandboxId: newSandboxId, vncUrl } = await response.json();
-      console.log('[useDeepResearchTrigger] Task triggered, runId:', newRunId);
       sandboxIdRef.current = newSandboxId;
       setInitialVncUrl(vncUrl);
       setRunId(newRunId);
@@ -126,9 +116,15 @@ export function useDeepResearchTrigger({ company, accessToken }: UseDeepResearch
 
   useEffect(() => {
     return () => {
-      // Cleanup handled by Trigger.dev
+      (async function () {
+        await fetch(`/api/research/cancel`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ runId }),
+        });
+      })();
     };
-  }, []);
+  }, [runId]);
 
   return {
     isResearching,

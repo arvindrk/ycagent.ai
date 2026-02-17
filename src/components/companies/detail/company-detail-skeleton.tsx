@@ -28,7 +28,7 @@ export function CompanyDetailSkeleton() {
                 <Skeleton className="h-4 w-48" />
               </div>
 
-              <div className="md:col-span-2 lg:col-span-1 rounded-lg border border-border-primary bg-bg-primary shadow-sm min-h-[300px]">
+              <div className="md:col-span-2 lg:col-span-1 rounded-lg bg-bg-primary shadow-sm min-h-[300px]">
                 <div className="p-6 space-y-8">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">

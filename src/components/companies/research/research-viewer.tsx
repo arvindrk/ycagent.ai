@@ -168,7 +168,7 @@ export function ResearchViewer({
                 />
               </div>
               <p className="text-xs text-text-tertiary italic mt-3">
-                Note: Google search results are extracted from the main results tab. AI Overview content is not included as it loads after the agent extracts the page.
+                Note: Agents extract data directly from the DOM without waiting for visual rendering (CSS layout, paint, composite), so data collection completes before the display updates.
               </p>
             </div>
           </div>

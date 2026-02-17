@@ -160,7 +160,7 @@ export function CompanyHero({
         </div>
 
         {stats.length > 0 && (
-          <Card className="md:col-span-2 lg:col-span-1">
+          <Card className="md:col-span-2 lg:col-span-1 border border-transparent hover:border-transparent">
             <CardContent className="p-6 space-y-4">
               {stats.map((stat) => {
                 const Icon = stat.icon;
