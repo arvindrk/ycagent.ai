@@ -19,7 +19,7 @@ export function getEventStyle(type: SSEEvent): EventStyle {
         iconColor: 'text-text-tertiary',
         label: 'THINKING',
         labelColor: 'text-text-tertiary',
-        cardBg: 'bg-bg-quaternary',
+        cardBg: 'bg-white dark:bg-bg-quaternary',
       };
     case SSEEvent.REASONING:
       return {
@@ -29,7 +29,7 @@ export function getEventStyle(type: SSEEvent): EventStyle {
         iconColor: 'text-blue',
         label: 'REASONING',
         labelColor: 'text-blue',
-        cardBg: 'bg-bg-quaternary',
+        cardBg: 'bg-white dark:bg-bg-quaternary',
       };
     case SSEEvent.ACTION:
       return {
@@ -39,7 +39,7 @@ export function getEventStyle(type: SSEEvent): EventStyle {
         iconColor: 'text-accent',
         label: 'ACTION',
         labelColor: 'text-accent',
-        cardBg: 'bg-bg-quaternary',
+        cardBg: 'bg-white dark:bg-bg-quaternary',
       };
     case SSEEvent.ERROR:
       return {
@@ -59,7 +59,7 @@ export function getEventStyle(type: SSEEvent): EventStyle {
         iconColor: 'text-green',
         label: 'DONE',
         labelColor: 'text-green',
-        cardBg: 'bg-bg-quaternary',
+        cardBg: 'bg-white dark:bg-bg-quaternary',
       };
     default:
       return {
@@ -69,7 +69,7 @@ export function getEventStyle(type: SSEEvent): EventStyle {
         iconColor: 'text-text-tertiary',
         label: 'EVENT',
         labelColor: 'text-text-tertiary',
-        cardBg: 'bg-bg-quaternary',
+        cardBg: 'bg-white dark:bg-bg-quaternary',
       };
   }
 }

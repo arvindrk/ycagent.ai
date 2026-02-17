@@ -21,6 +21,7 @@ export interface ActionDetails {
   icon: IconType;
   duration?: number;
   urls?: string[];
+  isSecondaryStyle?: boolean;
 }
 
 export interface EventStyle {

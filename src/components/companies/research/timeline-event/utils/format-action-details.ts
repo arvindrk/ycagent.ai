@@ -58,7 +58,7 @@ export function formatActionDetails(
     }
     return {
       tool: 'bash',
-      primary: `Executing: ${bashAction.command}`,
+      primary: bashAction.command,
       secondary: 'Working directory: /workspace',
       icon: Terminal,
     };
@@ -71,6 +71,7 @@ export function formatActionDetails(
         tool: 'Browse',
         primary: computerAction.url,
         icon: Globe,
+        isSecondaryStyle: true,
       };
     }
     if (computerAction.action === 'screenshot') {

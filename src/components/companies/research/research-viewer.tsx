@@ -167,6 +167,9 @@ export function ResearchViewer({
                   allow="clipboard-read; clipboard-write"
                 />
               </div>
+              <p className="text-xs text-text-tertiary italic mt-3">
+                Note: Google search results are extracted from the main results tab. AI Overview content is not included as it loads after the agent extracts the page.
+              </p>
             </div>
           </div>
         )}

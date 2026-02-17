@@ -56,17 +56,15 @@ export function TimelineEvent({ event, isLatest }: TimelineEventProps) {
     <div className="relative flex animate-slide-up-fade">
       <div className="absolute left-0 top-2.5 flex items-center justify-center w-5 h-5">
         {event.type === SSEEvent.ACTION && event.isCompleted ? (
-          <CheckCircle className={`w-4 h-4 text-green ${isLatest ? 'animate-ripple-ring' : ''}`} />
+          <CheckCircle className={`w-4 h-4 fill-bg-primary text-green ${isLatest ? 'animate-ripple-ring' : ''}`} />
         ) : (
           <div
-            className={`relative w-3 h-3 rounded-full border-2 ${style.nodeColor} ${style.nodeBg} ${style.iconColor} ${
-              isLatest ? 'animate-ripple-ring' : ''
-            }`}
+            className={`relative w-3 h-3 rounded-full border-2 ${style.nodeColor} ${style.nodeBg} ${style.iconColor} ${isLatest ? 'animate-ripple-ring' : ''
+              }`}
           >
             <div
-              className={`w-1 h-1 rounded-full bg-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${
-                event.type === SSEEvent.DONE ? 'hidden' : ''
-              }`}
+              className={`w-1 h-1 rounded-full bg-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${event.type === SSEEvent.DONE ? 'hidden' : ''
+                }`}
             />
           </div>
         )}
