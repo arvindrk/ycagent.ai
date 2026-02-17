@@ -2,7 +2,7 @@ import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import { useRealtimeRun, useRealtimeStream } from "@trigger.dev/react-hooks";
 import type { researchOrchestrator } from '@/trigger/research-orchestrator';
 import { researchStream } from '@/trigger/streams';
-import { SSEEvent } from '@/types/llm.types';
+import { SSEEvent, StreamChunk } from '@/types/llm.types';
 import { Company } from '@/types/company.types';
 
 interface UseDeepResearchTriggerProps {
@@ -13,6 +13,7 @@ interface UseDeepResearchTriggerProps {
 export function useDeepResearchTrigger({ company, accessToken }: UseDeepResearchTriggerProps) {
   const [runId, setRunId] = useState<string | null>(null);
   const [initialVncUrl, setInitialVncUrl] = useState<string | null>(null);
+  const [syntheticEvents, setSyntheticEvents] = useState<StreamChunk[]>([]);
   const sandboxIdRef = useRef<string | null>(null);
   const researchContainerRef = useRef<HTMLDivElement>(null);
 
@@ -49,8 +50,8 @@ export function useDeepResearchTrigger({ company, accessToken }: UseDeepResearch
     if (streamData.length > 0) {
       console.log(`[useDeepResearchTrigger] Received ${streamData.length} events`);
     }
-    return streamData;
-  }, [parts]);
+    return [...streamData, ...syntheticEvents];
+  }, [parts, syntheticEvents]);
 
   const vncUrl = useMemo(() => {
     // Priority: initial response > stream event > run output
@@ -68,6 +69,7 @@ export function useDeepResearchTrigger({ company, accessToken }: UseDeepResearch
 
   const startResearch = useCallback(async () => {
     setRunId(null);
+    setSyntheticEvents([]);
 
     setTimeout(() => {
       researchContainerRef.current?.scrollIntoView({
@@ -103,11 +105,20 @@ export function useDeepResearchTrigger({ company, accessToken }: UseDeepResearch
     if (!runId) return;
 
     try {
-      await fetch(`/api/research/cancel`, {
+      const response = await fetch(`/api/research/cancel`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ runId }),
       });
+
+      const data = await response.json();
+
+      if (data.success && data.message) {
+        setSyntheticEvents(curr => [...curr, {
+          type: SSEEvent.ERROR,
+          error: data.message
+        }]);
+      }
     } catch (error) {
       console.error('Failed to cancel research:', error);
     }

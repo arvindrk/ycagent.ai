@@ -8,7 +8,7 @@ interface ResearchSummaryProps {
 
 export function ResearchSummary({ result }: ResearchSummaryProps) {
   return (
-    <div className="py-4 space-y-6 max-w-4xl">
+    <div className="p-4 space-y-6 max-w-4xl">
       <section>
         <h3 className="text-accent font-medium text-text-primary mb-3">
           Executive Summary

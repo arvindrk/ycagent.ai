@@ -35,9 +35,7 @@ export function ResearchViewer({
     const result: Array<StreamChunk & { isCompleted?: boolean }> = [];
 
     events.forEach(event => {
-      if (event.type === SSEEvent.REASONING ||
-        event.type === SSEEvent.ACTION ||
-        event.type === SSEEvent.DONE) {
+      if (event.type !== SSEEvent.THINKING) {
         const lastThinkingIndex = result.findLastIndex(e => e.type === SSEEvent.THINKING);
         if (lastThinkingIndex !== -1) {
           result.splice(lastThinkingIndex, 1);

@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
 
   try {
     await runs.cancel(runId);
-    return Response.json({ success: true });
+    return Response.json({ success: true, message: "Agent stopped by user" });
   } catch (error) {
     console.error("Failed to cancel run:", error);
     return Response.json({ error: "Failed to cancel research" }, { status: 500 });
