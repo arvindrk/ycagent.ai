@@ -1,7 +1,9 @@
+import { Suspense } from 'react';
 import { getCompany } from '@/lib/api/companies/get-companies';
 import { DetailBreadcrumb } from '@/components/companies/detail/detail-breadcrumb';
 import { PageHeader } from '@/components/layout/page-header';
 import { CompanyDetailLayout } from '@/components/companies/detail/company-detail-layout';
+import { CompanyDetailSkeleton } from '@/components/companies/detail/company-detail-skeleton';
 import { createResearchAccessToken } from '@/app/actions/research';
 import { generateCompanyMetadata } from '@/lib/seo/metadata';
 
@@ -15,10 +17,25 @@ export async function generateMetadata({ params }: PageProps) {
   return generateCompanyMetadata(company, `/companies/${id}`);
 }
 
-export default async function CompanyDetailPage({ params }: PageProps) {
-  const { id } = await params;
+async function CompanyDetailContent({ id }: { id: string }) {
   const company = await getCompany(id);
   const researchAccessToken = await createResearchAccessToken();
+
+  return (
+    <>
+      <DetailBreadcrumb companyName={company.name} />
+      <main id="main-content" className="space-y-8">
+        <CompanyDetailLayout
+          company={company}
+          researchAccessToken={researchAccessToken}
+        />
+      </main>
+    </>
+  );
+}
+
+export default async function CompanyDetailPage({ params }: PageProps) {
+  const { id } = await params;
 
   return (
     <div className="min-h-screen bg-bg-primary">
@@ -29,17 +46,16 @@ export default async function CompanyDetailPage({ params }: PageProps) {
         Skip to main content
       </a>
 
-      <PageHeader showBackLink />
+      <PageHeader
+        title="Deep Research Agent"
+        subtitle="AI-powered research using live browser automation, web crawling, and synthesis"
+        showBackLink
+      />
 
       <div className="container mx-auto px-4 py-8">
-        <DetailBreadcrumb companyName={company.name} />
-
-        <main id="main-content" className="space-y-8">
-          <CompanyDetailLayout
-            company={company}
-            researchAccessToken={researchAccessToken}
-          />
-        </main>
+        <Suspense fallback={<CompanyDetailSkeleton />}>
+          <CompanyDetailContent id={id} />
+        </Suspense>
       </div>
     </div>
   );

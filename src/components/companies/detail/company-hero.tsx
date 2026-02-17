@@ -116,7 +116,7 @@ export function CompanyHero({
 
           <div className="flex flex-wrap gap-3">
             {company.source_url && (
-              <Button variant="yc-accent" asChild>
+              <Button asChild>
                 <a
                   href={company.source_url}
                   target="_blank"

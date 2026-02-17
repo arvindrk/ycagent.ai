@@ -29,8 +29,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     <div className="min-h-screen bg-background">
       <PageHeader
         title="YC Companies"
-        description="Discover companies from Y Combinator's portfolio"
-        stats={`${total.toLocaleString()} companies`}
+        subtitle="Discover companies from Y Combinator's portfolio"
+        metadata={`${total.toLocaleString()} companies`}
       />
 
       <main className="container mx-auto px-4 py-8">

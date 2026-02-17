@@ -17,7 +17,7 @@ export function SearchInput({
   value,
   onChange,
   isLoading = false,
-  placeholder = 'Search YC companies...',
+  placeholder = 'Search YC companies with natural language...',
   className,
 }: SearchInputProps) {
   const inputRef = React.useRef<HTMLInputElement>(null);

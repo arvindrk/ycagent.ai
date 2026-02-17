@@ -9,13 +9,13 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-[#e6e6e6] text-[#08090a] border border-[#e6e6e6] shadow-sm hover:opacity-90",
+          "dark:bg-bg-quaternary text-text-primary border border-border-secondary shadow-sm hover:opacity-90",
         primary:
-          "bg-bg-quaternary text-text-primary border border-border-tertiary hover:bg-[rgba(255,255,255,0.08)]",
+          "bg-bg-quaternary text-text-primary border border-border-tertiary hover:bg-bg-tertiary",
         secondary:
-          "bg-transparent text-text-tertiary border-2 border-[rgba(255,255,255,0.05)] hover:bg-[rgba(255,255,255,0.08)] hover:text-text-primary",
+          "bg-transparent text-text-tertiary border border-border-primary hover:bg-bg-tertiary hover:text-text-primary",
         ghost:
-          "bg-transparent hover:bg-[rgba(255,255,255,0.08)]",
+          "bg-transparent hover:bg-bg-tertiary",
         accent:
           "bg-accent text-white hover:bg-accent-hover shadow-sm",
         "yc-accent":
