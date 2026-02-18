@@ -114,18 +114,6 @@ export function useDeepResearchTrigger({ company, accessToken }: UseDeepResearch
     }
   }, [runId]);
 
-  useEffect(() => {
-    return () => {
-      (async function () {
-        await fetch(`/api/research/cancel`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ runId }),
-        });
-      })();
-    };
-  }, [runId]);
-
   return {
     isResearching,
     vncUrl,

@@ -72,7 +72,7 @@ export function TimelineEvent({ event, isLatest }: TimelineEventProps) {
 
       <div className="ml-8 flex-1">
         <div
-          className={`rounded-lg px-4 py-3 ${style.cardBg} shadow-sm hover:shadow-md transition-all duration-200 ease-out max-w-160`}
+          className={`rounded-lg px-4 py-3 ${style.cardBg} shadow-sm hover:shadow-md transition-all duration-200 ease-out max-w-[90%]`}
         >
           <div className="flex gap-3 items-start">
             <EventIcon event={event} style={style} />

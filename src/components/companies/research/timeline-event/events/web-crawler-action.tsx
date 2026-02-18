@@ -17,6 +17,7 @@ export function WebCrawlerAction({ action, style }: WebCrawlerActionProps) {
     <div className="flex-1 min-w-0">
       <div className={`text-xs font-medium uppercase tracking-wider mb-1 ${style.labelColor}`}>
         WEB CRAWLER
+        <span className="text-text-primary italic">&nbsp;&nbsp;({urls.length} Links)</span>
       </div>
 
       <div className="space-y-1">
@@ -45,9 +46,8 @@ export function WebCrawlerAction({ action, style }: WebCrawlerActionProps) {
         </div>
 
         <div
-          className={`overflow-hidden transition-all duration-200 ${
-            isExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-          }`}
+          className={`overflow-hidden transition-all duration-200 ${isExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+            }`}
         >
           <ul className="space-y-1 mt-2">
             {urls.map((url, idx) => (
