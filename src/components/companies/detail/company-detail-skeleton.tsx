@@ -23,7 +23,8 @@ export function CompanyDetailSkeleton() {
                 </div>
                 <div className="flex flex-wrap gap-3">
                   <Skeleton className="h-10 w-32" />
-                  <Skeleton className="h-10 w-28" />
+                  <Skeleton className="h-10 w-32" />
+                  <Skeleton className="h-10 w-44" />
                 </div>
                 <Skeleton className="h-4 w-48" />
               </div>
