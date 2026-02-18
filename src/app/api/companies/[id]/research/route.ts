@@ -5,6 +5,7 @@ import { DEFAULT_DESKTOP_TIMEOUT } from "@/constants/llm.constants";
 import type { researchOrchestrator } from "@/trigger/research-orchestrator";
 import type { Company } from "@/types/company.types";
 import { DEFAULT_RESOLUTION, Resolution } from "@/types/sandbox.types";
+import { auth } from "@/lib/auth";
 
 async function createSandbox(resolution: Resolution) {
   return Sandbox.create({
@@ -20,6 +21,11 @@ async function startStreamAndGetUrl(desktop: Sandbox) {
 }
 
 export async function POST(request: NextRequest) {
+  const session = await auth.api.getSession({ headers: request.headers });
+  if (!session) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const { company, resolution = DEFAULT_RESOLUTION, sandboxId } = await request.json() as {
     company: Company;
     resolution?: Resolution;
