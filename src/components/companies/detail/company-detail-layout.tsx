@@ -23,6 +23,7 @@ export function CompanyDetailLayout({
   const [signInOpen, setSignInOpen] = useState(false);
   const {
     isResearching,
+    isLoading,
     vncUrl,
     events,
     startResearch,
@@ -50,7 +51,7 @@ export function CompanyDetailLayout({
           company={company}
           onStartResearch={handleStartResearch}
           onStopResearch={stopResearch}
-          isResearching={isResearching}
+          isResearching={isLoading || isResearching}
         />
         <CompanyAboutSection company={company} />
         <CompanyTaxonomySection company={company} />
@@ -61,7 +62,7 @@ export function CompanyDetailLayout({
           companyName={company.name}
           vncUrl={vncUrl}
           events={events}
-          isResearching={isResearching}
+          isResearching={isLoading || isResearching}
           onStopResearch={stopResearch}
         />
       </div>

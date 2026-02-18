@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { StreamChunk, SSEEvent, ResearchResult } from '@/types/llm.types';
-import { Laptop, Activity, Square } from 'lucide-react';
+import { Laptop, Activity, Square, Loader2 } from 'lucide-react';
 import { TimelineEvent } from './timeline-event';
 import { ResearchSummary } from './research-summary';
 
@@ -82,10 +82,11 @@ export function ResearchViewer({
       <CardContent className=''>
         {!vncUrl ? (
           <div className="flex flex-col items-center justify-center py-16 text-center">
-            <Activity
-              className="w-12 h-12 text-text-tertiary mb-4"
-              aria-hidden="true"
-            />
+            {isResearching ? (
+              <Loader2 className="w-12 h-12 text-text-tertiary mb-4 animate-spin" aria-hidden="true" />
+            ) : (
+              <Activity className="w-12 h-12 text-text-tertiary mb-4" aria-hidden="true" />
+            )}
             <p className="text-text-secondary">
               {isResearching
                 ? 'Initializing research environment...'
@@ -128,7 +129,7 @@ export function ResearchViewer({
                           <div className="w-3 h-3 rounded-full border-2 border-border-secondary bg-bg-tertiary" />
                         </div>
                       </div>
-                      <p className="text-text-tertiary text-sm mt-6">Agent will appear here...</p>
+                      <p className="text-text-tertiary text-sm mt-6">Agent event will appear here...</p>
                     </div>
                   ) : (
                     <div className="relative">

@@ -14,6 +14,7 @@ export function useDeepResearchTrigger({ company, accessToken }: UseDeepResearch
   const [runId, setRunId] = useState<string | null>(null);
   const [initialVncUrl, setInitialVncUrl] = useState<string | null>(null);
   const [syntheticEvents, setSyntheticEvents] = useState<StreamChunk[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const sandboxIdRef = useRef<string | null>(null);
   const researchContainerRef = useRef<HTMLDivElement>(null);
 
@@ -58,9 +59,14 @@ export function useDeepResearchTrigger({ company, accessToken }: UseDeepResearch
     return run?.status === "QUEUED" || run?.status === "EXECUTING";
   }, [run?.status]);
 
+  useEffect(() => {
+    if (run?.status) setIsLoading(false);
+  }, [run?.status]);
+
   const startResearch = useCallback(async () => {
     setRunId(null);
     setSyntheticEvents([]);
+    setIsLoading(true);
 
     setTimeout(() => {
       researchContainerRef.current?.scrollIntoView({
@@ -79,6 +85,7 @@ export function useDeepResearchTrigger({ company, accessToken }: UseDeepResearch
       if (!response.ok) {
         const error = await response.json();
         console.error('Failed to start research:', error);
+        setIsLoading(false);
         return;
       }
 
@@ -88,6 +95,7 @@ export function useDeepResearchTrigger({ company, accessToken }: UseDeepResearch
       setRunId(newRunId);
     } catch (error) {
       console.error('Failed to start research:', error);
+      setIsLoading(false);
     }
   }, [company]);
 
@@ -116,6 +124,7 @@ export function useDeepResearchTrigger({ company, accessToken }: UseDeepResearch
 
   return {
     isResearching,
+    isLoading,
     vncUrl,
     events,
     startResearch,
