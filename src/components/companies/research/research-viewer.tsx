@@ -1,13 +1,14 @@
 "use client";
 
-import { useRef, useEffect, useMemo, useState } from 'react';
+import { useRef, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { StreamChunk, SSEEvent, ResearchResult } from '@/types/llm.types';
+import { StreamChunk } from '@/types/llm.types';
 import { Laptop, Activity, Square, Loader2 } from 'lucide-react';
 import { TimelineEvent } from './timeline-event';
 import { ResearchSummary } from './research-summary';
+import { useResearchTabs } from './use-research-tabs';
 
 interface ResearchViewerProps {
   companyName: string;
@@ -25,51 +26,11 @@ export function ResearchViewer({
   onStopResearch
 }: ResearchViewerProps) {
   const eventsEndRef = useRef<HTMLDivElement>(null);
-  const [userSelectedTab, setUserSelectedTab] = useState<'timeline' | 'summary' | null>(null);
+  const { activeTab, setActiveTab, tabs, processedEvents, researchResult } = useResearchTabs(events);
 
   useEffect(() => {
     eventsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [events]);
-
-  const processedEvents = useMemo(() => {
-    const result: Array<StreamChunk & { isCompleted?: boolean }> = [];
-
-    events.forEach(event => {
-      if (event.type !== SSEEvent.THINKING) {
-        const lastThinkingIndex = result.findLastIndex(e => e.type === SSEEvent.THINKING);
-        if (lastThinkingIndex !== -1) {
-          result.splice(lastThinkingIndex, 1);
-        }
-      }
-
-      if (event.type === SSEEvent.ACTION_COMPLETED) {
-        for (let i = result.length - 1; i >= 0; i--) {
-          if (result[i].type === SSEEvent.ACTION) {
-            result[i].isCompleted = true;
-            break;
-          }
-        }
-      } else if (event.type !== SSEEvent.RESULT) {
-        result.push(event);
-      }
-    });
-
-    return result;
-  }, [events]);
-
-  const researchResult = useMemo((): ResearchResult | null => {
-    const resultEvent = events.find(e => e.type === SSEEvent.RESULT);
-    if (resultEvent?.result) {
-      return resultEvent.result;
-    }
-
-    return null;
-  }, [events]);
-
-  const activeTab = useMemo(() => {
-    if (userSelectedTab) return userSelectedTab;
-    return researchResult ? 'summary' : 'timeline';
-  }, [userSelectedTab, researchResult]);
 
   return (
     <Card>
@@ -79,7 +40,7 @@ export function ResearchViewer({
           Deep Research - {companyName}
         </CardTitle>
       </CardHeader>
-      <CardContent className=''>
+      <CardContent>
         {!vncUrl ? (
           <div className="flex flex-col items-center justify-center py-16 text-center">
             {isResearching ? (
@@ -96,28 +57,27 @@ export function ResearchViewer({
         ) : (
           <div className="flex flex-col lg:flex-row gap-6">
             <div className="lg:w-[60%] flex flex-col h-[600px] rounded-md">
-              <div className="py-2 flex items-center justify-between">
-                <Tabs value={activeTab} onValueChange={(v) => setUserSelectedTab(v as 'timeline' | 'summary')} className="flex-1">
+              <Tabs value={activeTab} onValueChange={setActiveTab} className="flex flex-col flex-1 overflow-hidden">
+                <div className="py-2 flex items-center justify-between">
                   <TabsList variant="line">
-                    <TabsTrigger value="timeline">Timeline</TabsTrigger>
-                    <TabsTrigger value="summary" disabled={!researchResult}>
-                      Summary
-                    </TabsTrigger>
+                    {tabs.map(tab => (
+                      <TabsTrigger key={tab.id} value={tab.id} disabled={tab.disabled}>
+                        {tab.label}
+                      </TabsTrigger>
+                    ))}
                   </TabsList>
-                </Tabs>
-                <Button
-                  onClick={onStopResearch}
-                  disabled={!isResearching}
-                  variant="destructive"
-                  size="sm"
-                  aria-label="Stop research"
-                >
-                  <Square className="w-3.5 h-3.5" />
-                  Stop
-                </Button>
-              </div>
+                  <Button
+                    onClick={onStopResearch}
+                    disabled={!isResearching}
+                    variant="destructive"
+                    size="sm"
+                    aria-label="Stop research"
+                  >
+                    <Square className="w-3.5 h-3.5" />
+                    Stop
+                  </Button>
+                </div>
 
-              <Tabs value={activeTab} onValueChange={(v) => setUserSelectedTab(v as 'timeline' | 'summary')} className="flex-1 flex flex-col overflow-y-auto">
                 <TabsContent value="timeline" className="flex-1 overflow-y-auto mt-0" role="feed" aria-label="Research event timeline">
                   {events.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-full opacity-40">
@@ -159,6 +119,7 @@ export function ResearchViewer({
                 </TabsContent>
               </Tabs>
             </div>
+
             <div className="lg:w-[40%]">
               <div className="relative w-full" style={{ paddingBottom: '75%' }}>
                 <iframe

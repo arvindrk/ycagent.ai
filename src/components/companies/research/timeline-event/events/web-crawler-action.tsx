@@ -57,7 +57,7 @@ export function WebCrawlerAction({ action, style }: WebCrawlerActionProps) {
                   href={url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center gap-1 text-xs text-text-secondary hover:text-text-primary transition-fast min-w-0"
+                  className="group flex items-center gap-1 text-xs text-text-secondary hover:text-text-primary transition-fast flex-1 min-w-0"
                 >
                   <span className="truncate">{url}</span>
                   <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 text-accent transition-opacity flex-shrink-0" />
