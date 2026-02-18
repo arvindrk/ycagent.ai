@@ -48,7 +48,7 @@ export const googleSearchToolSchema: ToolSchema = {
 
 export const webCrawlerToolSchema: ToolSchema = {
   name: "web_crawler",
-  description: "Scrape content from URLs. Best used after google_search to extract full page content. Returns markdown content from each URL. Default limit is 3 URLs to manage token usage.",
+  description: "Primary tool for extracting detailed information. Crawl known sources directly before resorting to google_search. Returns full page markdown content. Choose number of url's to crawl based on relavance. Default limit is 5 URLs per call.",
   inputSchema: {
     type: "object",
     properties: {
@@ -57,7 +57,7 @@ export const webCrawlerToolSchema: ToolSchema = {
         items: { type: "string" },
         description: "Array of URLs to scrape"
       },
-      limit: { type: "number", description: "Max URLs to scrape (default: 3, max: 10)" },
+      limit: { type: "number", description: "Max URLs to scrape (default: 5, max: 10)" },
       formats: {
         type: "array",
         items: { type: "string", enum: ["markdown", "html", "rawHtml", "links"] },
