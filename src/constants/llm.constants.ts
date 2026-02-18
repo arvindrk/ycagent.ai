@@ -1,4 +1,4 @@
-export const DEFAULT_DESKTOP_TIMEOUT = 12000_000;
+export const DEFAULT_DESKTOP_TIMEOUT = 1200_000;
 
 export const DEFAULT_SYSTEM_PROMPT = `
 You are a helpful assistant that can use a computer to help the user with their tasks.
