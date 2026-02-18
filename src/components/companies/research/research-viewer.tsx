@@ -8,7 +8,7 @@ import { StreamChunk } from '@/types/llm.types';
 import { Laptop, Activity, Square, Loader2 } from 'lucide-react';
 import { TimelineEvent } from './timeline-event';
 import { ResearchSummary } from './research-summary';
-import { useResearchTabs } from './use-research-tabs';
+import { useResearchTabs } from '../../../hooks/use-research-tabs';
 
 interface ResearchViewerProps {
   companyName: string;
@@ -25,11 +25,13 @@ export function ResearchViewer({
   isResearching,
   onStopResearch
 }: ResearchViewerProps) {
-  const eventsEndRef = useRef<HTMLDivElement>(null);
+  const timelineRef = useRef<HTMLDivElement>(null);
   const { activeTab, setActiveTab, tabs, processedEvents, researchResult } = useResearchTabs(events);
 
   useEffect(() => {
-    eventsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (timelineRef.current) {
+      timelineRef.current.scrollTo({ top: timelineRef.current.scrollHeight, behavior: 'smooth' });
+    }
   }, [events]);
 
   return (
@@ -78,34 +80,35 @@ export function ResearchViewer({
                   </Button>
                 </div>
 
-                <TabsContent value="timeline" className="flex-1 overflow-y-auto mt-0" role="feed" aria-label="Research event timeline">
-                  {events.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center h-full opacity-40">
+                <TabsContent value="timeline" className="flex-1 overflow-hidden mt-0">
+                  <div ref={timelineRef} className="h-full overflow-y-auto" role="feed" aria-label="Research event timeline">
+                    {events.length === 0 ? (
+                      <div className="flex flex-col items-center justify-center h-full opacity-40">
+                        <div className="relative">
+                          <div className="absolute left-2.5 top-0 bottom-0 w-0.5 border-l-2 border-dashed border-border-secondary" />
+                          <div className="space-y-8 ml-8">
+                            <div className="w-3 h-3 rounded-full border-2 border-border-secondary bg-bg-tertiary" />
+                            <div className="w-3 h-3 rounded-full border-2 border-border-secondary bg-bg-tertiary" />
+                            <div className="w-3 h-3 rounded-full border-2 border-border-secondary bg-bg-tertiary" />
+                          </div>
+                        </div>
+                        <p className="text-text-tertiary text-sm mt-6">Agent event will appear here...</p>
+                      </div>
+                    ) : (
                       <div className="relative">
-                        <div className="absolute left-2.5 top-0 bottom-0 w-0.5 border-l-2 border-dashed border-border-secondary" />
-                        <div className="space-y-8 ml-8">
-                          <div className="w-3 h-3 rounded-full border-2 border-border-secondary bg-bg-tertiary" />
-                          <div className="w-3 h-3 rounded-full border-2 border-border-secondary bg-bg-tertiary" />
-                          <div className="w-3 h-3 rounded-full border-2 border-border-secondary bg-bg-tertiary" />
+                        <div className="absolute left-2.5 top-0 bottom-0 w-0.5 border-l-2 border-border-secondary" />
+                        <div className="space-y-4">
+                          {processedEvents.map((event, index) => (
+                            <TimelineEvent
+                              key={index}
+                              event={event}
+                              isLatest={index === processedEvents.length - 1 && isResearching}
+                            />
+                          ))}
                         </div>
                       </div>
-                      <p className="text-text-tertiary text-sm mt-6">Agent event will appear here...</p>
-                    </div>
-                  ) : (
-                    <div className="relative">
-                      <div className="absolute left-2.5 top-0 bottom-0 w-0.5 border-l-2 border-border-secondary" />
-                      <div className="space-y-4">
-                        {processedEvents.map((event, index) => (
-                          <TimelineEvent
-                            key={index}
-                            event={event}
-                            isLatest={index === processedEvents.length - 1 && isResearching}
-                          />
-                        ))}
-                      </div>
-                      <div ref={eventsEndRef} />
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </TabsContent>
 
                 <TabsContent value="summary" className="flex-1 overflow-y-auto mt-0">
