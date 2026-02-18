@@ -1,4 +1,4 @@
-import { GoogleGenAI, Content, Part, FunctionCall, Tool } from "@google/genai";
+import { GoogleGenAI, Content, Part, FunctionCall, Tool, ThinkingLevel } from "@google/genai";
 import { ComputerAgentConfig, BaseComputerStreamer, Message, ChatOptions, StreamChunk, SSEEvent } from "@/types/llm.types";
 import { ResolutionScaler } from "@/lib/sandbox-desktop/resolution";
 import { ActionExecutor } from "@/lib/sandbox-desktop/executor";
@@ -28,7 +28,7 @@ export class GoogleComputerStreamer implements BaseComputerStreamer {
       apiVersion: 'v1beta'
     });
     this.systemPrompt = config.systemPrompt || DEFAULT_SYSTEM_PROMPT;
-    this.model = config.model || "gemini-3-pro-preview";
+    this.model = config.model || "gemini-3-flash-preview";
     this.scaler = new ResolutionScaler(config.desktop, config.resolution);
     this.navigationManager = new NavigationManager(config.desktop);
     this.executor = new ActionExecutor(config.desktop, this.scaler, this.navigationManager);
@@ -116,7 +116,7 @@ export class GoogleComputerStreamer implements BaseComputerStreamer {
             tools: this.getProviderTools(),
             thinkingConfig: {
               includeThoughts: true,
-              thinkingBudget: 1024
+              thinkingLevel: ThinkingLevel.LOW
             },
             abortSignal: signal,
           }

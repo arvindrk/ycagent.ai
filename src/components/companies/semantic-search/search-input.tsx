@@ -46,7 +46,7 @@ export function SearchInput({
   const isAnimationEnabled = !isFocused && !value;
 
   const animatedPlaceholder = useTypingAnimation(SEARCH_PHRASES, {
-    typingSpeed: 70,
+    typingSpeed: 50,
     deletingSpeed: 20,
     pauseDuration: 2000,
     enabled: isAnimationEnabled,

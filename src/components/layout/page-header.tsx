@@ -15,9 +15,9 @@ export function PageHeader({
   showBackLink = false,
 }: PageHeaderProps) {
   return (
-    <header className="border-b border-border-primary min-h-[110px]">
+    <header className="border-b border-border-primary min-h-[80px] sm:min-h-[110px]">
       <div className="container mx-auto px-4 py-6">
-        <div className="relative flex items-center justify-between">
+        <div className="relative flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           {showBackLink && (
             <Link
               href="/"
@@ -41,7 +41,7 @@ export function PageHeader({
             </Link>
           )}
           <div>
-            <h1 className="text-3xl font-semibold tracking-tight text-text-primary">
+            <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-text-primary">
               {title}
             </h1>
             <div className="min-h-[24px] mt-1">
@@ -52,7 +52,7 @@ export function PageHeader({
               )}
             </div>
           </div>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-6 self-end sm:self-auto">
             {metadata && (
               <div className="text-sm text-text-secondary">{metadata}</div>
             )}
