@@ -168,17 +168,18 @@ export class ActionExecutor {
     const formats = input.formats || ['markdown'];
     const onlyMainContent = input.onlyMainContent ?? true;
 
+    for (const url of urls) {
+      this.navigationManager.navigate(url);
+      await wait.for({ seconds: 0.75 });
+    }
 
     const results = await Promise.allSettled(
-      urls.map(async url => {
-        this.navigationManager.navigate(url);
-        await wait.for({ seconds: 0.5 });
+      urls.map(url => {
         return crawler.scrape(url, {
           formats,
           onlyMainContent
         })
-      }
-      )
+      })
     );
 
     const output: string[] = [];

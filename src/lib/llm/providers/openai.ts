@@ -170,7 +170,6 @@ export class OpenAIComputerStreamer implements BaseComputerStreamer {
 
         for (const toolCall of toolCalls) {
           if (toolCall.name.startsWith('format_result_')) {
-            console.log('Formatted result: ', toolCall.input);
             yield {
               type: SSEEvent.RESULT,
               result: toolCall.input as unknown as ResearchResult
