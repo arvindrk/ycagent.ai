@@ -95,7 +95,7 @@ function BulletPoint({ item }: { item: CleanedItem }) {
 
 function FounderAvatar({ name, profileImageUrl }: { name: string; profileImageUrl?: string }) {
   const initials = name.trim().charAt(0).toUpperCase();
-
+  console.log(profileImageUrl);
   if (profileImageUrl) {
     return (
       <Image
