@@ -95,7 +95,7 @@ function BulletPoint({ item }: { item: CleanedItem }) {
 
 function FounderAvatar({ name, profileImageUrl }: { name: string; profileImageUrl?: string }) {
   const initials = name.trim().charAt(0).toUpperCase();
-  console.log(profileImageUrl);
+  console.log('URL: ', profileImageUrl);
   if (profileImageUrl) {
     return (
       <Image
@@ -180,8 +180,9 @@ function AnalysisSection({ icon: Icon, title, items }: { icon: LucideIcon; title
 }
 
 export function FounderProfileView({ result }: FounderProfileViewProps) {
+  console.log('Result: ', result);
   const processed = useMemo(() => processResult(result), [result]);
-
+  console.log('Processed: ', processed);
   const founderSections = [
     { title: 'Education', items: (founder: CleanedFounder) => founder.education },
     { title: 'Previous Experience', items: (founder: CleanedFounder) => founder.previousCompanies },
