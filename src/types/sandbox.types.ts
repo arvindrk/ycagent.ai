@@ -32,6 +32,18 @@ export type WebCrawlerCommand = {
   onlyMainContent?: boolean;
 };
 
+export type XSearchPostsCommand = {
+  query: string;
+  max_results?: number;
+  sort_order?: 'recency' | 'relevancy';
+};
+
+export type XGetUserCommand = {
+  username: string;
+  max_posts?: number;
+  max_mentions?: number;
+};
+
 export type Resolution = [number, number];
 
 export const DEFAULT_RESOLUTION: Resolution = [1024, 768];

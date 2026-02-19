@@ -1,12 +1,14 @@
 import { Sandbox } from "@e2b/desktop";
 import { ResolutionScaler } from "./resolution";
-import { ComputerAction, GoogleSearchCommand, WebCrawlerCommand } from "@/types/sandbox.types";
+import { ComputerAction, GoogleSearchCommand, WebCrawlerCommand, XSearchPostsCommand, XGetUserCommand } from "@/types/sandbox.types";
 import { BashCommand } from "@/types/sandbox.types";
 import { TextEditorCommand } from "@/types/sandbox.types";
 import { NavigationManager, NavigatorRole } from "./navigation";
 import { StandardToolCall, StandardToolResult } from "@/types/tool.types";
 import { getSearchProvider } from "@/lib/google-search";
 import { getCrawlerProvider } from "@/lib/crawler";
+import { getXProvider } from "@/lib/x";
+import { formatSearchResults, formatUserResult } from "@/lib/x/formatters";
 import { SearchProvider } from "@/types/google-search.types";
 import { CrawlerProvider } from "@/types/crawler.types";
 import { wait } from "@trigger.dev/sdk";
@@ -36,6 +38,12 @@ export class ActionExecutor {
         break;
       case "web_crawler":
         textResult = await this.executeCrawler(toolCall.input as WebCrawlerCommand);
+        break;
+      case "x_search_posts":
+        textResult = await this.executeXSearchPosts(toolCall.input as XSearchPostsCommand);
+        break;
+      case "x_get_user":
+        textResult = await this.executeXGetUser(toolCall.input as XGetUserCommand);
         break;
     }
 
@@ -210,7 +218,34 @@ export class ActionExecutor {
 
     const summary = `Scraped ${successCount}/${urls.length} URLs successfully${failCount > 0 ? ` (${failCount} failed)` : ''}`;
 
-
     return [summary, '', '---', '', ...output].join('\n');
+  }
+
+  private async executeXSearchPosts(input: XSearchPostsCommand): Promise<string> {
+    try {
+      const provider = getXProvider();
+      const result = await provider.searchPosts(input.query, {
+        maxResults: input.max_results,
+        sortOrder: input.sort_order,
+      });
+      return formatSearchResults(result);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      return `X search failed: ${message}`;
+    }
+  }
+
+  private async executeXGetUser(input: XGetUserCommand): Promise<string> {
+    try {
+      const provider = getXProvider();
+      const result = await provider.getUser(input.username, {
+        maxPosts: input.max_posts,
+        maxMentions: input.max_mentions,
+      });
+      return formatUserResult(result);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      return `X user lookup failed for @${input.username}: ${message}`;
+    }
   }
 }

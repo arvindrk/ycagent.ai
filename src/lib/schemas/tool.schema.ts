@@ -148,6 +148,10 @@ export const founderProfileResultToolSchema: ToolSchema = {
                 github: { type: 'string' }
               },
               description: 'Social media and professional profiles'
+            },
+            profileImageUrl: {
+              type: 'string',
+              description: 'Profile picture URL from X (Twitter). Populate from x_get_user profileImageUrl field when available.'
             }
           },
           required: ['name', 'title']
@@ -158,9 +162,58 @@ export const founderProfileResultToolSchema: ToolSchema = {
   }
 };
 
+export const xSearchPostsToolSchema: ToolSchema = {
+  name: 'x_search_posts',
+  description: 'Search X (Twitter) for recent posts (last 7 days). Use to find a founder\'s handle, discover what people are saying about a company, or search `from:handle` to see a specific user\'s recent activity. Returns posts with engagement metrics, hashtags, and topics.',
+  inputSchema: {
+    type: 'object',
+    properties: {
+      query: {
+        type: 'string',
+        description: 'X search query. Supports operators: `from:handle` (posts by a user), `"exact phrase"`, `#hashtag`, `@mention`. Example: `from:paulg` or `"company name" AI startup`'
+      },
+      max_results: {
+        type: 'number',
+        description: 'Number of results to return (10–100, default 20)'
+      },
+      sort_order: {
+        type: 'string',
+        enum: ['recency', 'relevancy'],
+        description: 'Sort by recency or relevancy (default: relevancy)'
+      }
+    },
+    required: ['query']
+  }
+};
+
+export const xGetUserToolSchema: ToolSchema = {
+  name: 'x_get_user',
+  description: 'Fetch a user\'s X profile, recent posts, and recent mentions by their @username. Returns follower count, bio, verification status, subscription tier, and up to 50 recent posts and mentions. Use this after finding a founder\'s X handle to assess their social presence and thought leadership.',
+  inputSchema: {
+    type: 'object',
+    properties: {
+      username: {
+        type: 'string',
+        description: 'X @handle without the @ symbol. Example: `paulg` not `@paulg`'
+      },
+      max_posts: {
+        type: 'number',
+        description: 'Max recent posts to return (default 10, max 50)'
+      },
+      max_mentions: {
+        type: 'number',
+        description: 'Max recent mentions to return (default 10, max 50)'
+      }
+    },
+    required: ['username']
+  }
+};
+
 export const SHARED_TOOLS: ToolSchema[] = [
   googleSearchToolSchema,
   webCrawlerToolSchema,
+  xSearchPostsToolSchema,
+  xGetUserToolSchema,
 ];
 
 export const DOMAIN_RESULT_TOOLS: Record<string, ToolSchema> = {

@@ -43,9 +43,16 @@ and credibility. Do NOT research company financials, investors, or non-founder t
 - How does their experience align with the problem they're solving?
 
 ## SOCIAL PRESENCE & CREDIBILITY:
-- What is their social media reach (Twitter, LinkedIn followers)?
+- What is their social media reach (X/Twitter, LinkedIn followers)?
 - Are they thought leaders in their domain (publications, talks, GitHub activity)?
 - What is their reputation in the industry?
+
+## X (TWITTER) RESEARCH:
+- If you find a founder's @handle, call x_get_user to fetch their full profile, recent posts, and mentions in one step
+- If you don't know their @handle, use google_search for "founder name twitter" or x_search_posts with their full name
+- Key signals: follower count, verified type, X Blue subscription tier, listed count, engagement rates, topics they post about
+- Use x_search_posts with \`from:handle\` for targeted post search, or a company/topic query to find relevant discussion
+- When calling format_result_founder_profile, populate each founder's profileImageUrl with the profileImageUrl returned by x_get_user
 
 ## EXECUTION TRACK RECORD:
 - Have they founded companies before? What were the outcomes?

@@ -54,6 +54,7 @@ export interface FounderProfileResult extends BaseResearchResult {
       x?: string;
       github?: string;
     };
+    profileImageUrl?: string;
   }>;
 }
 
