@@ -111,7 +111,7 @@ export function ResearchViewer({
                   </div>
                 </TabsContent>
 
-                <TabsContent value="summary" className="flex-1 overflow-y-auto mt-0">
+                <TabsContent value="founder_profile" className="flex-1 overflow-y-auto mt-0">
                   {researchResult ? (
                     <ResearchSummary result={researchResult} />
                   ) : (
