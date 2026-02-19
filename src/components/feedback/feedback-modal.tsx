@@ -67,7 +67,7 @@ export function FeedbackModal({ open, onOpenChange }: FeedbackModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-sm">
+      <DialogContent className="sm:max-w-sm bg-bg-secondary border-border-primary">
         <DialogHeader>
           <DialogTitle>How&apos;s your experience?</DialogTitle>
         </DialogHeader>
@@ -79,7 +79,7 @@ export function FeedbackModal({ open, onOpenChange }: FeedbackModalProps) {
               variant={sentiment === value ? 'accent' : 'secondary'}
               onClick={() => setSentiment(value)}
               aria-pressed={sentiment === value}
-              className={`flex h-auto flex-1 flex-col gap-1.5 py-3 text-xs ${sentiment === value ? 'border border-transparent' : ''}`}
+              className={`flex h-auto flex-1 flex-col gap-1.5 py-3 text-xs ${sentiment === value ? 'border border-transparent' : 'bg-bg-primary'}`}
             >
               <span className="text-xl leading-none">{emoji}</span>
               {label}

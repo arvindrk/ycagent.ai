@@ -52,7 +52,7 @@ export function SignInDialog({ open, onOpenChange, companyName }: SignInDialogPr
 
         <div className="flex flex-col gap-3 pt-2 pb-2">
           <Button
-            className="w-full gap-2 h-11"
+            className="w-full gap-2 h-11 hover:border-accent"
             onClick={handleGoogleSignIn}
             disabled={isLoading}
           >
