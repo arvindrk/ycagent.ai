@@ -22,7 +22,8 @@ export function EventIcon({ event, style }: EventIconProps) {
       return <CircularProgress duration={details.duration} className={style.iconColor} />;
     }
     const ActionIcon = details.icon;
-    return <ActionIcon className={`w-4 h-4 ${style.iconColor} flex-shrink-0 mt-0.5`} aria-hidden="true" />;
+    const iconColor = details.iconClassName ?? style.iconColor;
+    return <ActionIcon className={`w-4 h-4 ${iconColor} flex-shrink-0 mt-0.5`} aria-hidden="true" />;
   }
 
   return <Icon className={`w-4 h-4 ${style.iconColor} flex-shrink-0 mt-0.5`} aria-hidden="true" />;

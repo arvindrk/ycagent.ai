@@ -14,8 +14,9 @@ import {
   Bug,
 } from 'lucide-react';
 import { AgentAction } from '@/types/llm.types';
-import { ComputerAction, BashCommand, TextEditorCommand, GoogleSearchCommand, WebCrawlerCommand } from '@/types/sandbox.types';
+import { ComputerAction, BashCommand, TextEditorCommand, GoogleSearchCommand, WebCrawlerCommand, XSearchPostsCommand, XGetUserCommand } from '@/types/sandbox.types';
 import { GoogleIcon } from '@/components/icons/google-icon';
+import { XIcon } from '@/components/icons/x-icon';
 import { ActionDetails } from '../types';
 
 export function formatActionDetails(
@@ -44,6 +45,34 @@ export function formatActionDetails(
       secondary: crawlerAction.urls.length > 1 ? `+${crawlerAction.urls.length - 1} more` : undefined,
       icon: Bug,
       urls: crawlerAction.urls,
+    };
+  }
+
+  if (toolName === 'x_search_posts') {
+    const xAction = action as XSearchPostsCommand;
+    const parts: string[] = [];
+    if (xAction.max_results) parts.push(`${xAction.max_results} results`);
+    if (xAction.sort_order) parts.push(xAction.sort_order);
+    return {
+      tool: 'Post Search',
+      primary: xAction.query,
+      secondary: parts.length ? parts.join(' · ') : undefined,
+      icon: XIcon,
+      iconClassName: 'text-text-primary',
+    };
+  }
+
+  if (toolName === 'x_get_user') {
+    const xAction = action as unknown as XGetUserCommand;
+    const parts: string[] = ['Profile', 'Posts', 'Mentions'];
+    if (xAction.max_posts) parts[1] = `Posts (${xAction.max_posts})`;
+    if (xAction.max_mentions) parts[2] = `Mentions (${xAction.max_mentions})`;
+    return {
+      tool: 'User lookup',
+      primary: `@${xAction.username}`,
+      secondary: parts.join(' · '),
+      icon: XIcon,
+      iconClassName: 'text-text-primary',
     };
   }
 

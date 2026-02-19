@@ -1,14 +1,8 @@
 import { FounderProfileResult } from '@/types/llm.types';
 import { Users, Zap, TrendingUp, Award, Linkedin, Github, ExternalLink, LucideIcon } from 'lucide-react';
-
-function XIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className={className} xmlns="http://www.w3.org/2000/svg" fill="currentColor">
-      <path d="M21.742 21.75l-7.563-11.179 7.056-8.321h-2.456l-5.691 6.714-4.54-6.714H2.359l7.29 10.776L2.25 21.75h2.456l6.035-7.118 4.818 7.118h6.191-.008zM7.739 3.818L18.81 20.182h-2.447L5.29 3.818h2.447z" />
-    </svg>
-  );
-}
+import { XIcon } from '@/components/icons/x-icon';
 import { useMemo } from 'react';
+import Image from 'next/image';
 
 interface FounderProfileViewProps {
   result: FounderProfileResult;
@@ -30,6 +24,7 @@ interface CleanedFounder {
     x?: string;
     github?: string;
   };
+  profileImageUrl?: string;
 }
 
 interface ProcessedResult {
@@ -66,6 +61,7 @@ function processResult(result: FounderProfileResult): ProcessedResult {
       previousCompanies: founder.previousCompanies?.map(extractUrls),
       achievements: founder.achievements?.map(extractUrls),
       socialLinks: founder.socialLinks,
+      profileImageUrl: founder.profileImageUrl,
     })),
   };
 }
@@ -94,6 +90,32 @@ function BulletPoint({ item }: { item: CleanedItem }) {
         )}
       </div>
     </li>
+  );
+}
+
+function FounderAvatar({ name, profileImageUrl }: { name: string; profileImageUrl?: string }) {
+  const initials = name.trim().charAt(0).toUpperCase();
+
+  if (profileImageUrl) {
+    return (
+      <Image
+        src={profileImageUrl}
+        alt={name}
+        width={32}
+        height={32}
+        className="h-8 w-8 rounded-full object-cover flex-shrink-0 border border-border"
+        unoptimized
+      />
+    );
+  }
+
+  return (
+    <div
+      className="h-8 w-8 rounded-full flex-shrink-0 flex items-center justify-center bg-tertiary border border-border text-xs font-medium text-text-secondary"
+      aria-label={name}
+    >
+      {initials}
+    </div>
   );
 }
 
@@ -183,10 +205,13 @@ export function FounderProfileView({ result }: FounderProfileViewProps) {
         <div className="space-y-4">
           {processed.founders.map((founder, i) => (
             <div key={i} className="p-4 bg-secondary rounded-lg border border-border">
-              <div className="flex items-start justify-between mb-3">
-                <div>
-                  <h4 className="font-medium text-accent">{founder.name}</h4>
-                  <p className="text-sm text-text-secondary">{founder.title}</p>
+              <div className="flex items-center justify-between mb-3 gap-3">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <FounderAvatar name={founder.name} profileImageUrl={founder.profileImageUrl} />
+                  <div className="min-w-0">
+                    <h4 className="font-medium text-accent truncate">{founder.name}</h4>
+                    <p className="text-sm text-text-secondary truncate">{founder.title}</p>
+                  </div>
                 </div>
                 <SocialLinks socialLinks={founder.socialLinks} founderName={founder.name} />
               </div>

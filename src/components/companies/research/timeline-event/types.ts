@@ -1,6 +1,6 @@
 import { StreamChunk } from '@/types/llm.types';
+import { type ComponentType } from 'react';
 import { type LucideIcon } from 'lucide-react';
-import { GoogleIcon } from '@/components/icons/google-icon';
 
 export interface TimelineEventProps {
   event: StreamChunk;
@@ -12,13 +12,14 @@ export interface CircularProgressProps {
   className?: string;
 }
 
-export type IconType = LucideIcon | typeof GoogleIcon;
+export type IconType = ComponentType<{ className?: string }>;
 
 export interface ActionDetails {
   tool: string;
   primary: string;
   secondary?: string;
   icon: IconType;
+  iconClassName?: string;
   duration?: number;
   urls?: string[];
   isSecondaryStyle?: boolean;
