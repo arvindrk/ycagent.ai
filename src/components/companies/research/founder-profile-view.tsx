@@ -104,7 +104,6 @@ function FounderAvatar({ name, profileImageUrl }: { name: string; profileImageUr
         width={32}
         height={32}
         className="h-8 w-8 rounded-full object-cover flex-shrink-0 border border-border"
-        unoptimized
       />
     );
   }
