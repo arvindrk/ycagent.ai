@@ -111,14 +111,16 @@ export function ResearchViewer({
                   </div>
                 </TabsContent>
 
-                <TabsContent value="founder_profile" className="flex-1 overflow-y-auto mt-0">
-                  {researchResult ? (
-                    <ResearchSummary result={researchResult} />
-                  ) : (
-                    <div className="flex items-center justify-center h-full text-text-tertiary text-sm">
-                      No summary available yet
-                    </div>
-                  )}
+                <TabsContent value="founder_profile" className="flex-1 overflow-hidden mt-0">
+                  <div className="h-full overflow-y-auto">
+                    {researchResult ? (
+                      <ResearchSummary result={researchResult} />
+                    ) : (
+                      <div className="flex items-center justify-center h-full text-text-tertiary text-sm">
+                        No summary available yet
+                      </div>
+                    )}
+                  </div>
                 </TabsContent>
               </Tabs>
             </div>
