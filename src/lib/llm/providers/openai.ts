@@ -41,7 +41,7 @@ export class OpenAIComputerStreamer implements BaseComputerStreamer {
       apiKey: config.apiKey || process.env.OPENAI_API_KEY
     });
     this.systemPrompt = config.systemPrompt || DEFAULT_SYSTEM_PROMPT;
-    this.model = config.model || "gpt-5.2";
+    this.model = config.model || "gpt-5-mini";
     this.scaler = new ResolutionScaler(config.desktop, config.resolution);
     this.navigationManager = new NavigationManager(config.desktop);
     this.executor = new ActionExecutor(config.desktop, this.scaler, this.navigationManager);
