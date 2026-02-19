@@ -26,6 +26,8 @@ export function useResearchTabs(events: StreamChunk[]): UseResearchTabsResult {
   const tabs = useMemo((): TabConfig[] => [
     { id: 'timeline', label: 'Timeline' },
     { id: 'founder_profile', label: 'Founder Profile', disabled: !researchResult },
+    { id: 'investor_profile', label: 'Investor Profile (Coming Soon)', disabled: true },
+    { id: 'hiring', label: 'Jobs (Coming Soon)', disabled: true },
   ], [researchResult]);
 
   const activeTab = useMemo(() => {
