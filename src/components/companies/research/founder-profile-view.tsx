@@ -1,5 +1,13 @@
 import { FounderProfileResult } from '@/types/llm.types';
-import { Users, Zap, TrendingUp, Award, Linkedin, Twitter, Github, ExternalLink, LucideIcon } from 'lucide-react';
+import { Users, Zap, TrendingUp, Award, Linkedin, Github, ExternalLink, LucideIcon } from 'lucide-react';
+
+function XIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className} xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+      <path d="M21.742 21.75l-7.563-11.179 7.056-8.321h-2.456l-5.691 6.714-4.54-6.714H2.359l7.29 10.776L2.25 21.75h2.456l6.035-7.118 4.818 7.118h6.191-.008zM7.739 3.818L18.81 20.182h-2.447L5.29 3.818h2.447z" />
+    </svg>
+  );
+}
 import { useMemo } from 'react';
 
 interface FounderProfileViewProps {
@@ -19,7 +27,7 @@ interface CleanedFounder {
   achievements?: CleanedItem[];
   socialLinks?: {
     linkedin?: string;
-    twitter?: string;
+    x?: string;
     github?: string;
   };
 }
@@ -34,7 +42,7 @@ interface ProcessedResult {
 
 const SOCIAL_PLATFORMS = [
   { key: 'linkedin' as const, icon: Linkedin, label: 'LinkedIn' },
-  { key: 'twitter' as const, icon: Twitter, label: 'Twitter' },
+  { key: 'x' as const, icon: XIcon, label: 'X' },
   { key: 'github' as const, icon: Github, label: 'GitHub' },
 ] as const;
 

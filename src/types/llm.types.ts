@@ -51,7 +51,7 @@ export interface FounderProfileResult extends BaseResearchResult {
     achievements?: string[];
     socialLinks?: {
       linkedin?: string;
-      twitter?: string;
+      x?: string;
       github?: string;
     };
   }>;

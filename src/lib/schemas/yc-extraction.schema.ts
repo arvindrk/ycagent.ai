@@ -27,7 +27,7 @@ export const YC_EXTRACTION_SCHEMA = {
                 type: 'string',
                 description: 'LinkedIn profile URL',
               },
-              twitter: {
+              x: {
                 type: 'string',
                 description: 'Twitter/X profile URL',
               },
@@ -59,7 +59,7 @@ export const YC_EXTRACTION_SCHEMA = {
           type: 'string',
           description: 'Company LinkedIn profile URL',
         },
-        twitter: {
+        x: {
           type: 'string',
           description: 'Company Twitter/X profile URL',
         },

@@ -144,7 +144,7 @@ export const founderProfileResultToolSchema: ToolSchema = {
               type: 'object',
               properties: {
                 linkedin: { type: 'string' },
-                twitter: { type: 'string' },
+                x: { type: 'string' },
                 github: { type: 'string' }
               },
               description: 'Social media and professional profiles'
