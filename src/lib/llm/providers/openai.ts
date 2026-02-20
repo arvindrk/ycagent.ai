@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+import { logger } from "@trigger.dev/sdk/v3";
 import { ResponseInput } from "openai/resources/responses/responses.mjs";
 import { DEFAULT_SYSTEM_PROMPT } from "@/constants/llm.constants";
 import { ResolutionScaler } from "@/lib/sandbox-desktop/resolution";
@@ -212,7 +213,7 @@ export class OpenAIComputerStreamer implements BaseComputerStreamer {
         }
       }
     } catch (error) {
-      console.error("OpenAI provider error:", error);
+      logger.error("OpenAI provider error", { model: this.model, error: extractErrorMessage(error) });
 
       yield {
         type: SSEEvent.ERROR,

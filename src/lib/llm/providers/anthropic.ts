@@ -1,4 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
+import { logger } from "@trigger.dev/sdk/v3";
 import { ComputerAgentConfig, BaseComputerStreamer } from "@/types/llm.types";
 import { Message } from "@/types/llm.types";
 import { ChatOptions } from "@/types/llm.types";
@@ -188,7 +189,7 @@ export class AnthropicComputerStreamer implements BaseComputerStreamer {
         }
       }
     } catch (error) {
-      console.error("Anthropic provider error:", error);
+      logger.error("Anthropic provider error", { model: this.model, error: extractErrorMessage(error) });
 
       yield {
         type: SSEEvent.ERROR,

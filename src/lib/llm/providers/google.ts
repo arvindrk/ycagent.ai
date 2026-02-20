@@ -1,4 +1,5 @@
 import { GoogleGenAI, Content, Part, FunctionCall, Tool, ThinkingLevel } from "@google/genai";
+import { logger } from "@trigger.dev/sdk/v3";
 import { ComputerAgentConfig, BaseComputerStreamer, Message, ChatOptions, StreamChunk, SSEEvent } from "@/types/llm.types";
 import { ResolutionScaler } from "@/lib/sandbox-desktop/resolution";
 import { ActionExecutor } from "@/lib/sandbox-desktop/executor";
@@ -196,7 +197,7 @@ export class GoogleComputerStreamer implements BaseComputerStreamer {
         }
       }
     } catch (error) {
-      console.error("Google provider error:", error);
+      logger.error("Google provider error", { model: this.model, error: extractErrorMessage(error) });
 
       yield {
         type: SSEEvent.ERROR,

@@ -63,13 +63,25 @@ export async function POST(request: NextRequest) {
       }
     );
 
+    console.log(JSON.stringify({
+      event: "research_triggered",
+      runId: handle.id,
+      companyId: company.id,
+      companyName: company.name,
+      sandboxId: desktop.sandboxId,
+    }));
+
     return Response.json({
       runId: handle.id,
       sandboxId: desktop.sandboxId,
       vncUrl,
     });
   } catch (error) {
-    console.error("Research API error:", error);
+    console.error(JSON.stringify({
+      event: "research_start_failed",
+      companyId: company?.id,
+      error: error instanceof Error ? error.message : String(error),
+    }));
     return Response.json({ error: "Failed to start research task" }, { status: 500 });
   }
 }

@@ -1,4 +1,4 @@
-import { task } from "@trigger.dev/sdk/v3";
+import { task, logger } from "@trigger.dev/sdk/v3";
 import { Sandbox } from "@e2b/desktop";
 import { researchStream } from "./streams";
 import { StreamerFactory } from "@/lib/llm/factory";
@@ -18,10 +18,13 @@ export const deepResearchAgent = task({
     } = payload;
     let desktop: Sandbox;
 
+    logger.info("Agent started", { companyId: payload.company.id, domain: payload.domain, sandboxId: payload.sandboxId });
+
     try {
       desktop = await Sandbox.connect(payload.sandboxId);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Unknown connection error";
+      logger.error("Sandbox connection failed", { sandboxId: payload.sandboxId, companyId: payload.company.id, domain: payload.domain, error: errorMessage });
       await researchStream.append(
         {
           type: SSEEvent.ERROR,
@@ -51,6 +54,8 @@ export const deepResearchAgent = task({
     });
 
     await waitUntilComplete();
+
+    logger.info("Agent loop complete", { sandboxId: desktop.sandboxId, companyId: payload.company.id, domain: payload.domain });
 
     return {
       sandboxId: desktop.sandboxId,
