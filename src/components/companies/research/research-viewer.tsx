@@ -44,7 +44,7 @@ export function ResearchViewer({
       </CardHeader>
       <CardContent>
         {!vncUrl ? (
-          <div className="flex flex-col items-center justify-center py-16 text-center">
+          <div className="flex flex-col items-center justify-center py-16 text-center h-[600px]">
             {isResearching ? (
               <Loader2 className="w-12 h-12 text-text-tertiary mb-4 animate-spin" aria-hidden="true" />
             ) : (
