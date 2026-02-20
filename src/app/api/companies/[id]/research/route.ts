@@ -6,6 +6,7 @@ import type { researchOrchestrator } from "@/trigger/research-orchestrator";
 import type { Company } from "@/types/company.types";
 import { DEFAULT_RESOLUTION, Resolution } from "@/types/sandbox.types";
 import { getSession } from "@/lib/session";
+import { insertResearchRun } from "@/lib/db/queries/research-runs.queries";
 
 async function createSandbox(resolution: Resolution) {
   return Sandbox.create({
@@ -62,6 +63,15 @@ export async function POST(request: NextRequest) {
         vncUrl,
       }
     );
+
+    await insertResearchRun({
+      userId: session.user.id,
+      userEmail: session.user.email,
+      companyId: company.id,
+      companyName: company.name,
+      triggerRunId: handle.id,
+      sandboxId: desktop.sandboxId,
+    });
 
     console.log(JSON.stringify({
       event: "research_triggered",
