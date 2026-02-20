@@ -65,8 +65,8 @@ export function formatActionDetails(
   if (toolName === 'x_get_user') {
     const xAction = action as unknown as XGetUserCommand;
     const parts: string[] = ['Profile', 'Posts', 'Mentions'];
-    if (xAction.max_posts) parts[1] = `Posts (${xAction.max_posts})`;
-    if (xAction.max_mentions) parts[2] = `Mentions (${xAction.max_mentions})`;
+    if (xAction.max_posts) parts[1] = `Fetched latest Posts (${xAction.max_posts})`;
+    if (xAction.max_mentions) parts[2] = `Searched latest Mentions (${xAction.max_mentions})`;
     return {
       tool: 'User lookup',
       primary: `@${xAction.username}`,

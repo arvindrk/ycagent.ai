@@ -1,10 +1,16 @@
 "use server";
 
-import { auth } from "@trigger.dev/sdk/v3";
+import { auth as triggerAuth } from "@trigger.dev/sdk/v3";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 export async function createResearchAccessToken() {
-  // Token that can both trigger AND read the orchestrator task
-  const publicToken = await auth.createPublicToken({
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+
+  const publicToken = await triggerAuth.createPublicToken({
     scopes: {
       read: {
         tasks: ["research-orchestrator"],
@@ -15,6 +21,6 @@ export async function createResearchAccessToken() {
     },
     expirationTime: "1h",
   });
-  
+
   return publicToken;
 }
