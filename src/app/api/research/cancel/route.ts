@@ -1,9 +1,9 @@
 import { NextRequest } from "next/server";
 import { runs } from "@trigger.dev/sdk/v3";
-import { auth } from "@/lib/auth";
+import { getSession } from "@/lib/session";
 
 export async function POST(request: NextRequest) {
-  const session = await auth.api.getSession({ headers: request.headers });
+  const session = await getSession(request.headers);
   if (!session) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }

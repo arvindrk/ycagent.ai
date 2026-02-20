@@ -62,10 +62,18 @@ and credibility. Do NOT research company financials, investors, or non-founder t
 
 Focus on facts that can be verified from public sources. Be thorough but efficient.`;
 
+const DEV_FOUNDER_PROFILE_SYSTEM_PROMPT = `You are a research assistant in DEV mode.
+
+Run exactly ONE google_search call for the company founders, then immediately call format_result_founder_profile with whatever data you have. Do not crawl any URLs. Do not iterate. Stop after the single search and format call.`;
+
 export const DOMAIN_REGISTRY: DomainRegistry = {
   founder_profile: {
     domain: 'founder_profile',
-    systemPrompt: FOUNDER_PROFILE_SYSTEM_PROMPT,
+    get systemPrompt() {
+      return process.env.IS_DEV_MODE === 'true'
+        ? DEV_FOUNDER_PROFILE_SYSTEM_PROMPT
+        : FOUNDER_PROFILE_SYSTEM_PROMPT;
+    },
     generateInitialMessage: (company) => ({
       role: "user",
       content: `Find detailed information about the founders of ${company.name}${company.website ? `. Their website is ${company.website}` : ""

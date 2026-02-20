@@ -1,11 +1,11 @@
 "use server";
 
 import { auth as triggerAuth } from "@trigger.dev/sdk/v3";
-import { auth } from "@/lib/auth";
+import { getSession } from "@/lib/session";
 import { headers } from "next/headers";
 
 export async function createResearchAccessToken() {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSession(await headers());
   if (!session) {
     throw new Error("Unauthorized");
   }

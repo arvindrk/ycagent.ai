@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import { z } from 'zod';
-import { auth } from '@/lib/auth';
+import { getSession } from '@/lib/session';
 import { insertFeedback } from '@/lib/db/queries/feedback.queries';
 
 const feedbackSchema = z.object({
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
 
   const { sentiment, message, page_url } = parsed.data;
 
-  const session = await auth.api.getSession({ headers: request.headers });
+  const session = await getSession(request.headers);
   const companyId = extractCompanyId(page_url);
 
   try {

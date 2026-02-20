@@ -81,7 +81,7 @@ export function ResearchViewer({
                 </div>
 
                 <TabsContent value="timeline" className="flex-1 overflow-hidden mt-0">
-                  <div ref={timelineRef} className="h-full overflow-y-auto" role="feed" aria-label="Research event timeline">
+                  <div ref={timelineRef} className="h-full overflow-y-scroll" role="feed" aria-label="Research event timeline">
                     {events.length === 0 ? (
                       <div className="flex flex-col items-center justify-center h-full opacity-40">
                         <div className="relative">
@@ -112,7 +112,7 @@ export function ResearchViewer({
                 </TabsContent>
 
                 <TabsContent value="founder_profile" className="flex-1 overflow-hidden mt-0">
-                  <div className="h-full overflow-y-auto">
+                  <div className="h-full overflow-y-scroll">
                     {researchResult ? (
                       <ResearchSummary result={researchResult} />
                     ) : (
