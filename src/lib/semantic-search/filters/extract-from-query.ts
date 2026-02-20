@@ -157,7 +157,7 @@ export function extractFiltersFromQuery(rawQuery: string): ExtractionResult {
 
   // --- 1. Batch: short-form aliases (W24, S23, F24, SP25) ---
   {
-    const batchRegex = /\b([wsf](?:p)?(?:20\d{2}|\d{2}))\b/gi;
+    const batchRegex = /\b([wsfx](?:p)?(?:20\d{2}|\d{2})|fall(?:20\d{2}|\d{2})|spring(?:20\d{2}|\d{2}))\b/gi;
     let match: RegExpExecArray | null;
     while ((match = batchRegex.exec(normalizedQuery)) !== null) {
       const alias = BATCH_ALIASES[match[1].toLowerCase()];

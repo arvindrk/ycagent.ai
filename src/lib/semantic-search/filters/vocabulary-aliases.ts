@@ -43,6 +43,8 @@ export const BATCH_ALIASES: Record<string, string> = {
   'f2024': 'Fall 2024', 'f2025': 'Fall 2025',
   'fall24': 'Fall 2024', 'fall25': 'Fall 2025',
   // Spring batches
+  'x25': 'Spring 2025', 'x26': 'Spring 2026',
+  'x2025': 'Spring 2025', 'x2026': 'Spring 2026',
   'sp25': 'Spring 2025', 'sp26': 'Spring 2026',
   'sp2025': 'Spring 2025', 'sp2026': 'Spring 2026',
   'spring25': 'Spring 2025', 'spring26': 'Spring 2026',
