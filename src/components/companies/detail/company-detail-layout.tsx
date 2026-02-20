@@ -12,7 +12,7 @@ import { ResearchViewer } from '../research/research-viewer';
 
 interface CompanyDetailLayoutProps {
   company: Company;
-  researchAccessToken: string;
+  researchAccessToken: string | null;
 }
 
 export function CompanyDetailLayout({
@@ -29,7 +29,7 @@ export function CompanyDetailLayout({
     startResearch,
     stopResearch,
     researchContainerRef
-  } = useDeepResearchTrigger({ company, accessToken: researchAccessToken });
+  } = useDeepResearchTrigger({ company, accessToken: researchAccessToken ?? "" });
 
   const handleStartResearch = () => {
     if (!session) {

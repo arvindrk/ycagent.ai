@@ -57,7 +57,8 @@ export const getCompany = cache(async (id: string): Promise<Company> => {
     }
 
     return company;
-  } catch {
+  } catch (error) {
+    console.log(error);
     throw new Error('Unexpected Error. Please try again.');
   }
 });
