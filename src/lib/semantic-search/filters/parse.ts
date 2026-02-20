@@ -12,6 +12,8 @@ export interface ParsedFilters {
   is_hiring?: boolean;
   is_nonprofit?: boolean;
   location?: string;
+  founded_year_min?: number;
+  founded_year_max?: number;
 }
 
 function parseArrayFilter(value: string | undefined): string[] | undefined {
@@ -41,5 +43,7 @@ export function parseSearchFilters(params: SearchInput): ParsedFilters {
     is_hiring: parseBooleanFilter(params.is_hiring),
     is_nonprofit: parseBooleanFilter(params.is_nonprofit),
     location: params.location,
+    founded_year_min: params.founded_year_min,
+    founded_year_max: params.founded_year_max,
   };
 }

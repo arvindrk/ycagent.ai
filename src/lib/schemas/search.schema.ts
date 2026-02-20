@@ -13,6 +13,8 @@ export const searchInputSchema = z.object({
   is_hiring: z.enum(['true', 'false']).optional(),
   is_nonprofit: z.enum(['true', 'false']).optional(),
   location: z.string().optional(),
+  founded_year_min: z.coerce.number().int().min(1990).max(2100).optional(),
+  founded_year_max: z.coerce.number().int().min(1990).max(2100).optional(),
   limit: z.coerce.number().int().min(1).max(50).default(50),
 });
 

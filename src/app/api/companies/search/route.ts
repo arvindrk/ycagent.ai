@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { searchCompanies as dbSearchCompanies } from '@/lib/semantic-search/query';
 import { parseSearchFilters } from '@/lib/semantic-search/filters/parse';
+import { extractFiltersFromQuery } from '@/lib/semantic-search/filters/extract-from-query';
 import { generateEmbedding } from '@/lib/semantic-search/embeddings/generate';
 import { searchInputSchema } from '@/lib/schemas/search.schema';
+import type { ParsedFilters } from '@/lib/semantic-search/filters/parse';
 
 export async function GET(request: NextRequest) {
   const startTime = Date.now();
@@ -23,13 +25,25 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    const filters = parseSearchFilters(validatedParams);
-    const embedding = await generateEmbedding(validatedParams.q, request.signal);
+    const { extractedFilters, cleanedQuery } = extractFiltersFromQuery(validatedParams.q);
+    const explicitFilters = parseSearchFilters(validatedParams);
+    const definedExplicitFilters = Object.fromEntries(
+      Object.entries(explicitFilters).filter(([, v]) => v !== undefined)
+    ) as Partial<ParsedFilters>;
+    const mergedFilters: ParsedFilters = { ...extractedFilters, ...definedExplicitFilters };
+
+    // Skip vector search only when ALL tokens were consumed by filter extraction
+    const skipVectorSearch = cleanedQuery.trim().length === 0;
+
+    const embedding = skipVectorSearch
+      ? null
+      : await generateEmbedding(validatedParams.q, request.signal);
 
     const results = await dbSearchCompanies({
       query: validatedParams.q,
-      filters,
+      filters: mergedFilters,
       limit: validatedParams.limit,
+      skipVectorSearch,
     }, embedding);
 
     const queryTime = Date.now() - startTime;
@@ -47,8 +61,8 @@ export async function GET(request: NextRequest) {
 
     console.error('Search error:', error);
     return NextResponse.json(
-      { 
-        error: error instanceof Error ? error.message : 'Search failed' 
+      {
+        error: error instanceof Error ? error.message : 'Search failed'
       },
       { status: 500 }
     );

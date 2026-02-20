@@ -11,6 +11,7 @@
         "db:ingest-yc": "dotenvx run -- tsx scripts/ingest-yc-companies.ts",
         "db:test": "dotenvx run -- tsx scripts/test-queries.ts",
         "test:search": "dotenvx run -- tsx scripts/test-search.ts",
+        "test:semantic": "tsx scripts/test-semantic-search-exhaustive.ts",
         "test:crawler": "dotenvx run -- tsx scripts/test-crawler.ts"
     },
     "dependencies": {

@@ -65,6 +65,16 @@ export function buildFilterSQL(
     conditions.push(`all_locations ILIKE $${paramOffset + values.length}`);
   }
 
+  if (filters.founded_year_min !== undefined) {
+    values.push(filters.founded_year_min);
+    conditions.push(`EXTRACT(YEAR FROM founded_at) >= $${paramOffset + values.length}`);
+  }
+
+  if (filters.founded_year_max !== undefined) {
+    values.push(filters.founded_year_max);
+    conditions.push(`EXTRACT(YEAR FROM founded_at) <= $${paramOffset + values.length}`);
+  }
+
   const whereSQL =
     conditions.length > 0
       ? `${conditions.join(' AND ')} AND embedding IS NOT NULL`

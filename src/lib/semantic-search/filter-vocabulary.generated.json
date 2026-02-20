@@ -1,0 +1,2720 @@
+{
+  "batches": [
+    {
+      "value": "Fall 2024",
+      "normalized": "fall 2024",
+      "count": 93
+    },
+    {
+      "value": "Fall 2025",
+      "normalized": "fall 2025",
+      "count": 156
+    },
+    {
+      "value": "Spring 2025",
+      "normalized": "spring 2025",
+      "count": 145
+    },
+    {
+      "value": "Spring 2026",
+      "normalized": "spring 2026",
+      "count": 1
+    },
+    {
+      "value": "Summer 2005",
+      "normalized": "summer 2005",
+      "count": 9
+    },
+    {
+      "value": "Summer 2006",
+      "normalized": "summer 2006",
+      "count": 11
+    },
+    {
+      "value": "Summer 2007",
+      "normalized": "summer 2007",
+      "count": 19
+    },
+    {
+      "value": "Summer 2008",
+      "normalized": "summer 2008",
+      "count": 22
+    },
+    {
+      "value": "Summer 2009",
+      "normalized": "summer 2009",
+      "count": 26
+    },
+    {
+      "value": "Summer 2010",
+      "normalized": "summer 2010",
+      "count": 36
+    },
+    {
+      "value": "Summer 2011",
+      "normalized": "summer 2011",
+      "count": 60
+    },
+    {
+      "value": "Summer 2012",
+      "normalized": "summer 2012",
+      "count": 83
+    },
+    {
+      "value": "Summer 2013",
+      "normalized": "summer 2013",
+      "count": 52
+    },
+    {
+      "value": "Summer 2014",
+      "normalized": "summer 2014",
+      "count": 78
+    },
+    {
+      "value": "Summer 2015",
+      "normalized": "summer 2015",
+      "count": 105
+    },
+    {
+      "value": "Summer 2016",
+      "normalized": "summer 2016",
+      "count": 102
+    },
+    {
+      "value": "Summer 2017",
+      "normalized": "summer 2017",
+      "count": 125
+    },
+    {
+      "value": "Summer 2018",
+      "normalized": "summer 2018",
+      "count": 131
+    },
+    {
+      "value": "Summer 2019",
+      "normalized": "summer 2019",
+      "count": 176
+    },
+    {
+      "value": "Summer 2020",
+      "normalized": "summer 2020",
+      "count": 208
+    },
+    {
+      "value": "Summer 2021",
+      "normalized": "summer 2021",
+      "count": 391
+    },
+    {
+      "value": "Summer 2022",
+      "normalized": "summer 2022",
+      "count": 234
+    },
+    {
+      "value": "Summer 2023",
+      "normalized": "summer 2023",
+      "count": 221
+    },
+    {
+      "value": "Summer 2024",
+      "normalized": "summer 2024",
+      "count": 249
+    },
+    {
+      "value": "Summer 2025",
+      "normalized": "summer 2025",
+      "count": 168
+    },
+    {
+      "value": "Winter 2006",
+      "normalized": "winter 2006",
+      "count": 7
+    },
+    {
+      "value": "Winter 2007",
+      "normalized": "winter 2007",
+      "count": 13
+    },
+    {
+      "value": "Winter 2008",
+      "normalized": "winter 2008",
+      "count": 21
+    },
+    {
+      "value": "Winter 2009",
+      "normalized": "winter 2009",
+      "count": 16
+    },
+    {
+      "value": "Winter 2010",
+      "normalized": "winter 2010",
+      "count": 27
+    },
+    {
+      "value": "Winter 2011",
+      "normalized": "winter 2011",
+      "count": 44
+    },
+    {
+      "value": "Winter 2012",
+      "normalized": "winter 2012",
+      "count": 66
+    },
+    {
+      "value": "Winter 2013",
+      "normalized": "winter 2013",
+      "count": 46
+    },
+    {
+      "value": "Winter 2014",
+      "normalized": "winter 2014",
+      "count": 74
+    },
+    {
+      "value": "Winter 2015",
+      "normalized": "winter 2015",
+      "count": 111
+    },
+    {
+      "value": "Winter 2016",
+      "normalized": "winter 2016",
+      "count": 122
+    },
+    {
+      "value": "Winter 2017",
+      "normalized": "winter 2017",
+      "count": 116
+    },
+    {
+      "value": "Winter 2018",
+      "normalized": "winter 2018",
+      "count": 146
+    },
+    {
+      "value": "Winter 2019",
+      "normalized": "winter 2019",
+      "count": 195
+    },
+    {
+      "value": "Winter 2020",
+      "normalized": "winter 2020",
+      "count": 229
+    },
+    {
+      "value": "Winter 2021",
+      "normalized": "winter 2021",
+      "count": 336
+    },
+    {
+      "value": "Winter 2022",
+      "normalized": "winter 2022",
+      "count": 399
+    },
+    {
+      "value": "Winter 2023",
+      "normalized": "winter 2023",
+      "count": 274
+    },
+    {
+      "value": "Winter 2024",
+      "normalized": "winter 2024",
+      "count": 251
+    },
+    {
+      "value": "Winter 2025",
+      "normalized": "winter 2025",
+      "count": 167
+    },
+    {
+      "value": "Winter 2026",
+      "normalized": "winter 2026",
+      "count": 91
+    }
+  ],
+  "stages": [
+    {
+      "value": "Early",
+      "normalized": "early",
+      "count": 4624
+    },
+    {
+      "value": "Growth",
+      "normalized": "growth",
+      "count": 1029
+    }
+  ],
+  "statuses": [
+    {
+      "value": "Active",
+      "normalized": "active",
+      "count": 3901
+    },
+    {
+      "value": "Inactive",
+      "normalized": "inactive",
+      "count": 1001
+    },
+    {
+      "value": "Acquired",
+      "normalized": "acquired",
+      "count": 729
+    },
+    {
+      "value": "Public",
+      "normalized": "public",
+      "count": 22
+    }
+  ],
+  "industries": [
+    {
+      "value": "B2B",
+      "normalized": "b2b",
+      "count": 2852
+    },
+    {
+      "value": "Consumer",
+      "normalized": "consumer",
+      "count": 860
+    },
+    {
+      "value": "Healthcare",
+      "normalized": "healthcare",
+      "count": 652
+    },
+    {
+      "value": "Fintech",
+      "normalized": "fintech",
+      "count": 606
+    },
+    {
+      "value": "Engineering, Product and Design",
+      "normalized": "engineering, product and design",
+      "count": 581
+    },
+    {
+      "value": "Industrials",
+      "normalized": "industrials",
+      "count": 347
+    },
+    {
+      "value": "Infrastructure",
+      "normalized": "infrastructure",
+      "count": 255
+    },
+    {
+      "value": "Productivity",
+      "normalized": "productivity",
+      "count": 218
+    },
+    {
+      "value": "Marketing",
+      "normalized": "marketing",
+      "count": 157
+    },
+    {
+      "value": "Real Estate and Construction",
+      "normalized": "real estate and construction",
+      "count": 152
+    },
+    {
+      "value": "Healthcare IT",
+      "normalized": "healthcare it",
+      "count": 139
+    },
+    {
+      "value": "Operations",
+      "normalized": "operations",
+      "count": 134
+    },
+    {
+      "value": "Sales",
+      "normalized": "sales",
+      "count": 130
+    },
+    {
+      "value": "Retail",
+      "normalized": "retail",
+      "count": 129
+    },
+    {
+      "value": "Supply Chain and Logistics",
+      "normalized": "supply chain and logistics",
+      "count": 129
+    },
+    {
+      "value": "Analytics",
+      "normalized": "analytics",
+      "count": 128
+    },
+    {
+      "value": "Home and Personal",
+      "normalized": "home and personal",
+      "count": 127
+    },
+    {
+      "value": "Education",
+      "normalized": "education",
+      "count": 126
+    },
+    {
+      "value": "Finance and Accounting",
+      "normalized": "finance and accounting",
+      "count": 125
+    },
+    {
+      "value": "Payments",
+      "normalized": "payments",
+      "count": 123
+    },
+    {
+      "value": "Content",
+      "normalized": "content",
+      "count": 113
+    },
+    {
+      "value": "Consumer Health and Wellness",
+      "normalized": "consumer health and wellness",
+      "count": 113
+    },
+    {
+      "value": "Social",
+      "normalized": "social",
+      "count": 111
+    },
+    {
+      "value": "Security",
+      "normalized": "security",
+      "count": 106
+    },
+    {
+      "value": "Food and Beverage",
+      "normalized": "food and beverage",
+      "count": 94
+    },
+    {
+      "value": "Manufacturing and Robotics",
+      "normalized": "manufacturing and robotics",
+      "count": 89
+    },
+    {
+      "value": "Human Resources",
+      "normalized": "human resources",
+      "count": 85
+    },
+    {
+      "value": "Housing and Real Estate",
+      "normalized": "housing and real estate",
+      "count": 83
+    },
+    {
+      "value": "Consumer Finance",
+      "normalized": "consumer finance",
+      "count": 83
+    },
+    {
+      "value": "Credit and Lending",
+      "normalized": "credit and lending",
+      "count": 74
+    },
+    {
+      "value": "Recruiting and Talent",
+      "normalized": "recruiting and talent",
+      "count": 73
+    },
+    {
+      "value": "Gaming",
+      "normalized": "gaming",
+      "count": 70
+    },
+    {
+      "value": "Banking and Exchange",
+      "normalized": "banking and exchange",
+      "count": 67
+    },
+    {
+      "value": "Healthcare Services",
+      "normalized": "healthcare services",
+      "count": 67
+    },
+    {
+      "value": "Therapeutics",
+      "normalized": "therapeutics",
+      "count": 64
+    },
+    {
+      "value": "Aviation and Space",
+      "normalized": "aviation and space",
+      "count": 59
+    },
+    {
+      "value": "Insurance",
+      "normalized": "insurance",
+      "count": 55
+    },
+    {
+      "value": "Diagnostics",
+      "normalized": "diagnostics",
+      "count": 54
+    },
+    {
+      "value": "Climate",
+      "normalized": "climate",
+      "count": 52
+    },
+    {
+      "value": "Legal",
+      "normalized": "legal",
+      "count": 51
+    },
+    {
+      "value": "Asset Management",
+      "normalized": "asset management",
+      "count": 51
+    },
+    {
+      "value": "Drug Discovery and Delivery",
+      "normalized": "drug discovery and delivery",
+      "count": 51
+    },
+    {
+      "value": "Apparel and Cosmetics",
+      "normalized": "apparel and cosmetics",
+      "count": 49
+    },
+    {
+      "value": "Construction",
+      "normalized": "construction",
+      "count": 46
+    },
+    {
+      "value": "Medical Devices",
+      "normalized": "medical devices",
+      "count": 43
+    },
+    {
+      "value": "Consumer Electronics",
+      "normalized": "consumer electronics",
+      "count": 42
+    },
+    {
+      "value": "Energy",
+      "normalized": "energy",
+      "count": 41
+    },
+    {
+      "value": "Government",
+      "normalized": "government",
+      "count": 40
+    },
+    {
+      "value": "Travel, Leisure and Tourism",
+      "normalized": "travel, leisure and tourism",
+      "count": 36
+    },
+    {
+      "value": "Industrial Bio",
+      "normalized": "industrial bio",
+      "count": 32
+    },
+    {
+      "value": "Agriculture",
+      "normalized": "agriculture",
+      "count": 31
+    },
+    {
+      "value": "Transportation Services",
+      "normalized": "transportation services",
+      "count": 27
+    },
+    {
+      "value": "Office Management",
+      "normalized": "office management",
+      "count": 23
+    },
+    {
+      "value": "Automotive",
+      "normalized": "automotive",
+      "count": 21
+    },
+    {
+      "value": "Virtual and Augmented Reality",
+      "normalized": "virtual and augmented reality",
+      "count": 21
+    },
+    {
+      "value": "Drones",
+      "normalized": "drones",
+      "count": 20
+    },
+    {
+      "value": "Unspecified",
+      "normalized": "unspecified",
+      "count": 18
+    },
+    {
+      "value": "Job and Career Services",
+      "normalized": "job and career services",
+      "count": 17
+    },
+    {
+      "value": "Defense",
+      "normalized": "defense",
+      "count": 10
+    }
+  ],
+  "tags": [
+    {
+      "value": "SaaS",
+      "normalized": "saas",
+      "count": 1129
+    },
+    {
+      "value": "B2B",
+      "normalized": "b2b",
+      "count": 1103
+    },
+    {
+      "value": "Artificial Intelligence",
+      "normalized": "artificial intelligence",
+      "count": 883
+    },
+    {
+      "value": "AI",
+      "normalized": "ai",
+      "count": 769
+    },
+    {
+      "value": "Fintech",
+      "normalized": "fintech",
+      "count": 700
+    },
+    {
+      "value": "Developer Tools",
+      "normalized": "developer tools",
+      "count": 532
+    },
+    {
+      "value": "Marketplace",
+      "normalized": "marketplace",
+      "count": 309
+    },
+    {
+      "value": "Generative AI",
+      "normalized": "generative ai",
+      "count": 270
+    },
+    {
+      "value": "Consumer",
+      "normalized": "consumer",
+      "count": 233
+    },
+    {
+      "value": "Machine Learning",
+      "normalized": "machine learning",
+      "count": 233
+    },
+    {
+      "value": "Healthcare",
+      "normalized": "healthcare",
+      "count": 200
+    },
+    {
+      "value": "E-commerce",
+      "normalized": "e-commerce",
+      "count": 191
+    },
+    {
+      "value": "Analytics",
+      "normalized": "analytics",
+      "count": 188
+    },
+    {
+      "value": "Health Tech",
+      "normalized": "health tech",
+      "count": 172
+    },
+    {
+      "value": "Productivity",
+      "normalized": "productivity",
+      "count": 166
+    },
+    {
+      "value": "Education",
+      "normalized": "education",
+      "count": 163
+    },
+    {
+      "value": "Open Source",
+      "normalized": "open source",
+      "count": 162
+    },
+    {
+      "value": "AI Assistant",
+      "normalized": "ai assistant",
+      "count": 157
+    },
+    {
+      "value": "Payments",
+      "normalized": "payments",
+      "count": 146
+    },
+    {
+      "value": "Climate",
+      "normalized": "climate",
+      "count": 142
+    },
+    {
+      "value": "API",
+      "normalized": "api",
+      "count": 140
+    },
+    {
+      "value": "Biotech",
+      "normalized": "biotech",
+      "count": 133
+    },
+    {
+      "value": "Hardware",
+      "normalized": "hardware",
+      "count": 133
+    },
+    {
+      "value": "Logistics",
+      "normalized": "logistics",
+      "count": 126
+    },
+    {
+      "value": "Sales",
+      "normalized": "sales",
+      "count": 114
+    },
+    {
+      "value": "Enterprise",
+      "normalized": "enterprise",
+      "count": 110
+    },
+    {
+      "value": "Enterprise Software",
+      "normalized": "enterprise software",
+      "count": 110
+    },
+    {
+      "value": "Digital Health",
+      "normalized": "digital health",
+      "count": 106
+    },
+    {
+      "value": "Consumer Health Services",
+      "normalized": "consumer health services",
+      "count": 104
+    },
+    {
+      "value": "Robotics",
+      "normalized": "robotics",
+      "count": 101
+    },
+    {
+      "value": "Infrastructure",
+      "normalized": "infrastructure",
+      "count": 100
+    },
+    {
+      "value": "Marketing",
+      "normalized": "marketing",
+      "count": 98
+    },
+    {
+      "value": "Data Engineering",
+      "normalized": "data engineering",
+      "count": 93
+    },
+    {
+      "value": "Video",
+      "normalized": "video",
+      "count": 92
+    },
+    {
+      "value": "Hard Tech",
+      "normalized": "hard tech",
+      "count": 91
+    },
+    {
+      "value": "Crypto / Web3",
+      "normalized": "crypto / web3",
+      "count": 89
+    },
+    {
+      "value": "Security",
+      "normalized": "security",
+      "count": 88
+    },
+    {
+      "value": "Gaming",
+      "normalized": "gaming",
+      "count": 88
+    },
+    {
+      "value": "Proptech",
+      "normalized": "proptech",
+      "count": 85
+    },
+    {
+      "value": "Automation",
+      "normalized": "automation",
+      "count": 84
+    },
+    {
+      "value": "Finance",
+      "normalized": "finance",
+      "count": 84
+    },
+    {
+      "value": "Real Estate",
+      "normalized": "real estate",
+      "count": 83
+    },
+    {
+      "value": "Computer Vision",
+      "normalized": "computer vision",
+      "count": 80
+    },
+    {
+      "value": "Supply Chain",
+      "normalized": "supply chain",
+      "count": 80
+    },
+    {
+      "value": "HR Tech",
+      "normalized": "hr tech",
+      "count": 75
+    },
+    {
+      "value": "Manufacturing",
+      "normalized": "manufacturing",
+      "count": 73
+    },
+    {
+      "value": "Workflow Automation",
+      "normalized": "workflow automation",
+      "count": 72
+    },
+    {
+      "value": "Compliance",
+      "normalized": "compliance",
+      "count": 72
+    },
+    {
+      "value": "Insurance",
+      "normalized": "insurance",
+      "count": 70
+    },
+    {
+      "value": "Social",
+      "normalized": "social",
+      "count": 69
+    },
+    {
+      "value": "Recruiting",
+      "normalized": "recruiting",
+      "count": 69
+    },
+    {
+      "value": "Construction",
+      "normalized": "construction",
+      "count": 67
+    },
+    {
+      "value": "Medical Devices",
+      "normalized": "medical devices",
+      "count": 66
+    },
+    {
+      "value": "Design Tools",
+      "normalized": "design tools",
+      "count": 63
+    },
+    {
+      "value": "Community",
+      "normalized": "community",
+      "count": 58
+    },
+    {
+      "value": "AIOps",
+      "normalized": "aiops",
+      "count": 56
+    },
+    {
+      "value": "Delivery",
+      "normalized": "delivery",
+      "count": 54
+    },
+    {
+      "value": "LegalTech",
+      "normalized": "legaltech",
+      "count": 53
+    },
+    {
+      "value": "Investing",
+      "normalized": "investing",
+      "count": 53
+    },
+    {
+      "value": "Entertainment",
+      "normalized": "entertainment",
+      "count": 52
+    },
+    {
+      "value": "Neobank",
+      "normalized": "neobank",
+      "count": 51
+    },
+    {
+      "value": "Retail",
+      "normalized": "retail",
+      "count": 50
+    },
+    {
+      "value": "DevOps",
+      "normalized": "devops",
+      "count": 49
+    },
+    {
+      "value": "eLearning",
+      "normalized": "elearning",
+      "count": 48
+    },
+    {
+      "value": "Media",
+      "normalized": "media",
+      "count": 48
+    },
+    {
+      "value": "Travel",
+      "normalized": "travel",
+      "count": 48
+    },
+    {
+      "value": "Food Tech",
+      "normalized": "food tech",
+      "count": 48
+    },
+    {
+      "value": "AI-Enhanced Learning",
+      "normalized": "ai-enhanced learning",
+      "count": 47
+    },
+    {
+      "value": "Conversational AI",
+      "normalized": "conversational ai",
+      "count": 47
+    },
+    {
+      "value": "Messaging",
+      "normalized": "messaging",
+      "count": 45
+    },
+    {
+      "value": "Cloud Computing",
+      "normalized": "cloud computing",
+      "count": 45
+    },
+    {
+      "value": "GovTech",
+      "normalized": "govtech",
+      "count": 45
+    },
+    {
+      "value": "Therapeutics",
+      "normalized": "therapeutics",
+      "count": 44
+    },
+    {
+      "value": "Collaboration",
+      "normalized": "collaboration",
+      "count": 44
+    },
+    {
+      "value": "IoT",
+      "normalized": "iot",
+      "count": 44
+    },
+    {
+      "value": "Health & Wellness",
+      "normalized": "health & wellness",
+      "count": 43
+    },
+    {
+      "value": "Energy",
+      "normalized": "energy",
+      "count": 43
+    },
+    {
+      "value": "Advertising",
+      "normalized": "advertising",
+      "count": 42
+    },
+    {
+      "value": "E-Commerce",
+      "normalized": "e-commerce",
+      "count": 41
+    },
+    {
+      "value": "Cybersecurity",
+      "normalized": "cybersecurity",
+      "count": 41
+    },
+    {
+      "value": "Healthcare IT",
+      "normalized": "healthcare it",
+      "count": 40
+    },
+    {
+      "value": "Transportation",
+      "normalized": "transportation",
+      "count": 39
+    },
+    {
+      "value": "Subscriptions",
+      "normalized": "subscriptions",
+      "count": 39
+    },
+    {
+      "value": "Deep Learning",
+      "normalized": "deep learning",
+      "count": 38
+    },
+    {
+      "value": "Legal",
+      "normalized": "legal",
+      "count": 37
+    },
+    {
+      "value": "Mental Health Tech",
+      "normalized": "mental health tech",
+      "count": 37
+    },
+    {
+      "value": "AI-powered Drug Discovery",
+      "normalized": "ai-powered drug discovery",
+      "count": 37
+    },
+    {
+      "value": "No-code",
+      "normalized": "no-code",
+      "count": 37
+    },
+    {
+      "value": "Aerospace",
+      "normalized": "aerospace",
+      "count": 37
+    },
+    {
+      "value": "India",
+      "normalized": "india",
+      "count": 36
+    },
+    {
+      "value": "DevSecOps",
+      "normalized": "devsecops",
+      "count": 35
+    },
+    {
+      "value": "Sales Enablement",
+      "normalized": "sales enablement",
+      "count": 35
+    },
+    {
+      "value": "Creator Economy",
+      "normalized": "creator economy",
+      "count": 33
+    },
+    {
+      "value": "Documents",
+      "normalized": "documents",
+      "count": 33
+    },
+    {
+      "value": "Data Visualization",
+      "normalized": "data visualization",
+      "count": 33
+    },
+    {
+      "value": "Customer Support",
+      "normalized": "customer support",
+      "count": 32
+    },
+    {
+      "value": "Data Science",
+      "normalized": "data science",
+      "count": 32
+    },
+    {
+      "value": "Email",
+      "normalized": "email",
+      "count": 32
+    },
+    {
+      "value": "Diagnostics",
+      "normalized": "diagnostics",
+      "count": 32
+    },
+    {
+      "value": "Agriculture",
+      "normalized": "agriculture",
+      "count": 32
+    },
+    {
+      "value": "Drug discovery",
+      "normalized": "drug discovery",
+      "count": 32
+    },
+    {
+      "value": "Social Media",
+      "normalized": "social media",
+      "count": 31
+    },
+    {
+      "value": "ClimateTech",
+      "normalized": "climatetech",
+      "count": 31
+    },
+    {
+      "value": "Synthetic Biology",
+      "normalized": "synthetic biology",
+      "count": 31
+    },
+    {
+      "value": "Grocery",
+      "normalized": "grocery",
+      "count": 31
+    },
+    {
+      "value": "Design",
+      "normalized": "design",
+      "count": 31
+    },
+    {
+      "value": "Robotic Process Automation",
+      "normalized": "robotic process automation",
+      "count": 31
+    },
+    {
+      "value": "Reinforcement Learning",
+      "normalized": "reinforcement learning",
+      "count": 30
+    },
+    {
+      "value": "FinOps",
+      "normalized": "finops",
+      "count": 29
+    },
+    {
+      "value": "Big Data",
+      "normalized": "big data",
+      "count": 29
+    },
+    {
+      "value": "Drones",
+      "normalized": "drones",
+      "count": 29
+    },
+    {
+      "value": "Operations",
+      "normalized": "operations",
+      "count": 29
+    },
+    {
+      "value": "Telemedicine",
+      "normalized": "telemedicine",
+      "count": 29
+    },
+    {
+      "value": "Food & Beverage",
+      "normalized": "food & beverage",
+      "count": 28
+    },
+    {
+      "value": "Telehealth",
+      "normalized": "telehealth",
+      "count": 27
+    },
+    {
+      "value": "Genomics",
+      "normalized": "genomics",
+      "count": 27
+    },
+    {
+      "value": "Health Insurance",
+      "normalized": "health insurance",
+      "count": 27
+    },
+    {
+      "value": "Databases",
+      "normalized": "databases",
+      "count": 26
+    },
+    {
+      "value": "Consumer Finance",
+      "normalized": "consumer finance",
+      "count": 26
+    },
+    {
+      "value": "Telecommunications",
+      "normalized": "telecommunications",
+      "count": 26
+    },
+    {
+      "value": "Nonprofit",
+      "normalized": "nonprofit",
+      "count": 25
+    },
+    {
+      "value": "Customer Success",
+      "normalized": "customer success",
+      "count": 25
+    },
+    {
+      "value": "Banking as a Service",
+      "normalized": "banking as a service",
+      "count": 25
+    },
+    {
+      "value": "Web Development",
+      "normalized": "web development",
+      "count": 25
+    },
+    {
+      "value": "Augmented Reality",
+      "normalized": "augmented reality",
+      "count": 23
+    },
+    {
+      "value": "Automotive",
+      "normalized": "automotive",
+      "count": 23
+    },
+    {
+      "value": "NLP",
+      "normalized": "nlp",
+      "count": 23
+    },
+    {
+      "value": "Customer Service",
+      "normalized": "customer service",
+      "count": 23
+    },
+    {
+      "value": "CRM",
+      "normalized": "crm",
+      "count": 23
+    },
+    {
+      "value": "Electric Vehicles",
+      "normalized": "electric vehicles",
+      "count": 23
+    },
+    {
+      "value": "Social Network",
+      "normalized": "social network",
+      "count": 22
+    },
+    {
+      "value": "Satellites",
+      "normalized": "satellites",
+      "count": 21
+    },
+    {
+      "value": "Search",
+      "normalized": "search",
+      "count": 21
+    },
+    {
+      "value": "Music",
+      "normalized": "music",
+      "count": 21
+    },
+    {
+      "value": "Latin America",
+      "normalized": "latin america",
+      "count": 21
+    },
+    {
+      "value": "Human Resources",
+      "normalized": "human resources",
+      "count": 21
+    },
+    {
+      "value": "Privacy",
+      "normalized": "privacy",
+      "count": 20
+    },
+    {
+      "value": "Oncology",
+      "normalized": "oncology",
+      "count": 20
+    },
+    {
+      "value": "Edtech",
+      "normalized": "edtech",
+      "count": 20
+    },
+    {
+      "value": "Fashion",
+      "normalized": "fashion",
+      "count": 20
+    },
+    {
+      "value": "Sports Tech",
+      "normalized": "sports tech",
+      "count": 20
+    },
+    {
+      "value": "Fitness",
+      "normalized": "fitness",
+      "count": 19
+    },
+    {
+      "value": "Retail Tech",
+      "normalized": "retail tech",
+      "count": 19
+    },
+    {
+      "value": "Industrial",
+      "normalized": "industrial",
+      "count": 19
+    },
+    {
+      "value": "Housing",
+      "normalized": "housing",
+      "count": 19
+    },
+    {
+      "value": "Regtech",
+      "normalized": "regtech",
+      "count": 18
+    },
+    {
+      "value": "Renewable Energy",
+      "normalized": "renewable energy",
+      "count": 18
+    },
+    {
+      "value": "Space Exploration",
+      "normalized": "space exploration",
+      "count": 17
+    },
+    {
+      "value": "Payroll",
+      "normalized": "payroll",
+      "count": 17
+    },
+    {
+      "value": "Solar Power",
+      "normalized": "solar power",
+      "count": 17
+    },
+    {
+      "value": "Remote Work",
+      "normalized": "remote work",
+      "count": 16
+    },
+    {
+      "value": "Data Labeling",
+      "normalized": "data labeling",
+      "count": 16
+    },
+    {
+      "value": "Lending",
+      "normalized": "lending",
+      "count": 16
+    },
+    {
+      "value": "Identity",
+      "normalized": "identity",
+      "count": 16
+    },
+    {
+      "value": "Biotechnology",
+      "normalized": "biotechnology",
+      "count": 16
+    },
+    {
+      "value": "Market Research",
+      "normalized": "market research",
+      "count": 15
+    },
+    {
+      "value": "Women's Health",
+      "normalized": "women's health",
+      "count": 15
+    },
+    {
+      "value": "Neurotechnology",
+      "normalized": "neurotechnology",
+      "count": 14
+    },
+    {
+      "value": "ML",
+      "normalized": "ml",
+      "count": 14
+    },
+    {
+      "value": "Kubernetes",
+      "normalized": "kubernetes",
+      "count": 14
+    },
+    {
+      "value": "Sustainability",
+      "normalized": "sustainability",
+      "count": 14
+    },
+    {
+      "value": "SMB",
+      "normalized": "smb",
+      "count": 14
+    },
+    {
+      "value": "Monitoring",
+      "normalized": "monitoring",
+      "count": 14
+    },
+    {
+      "value": "Energy Storage",
+      "normalized": "energy storage",
+      "count": 14
+    },
+    {
+      "value": "Mobility",
+      "normalized": "mobility",
+      "count": 13
+    },
+    {
+      "value": "Carbon Capture and Removal",
+      "normalized": "carbon capture and removal",
+      "count": 13
+    },
+    {
+      "value": "Virtual Reality",
+      "normalized": "virtual reality",
+      "count": 13
+    },
+    {
+      "value": "Warehouse Management Tech",
+      "normalized": "warehouse management tech",
+      "count": 13
+    },
+    {
+      "value": "Restaurant Tech",
+      "normalized": "restaurant tech",
+      "count": 13
+    },
+    {
+      "value": "Gene Therapy",
+      "normalized": "gene therapy",
+      "count": 12
+    },
+    {
+      "value": "3D Printing",
+      "normalized": "3d printing",
+      "count": 12
+    },
+    {
+      "value": "Consumer Products",
+      "normalized": "consumer products",
+      "count": 12
+    },
+    {
+      "value": "DeFi",
+      "normalized": "defi",
+      "count": 12
+    },
+    {
+      "value": "Team Collaboration",
+      "normalized": "team collaboration",
+      "count": 12
+    },
+    {
+      "value": "Electronics",
+      "normalized": "electronics",
+      "count": 11
+    },
+    {
+      "value": "Trading",
+      "normalized": "trading",
+      "count": 11
+    },
+    {
+      "value": "Semiconductors",
+      "normalized": "semiconductors",
+      "count": 11
+    },
+    {
+      "value": "Ghost Kitchens",
+      "normalized": "ghost kitchens",
+      "count": 11
+    },
+    {
+      "value": "Nanotechnology",
+      "normalized": "nanotechnology",
+      "count": 11
+    },
+    {
+      "value": "Autonomous Trucking",
+      "normalized": "autonomous trucking",
+      "count": 11
+    },
+    {
+      "value": "Scheduling",
+      "normalized": "scheduling",
+      "count": 11
+    },
+    {
+      "value": "Procurement",
+      "normalized": "procurement",
+      "count": 11
+    },
+    {
+      "value": "Chatbot",
+      "normalized": "chatbot",
+      "count": 10
+    },
+    {
+      "value": "Home Services",
+      "normalized": "home services",
+      "count": 10
+    },
+    {
+      "value": "Mental Health",
+      "normalized": "mental health",
+      "count": 10
+    },
+    {
+      "value": "Airplanes",
+      "normalized": "airplanes",
+      "count": 10
+    },
+    {
+      "value": "Cryptocurrency",
+      "normalized": "cryptocurrency",
+      "count": 10
+    },
+    {
+      "value": "Food Service Robots & Machines",
+      "normalized": "food service robots & machines",
+      "count": 10
+    },
+    {
+      "value": "Beauty",
+      "normalized": "beauty",
+      "count": 10
+    },
+    {
+      "value": "Billing",
+      "normalized": "billing",
+      "count": 9
+    },
+    {
+      "value": "Metaverse",
+      "normalized": "metaverse",
+      "count": 9
+    },
+    {
+      "value": "Kids",
+      "normalized": "kids",
+      "count": 9
+    },
+    {
+      "value": "Personalization",
+      "normalized": "personalization",
+      "count": 9
+    },
+    {
+      "value": "Crowdfunding",
+      "normalized": "crowdfunding",
+      "count": 9
+    },
+    {
+      "value": "Emerging Markets",
+      "normalized": "emerging markets",
+      "count": 9
+    },
+    {
+      "value": "Sustainable Fashion",
+      "normalized": "sustainable fashion",
+      "count": 9
+    },
+    {
+      "value": "Sleep Tech",
+      "normalized": "sleep tech",
+      "count": 9
+    },
+    {
+      "value": "Calendar",
+      "normalized": "calendar",
+      "count": 9
+    },
+    {
+      "value": "Fertility Tech",
+      "normalized": "fertility tech",
+      "count": 8
+    },
+    {
+      "value": "Call Center",
+      "normalized": "call center",
+      "count": 8
+    },
+    {
+      "value": "Primary Care",
+      "normalized": "primary care",
+      "count": 8
+    },
+    {
+      "value": "APIs",
+      "normalized": "apis",
+      "count": 8
+    },
+    {
+      "value": "Fraud Detection",
+      "normalized": "fraud detection",
+      "count": 8
+    },
+    {
+      "value": "Autonomous Delivery",
+      "normalized": "autonomous delivery",
+      "count": 8
+    },
+    {
+      "value": "Food",
+      "normalized": "food",
+      "count": 8
+    },
+    {
+      "value": "Civic Tech",
+      "normalized": "civic tech",
+      "count": 8
+    },
+    {
+      "value": "SMS",
+      "normalized": "sms",
+      "count": 7
+    },
+    {
+      "value": "Talent Acquisition",
+      "normalized": "talent acquisition",
+      "count": 7
+    },
+    {
+      "value": "Anti-Aging",
+      "normalized": "anti-aging",
+      "count": 7
+    },
+    {
+      "value": "Biometrics",
+      "normalized": "biometrics",
+      "count": 7
+    },
+    {
+      "value": "Immigration",
+      "normalized": "immigration",
+      "count": 7
+    },
+    {
+      "value": "Smart Home Assistants",
+      "normalized": "smart home assistants",
+      "count": 7
+    },
+    {
+      "value": "Podcasts",
+      "normalized": "podcasts",
+      "count": 7
+    },
+    {
+      "value": "Chat",
+      "normalized": "chat",
+      "count": 7
+    },
+    {
+      "value": "Cannabis",
+      "normalized": "cannabis",
+      "count": 7
+    },
+    {
+      "value": "Investments",
+      "normalized": "investments",
+      "count": 7
+    },
+    {
+      "value": "Architecture",
+      "normalized": "architecture",
+      "count": 6
+    },
+    {
+      "value": "Self-Driving Vehicles",
+      "normalized": "self-driving vehicles",
+      "count": 6
+    },
+    {
+      "value": "Commercial Space Launch",
+      "normalized": "commercial space launch",
+      "count": 6
+    },
+    {
+      "value": "International",
+      "normalized": "international",
+      "count": 6
+    },
+    {
+      "value": "Note-taking",
+      "normalized": "note-taking",
+      "count": 6
+    },
+    {
+      "value": "AR",
+      "normalized": "ar",
+      "count": 6
+    },
+    {
+      "value": "Speech Recognition",
+      "normalized": "speech recognition",
+      "count": 6
+    },
+    {
+      "value": "Dating",
+      "normalized": "dating",
+      "count": 6
+    },
+    {
+      "value": "Remote",
+      "normalized": "remote",
+      "count": 6
+    },
+    {
+      "value": "Feedback",
+      "normalized": "feedback",
+      "count": 6
+    },
+    {
+      "value": "Cellular Agriculture",
+      "normalized": "cellular agriculture",
+      "count": 6
+    },
+    {
+      "value": "Advanced Materials",
+      "normalized": "advanced materials",
+      "count": 6
+    },
+    {
+      "value": "Assistive Tech",
+      "normalized": "assistive tech",
+      "count": 6
+    },
+    {
+      "value": "Furniture",
+      "normalized": "furniture",
+      "count": 6
+    },
+    {
+      "value": "Femtech",
+      "normalized": "femtech",
+      "count": 5
+    },
+    {
+      "value": "NFT",
+      "normalized": "nft",
+      "count": 5
+    },
+    {
+      "value": "Cashierless Checkout",
+      "normalized": "cashierless checkout",
+      "count": 5
+    },
+    {
+      "value": "Next-gen Network Security",
+      "normalized": "next-gen network security",
+      "count": 5
+    },
+    {
+      "value": "Air Taxis",
+      "normalized": "air taxis",
+      "count": 5
+    },
+    {
+      "value": "Medical Robotics",
+      "normalized": "medical robotics",
+      "count": 5
+    },
+    {
+      "value": "Cell Therapy",
+      "normalized": "cell therapy",
+      "count": 5
+    },
+    {
+      "value": "Microfluidics",
+      "normalized": "microfluidics",
+      "count": 5
+    },
+    {
+      "value": "Live",
+      "normalized": "live",
+      "count": 5
+    },
+    {
+      "value": "Crowdsourcing",
+      "normalized": "crowdsourcing",
+      "count": 5
+    },
+    {
+      "value": "Smart Clothing",
+      "normalized": "smart clothing",
+      "count": 5
+    },
+    {
+      "value": "Cloud Workload Protection",
+      "normalized": "cloud workload protection",
+      "count": 5
+    },
+    {
+      "value": "Nanomedicine",
+      "normalized": "nanomedicine",
+      "count": 5
+    },
+    {
+      "value": "Drug Delivery",
+      "normalized": "drug delivery",
+      "count": 5
+    },
+    {
+      "value": "Mining",
+      "normalized": "mining",
+      "count": 5
+    },
+    {
+      "value": "Auto Commerce",
+      "normalized": "auto commerce",
+      "count": 5
+    },
+    {
+      "value": "Remittances",
+      "normalized": "remittances",
+      "count": 5
+    },
+    {
+      "value": "Edge Computing Semiconductors",
+      "normalized": "edge computing semiconductors",
+      "count": 4
+    },
+    {
+      "value": "COVID-19",
+      "normalized": "covid-19",
+      "count": 4
+    },
+    {
+      "value": "Home Automation",
+      "normalized": "home automation",
+      "count": 4
+    },
+    {
+      "value": "Income Share Agreements",
+      "normalized": "income share agreements",
+      "count": 4
+    },
+    {
+      "value": "Navigation",
+      "normalized": "navigation",
+      "count": 4
+    },
+    {
+      "value": "Airlines",
+      "normalized": "airlines",
+      "count": 4
+    },
+    {
+      "value": "Quantum Computing",
+      "normalized": "quantum computing",
+      "count": 4
+    },
+    {
+      "value": "Apparel",
+      "normalized": "apparel",
+      "count": 4
+    },
+    {
+      "value": "Indoor Mapping",
+      "normalized": "indoor mapping",
+      "count": 4
+    },
+    {
+      "value": "Careers",
+      "normalized": "careers",
+      "count": 4
+    },
+    {
+      "value": "Fraud Prevention",
+      "normalized": "fraud prevention",
+      "count": 4
+    },
+    {
+      "value": "SEO",
+      "normalized": "seo",
+      "count": 4
+    },
+    {
+      "value": "Geographic Information System",
+      "normalized": "geographic information system",
+      "count": 4
+    },
+    {
+      "value": "Nanosensors",
+      "normalized": "nanosensors",
+      "count": 4
+    },
+    {
+      "value": "Cryptography",
+      "normalized": "cryptography",
+      "count": 4
+    },
+    {
+      "value": "CRISPR",
+      "normalized": "crispr",
+      "count": 4
+    },
+    {
+      "value": "Recommendation System",
+      "normalized": "recommendation system",
+      "count": 4
+    },
+    {
+      "value": "Industrial Workplace Safety",
+      "normalized": "industrial workplace safety",
+      "count": 4
+    },
+    {
+      "value": "Dental",
+      "normalized": "dental",
+      "count": 4
+    },
+    {
+      "value": "Maritime",
+      "normalized": "maritime",
+      "count": 4
+    },
+    {
+      "value": "Weather",
+      "normalized": "weather",
+      "count": 4
+    },
+    {
+      "value": "Reviews",
+      "normalized": "reviews",
+      "count": 3
+    },
+    {
+      "value": "Sustainable Agriculture",
+      "normalized": "sustainable agriculture",
+      "count": 3
+    },
+    {
+      "value": "Bioplastic",
+      "normalized": "bioplastic",
+      "count": 3
+    },
+    {
+      "value": "Robotic Surgery",
+      "normalized": "robotic surgery",
+      "count": 3
+    },
+    {
+      "value": "Time Series",
+      "normalized": "time series",
+      "count": 3
+    },
+    {
+      "value": "Unmanned Vehicle",
+      "normalized": "unmanned vehicle",
+      "count": 3
+    },
+    {
+      "value": "Fusion Energy",
+      "normalized": "fusion energy",
+      "count": 3
+    },
+    {
+      "value": "Microinsurance",
+      "normalized": "microinsurance",
+      "count": 3
+    },
+    {
+      "value": "Hydrogen Energy",
+      "normalized": "hydrogen energy",
+      "count": 3
+    },
+    {
+      "value": "Diversity & Inclusion",
+      "normalized": "diversity & inclusion",
+      "count": 3
+    },
+    {
+      "value": "Rocketry",
+      "normalized": "rocketry",
+      "count": 3
+    },
+    {
+      "value": "Stocks",
+      "normalized": "stocks",
+      "count": 3
+    },
+    {
+      "value": "Ticketing",
+      "normalized": "ticketing",
+      "count": 3
+    },
+    {
+      "value": "Pediatrics",
+      "normalized": "pediatrics",
+      "count": 3
+    },
+    {
+      "value": "Trust & Safety",
+      "normalized": "trust & safety",
+      "count": 3
+    },
+    {
+      "value": "GraphQL",
+      "normalized": "graphql",
+      "count": 3
+    },
+    {
+      "value": "Sustainable Tourism",
+      "normalized": "sustainable tourism",
+      "count": 3
+    },
+    {
+      "value": "Booking",
+      "normalized": "booking",
+      "count": 3
+    },
+    {
+      "value": "Ridesharing",
+      "normalized": "ridesharing",
+      "count": 3
+    },
+    {
+      "value": "Vertical Farming",
+      "normalized": "vertical farming",
+      "count": 3
+    },
+    {
+      "value": "Cloud Gaming",
+      "normalized": "cloud gaming",
+      "count": 3
+    },
+    {
+      "value": "Networks",
+      "normalized": "networks",
+      "count": 3
+    },
+    {
+      "value": "China",
+      "normalized": "china",
+      "count": 3
+    },
+    {
+      "value": "Cultured Meat",
+      "normalized": "cultured meat",
+      "count": 3
+    },
+    {
+      "value": "Radar",
+      "normalized": "radar",
+      "count": 2
+    },
+    {
+      "value": "Chatbots",
+      "normalized": "chatbots",
+      "count": 2
+    },
+    {
+      "value": "Plant-based Meat",
+      "normalized": "plant-based meat",
+      "count": 2
+    },
+    {
+      "value": "Fundraising",
+      "normalized": "fundraising",
+      "count": 2
+    },
+    {
+      "value": "DAO",
+      "normalized": "dao",
+      "count": 2
+    },
+    {
+      "value": "Notifications",
+      "normalized": "notifications",
+      "count": 2
+    },
+    {
+      "value": "Swarm Robotics",
+      "normalized": "swarm robotics",
+      "count": 2
+    },
+    {
+      "value": "Gardening",
+      "normalized": "gardening",
+      "count": 2
+    },
+    {
+      "value": "Livestock Health",
+      "normalized": "livestock health",
+      "count": 2
+    },
+    {
+      "value": "Alternative Battery Tech",
+      "normalized": "alternative battery tech",
+      "count": 2
+    },
+    {
+      "value": "Small Modular Reactors",
+      "normalized": "small modular reactors",
+      "count": 2
+    },
+    {
+      "value": "Referrals",
+      "normalized": "referrals",
+      "count": 2
+    },
+    {
+      "value": "Blockchain",
+      "normalized": "blockchain",
+      "count": 2
+    },
+    {
+      "value": "Genetic Engineering",
+      "normalized": "genetic engineering",
+      "count": 2
+    },
+    {
+      "value": "Digital Freight Brokerage",
+      "normalized": "digital freight brokerage",
+      "count": 2
+    },
+    {
+      "value": "Customization",
+      "normalized": "customization",
+      "count": 2
+    },
+    {
+      "value": "Conversational Banking",
+      "normalized": "conversational banking",
+      "count": 2
+    },
+    {
+      "value": "eSports",
+      "normalized": "esports",
+      "count": 2
+    },
+    {
+      "value": "Culture",
+      "normalized": "culture",
+      "count": 2
+    },
+    {
+      "value": "Location-based",
+      "normalized": "location-based",
+      "count": 2
+    },
+    {
+      "value": "VR Health",
+      "normalized": "vr health",
+      "count": 2
+    },
+    {
+      "value": "Cultivated Meat",
+      "normalized": "cultivated meat",
+      "count": 2
+    },
+    {
+      "value": "Coding Bootcamps",
+      "normalized": "coding bootcamps",
+      "count": 2
+    },
+    {
+      "value": "Election Tech",
+      "normalized": "election tech",
+      "count": 2
+    },
+    {
+      "value": "Batteryless IoT Sensors",
+      "normalized": "batteryless iot sensors",
+      "count": 1
+    },
+    {
+      "value": "Lidar",
+      "normalized": "lidar",
+      "count": 1
+    },
+    {
+      "value": "Art Trading Platforms",
+      "normalized": "art trading platforms",
+      "count": 1
+    },
+    {
+      "value": "3D Printed Foods",
+      "normalized": "3d printed foods",
+      "count": 1
+    },
+    {
+      "value": "Psychedelics",
+      "normalized": "psychedelics",
+      "count": 1
+    },
+    {
+      "value": "Computational Storage",
+      "normalized": "computational storage",
+      "count": 1
+    },
+    {
+      "value": "Alternative Fuels",
+      "normalized": "alternative fuels",
+      "count": 1
+    },
+    {
+      "value": "Smart Locks",
+      "normalized": "smart locks",
+      "count": 1
+    },
+    {
+      "value": "Swarm AI",
+      "normalized": "swarm ai",
+      "count": 1
+    },
+    {
+      "value": "Skincare",
+      "normalized": "skincare",
+      "count": 1
+    },
+    {
+      "value": "IoT Security",
+      "normalized": "iot security",
+      "count": 1
+    },
+    {
+      "value": "Clean Meat",
+      "normalized": "clean meat",
+      "count": 1
+    },
+    {
+      "value": "Security Orchestration, Automation and Response (SOAR)",
+      "normalized": "security orchestration, automation and response (soar)",
+      "count": 1
+    },
+    {
+      "value": "Fuel Cells",
+      "normalized": "fuel cells",
+      "count": 1
+    },
+    {
+      "value": "Cyber Insurance",
+      "normalized": "cyber insurance",
+      "count": 1
+    },
+    {
+      "value": "Deepfake Detection",
+      "normalized": "deepfake detection",
+      "count": 1
+    },
+    {
+      "value": "Lab-on-a-chip",
+      "normalized": "lab-on-a-chip",
+      "count": 1
+    }
+  ],
+  "regions": [
+    {
+      "value": "America / Canada",
+      "normalized": "america / canada",
+      "count": 4032
+    },
+    {
+      "value": "United States of America",
+      "normalized": "united states of america",
+      "count": 3897
+    },
+    {
+      "value": "Remote",
+      "normalized": "remote",
+      "count": 2969
+    },
+    {
+      "value": "Partly Remote",
+      "normalized": "partly remote",
+      "count": 1813
+    },
+    {
+      "value": "Fully Remote",
+      "normalized": "fully remote",
+      "count": 1156
+    },
+    {
+      "value": "Europe",
+      "normalized": "europe",
+      "count": 384
+    },
+    {
+      "value": "South Asia",
+      "normalized": "south asia",
+      "count": 218
+    },
+    {
+      "value": "Latin America",
+      "normalized": "latin america",
+      "count": 216
+    },
+    {
+      "value": "India",
+      "normalized": "india",
+      "count": 206
+    },
+    {
+      "value": "United Kingdom",
+      "normalized": "united kingdom",
+      "count": 160
+    },
+    {
+      "value": "Canada",
+      "normalized": "canada",
+      "count": 144
+    },
+    {
+      "value": "Southeast Asia",
+      "normalized": "southeast asia",
+      "count": 106
+    },
+    {
+      "value": "Mexico",
+      "normalized": "mexico",
+      "count": 89
+    },
+    {
+      "value": "Africa",
+      "normalized": "africa",
+      "count": 87
+    },
+    {
+      "value": "Middle East and North Africa",
+      "normalized": "middle east and north africa",
+      "count": 71
+    },
+    {
+      "value": "France",
+      "normalized": "france",
+      "count": 62
+    },
+    {
+      "value": "Nigeria",
+      "normalized": "nigeria",
+      "count": 60
+    },
+    {
+      "value": "Singapore",
+      "normalized": "singapore",
+      "count": 54
+    },
+    {
+      "value": "Germany",
+      "normalized": "germany",
+      "count": 50
+    },
+    {
+      "value": "Brazil",
+      "normalized": "brazil",
+      "count": 50
+    },
+    {
+      "value": "Colombia",
+      "normalized": "colombia",
+      "count": 32
+    },
+    {
+      "value": "Israel",
+      "normalized": "israel",
+      "count": 32
+    },
+    {
+      "value": "Indonesia",
+      "normalized": "indonesia",
+      "count": 31
+    },
+    {
+      "value": "East Asia",
+      "normalized": "east asia",
+      "count": 23
+    },
+    {
+      "value": "Argentina",
+      "normalized": "argentina",
+      "count": 20
+    },
+    {
+      "value": "Chile",
+      "normalized": "chile",
+      "count": 20
+    },
+    {
+      "value": "Spain",
+      "normalized": "spain",
+      "count": 19
+    },
+    {
+      "value": "Denmark",
+      "normalized": "denmark",
+      "count": 15
+    },
+    {
+      "value": "Oceania",
+      "normalized": "oceania",
+      "count": 14
+    },
+    {
+      "value": "Netherlands",
+      "normalized": "netherlands",
+      "count": 12
+    },
+    {
+      "value": "Egypt",
+      "normalized": "egypt",
+      "count": 12
+    },
+    {
+      "value": "Australia",
+      "normalized": "australia",
+      "count": 12
+    },
+    {
+      "value": "United Arab Emirates",
+      "normalized": "united arab emirates",
+      "count": 11
+    },
+    {
+      "value": "Switzerland",
+      "normalized": "switzerland",
+      "count": 11
+    },
+    {
+      "value": "Sweden",
+      "normalized": "sweden",
+      "count": 10
+    },
+    {
+      "value": "Philippines",
+      "normalized": "philippines",
+      "count": 10
+    },
+    {
+      "value": "Pakistan",
+      "normalized": "pakistan",
+      "count": 10
+    },
+    {
+      "value": "Peru",
+      "normalized": "peru",
+      "count": 10
+    },
+    {
+      "value": "Kenya",
+      "normalized": "kenya",
+      "count": 10
+    },
+    {
+      "value": "Ireland",
+      "normalized": "ireland",
+      "count": 8
+    },
+    {
+      "value": "China",
+      "normalized": "china",
+      "count": 8
+    },
+    {
+      "value": "Hong Kong",
+      "normalized": "hong kong",
+      "count": 8
+    },
+    {
+      "value": "Malaysia",
+      "normalized": "malaysia",
+      "count": 7
+    },
+    {
+      "value": "South Korea",
+      "normalized": "south korea",
+      "count": 6
+    },
+    {
+      "value": "Vietnam",
+      "normalized": "vietnam",
+      "count": 6
+    },
+    {
+      "value": "Panama",
+      "normalized": "panama",
+      "count": 6
+    },
+    {
+      "value": "Turkey",
+      "normalized": "turkey",
+      "count": 5
+    },
+    {
+      "value": "Norway",
+      "normalized": "norway",
+      "count": 5
+    },
+    {
+      "value": "Poland",
+      "normalized": "poland",
+      "count": 5
+    },
+    {
+      "value": "Austria",
+      "normalized": "austria",
+      "count": 5
+    },
+    {
+      "value": "Ghana",
+      "normalized": "ghana",
+      "count": 5
+    },
+    {
+      "value": "Saudi Arabia",
+      "normalized": "saudi arabia",
+      "count": 5
+    },
+    {
+      "value": "Slovenia",
+      "normalized": "slovenia",
+      "count": 4
+    },
+    {
+      "value": "Finland",
+      "normalized": "finland",
+      "count": 3
+    },
+    {
+      "value": "Italy",
+      "normalized": "italy",
+      "count": 3
+    },
+    {
+      "value": "Belgium",
+      "normalized": "belgium",
+      "count": 3
+    },
+    {
+      "value": "Morocco",
+      "normalized": "morocco",
+      "count": 3
+    },
+    {
+      "value": "Portugal",
+      "normalized": "portugal",
+      "count": 3
+    },
+    {
+      "value": "Senegal",
+      "normalized": "senegal",
+      "count": 3
+    },
+    {
+      "value": "Estonia",
+      "normalized": "estonia",
+      "count": 3
+    },
+    {
+      "value": "Puerto Rico",
+      "normalized": "puerto rico",
+      "count": 2
+    },
+    {
+      "value": "Uganda",
+      "normalized": "uganda",
+      "count": 2
+    },
+    {
+      "value": "Ukraine",
+      "normalized": "ukraine",
+      "count": 2
+    },
+    {
+      "value": "Venezuela",
+      "normalized": "venezuela",
+      "count": 2
+    },
+    {
+      "value": "Romania",
+      "normalized": "romania",
+      "count": 2
+    },
+    {
+      "value": "New Zealand",
+      "normalized": "new zealand",
+      "count": 2
+    },
+    {
+      "value": "South Africa",
+      "normalized": "south africa",
+      "count": 2
+    },
+    {
+      "value": "Zambia",
+      "normalized": "zambia",
+      "count": 1
+    },
+    {
+      "value": "Algeria",
+      "normalized": "algeria",
+      "count": 1
+    },
+    {
+      "value": "Armenia",
+      "normalized": "armenia",
+      "count": 1
+    },
+    {
+      "value": "Bahrain",
+      "normalized": "bahrain",
+      "count": 1
+    },
+    {
+      "value": "Bangladesh",
+      "normalized": "bangladesh",
+      "count": 1
+    },
+    {
+      "value": "Belarus",
+      "normalized": "belarus",
+      "count": 1
+    },
+    {
+      "value": "Costa Rica",
+      "normalized": "costa rica",
+      "count": 1
+    },
+    {
+      "value": "Croatia",
+      "normalized": "croatia",
+      "count": 1
+    },
+    {
+      "value": "Cyprus",
+      "normalized": "cyprus",
+      "count": 1
+    },
+    {
+      "value": "Czechia",
+      "normalized": "czechia",
+      "count": 1
+    },
+    {
+      "value": "Democratic Republic of the Congo",
+      "normalized": "democratic republic of the congo",
+      "count": 1
+    },
+    {
+      "value": "Ecuador",
+      "normalized": "ecuador",
+      "count": 1
+    },
+    {
+      "value": "Ethiopia",
+      "normalized": "ethiopia",
+      "count": 1
+    },
+    {
+      "value": "Georgia",
+      "normalized": "georgia",
+      "count": 1
+    },
+    {
+      "value": "Greece",
+      "normalized": "greece",
+      "count": 1
+    },
+    {
+      "value": "Hungary",
+      "normalized": "hungary",
+      "count": 1
+    },
+    {
+      "value": "Iceland",
+      "normalized": "iceland",
+      "count": 1
+    },
+    {
+      "value": "Iraq",
+      "normalized": "iraq",
+      "count": 1
+    },
+    {
+      "value": "Ivory Coast",
+      "normalized": "ivory coast",
+      "count": 1
+    },
+    {
+      "value": "Japan",
+      "normalized": "japan",
+      "count": 1
+    },
+    {
+      "value": "Latvia",
+      "normalized": "latvia",
+      "count": 1
+    },
+    {
+      "value": "Lithuania",
+      "normalized": "lithuania",
+      "count": 1
+    },
+    {
+      "value": "Namibia",
+      "normalized": "namibia",
+      "count": 1
+    },
+    {
+      "value": "Nepal",
+      "normalized": "nepal",
+      "count": 1
+    },
+    {
+      "value": "Russia",
+      "normalized": "russia",
+      "count": 1
+    },
+    {
+      "value": "Rwanda",
+      "normalized": "rwanda",
+      "count": 1
+    },
+    {
+      "value": "Seychelles",
+      "normalized": "seychelles",
+      "count": 1
+    },
+    {
+      "value": "Tanzania",
+      "normalized": "tanzania",
+      "count": 1
+    },
+    {
+      "value": "Thailand",
+      "normalized": "thailand",
+      "count": 1
+    },
+    {
+      "value": "Uruguay",
+      "normalized": "uruguay",
+      "count": 1
+    }
+  ],
+  "generatedAt": "2026-02-20T04:31:01.634Z"
+}
