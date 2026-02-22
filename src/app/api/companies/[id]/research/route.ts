@@ -7,6 +7,7 @@ import type { Company } from "@/types/company.types";
 import { DEFAULT_RESOLUTION, Resolution } from "@/types/sandbox.types";
 import { getSession } from "@/lib/session";
 import { insertResearchRun } from "@/lib/db/queries/research-runs.queries";
+import { captureServerEvent } from "@/lib/analytics/posthog";
 
 async function createSandbox(resolution: Resolution) {
   return Sandbox.create({
@@ -73,13 +74,12 @@ export async function POST(request: NextRequest) {
       sandboxId: desktop.sandboxId,
     });
 
-    console.log(JSON.stringify({
-      event: "research_triggered",
-      runId: handle.id,
-      companyId: company.id,
-      companyName: company.name,
-      sandboxId: desktop.sandboxId,
-    }));
+    captureServerEvent(session.user.id, 'research_triggered', {
+      company_id: company.id,
+      company_name: company.name,
+      run_id: handle.id,
+      $set: { email: session.user.email },
+    });
 
     return Response.json({
       runId: handle.id,
@@ -87,11 +87,10 @@ export async function POST(request: NextRequest) {
       vncUrl,
     });
   } catch (error) {
-    console.error(JSON.stringify({
-      event: "research_start_failed",
-      companyId: company?.id,
+    captureServerEvent(session.user.id, 'research_failed', {
+      company_id: company?.id,
       error: error instanceof Error ? error.message : String(error),
-    }));
+    });
     return Response.json({ error: "Failed to start research task" }, { status: 500 });
   }
 }

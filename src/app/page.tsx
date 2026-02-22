@@ -1,4 +1,6 @@
 import { Suspense } from 'react';
+import { after } from 'next/server';
+import { cookies, headers } from 'next/headers';
 import { getCompanies } from '@/lib/api/companies/get-companies';
 import { CompanyListGrid } from '@/components/companies/list/company-list-grid';
 import { CompanyListSkeleton } from '@/components/companies/list/company-list-skeleton';
@@ -6,6 +8,9 @@ import { CompanyListPagination } from '@/components/companies/list/company-list-
 import { SearchWrapper } from '@/components/companies/semantic-search/search-wrapper';
 import { PageHeader } from '@/components/layout/page-header';
 import { generateHomeMetadata } from '@/lib/seo/metadata';
+import { captureServerEvent } from '@/lib/analytics/posthog';
+import { getDistinctId, getIpAddress } from '@/lib/analytics/get-distinct-id';
+import { getSession } from '@/lib/session';
 
 interface SearchParams {
   page?: string;
@@ -24,6 +29,19 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
   const { data: companies, total } = await getCompanies({ page, limit });
   const totalPages = Math.ceil(total / limit);
+
+  const [cookieStore, headerStore] = await Promise.all([cookies(), headers()]);
+  const session = await getSession(headerStore);
+  const ip = getIpAddress(headerStore);
+  const distinctId = session?.user.id ?? getDistinctId(cookieStore, ip);
+
+  after(() => {
+    captureServerEvent(distinctId, 'listing_page_viewed', {
+      page,
+      total_companies: total,
+      is_authenticated: !!session,
+    });
+  });
 
   return (
     <div className="min-h-screen bg-background">

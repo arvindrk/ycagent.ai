@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import posthog from 'posthog-js';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import type { CompanyListItem } from '@/types/company.types';
@@ -39,6 +40,13 @@ export function CompanyPreviewCard({ company }: CompanyPreviewCardProps) {
       prefetch={false}
       className="block transition-shadow hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-lg"
       aria-label={`View details for ${company.name}`}
+      onClick={() =>
+        posthog.capture('company_card_clicked', {
+          company_id: company.id,
+          company_name: company.name,
+          company_batch: company.batch,
+        })
+      }
     >
       <Card variant="interactive" className="flex flex-col h-full">
         <CardHeader className="space-y-2">

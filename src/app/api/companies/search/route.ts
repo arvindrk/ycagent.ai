@@ -5,13 +5,17 @@ import { extractFiltersFromQuery } from '@/lib/semantic-search/filters/extract-f
 import { generateEmbedding } from '@/lib/semantic-search/embeddings/generate';
 import { searchInputSchema } from '@/lib/schemas/search.schema';
 import type { ParsedFilters } from '@/lib/semantic-search/filters/parse';
+import { captureServerEvent } from '@/lib/analytics/posthog';
+import { getDistinctId, getIpAddress } from '@/lib/analytics/get-distinct-id';
 
 export async function GET(request: NextRequest) {
   const startTime = Date.now();
+  const ip = getIpAddress(request.headers);
+  const distinctId = getDistinctId(request.cookies, ip);
 
+  const searchParams = request.nextUrl.searchParams;
+  const q = searchParams.get('q') || '';
   try {
-    const searchParams = request.nextUrl.searchParams;
-    const q = searchParams.get('q') || '';
     const limit = Number(searchParams.get('limit')) || 50;
 
     const validatedParams = searchInputSchema.parse({ q, limit });
@@ -48,6 +52,14 @@ export async function GET(request: NextRequest) {
 
     const queryTime = Date.now() - startTime;
 
+    captureServerEvent(distinctId, 'search_performed', {
+      query: validatedParams.q,
+      result_count: results.length,
+      query_time_ms: queryTime,
+      has_results: results.length > 0,
+      results,
+    });
+
     return NextResponse.json({
       data: results,
       total: results.length,
@@ -59,7 +71,10 @@ export async function GET(request: NextRequest) {
       return new NextResponse('Request aborted', { status: 499 });
     }
 
-    console.error('Search error:', error);
+    captureServerEvent(distinctId, 'semantic_search_failed', {
+      query: q,
+      error: error instanceof Error ? error.message : String(error),
+    });
     return NextResponse.json(
       {
         error: error instanceof Error ? error.message : 'Search failed'
