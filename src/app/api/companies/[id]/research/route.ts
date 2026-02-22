@@ -34,14 +34,6 @@ export async function POST(request: NextRequest) {
     sandboxId?: string;
   };
 
-  if (!process.env.E2B_API_KEY) {
-    return Response.json({ error: "E2B API key not configured" }, { status: 500 });
-  }
-
-  if (!process.env.ANTHROPIC_API_KEY) {
-    return Response.json({ error: "Anthropic API key not configured" }, { status: 500 });
-  }
-
   try {
     let desktop: Sandbox;
     if (sandboxId) {

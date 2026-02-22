@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { CompanyHero } from './company-hero';
 import { CompanyAboutSection } from './company-about-section';
 import { CompanyTaxonomySection } from './company-taxonomy-section';
@@ -13,14 +13,17 @@ import { ResearchViewer } from '../research/research-viewer';
 interface CompanyDetailLayoutProps {
   company: Company;
   researchAccessToken: string | null;
+  autoStart?: boolean;
 }
 
 export function CompanyDetailLayout({
   company,
   researchAccessToken,
+  autoStart = false,
 }: CompanyDetailLayoutProps) {
-  const { data: session } = authClient.useSession();
+  const { data: session, isPending: sessionPending } = authClient.useSession();
   const [signInOpen, setSignInOpen] = useState(false);
+  const hasAutoStarted = useRef(false);
   const {
     isResearching,
     isLoading,
@@ -38,6 +41,14 @@ export function CompanyDetailLayout({
     }
     startResearch();
   };
+
+  useEffect(() => {
+    if (!autoStart || sessionPending || hasAutoStarted.current) return;
+    hasAutoStarted.current = true;
+    handleStartResearch();
+  // handleStartResearch intentionally excluded — fires once after session resolves
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoStart, sessionPending]);
 
   return (
     <>

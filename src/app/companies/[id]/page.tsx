@@ -14,6 +14,7 @@ import { getSession } from '@/lib/session';
 
 interface PageProps {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ autostart?: string }>;
 }
 
 export async function generateMetadata({ params }: PageProps) {
@@ -22,7 +23,7 @@ export async function generateMetadata({ params }: PageProps) {
   return generateCompanyMetadata(company, `/companies/${id}`);
 }
 
-async function CompanyDetailContent({ id }: { id: string }) {
+async function CompanyDetailContent({ id, autoStart }: { id: string; autoStart: boolean }) {
   const company = await getCompany(id);
   const researchAccessToken = await createResearchAccessToken();
 
@@ -33,14 +34,17 @@ async function CompanyDetailContent({ id }: { id: string }) {
         <CompanyDetailLayout
           company={company}
           researchAccessToken={researchAccessToken}
+          autoStart={autoStart}
         />
       </main>
     </>
   );
 }
 
-export default async function CompanyDetailPage({ params }: PageProps) {
+export default async function CompanyDetailPage({ params, searchParams }: PageProps) {
   const { id } = await params;
+  const { autostart } = await searchParams;
+  const autoStart = autostart === 'true';
 
   const [cookieStore, headerStore] = await Promise.all([cookies(), headers()]);
   const session = await getSession(headerStore);
@@ -64,7 +68,7 @@ export default async function CompanyDetailPage({ params }: PageProps) {
 
       <div className="container mx-auto px-4 py-8">
         <Suspense fallback={<CompanyDetailSkeleton />}>
-          <CompanyDetailContent id={id} />
+          <CompanyDetailContent id={id} autoStart={autoStart} />
         </Suspense>
       </div>
     </div>
