@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
+import { useState, useRef, useCallback, useMemo } from 'react';
 import { useRealtimeRun, useRealtimeStream } from "@trigger.dev/react-hooks";
 import type { researchOrchestrator } from '@/trigger/research-orchestrator';
 import { researchStream } from '@/trigger/streams';
@@ -59,9 +59,7 @@ export function useDeepResearchTrigger({ company, accessToken }: UseDeepResearch
     return run?.status === "QUEUED" || run?.status === "EXECUTING";
   }, [run?.status]);
 
-  useEffect(() => {
-    if (run?.status) setIsLoading(false);
-  }, [run?.status]);
+  const isStarting = isLoading && !run?.status;
 
   const startResearch = useCallback(async () => {
     setRunId(null);
@@ -124,7 +122,7 @@ export function useDeepResearchTrigger({ company, accessToken }: UseDeepResearch
 
   return {
     isResearching,
-    isLoading,
+    isLoading: isStarting,
     vncUrl,
     events,
     startResearch,

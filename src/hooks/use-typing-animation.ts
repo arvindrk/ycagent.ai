@@ -29,7 +29,6 @@ export function useTypingAnimation(
 
   useEffect(() => {
     if (!enabled || phrases.length === 0) {
-      setCurrentText('');
       return;
     }
 
@@ -41,7 +40,9 @@ export function useTypingAnimation(
           setCurrentText(currentPhrase.slice(0, currentText.length + 1));
         }, typingSpeed);
       } else {
-        setPhase('pausing');
+        timeoutRef.current = setTimeout(() => {
+          setPhase('pausing');
+        }, 0);
       }
     } else if (phase === 'pausing') {
       timeoutRef.current = setTimeout(() => {
@@ -53,7 +54,9 @@ export function useTypingAnimation(
           setCurrentText(currentText.slice(0, -1));
         }, deletingSpeed);
       } else {
-        setPhase('switching');
+        timeoutRef.current = setTimeout(() => {
+          setPhase('switching');
+        }, 0);
       }
     } else if (phase === 'switching') {
       timeoutRef.current = setTimeout(() => {
@@ -77,6 +80,10 @@ export function useTypingAnimation(
     pauseDuration,
     enabled,
   ]);
+
+  if (!enabled || phrases.length === 0) {
+    return '';
+  }
 
   return currentText;
 }
