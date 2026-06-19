@@ -1,0 +1,37 @@
+model = "gpt-5.5"
+model_reasoning_effort = "high"
+sandbox_mode = "workspace-write"
+approval_policy = "on-request"
+approvals_reviewer = "user"
+project_doc_max_bytes = 65536
+
+[agents]
+max_threads = 6
+max_depth = 1
+job_max_runtime_seconds = 3600
+
+[features]
+hooks = true
+memories = false
+
+[shell_environment_policy]
+inherit = "core"
+ignore_default_excludes = false
+exclude = ["*_KEY", "*TOKEN*", "*SECRET*", "DATABASE_URL", "OPENAI_API_KEY", "ANTHROPIC_API_KEY", "GOOGLE_API_KEY", "SERPER_API_KEY", "FIRE_CRAWL_API_KEY", "E2B_API_KEY"]
+
+[sandbox_workspace_write]
+network_access = false
+writable_roots = ["."]
+
+[mcp_servers.openaiDeveloperDocs]
+url = "https://developers.openai.com/mcp"
+enabled = true
+default_tools_approval_mode = "approve"
+tool_timeout_sec = 60
+
+[mcp_servers.playwright]
+command = "npx"
+args = ["-y", "@playwright/mcp"]
+enabled = false
+default_tools_approval_mode = "prompt"
+tool_timeout_sec = 120

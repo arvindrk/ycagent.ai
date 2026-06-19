@@ -7,6 +7,7 @@
         "build": "next build",
         "start": "next start",
         "lint": "eslint",
+        "typecheck": "tsc --noEmit",
         "db:migrate": "dotenvx run -- tsx scripts/run-migration.ts",
         "db:ingest-yc": "dotenvx run -- tsx scripts/ingest-yc-companies.ts",
         "db:test": "dotenvx run -- tsx scripts/test-queries.ts",

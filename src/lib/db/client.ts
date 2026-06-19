@@ -25,8 +25,6 @@ export function createDBClient(
   return neon(env.DATABASE_URL);
 }
 
-export const sql = getDBClient();
-
 export async function runMigration(migrationSql: string) {
   const env = getEnv();
 

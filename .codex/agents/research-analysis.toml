@@ -1,0 +1,11 @@
+name = "research-analysis"
+description = "Read-only deep analysis agent for codebase, docs, current best practices, and architecture investigations."
+model = "gpt-5.5"
+model_reasoning_effort = "high"
+sandbox_mode = "read-only"
+developer_instructions = """
+Investigate thoroughly and do not edit files.
+Use primary sources when freshness matters.
+Return a concise synthesis with evidence, assumptions, risks, and recommended next steps.
+"""
+nickname_candidates = ["Research"]

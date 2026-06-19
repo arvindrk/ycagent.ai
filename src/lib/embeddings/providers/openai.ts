@@ -4,19 +4,28 @@ import { EmbeddingProvider, type BaseEmbeddingProvider, type EmbeddingConfig } f
 export class OpenAIEmbeddingProvider implements BaseEmbeddingProvider {
   name = EmbeddingProvider.OPENAI;
   dimensions = 768;
-  private client: OpenAI;
+  private client: OpenAI | null = null;
+  private apiKey?: string;
   private model: string;
 
   constructor(config: EmbeddingConfig) {
-    this.client = new OpenAI({
-      apiKey: config.apiKey || process.env.OPENAI_API_KEY,
-    });
+    this.apiKey = config.apiKey;
     this.model = config.model || 'text-embedding-3-small';
     this.dimensions = config.dimensions;
   }
 
+  private getClient(): OpenAI {
+    if (!this.client) {
+      this.client = new OpenAI({
+        apiKey: this.apiKey || process.env.OPENAI_API_KEY,
+      });
+    }
+
+    return this.client;
+  }
+
   async generate(text: string, signal?: AbortSignal): Promise<number[]> {
-    const response = await this.client.embeddings.create({
+    const response = await this.getClient().embeddings.create({
       model: this.model,
       input: text,
       dimensions: this.dimensions,
@@ -32,7 +41,7 @@ export class OpenAIEmbeddingProvider implements BaseEmbeddingProvider {
       throw new Error('OpenAI batch size cannot exceed 2048');
     }
 
-    const response = await this.client.embeddings.create({
+    const response = await this.getClient().embeddings.create({
       model: this.model,
       input: texts,
       dimensions: this.dimensions,

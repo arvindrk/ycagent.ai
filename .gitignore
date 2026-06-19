@@ -45,10 +45,21 @@ next-env.d.ts
 # design system extraction artifacts
 extracted-css/
 
-docs/*
 .docs/*
 .vscode/*
-.agents/*
 .cursor/*
-scripts/*
-AGENTS.md
+
+# local/generated agent state
+agent/brain/**
+!agent/brain/
+!agent/brain/README.md
+.codex/worktrees/
+.codex/logs/
+.codex/tmp/
+
+# existing non-Codex swarm artifacts; keep out of this Codex-only harness
+.claude/
+.claude-flow/
+.swarm/
+.mcp.json
+*.db

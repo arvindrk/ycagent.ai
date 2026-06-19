@@ -1,0 +1,47 @@
+[
+  {
+    "id": "codex-harness-foundation",
+    "status": "completed",
+    "priority": 1,
+    "depends_on": [],
+    "description": "Install Codex-native repo harness, safety rules, local brain scaffold, specialist agents, skills, and CI.",
+    "verify": "npm run lint && npm run typecheck && npm run build",
+    "passes": true
+  },
+  {
+    "id": "dependency-security-audit",
+    "status": "planned",
+    "priority": 2,
+    "depends_on": ["codex-harness-foundation"],
+    "description": "Triage npm audit findings from the harness setup run, prioritizing the critical and high vulnerabilities without unsafe force upgrades.",
+    "verify": "npm audit --audit-level=high",
+    "passes": false
+  },
+  {
+    "id": "auth-build-env-cleanup",
+    "status": "planned",
+    "priority": 3,
+    "depends_on": ["codex-harness-foundation"],
+    "description": "Remove Better Auth build-time warnings by making auth configuration build-safe without using fake production secrets.",
+    "verify": "npm run build",
+    "passes": false
+  },
+  {
+    "id": "autonomous-merge-continuation",
+    "status": "planned",
+    "priority": 4,
+    "depends_on": ["codex-harness-foundation"],
+    "description": "Detect merges to main, refresh local context, choose the next unblocked feature, and continue in an isolated Codex worktree that opens a draft PR.",
+    "verify": "manual dry-run of merge event prompt plus CI passing on generated draft PR",
+    "passes": false
+  },
+  {
+    "id": "research-agent-eval-harness",
+    "status": "planned",
+    "priority": 5,
+    "depends_on": ["codex-harness-foundation"],
+    "description": "Add a lightweight scenario eval for the YC research agent using synthetic companies and rubric-based outcome checks.",
+    "verify": "npm run eval:research-smoke",
+    "passes": false
+  }
+]
