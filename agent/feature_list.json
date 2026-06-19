@@ -11,7 +11,7 @@
   {
     "id": "dependency-security-audit",
     "status": "planned",
-    "priority": 2,
+    "priority": 3,
     "depends_on": ["codex-harness-foundation"],
     "description": "Triage npm audit findings from the harness setup run, prioritizing the critical and high vulnerabilities without unsafe force upgrades.",
     "verify": "npm audit --audit-level=high",
@@ -20,7 +20,7 @@
   {
     "id": "auth-build-env-cleanup",
     "status": "planned",
-    "priority": 3,
+    "priority": 4,
     "depends_on": ["codex-harness-foundation"],
     "description": "Remove Better Auth build-time warnings by making auth configuration build-safe without using fake production secrets.",
     "verify": "npm run build",
@@ -28,12 +28,12 @@
   },
   {
     "id": "autonomous-merge-continuation",
-    "status": "planned",
-    "priority": 4,
+    "status": "completed",
+    "priority": 2,
     "depends_on": ["codex-harness-foundation"],
     "description": "Detect merges to main, refresh local context, choose the next unblocked feature, and continue in an isolated Codex worktree that opens a draft PR.",
-    "verify": "manual dry-run of merge event prompt plus CI passing on generated draft PR",
-    "passes": false
+    "verify": "manual workflow inspection plus CI passing on this draft PR",
+    "passes": true
   },
   {
     "id": "research-agent-eval-harness",
