@@ -6,12 +6,18 @@ on:
       - main
   workflow_dispatch:
 
+concurrency:
+  group: codex-continue-after-merge-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
-  plan-next:
+  generate-next-patch:
+    if: ${{ github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, '[skip codex]') }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
     outputs:
+      has_patch: ${{ steps.diff.outputs.has_patch }}
       final_message: ${{ steps.codex.outputs.final-message }}
     steps:
       - uses: actions/checkout@v5
@@ -22,11 +28,88 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - run: npm ci
+      - name: Install dependencies
+        run: npm ci
+      - name: Prepare Codex output directory
+        run: mkdir -p .codex/tmp
       - id: codex
+        name: Run Codex continuation
         uses: openai/codex-action@v1
         with:
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
-          prompt-file: .github/codex/prompts/continue-after-merge.md
-          sandbox: read-only
-          output-file: codex-next-plan.md
+          prompt-file: .github/codex/prompts/autonomous-continue.md
+          sandbox: workspace-write
+          output-file: .codex/tmp/codex-next-plan.md
+          codex-args: '["--ephemeral"]'
+      - id: diff
+        name: Create patch artifact
+        run: |
+          git add -N .
+          git diff --binary HEAD > codex.patch
+          if [ -s codex.patch ]; then
+            echo "has_patch=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_patch=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Upload patch artifact
+        if: steps.diff.outputs.has_patch == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: codex-continuation-patch
+          path: |
+            codex.patch
+            .codex/tmp/codex-next-plan.md
+          if-no-files-found: error
+          retention-days: 7
+
+  open-draft-pr:
+    runs-on: ubuntu-latest
+    needs: generate-next-patch
+    if: needs.generate-next-patch.outputs.has_patch == 'true'
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          token: ${{ secrets.CODEX_GITHUB_TOKEN || github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: codex-continuation-patch
+      - name: Apply Codex patch
+        run: git apply --index codex.patch
+      - name: Open draft pull request
+        env:
+          GH_TOKEN: ${{ secrets.CODEX_GITHUB_TOKEN || github.token }}
+          BASE_SHA: ${{ github.sha }}
+          RUN_ID: ${{ github.run_id }}
+          CODEX_FINAL_MESSAGE: ${{ needs.generate-next-patch.outputs.final_message }}
+        run: |
+          branch="codex/continue-$RUN_ID"
+          git config user.name "Arvind Rk"
+          git config user.email "arvindsuna10@gmail.com"
+          git switch -c "$branch"
+          git commit -m "chore: continue Codex work after merge"
+          git push origin "$branch"
+
+          {
+            echo "Codex generated this draft PR after a merge to \`main\`."
+            echo
+            echo "Base commit: \`$BASE_SHA\`"
+            echo "Workflow run: \`$RUN_ID\`"
+            echo
+            echo "Human gate: review, verify, and approve before merge. This workflow never merges or deploys."
+            echo
+            echo "Codex final message:"
+            echo
+            echo "$CODEX_FINAL_MESSAGE"
+          } > pr-body.md
+
+          gh pr create \
+            --draft \
+            --base main \
+            --head "$branch" \
+            --title "Codex continuation after merge" \
+            --body-file pr-body.md
