@@ -15,6 +15,7 @@
         "test:search": "dotenvx run -- tsx scripts/test-search.ts",
         "test:semantic": "tsx scripts/test-semantic-search-exhaustive.ts",
         "test:crawler": "dotenvx run -- tsx scripts/test-crawler.ts",
+        "test:logview": "node --import tsx --test \"agent/local/logview/__tests__/*.test.ts\" \"agent/local/logview/__tests__/*.test.tsx\"",
         "logs": "tsx agent/local/logview/index.tsx"
     },
     "dependencies": {

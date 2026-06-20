@@ -10,3 +10,9 @@ The loop emits a typed JSONL event stream; this renders it.
 Data lives in `agent/brain/logs/` (gitignored): `loop.jsonl` (run-level), `runs/<id>/events.jsonl`
 (per-run timeline), `runs/<id>/agent.stream.jsonl` (raw Sonnet 4.6 reasoning). Event contract:
 `events.ts`. Capture: `emit_event` in `agent/local/lib.sh`.
+
+## Tests
+
+- `npm run test:logview`: runs the logview unit + component tests (`__tests__/*.test.ts` and
+  `*.test.tsx`) via tsx + the Node built-in test runner. Covers the event/model parsing and a
+  `RunTimeline` render via `ink-testing-library`.

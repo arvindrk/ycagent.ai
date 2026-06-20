@@ -53,7 +53,7 @@ inflight="$(gh pr list --repo arvindrk/ycagent.ai --base main --state open \
   | sed -nE 's/^\[([^]]+)\].*/\1/p' | sort -u)"
 inflight_count="$(printf '%s' "$inflight" | grep -c . || true)"
 cap="${CONTINUE_MAX_INFLIGHT:-5}"
-excluded_json="$(printf '%s' "$inflight" | jq -R . | jq -sc 'map(select(length>0))')"
+excluded_json="$(printf '%s' "$inflight" | jq -R . | jq -sc 'map(select(length>0))')" || excluded_json='[]'
 emit_event guard.inflight excluded="$excluded_json" cap="$cap" count="$inflight_count"
 if [[ "$inflight_count" -ge "$cap" ]]; then
   log "guard: $inflight_count open continuation PRs >= cap $cap; skipping this run"
@@ -105,9 +105,9 @@ git -C "$wt" -c user.name="Arvind Rk" -c user.email="arvindsuna10@gmail.com" \
   commit -m "chore: continue ycagent work (local Ruflo + Sonnet 4.6)"
 git -C "$wt" push origin "$branch"
 
-adds="$(git -C "$wt" diff --numstat HEAD~1 | awk '{a+=$1} END{print a+0}')"
-dels="$(git -C "$wt" diff --numstat HEAD~1 | awk '{d+=$2} END{print d+0}')"
-files_json="$(git -C "$wt" diff --name-only HEAD~1 | jq -R . | jq -sc 'map(select(length>0))')"
+adds="$(git -C "$wt" diff --numstat HEAD~1 | awk '{a+=$1} END{print a+0}')" || adds=0
+dels="$(git -C "$wt" diff --numstat HEAD~1 | awk '{d+=$2} END{print d+0}')" || dels=0
+files_json="$(git -C "$wt" diff --name-only HEAD~1 | jq -R . | jq -sc 'map(select(length>0))')" || files_json='[]'
 emit_event impl.changes files="$files_json" additions="$adds" deletions="$dels"
 
 # Build a template-compliant, traceable PR title + body from the orchestrator's

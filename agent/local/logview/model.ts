@@ -60,9 +60,11 @@ export function buildFeature(repoRoot: string, featureId: string): Feature {
   const flPath = join(repoRoot, "agent/feature_list.json");
   let desc: string | undefined, prio: number | undefined, status: string | undefined;
   if (existsSync(flPath)) {
-    const fl = JSON.parse(readFileSync(flPath, "utf8")) as any[];
-    const f = fl.find((x) => x.id === featureId);
-    if (f) { desc = f.description; prio = f.priority; status = f.status; }
+    try {
+      const fl = JSON.parse(readFileSync(flPath, "utf8")) as any[];
+      const f = fl.find((x) => x.id === featureId);
+      if (f) { desc = f.description; prio = f.priority; status = f.status; }
+    } catch { /* malformed or mid-write feature_list.json; leave fields undefined */ }
   }
   // runs that selected it: loop.jsonl
   const loopPath = join(logsDir(repoRoot), "loop.jsonl");
