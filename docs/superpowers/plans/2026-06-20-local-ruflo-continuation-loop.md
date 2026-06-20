@@ -2,11 +2,11 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Replace the CI-generated continuation PRs with a local loop where a launchd watcher detects merges to `main` and runs a Ruflo-orchestrated Claude Code (Sonnet 4.6) instance in a git worktree that implements the next task and opens a draft PR.
+**Goal:** Replace the CI-generated continuation PRs with a local loop where a foreground terminal watcher detects merges to `main` and runs a Ruflo-orchestrated Claude Code (Sonnet 4.6) instance in a git worktree that implements the next task and opens a draft PR.
 
-**Architecture:** A thin `launchd` LaunchAgent polls `origin/main`; on a new merge SHA it runs `merge-watch.sh`, which locks and calls `continue.sh`. `continue.sh` creates a git worktree off `origin/main`, runs a single headless `claude` (Sonnet 4.6) instance wired to the Ruflo MCP for memory/coordination, and — if the tree changed — pushes a branch and opens a draft PR. Human merge is the only gate; nothing runs in CI.
+**Architecture:** A foreground terminal watcher (`watch.sh`, started manually in Apple Terminal and active only while running) polls `origin/main`; on a new merge SHA it runs `merge-watch.sh`, which locks and calls `continue.sh`. `continue.sh` creates a git worktree off `origin/main`, runs a single headless `claude` (Sonnet 4.6) instance wired to the Ruflo MCP for memory/coordination, and — if the tree changed — pushes a branch and opens a draft PR. Human merge is the only gate; nothing runs in CI. Scope: the watcher resolves its own repo root and only ever touches THIS repo.
 
-**Tech Stack:** bash, launchd (macOS), git worktrees, `claude` CLI (headless `-p`), Ruflo/claude-flow MCP (`npx -y ruflo@latest mcp start`), `gh` CLI.
+**Tech Stack:** bash, git worktrees, `claude` CLI (headless `-p`), Ruflo/claude-flow MCP (`npx -y ruflo@latest mcp start`), `gh` CLI.
 
 **Spec:** `docs/superpowers/specs/2026-06-20-local-ruflo-continuation-loop-design.md`
 
@@ -20,11 +20,10 @@
 | `agent/local/merge-watch.sh` (create) | Pure trigger: compare `origin/main` SHA to last-seen, honor `[skip codex]`, lock, call `continue.sh` |
 | `agent/local/continue.sh` (create) | Orchestration + git: worktree, run `claude`, commit/push/draft-PR, cleanup |
 | `agent/local/continue-prompt.md` (create) | Orchestrator prompt for the Sonnet 4.6 instance |
-| `agent/local/com.ycagent.continue.plist.tmpl` (create) | launchd template with `__REPO__`/`__PATH__` tokens |
-| `agent/local/install.sh` (create) | Generate plist from template, load/unload LaunchAgent (`--uninstall`) |
+| `agent/local/watch.sh` (create) | Foreground terminal watcher: loops `merge-watch.sh` every ~180s while running; Ctrl-C to stop. Active only in the Terminal session that runs it |
 | `.github/workflows/codex-continue-on-merge.yml` (modify) | Drop `push: [main]` trigger; keep `workflow_dispatch` |
 | `AGENTS.md` (modify) | Redefine agent model: Ruflo-orchestrated, Claude Code (Sonnet 4.6) executes, local loop |
-| `agent/AUTONOMY.md` (modify) | Replace CI Layer 2 with the local launchd loop |
+| `agent/AUTONOMY.md` (modify) | Replace CI Layer 2 with the local terminal-watcher loop |
 
 Runtime state (created at runtime, gitignored under `agent/brain/`): `state/last-merge-sha`, `locks/continue.lock.d/`, `logs/`.
 
@@ -393,91 +392,57 @@ Expected: commit succeeds. (Live end-to-end run happens in Task 8.)
 
 ---
 
-## Task 5: launchd LaunchAgent (`agent/local/com.ycagent.continue.plist.tmpl` + `install.sh`)
+## Task 5: Foreground terminal watcher (`agent/local/watch.sh`)
 
 **Files:**
-- Create: `agent/local/com.ycagent.continue.plist.tmpl`
-- Create: `agent/local/install.sh`
+- Create: `agent/local/watch.sh`
 
-- [ ] **Step 1: Create the plist template**
+- [ ] **Step 1: Create the watcher loop**
 
-Create `agent/local/com.ycagent.continue.plist.tmpl`:
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-  <key>Label</key><string>com.ycagent.continue</string>
-  <key>ProgramArguments</key>
-  <array>
-    <string>/bin/bash</string>
-    <string>__REPO__/agent/local/merge-watch.sh</string>
-  </array>
-  <key>WorkingDirectory</key><string>__REPO__</string>
-  <key>EnvironmentVariables</key>
-  <dict>
-    <key>PATH</key><string>__PATH__</string>
-    <key>HOME</key><string>__HOME__</string>
-  </dict>
-  <key>StartInterval</key><integer>180</integer>
-  <key>RunAtLoad</key><true/>
-  <key>StandardOutPath</key><string>__REPO__/agent/brain/logs/launchd.out.log</string>
-  <key>StandardErrorPath</key><string>__REPO__/agent/brain/logs/launchd.err.log</string>
-</dict>
-</plist>
-```
-
-- [ ] **Step 2: Create the installer**
-
-Create `agent/local/install.sh`:
+Create `agent/local/watch.sh`:
 ```bash
 #!/usr/bin/env bash
+# Foreground continuation watcher. Run this in Apple Terminal; Ctrl-C to stop.
+# It is active ONLY while this process runs (no background daemon) and only ever
+# operates on THIS repo (paths resolved from lib.sh). Loops merge-watch.sh every
+# WATCH_INTERVAL seconds (default 180).
 set -euo pipefail
 _DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd "$_DIR/../.." && pwd)"
-LABEL="com.ycagent.continue"
-PLIST_DEST="$HOME/Library/LaunchAgents/$LABEL.plist"
+# shellcheck source=lib.sh
+source "$_DIR/lib.sh"
 
-if [[ "${1:-}" == "--uninstall" ]]; then
-  launchctl unload "$PLIST_DEST" 2>/dev/null || true
-  rm -f "$PLIST_DEST"
-  echo "uninstalled $LABEL"
-  exit 0
-fi
+INTERVAL="${WATCH_INTERVAL:-180}"
+trap 'log "watcher stopped"; exit 0' INT TERM
 
-mkdir -p "$HOME/Library/LaunchAgents" "$REPO_ROOT/agent/brain/logs"
-# Resolve dirs of the tools the loop needs so launchd's minimal PATH can find them.
-tool_path="$(dirname "$(command -v claude)"):$(dirname "$(command -v gh)"):$(dirname "$(command -v npx)"):$(dirname "$(command -v git)"):/usr/bin:/bin:/usr/sbin:/sbin"
-
-sed -e "s#__REPO__#$REPO_ROOT#g" \
-    -e "s#__PATH__#$tool_path#g" \
-    -e "s#__HOME__#$HOME#g" \
-    "$_DIR/com.ycagent.continue.plist.tmpl" > "$PLIST_DEST"
-
-launchctl unload "$PLIST_DEST" 2>/dev/null || true
-launchctl load "$PLIST_DEST"
-echo "installed and loaded $LABEL"
-echo "PATH baked in: $tool_path"
-echo "verify: launchctl list | grep $LABEL"
+log "watching origin/main every ${INTERVAL}s for repo: $REPO_ROOT (Ctrl-C to stop)"
+while true; do
+  "$_DIR/merge-watch.sh" || log "merge-watch returned non-zero (continuing)"
+  sleep "$INTERVAL"
+done
 ```
 
-- [ ] **Step 3: Verify template renders and tools resolve (no load yet)**
+- [ ] **Step 2: Verify it ticks once and is stoppable**
 
-Run:
+Run (a short interval so it loops quickly, then Ctrl-C or let the timeout kill it):
 ```bash
 cd /Users/arvindkishore/personal/ycagent.ai
-chmod +x agent/local/install.sh
-for t in claude gh npx git; do command -v "$t" >/dev/null && echo "$t OK" || echo "MISSING $t"; done
+rm -f agent/brain/state/last-merge-sha
+WATCH_INTERVAL=2 bash agent/local/watch.sh &
+wpid=$!
+sleep 5
+kill -INT "$wpid" 2>/dev/null || true
+wait "$wpid" 2>/dev/null || true
 ```
-Expected: all four `OK`. (If any MISSING, fix PATH before loading launchd.)
+Expected: a `watching origin/main every 2s` line, at least one merge-watch tick (e.g. `new merge ...` or `no change ...`), then `watcher stopped`. (If it kicked off a real continuation, that is expected behavior — a draft PR may appear; see Task 8.)
 
-- [ ] **Step 4: Shellcheck and commit**
+- [ ] **Step 3: Shellcheck and commit**
 
 Run:
 ```bash
-command -v shellcheck >/dev/null && shellcheck agent/local/install.sh || echo "skip"
-git add agent/local/com.ycagent.continue.plist.tmpl agent/local/install.sh
-git commit -m "feat(local-loop): launchd LaunchAgent template + installer"
+command -v shellcheck >/dev/null && shellcheck agent/local/watch.sh || echo "skip"
+chmod +x agent/local/watch.sh
+git add agent/local/watch.sh
+git commit -m "feat(local-loop): foreground terminal watcher (repo-scoped)"
 ```
 Expected: clean; commit succeeds.
 
@@ -501,7 +466,7 @@ on:
 with:
 ```yaml
 on:
-  # Continuation now runs locally (launchd + Ruflo + Claude Code). See agent/AUTONOMY.md.
+  # Continuation now runs locally (terminal watcher + Ruflo + Claude Code). See agent/AUTONOMY.md.
   # Kept as a manual fallback only; no automatic PR generation in CI.
   workflow_dispatch:
 ```
@@ -540,30 +505,32 @@ Codex is the only coding agent allowed to operate in this repository.
 ```
 with:
 ```markdown
-Continuation runs locally: Ruflo (claude-flow) orchestrates and Claude Code on Sonnet 4.6 is the execution engine that writes code. It is triggered on merges to `main` by a launchd watcher (see `agent/local/` and `agent/AUTONOMY.md`). The `.codex/` harness is retained for manual Codex use but is no longer the active continuation path.
+Continuation runs locally: Ruflo (claude-flow) orchestrates and Claude Code on Sonnet 4.6 is the execution engine that writes code. It is triggered on merges to `main` by a foreground terminal watcher (`agent/local/watch.sh`, started in Apple Terminal and active only while running; see `agent/local/` and `agent/AUTONOMY.md`). The `.codex/` harness is retained for manual Codex use but is no longer the active continuation path.
 ```
 
 - [ ] **Step 2: Update `agent/AUTONOMY.md` Layer 2**
 
 In `agent/AUTONOMY.md`, replace the entire `## Layer 2: Continuation` section (from that heading through the line ending `...without a human prompt.`) with:
 ```markdown
-## Layer 2: Continuation (local)
+## Layer 2: Continuation (local, terminal-bound)
 
-Continuation runs on the maintainer's Mac, not in CI. A launchd LaunchAgent
-(`com.ycagent.continue`, installed via `agent/local/install.sh`) polls `origin/main`
-every ~180s. On a new merge SHA whose commit message lacks `[skip codex]`, it:
+Continuation runs on the maintainer's Mac, not in CI, and only while a foreground
+watcher is running in Apple Terminal. Start it with `bash agent/local/watch.sh`
+(Ctrl-C to stop). It is scoped to THIS repo only and polls `origin/main` every ~180s
+(`WATCH_INTERVAL` to override). On a new merge SHA whose commit message lacks
+`[skip codex]`, it:
 
 1. Acquires a lock (`agent/brain/locks/`), then runs `agent/local/continue.sh`.
 2. Creates a git worktree off `origin/main` under `.codex/worktrees/`.
 3. Runs one headless Claude Code instance (`--model claude-sonnet-4-6`,
-   `--mcp-config .mcp.json`) that orchestrates via the Ruflo MCP and implements the
-   next unblocked `feature_list.json` task.
+   `--mcp-config` rooted at the main repo) that orchestrates via the Ruflo MCP and
+   implements the next unblocked `feature_list.json` task.
 4. If the worktree changed: commits, pushes `codex/continue-local-<ts>`, and opens a
    draft PR with `gh`.
 5. Removes the worktree and records the SHA.
 
-The system is autonomous at the point a merge to `main` triggers this loop and a draft
-PR is opened without a human prompt.
+The system is autonomous (while the watcher runs) at the point a merge to `main`
+triggers this loop and a draft PR is opened without a human prompt.
 ```
 
 - [ ] **Step 3: Update the operational notes in `agent/AUTONOMY.md`**
@@ -575,7 +542,7 @@ Replace the bullet:
 with:
 ```markdown
 - The local loop pushes and opens draft PRs using the maintainer's local `gh` auth.
-- Kill switch: `bash agent/local/install.sh --uninstall` (or `launchctl unload`).
+- Kill switch: stop the watcher (Ctrl-C in its Terminal, or close the window). Nothing runs when the watcher is not running.
 - Token note: ChatGPT/Codex auth is no longer used by the loop; it runs on local Claude auth.
 ```
 
@@ -620,25 +587,29 @@ ls -d .codex/worktrees/*/.claude-flow .codex/worktrees/*/.swarm 2>/dev/null && e
 ```
 Expected: `after` ≥ `before` (main-repo memory touched, confirming the MCP `cwd` override took effect) **and** "no worktree-local Ruflo store (good)". If instead a worktree-local store appeared (or `after` == `before` == 0 with the daemon active), the `cwd` field in the MCP config was not honored — apply the fallback in Notes before relying on memory continuity.
 
-- [ ] **Step 2: Install the LaunchAgent**
+- [ ] **Step 2: Live trigger test via the terminal watcher**
 
-Run:
-```bash
-bash agent/local/install.sh
-launchctl list | grep com.ycagent.continue
-```
-Expected: `installed and loaded com.ycagent.continue`; the `launchctl list` line shows the label.
-
-- [ ] **Step 3: Live trigger test**
-
-Reset the seen-SHA so the next tick treats `origin/main` as new, then watch the log:
+Reset the seen-SHA so the next tick treats `origin/main` as new, then run the watcher in the foreground with a short interval and stop it after one cycle:
 ```bash
 cd /Users/arvindkishore/personal/ycagent.ai
 rm -f agent/brain/state/last-merge-sha
-# wait up to one StartInterval (~180s), then inspect:
-sleep 185; tail -30 agent/brain/logs/launchd.out.log
+WATCH_INTERVAL=10 bash agent/local/watch.sh &
+wpid=$!
+# allow one detection + continuation to run, then stop the watcher
+sleep 20; kill -INT "$wpid" 2>/dev/null || true; wait "$wpid" 2>/dev/null || true
+ls -t agent/brain/logs/continue-*.log | head -1 | xargs tail -30
 ```
-Expected: a `new merge <sha>; starting continuation` line, then completion. (This consumes one real continuation run; expect a draft PR if a task is implementable.)
+Expected: the watcher prints `new merge <sha>; starting continuation`, the latest `continue-*.log` shows the worktree run, and either "no changes produced" or "draft PR opened". (This consumes one real continuation run; expect a draft PR if a task is implementable.) Confirm the watcher fully stopped: `pgrep -f agent/local/watch.sh` returns nothing.
+
+- [ ] **Step 3: Confirm terminal-only / repo-only scope**
+
+Run:
+```bash
+cd /Users/arvindkishore/personal/ycagent.ai
+pgrep -fl "agent/local/watch.sh" || echo "no watcher running (correct when not started)"
+grep -RIl "REPO_ROOT" agent/local/*.sh | wc -l   # scripts resolve their own repo root
+```
+Expected: no watcher process lingers when not started (terminal-bound), and the scripts resolve `REPO_ROOT` from their own location (repo-scoped — they never read a global config or other repos).
 
 - [ ] **Step 4: Idempotency check**
 
@@ -656,14 +627,14 @@ cd /Users/arvindkishore/personal/ycagent.ai
 git push -u origin codex/local-continuation-loop
 gh pr create --repo arvindrk/ycagent.ai --draft --base main --head codex/local-continuation-loop \
   --title "Local Ruflo+Sonnet continuation loop (replaces CI PR generation)" \
-  --body "Implements docs/superpowers/specs/2026-06-20-local-ruflo-continuation-loop-design.md. launchd watcher -> Ruflo-orchestrated Claude Code (Sonnet 4.6) in a worktree -> draft PR. CI continuation neutered to workflow_dispatch. Human merge is the only gate."
+  --body "Implements docs/superpowers/specs/2026-06-20-local-ruflo-continuation-loop-design.md. Foreground terminal watcher -> Ruflo-orchestrated Claude Code (Sonnet 4.6) in a worktree -> draft PR. CI continuation neutered to workflow_dispatch. Human merge is the only gate."
 ```
 Expected: draft PR created for the implementation branch.
 
 ---
 
 ## Notes / Operational caveats
-- Ruflo MCP cold start can load a large model (60s+); the first `claude` run per boot may be slow. The already-running daemon mitigates this. Tune `StartInterval` or add a per-run timeout if needed.
+- Ruflo MCP cold start can load a large model (60s+); the first `claude` run may be slow. The already-running daemon mitigates this. Tune `WATCH_INTERVAL` or add a per-run timeout if needed.
 - `bypassPermissions` headless runs have no OS sandbox; the worktree + draft-PR gate are the safety boundary (per spec).
 - If `claude` lacks `--permission-mode bypassPermissions` on the installed version (Task 0 Step 1), substitute `--dangerously-skip-permissions` in `continue.sh` Step 1.
 - **Ruflo memory rooting fallback (if Task 8 Step 1b fails):** if the MCP server `cwd` field is not honored by the installed `claude`, instead run `claude` itself with cwd = `$REPO_ROOT` and pass the worktree path to the prompt for file operations; OR add an absolute persist-path env to the Ruflo server block in the generated config (`CLAUDE_FLOW_PERSIST_PATH="$REPO_ROOT/.claude-flow/data"` / confirm the exact var ruflo honors via `npx -y ruflo@latest --help`); OR symlink `$wt/.claude-flow` and `$wt/.swarm` to the main repo's before launching `claude`. Pick whichever the installed Ruflo version respects, verified by re-running Step 1b.

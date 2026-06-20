@@ -30,12 +30,15 @@ orchestration/memory and Claude Code (Sonnet 4.6) as the single execution engine
 3. **Isolation:** each continuation runs in a **dedicated git worktree**, not the primary
    working tree. No OS sandbox (unlike `codex exec --sandbox`); blast radius is bounded by
    the isolated checkout plus the draft-PR human gate.
-4. **Trigger host:** **launchd** LaunchAgent. The Ruflo daemon's worker set is a closed,
+4. **Trigger host:** **foreground terminal watcher** (`agent/local/watch.sh`), started
+   manually in Apple Terminal and active only while running (user choice: no background
+   daemon; on/off by the terminal session). The Ruflo daemon's worker set is a closed,
    hardcoded enum (`@claude-flow/cli` v3.12.4: `ultralearn optimize consolidate predict
    audit map preload deepdive document refactor benchmark testgaps`) with no plugin/config
    to register a custom worker, and no native `automation`/`schedule`/`cron` command. So the
-   merge trigger must live outside the daemon. launchd is the only piece that does what
+   merge trigger must live outside the daemon. The watcher is the only piece that does what
    Ruflo structurally cannot; all reasoning/coding flows through Ruflo + Claude Code.
+   Scope: it resolves its own repo root and only ever touches THIS repo.
 
 ## Architecture
 
@@ -43,7 +46,7 @@ orchestration/memory and Claude Code (Sonnet 4.6) as the single execution engine
 [human merges PR to main]
         │
         ▼  (≤ poll interval)
-launchd LaunchAgent ──runs──▶ agent/local/merge-watch.sh   (pure trigger)
+terminal watcher (watch.sh) ──runs──▶ agent/local/merge-watch.sh   (pure trigger)
         │  new origin/main SHA && no [skip codex] && lock acquired
         ▼
 agent/local/continue.sh   (orchestration + git, runs in a worktree)
@@ -97,11 +100,11 @@ Adapted from `.github/codex/prompts/autonomous-continue.md`:
 - **Do not** push, open PRs, merge, deploy, or change repo settings — the wrapper opens the
   draft PR.
 
-### `agent/local/com.ycagent.continue.plist` + `agent/local/install.sh` (tracked)
-- launchd LaunchAgent: `StartInterval` ~180s, absolute repo path, PATH including npx/gh/claude,
-  stdout/err to `agent/brain/logs/launchd.{out,err}.log`, `RunAtLoad`.
-- `install.sh`: copy plist to `~/Library/LaunchAgents/com.ycagent.continue.plist` and
-  `launchctl load` it; supports `--uninstall` (`launchctl unload` + remove).
+### `agent/local/watch.sh` (tracked)
+- Foreground terminal watcher: run `bash agent/local/watch.sh` in Apple Terminal; loops
+  `merge-watch.sh` every `WATCH_INTERVAL` (~180s) while running; Ctrl-C to stop.
+- Active only in the Terminal session that runs it (no background daemon). Resolves its own
+  repo root via `lib.sh`, so it only ever touches THIS repo.
 
 ## Engine invocation
 
@@ -137,7 +140,7 @@ the main repo (via cwd or absolute config), not the worktree.
 ## State & runtime (gitignored, under `agent/brain/`)
 - `state/last-merge-sha` — last processed `origin/main` SHA.
 - `locks/continue.lock` — `flock` target; prevents overlapping runs.
-- `logs/continue-<ts>.log`, `logs/launchd.{out,err}.log`.
+- `logs/continue-<ts>.log` (the watcher itself logs to the Terminal it runs in).
 
 ## CI disposition
 - Edit `.github/workflows/codex-continue-on-merge.yml`: remove the `push: branches: [main]`
@@ -154,21 +157,21 @@ the main repo (via cwd or absolute config), not the worktree.
 - `[skip codex]` in a merge commit suppresses a continuation (loop breaker / escape hatch).
 - Secrets: Claude Code uses local Claude auth; `gh` uses local `gh` auth. Nothing in the repo.
   Do not read `.env*`; do not touch `~/Mercor/wiki`.
-- Kill switch: `agent/local/install.sh --uninstall` (or `launchctl unload`).
+- Kill switch: stop the watcher (Ctrl-C / close its Terminal). Nothing runs when it is not running.
 - Optional macOS failure notification via `osascript`.
 
 ## Docs to update (part of implementation)
 - `AGENTS.md`: replace "Codex is the only coding agent allowed" with "Ruflo-orchestrated;
-  Claude Code (Sonnet 4.6) is the execution engine; continuation runs locally via launchd."
+  Claude Code (Sonnet 4.6) is the execution engine; continuation runs locally via a foreground terminal watcher."
   Note `.codex/` is retained but no longer the active path.
-- `agent/AUTONOMY.md`: replace the CI-continuation Layer 2 with the local launchd loop;
+- `agent/AUTONOMY.md`: replace the CI-continuation Layer 2 with the local terminal-watcher loop;
   keep the human-gate section.
 
 ## Testing / validation
 - `merge-watch.sh --dry-run` on a known state (prints intended actions, no run).
 - One manual `continue.sh` run on a known merged state → confirms task selection, Sonnet 4.6
   edits inside the worktree, and a draft PR opens.
-- Load launchd, push a trivial merge to `main`, confirm a run fires within the interval.
+- Start `watch.sh` in a Terminal, push a trivial merge to `main`, confirm a run fires within the interval; Ctrl-C stops it cleanly.
 - Re-run with no new SHA → no-op. Concurrent invocation → second one blocks on the lock.
 
 ## Out of scope
