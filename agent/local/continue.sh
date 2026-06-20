@@ -9,6 +9,10 @@ ts="$(date +%Y%m%d-%H%M%S)"
 branch="codex/continue-local-$ts"
 wt="$REPO_ROOT/.codex/worktrees/continue-$ts"
 
+init_run "$ts"
+run_started=$(date +%s)
+emit_event run.start base_sha="$base_sha" branch="$branch"
+
 log "fetch origin"
 git -C "$REPO_ROOT" fetch --quiet origin
 
@@ -49,8 +53,11 @@ inflight="$(gh pr list --repo arvindrk/ycagent.ai --base main --state open \
   | sed -nE 's/^\[([^]]+)\].*/\1/p' | sort -u)"
 inflight_count="$(printf '%s' "$inflight" | grep -c . || true)"
 cap="${CONTINUE_MAX_INFLIGHT:-5}"
+excluded_json="$(printf '%s' "$inflight" | jq -R . | jq -sc 'map(select(length>0))')"
+emit_event guard.inflight excluded="$excluded_json" cap="$cap" count="$inflight_count"
 if [[ "$inflight_count" -ge "$cap" ]]; then
   log "guard: $inflight_count open continuation PRs >= cap $cap; skipping this run"
+  emit_event run.end status=skipped reason="inflight>=cap"
   exit 0
 fi
 
@@ -67,17 +74,28 @@ if [[ -n "$inflight" ]]; then
 fi
 
 log "run Sonnet 4.6 orchestrator (Ruflo MCP rooted at main repo) in worktree"
+emit_event phase.start phase=orchestrate
 (
   cd "$wt"
   claude -p "$(cat "$run_prompt")" \
     --model claude-sonnet-4-6 \
     --mcp-config "$mcp_cfg" \
+    --output-format stream-json --verbose \
     --dangerously-skip-permissions
-) || { log "claude run failed"; rm -f "$mcp_cfg"; exit 1; }
+) > "$RUN_DIR/agent.stream.jsonl" 2>&1 || { log "claude run failed"; rm -f "$mcp_cfg"; emit_event run.end status=failed reason="claude-exit"; exit 1; }
 rm -f "$mcp_cfg"
+emit_event phase.end phase=orchestrate
+
+# feature.selected from the run summary (best-effort)
+if [[ -f "$wt/.codex/tmp/run-summary.json" ]]; then
+  fid="$(node -e 'try{process.stdout.write((require(process.argv[1]).feature_id)||"")}catch(e){}' "$wt/.codex/tmp/run-summary.json" 2>/dev/null || true)"
+  ftitle="$(node -e 'try{process.stdout.write((require(process.argv[1]).title)||"")}catch(e){}' "$wt/.codex/tmp/run-summary.json" 2>/dev/null || true)"
+  [[ -n "$fid" ]] && emit_event feature.selected feature_id="$fid" title="$ftitle"
+fi
 
 if [[ -z "$(git -C "$wt" status --porcelain)" ]]; then
   log "no changes produced; no PR opened"
+  emit_event run.end status=no-changes
   exit 0
 fi
 
@@ -86,6 +104,11 @@ git -C "$wt" add -A
 git -C "$wt" -c user.name="Arvind Rk" -c user.email="arvindsuna10@gmail.com" \
   commit -m "chore: continue ycagent work (local Ruflo + Sonnet 4.6)"
 git -C "$wt" push origin "$branch"
+
+adds="$(git -C "$wt" diff --numstat HEAD~1 | awk '{a+=$1} END{print a+0}')"
+dels="$(git -C "$wt" diff --numstat HEAD~1 | awk '{d+=$2} END{print d+0}')"
+files_json="$(git -C "$wt" diff --name-only HEAD~1 | jq -R . | jq -sc 'map(select(length>0))')"
+emit_event impl.changes files="$files_json" additions="$adds" deletions="$dels"
 
 # Build a template-compliant, traceable PR title + body from the orchestrator's
 # run summary (agent/local/continue-prompt.md step 8). Fall back gracefully if absent.
@@ -132,10 +155,13 @@ body="$pr_desc
 Human gate: review, verify, and approve before merge. This loop never merges or deploys."
 
 log "open draft PR: $title"
-gh pr create --repo arvindrk/ycagent.ai \
+pr_url="$(gh pr create --repo arvindrk/ycagent.ai \
   --draft --base main --head "$branch" \
   --title "$title" \
-  --body "$body" \
-  || { log "gh pr create failed (branch pushed: $branch)"; exit 1; }
+  --body "$body" 2>/dev/null)" \
+  || { log "gh pr create failed (branch pushed: $branch)"; emit_event run.end status=failed reason="pr-create"; exit 1; }
+pr_num="$(printf '%s' "$pr_url" | sed -nE 's#.*/pull/([0-9]+).*#\1#p')"
+emit_event pr.opened number="${pr_num:-0}" url="$pr_url" title="$title"
+emit_event run.end status=completed duration_ms="$(( ($(date +%s) - run_started) * 1000 ))"
 
 log "draft PR opened for $branch ($title)"
