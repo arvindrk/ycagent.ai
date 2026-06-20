@@ -1,4 +1,4 @@
-# Local Ruflo-Orchestrated Continuation Loop — Design
+# Local Ruflo-Orchestrated Continuation Loop - Design
 
 **Date:** 2026-06-20
 **Status:** Approved (design), pending implementation plan
@@ -16,7 +16,7 @@ continuation work to run there instead, triggered automatically when a PR is mer
 ## Goal / Outcome
 
 When a PR is merged to `main`, a process on the user's Mac detects it, refreshes context,
-selects the next unblocked task, implements it, and opens a **draft PR** — with the human
+selects the next unblocked task, implements it, and opens a **draft PR** - with the human
 merge as the only gate. No work runs in CI. The loop uses the local Ruflo infra for
 orchestration/memory and Claude Code (Sonnet 4.6) as the single execution engine.
 
@@ -24,7 +24,7 @@ orchestration/memory and Claude Code (Sonnet 4.6) as the single execution engine
 
 1. **Trigger:** auto-detect merge to `main` (not manual/scheduled/git-hook).
 2. **Engine:** Ruflo orchestrates; **Claude Code on Sonnet 4.6** executes (orchestrates *and*
-   writes code). **Codex is dropped** from the local loop — Ruflo already spawns headless
+   writes code). **Codex is dropped** from the local loop - Ruflo already spawns headless
    Claude Code as its runtime, so a separate `codex exec` engine adds a second model stack
    and auth system for no gain.
 3. **Isolation:** each continuation runs in a **dedicated git worktree**, not the primary
@@ -68,7 +68,7 @@ agent/local/continue.sh   (orchestration + git, runs in a worktree)
 All new code lives under `agent/local/` (tracked). Runtime state is gitignored under
 `agent/brain/`.
 
-### `agent/local/merge-watch.sh` (tracked) — pure trigger
+### `agent/local/merge-watch.sh` (tracked) - pure trigger
 - Reads last-seen SHA from `agent/brain/state/last-merge-sha`.
 - Queries `git ls-remote origin refs/heads/main` (cheap, no checkout).
 - If the SHA changed **and** the new HEAD commit message does not contain `[skip codex]`:
@@ -77,7 +77,7 @@ All new code lives under `agent/local/` (tracked). Runtime state is gitignored u
 - Fast no-op when unchanged or when a run is already in progress.
 - `--dry-run` flag prints intended actions without running.
 
-### `agent/local/continue.sh` (tracked) — orchestration + git
+### `agent/local/continue.sh` (tracked) - orchestration + git
 - `git fetch origin`.
 - `git worktree add -b codex/continue-local-<ts> .codex/worktrees/continue-<ts> origin/main`
   (`.codex/worktrees/` is already gitignored).
@@ -88,7 +88,7 @@ All new code lives under `agent/local/` (tracked). Runtime state is gitignored u
 - `git worktree remove` (cleanup); branch persists on the remote.
 - Logs to `agent/brain/logs/continue-<ts>.log` (main repo, not the worktree).
 
-### `agent/local/continue-prompt.md` (tracked) — orchestrator prompt
+### `agent/local/continue-prompt.md` (tracked) - orchestrator prompt
 Adapted from `.github/codex/prompts/autonomous-continue.md`:
 - Use `mcp__ruflo__*` tools for memory, coordination, and (optionally) `agent_spawn` for
   parallel sub-work.
@@ -97,7 +97,7 @@ Adapted from `.github/codex/prompts/autonomous-continue.md`:
 - Implement it directly (Sonnet 4.6 writes the code). Keep the diff scoped.
 - Update `feature_list.json` and append to `PROGRESS.md`.
 - Run the task's `verify` command when safe; record results.
-- **Do not** push, open PRs, merge, deploy, or change repo settings — the wrapper opens the
+- **Do not** push, open PRs, merge, deploy, or change repo settings - the wrapper opens the
   draft PR.
 
 ### `agent/local/watch.sh` (tracked)
@@ -138,8 +138,8 @@ already-running daemon. Implementation will verify the Ruflo MCP resolves its pe
 the main repo (via cwd or absolute config), not the worktree.
 
 ## State & runtime (gitignored, under `agent/brain/`)
-- `state/last-merge-sha` — last processed `origin/main` SHA.
-- `locks/continue.lock` — `flock` target; prevents overlapping runs.
+- `state/last-merge-sha` - last processed `origin/main` SHA.
+- `locks/continue.lock` - `flock` target; prevents overlapping runs.
 - `logs/continue-<ts>.log` (the watcher itself logs to the Terminal it runs in).
 
 ## CI disposition

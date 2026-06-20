@@ -1,10 +1,10 @@
-# Local Ruflo Continuation Loop — Implementation Plan
+# Local Ruflo Continuation Loop - Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Replace the CI-generated continuation PRs with a local loop where a foreground terminal watcher detects merges to `main` and runs a Ruflo-orchestrated Claude Code (Sonnet 4.6) instance in a git worktree that implements the next task and opens a draft PR.
 
-**Architecture:** A foreground terminal watcher (`watch.sh`, started manually in Apple Terminal and active only while running) polls `origin/main`; on a new merge SHA it runs `merge-watch.sh`, which locks and calls `continue.sh`. `continue.sh` creates a git worktree off `origin/main`, runs a single headless `claude` (Sonnet 4.6) instance wired to the Ruflo MCP for memory/coordination, and — if the tree changed — pushes a branch and opens a draft PR. Human merge is the only gate; nothing runs in CI. Scope: the watcher resolves its own repo root and only ever touches THIS repo.
+**Architecture:** A foreground terminal watcher (`watch.sh`, started manually in Apple Terminal and active only while running) polls `origin/main`; on a new merge SHA it runs `merge-watch.sh`, which locks and calls `continue.sh`. `continue.sh` creates a git worktree off `origin/main`, runs a single headless `claude` (Sonnet 4.6) instance wired to the Ruflo MCP for memory/coordination, and - if the tree changed - pushes a branch and opens a draft PR. Human merge is the only gate; nothing runs in CI. Scope: the watcher resolves its own repo root and only ever touches THIS repo.
 
 **Tech Stack:** bash, git worktrees, `claude` CLI (headless `-p`), Ruflo/claude-flow MCP (`npx -y ruflo@latest mcp start`), `gh` CLI.
 
@@ -29,7 +29,7 @@ Runtime state (created at runtime, gitignored under `agent/brain/`): `state/last
 
 ---
 
-## Task 0: Preflight — confirm local tool contract
+## Task 0: Preflight - confirm local tool contract
 
 **Files:** none (verification only)
 
@@ -39,7 +39,7 @@ Run:
 ```bash
 claude --help 2>&1 | grep -iE "permission-mode|--model|--mcp-config|--print| -p,"
 ```
-Expected: lines showing `-p`/`--print`, `--model`, `--mcp-config`, and `--permission-mode` (with `bypassPermissions` among accepted values). If `--permission-mode bypassPermissions` is absent on this version, the fallback is `--dangerously-skip-permissions` — note which one exists; the scripts below use `--permission-mode bypassPermissions`.
+Expected: lines showing `-p`/`--print`, `--model`, `--mcp-config`, and `--permission-mode` (with `bypassPermissions` among accepted values). If `--permission-mode bypassPermissions` is absent on this version, the fallback is `--dangerously-skip-permissions` - note which one exists; the scripts below use `--permission-mode bypassPermissions`.
 
 - [ ] **Step 2: Confirm Sonnet 4.6 model id is accepted**
 
@@ -57,7 +57,7 @@ cd /Users/arvindkishore/personal/ycagent.ai
 claude -p "List the names of all available MCP tools, one per line." \
   --mcp-config ./.mcp.json --permission-mode bypassPermissions 2>&1 | grep -iE "mcp__|ruflo|claude-flow" | head -20
 ```
-Expected: tool names. **Record the actual prefix** — the `.mcp.json` server key is `claude-flow`, so tools are likely `mcp__claude-flow__*` (not `mcp__ruflo__*`). Use the observed prefix when finalizing `continue-prompt.md` in Task 3, Step 2.
+Expected: tool names. **Record the actual prefix** - the `.mcp.json` server key is `claude-flow`, so tools are likely `mcp__claude-flow__*` (not `mcp__ruflo__*`). Use the observed prefix when finalizing `continue-prompt.md` in Task 3, Step 2.
 
 - [ ] **Step 4: Confirm `gh` auth + push capability**
 
@@ -207,7 +207,7 @@ chmod +x agent/local/merge-watch.sh
 rm -f agent/brain/state/last-merge-sha
 bash agent/local/merge-watch.sh --dry-run
 ```
-Expected: a line `[dry-run] would run continue.sh for <sha> (last=)`. (No `continue.sh` yet — dry-run must not call it.)
+Expected: a line `[dry-run] would run continue.sh for <sha> (last=)`. (No `continue.sh` yet - dry-run must not call it.)
 
 - [ ] **Step 3: Verify no-op when SHA already seen**
 
@@ -247,7 +247,7 @@ You are the ycagent.ai Orchestrator running locally after a merge to `main`, ins
 
 Goal: choose exactly one safe, unblocked next task and implement the smallest useful progress so the wrapper can open a draft PR.
 
-Use your Ruflo/claude-flow MCP tools (the `mcp__claude-flow__*` tools available to you) for memory, coordination, and — when a task genuinely benefits from parallel sub-work — agent spawning. Prefer recording and recalling decisions through Ruflo memory so the loop learns across runs.
+Use your Ruflo/claude-flow MCP tools (the `mcp__claude-flow__*` tools available to you) for memory, coordination, and - when a task genuinely benefits from parallel sub-work - agent spawning. Prefer recording and recalling decisions through Ruflo memory so the loop learns across runs.
 
 Required procedure:
 1. Run `bash agent/init.sh` and read its output.
@@ -324,7 +324,7 @@ log "refresh state (init.sh) in worktree"
 ( cd "$wt" && bash agent/init.sh ) || log "init.sh returned non-zero; continuing"
 
 # Root the Ruflo MCP at the MAIN repo so its memory/learning store
-# (.claude-flow, .swarm) is shared across runs and with the running daemon —
+# (.claude-flow, .swarm) is shared across runs and with the running daemon -
 # NOT the throwaway worktree. We clone .mcp.json and set each server's cwd to
 # REPO_ROOT. Written under agent/brain (gitignored, main repo) so it never lands
 # in the worktree's `git add -A`.
@@ -386,7 +386,7 @@ Expected: `syntax OK`; no shellcheck errors (or skipped).
 Run:
 ```bash
 git add agent/local/continue.sh
-git commit -m "feat(local-loop): worktree runner — Sonnet 4.6 + draft PR"
+git commit -m "feat(local-loop): worktree runner - Sonnet 4.6 + draft PR"
 ```
 Expected: commit succeeds. (Live end-to-end run happens in Task 8.)
 
@@ -421,7 +421,7 @@ while true; do
 done
 ```
 
-- [ ] **Step 2: Verify it ticks once and is stoppable (SAFE — no real continuation)**
+- [ ] **Step 2: Verify it ticks once and is stoppable (SAFE - no real continuation)**
 
 Pre-seed the seen-SHA to the CURRENT `origin/main` so the watcher takes the no-change path and does **not** launch a continuation during this build step (a real run is exercised only in the gated Task 8):
 ```bash
@@ -586,7 +586,7 @@ echo "before=$before after=$after"
 # The throwaway worktree must NOT have created its own Ruflo store:
 ls -d .codex/worktrees/*/.claude-flow .codex/worktrees/*/.swarm 2>/dev/null && echo "LEAK: worktree-local Ruflo store found" || echo "no worktree-local Ruflo store (good)"
 ```
-Expected: `after` ≥ `before` (main-repo memory touched, confirming the MCP `cwd` override took effect) **and** "no worktree-local Ruflo store (good)". If instead a worktree-local store appeared (or `after` == `before` == 0 with the daemon active), the `cwd` field in the MCP config was not honored — apply the fallback in Notes before relying on memory continuity.
+Expected: `after` ≥ `before` (main-repo memory touched, confirming the MCP `cwd` override took effect) **and** "no worktree-local Ruflo store (good)". If instead a worktree-local store appeared (or `after` == `before` == 0 with the daemon active), the `cwd` field in the MCP config was not honored - apply the fallback in Notes before relying on memory continuity.
 
 - [ ] **Step 2: Live trigger test via the terminal watcher**
 
@@ -610,7 +610,7 @@ cd /Users/arvindkishore/personal/ycagent.ai
 pgrep -fl "agent/local/watch.sh" || echo "no watcher running (correct when not started)"
 grep -RIl "REPO_ROOT" agent/local/*.sh | wc -l   # scripts resolve their own repo root
 ```
-Expected: no watcher process lingers when not started (terminal-bound), and the scripts resolve `REPO_ROOT` from their own location (repo-scoped — they never read a global config or other repos).
+Expected: no watcher process lingers when not started (terminal-bound), and the scripts resolve `REPO_ROOT` from their own location (repo-scoped - they never read a global config or other repos).
 
 - [ ] **Step 4: Idempotency check**
 
