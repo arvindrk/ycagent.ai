@@ -343,7 +343,7 @@ log "run Sonnet 4.6 orchestrator (Ruflo MCP rooted at main repo) in worktree"
   claude -p "$(cat "$REPO_ROOT/agent/local/continue-prompt.md")" \
     --model claude-sonnet-4-6 \
     --mcp-config "$mcp_cfg" \
-    --permission-mode bypassPermissions
+    --dangerously-skip-permissions
 ) || { log "claude run failed"; rm -f "$mcp_cfg"; exit 1; }
 rm -f "$mcp_cfg"
 
