@@ -47,3 +47,4 @@ Codex may create draft PRs. Humans must still approve irreversible actions:
 - Keep durable task state in `agent/feature_list.json`.
 - Keep append-only handoff notes in `agent/PROGRESS.md`.
 - Keep local/generated context in `agent/brain/`; it is git-ignored and separate from the Mercor Obsidian vault.
+- Each continuation emits a structured event stream under `agent/brain/logs/runs/<id>/`; view it with `npm run logs` (see agent/local/logview/README.md).

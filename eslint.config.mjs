@@ -19,6 +19,10 @@ const eslintConfig = defineConfig([
     ".codex/logs/**",
     ".codex/tmp/**",
     "agent/brain/**",
+    // logview is a standalone tsx-run tool with its own tsconfig
+    // (allowImportingTsExtensions, ink/react-jsx); typechecked via
+    // `npx tsc -p agent/local/logview/tsconfig.json --noEmit`.
+    "agent/local/logview/**",
   ]),
 ]);
 
