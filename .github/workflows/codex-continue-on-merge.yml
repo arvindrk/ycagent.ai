@@ -26,7 +26,6 @@ jobs:
     permissions:
       contents: read
     env:
-      CODEX_HOME: ${{ runner.temp }}/codex-home
       CODEX_VERSION: "0.141.0"
     outputs:
       has_patch: ${{ steps.diff.outputs.has_patch }}
@@ -53,6 +52,8 @@ jobs:
             echo "::error::CODEX_AUTH_JSON secret is not set. Run 'codex login' locally (cli_auth_credentials_store = \"file\") and add ~/.codex/auth.json as the CODEX_AUTH_JSON repo secret. See agent/AUTONOMY.md."
             exit 1
           fi
+          CODEX_HOME="$RUNNER_TEMP/codex-home"
+          echo "CODEX_HOME=$CODEX_HOME" >> "$GITHUB_ENV"
           mkdir -p "$CODEX_HOME"
           chmod 700 "$CODEX_HOME"
           printf '%s' "$CODEX_AUTH_JSON" > "$CODEX_HOME/auth.json"
