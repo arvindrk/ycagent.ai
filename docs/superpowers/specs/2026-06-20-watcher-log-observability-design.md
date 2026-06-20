@@ -1,4 +1,4 @@
-# Watcher Log Observability — Design
+# Watcher Log Observability - Design
 
 **Date:** 2026-06-20
 **Status:** Approved (design), pending implementation plan
@@ -84,15 +84,15 @@ authoritative TS type union; `lib.sh emit_event` must produce matching JSON.
   `skipped` when the guard/cap short-circuits.
 
 ### Presentation (`agent/local/logview/`, run via `tsx`, no build step)
-- `events.ts` — TS event type union + JSONL parser + agent-stream parser. The contract.
-- `model.ts` — aggregate events into a `Run` view (phases, reasoning steps, impl, outcome)
+- `events.ts` - TS event type union + JSONL parser + agent-stream parser. The contract.
+- `model.ts` - aggregate events into a `Run` view (phases, reasoning steps, impl, outcome)
   and a `Feature` view (inception → runs → PRs → status), reading `loop.jsonl`,
   `feature_list.json`, and `gh pr list`.
-- `report.ts` — serialize a `Run` to Markdown (sections: Inception, Reasoning,
+- `report.ts` - serialize a `Run` to Markdown (sections: Inception, Reasoning,
   Implementation, Verification, Outcome).
-- `components/` — ink views: `Dashboard` (live), `RunTimeline`, `ReasoningTrail`,
+- `components/` - ink views: `Dashboard` (live), `RunTimeline`, `ReasoningTrail`,
   `FeatureLifecycle`.
-- `index.tsx` — CLI entry. Commands: `live` (default; tails the logs), `run <id>`,
+- `index.tsx` - CLI entry. Commands: `live` (default; tails the logs), `run <id>`,
   `feature <id>`, `report <id>`. Wired as `npm run logs`.
 
 ## File layout
@@ -118,7 +118,7 @@ Live dashboard (`npm run logs`):
 │ origin/main 8c3c38d   in-flight PRs: #9 #11 #12                 │
 ├────────────────────────────────────────────────────────────────┤
 │ RUN 161549   auth-build-env-cleanup                 ● completed │
-│  ├ inception   selected (prio 4) — why: #9 in-flight → excluded  │
+│  ├ inception   selected (prio 4) - why: #9 in-flight → excluded  │
 │  ├ orchestrate ▸ 5 agents (Ruflo hierarchical-mesh)             │
 │  │   ├ edit   src/lib/auth.ts (+18 −6)                          │
 │  │   └ verify build ✓ lint ✓ typecheck ✓                        │

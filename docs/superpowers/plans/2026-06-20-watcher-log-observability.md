@@ -32,7 +32,7 @@ Runtime (gitignored under `agent/brain/`): `logs/loop.jsonl`, `logs/runs/<run_id
 
 ---
 
-## Task 0: Preflight — pin versions, verify flags, install deps
+## Task 0: Preflight - pin versions, verify flags, install deps
 
 **Files:** `package.json` (modify)
 
@@ -605,7 +605,7 @@ export function FeatureLifecycle({ feature }: { feature: Feature }) {
     <Box flexDirection="column">
       <Text bold>{feature.featureId} <Text dimColor>({feature.status ?? "?"})</Text></Text>
       {feature.description ? <Text>{"  inception   "}<Text dimColor>{feature.description.slice(0, 100)}</Text></Text> : null}
-      {feature.runs.map((r, i) => <Text key={i}>{`  selected    run ${r.runId}`}{r.why ? <Text dimColor> — {r.why}</Text> : null}</Text>)}
+      {feature.runs.map((r, i) => <Text key={i}>{`  selected    run ${r.runId}`}{r.why ? <Text dimColor> - {r.why}</Text> : null}</Text>)}
       {feature.prs.map((p, i) => <Text key={i}>{`  pr          #${p.number} ${p.title} `}<Text dimColor>[{p.state}]</Text></Text>)}
     </Box>
   );
@@ -723,7 +723,7 @@ npm run lint && npm run typecheck
 git add agent/local/logview/index.tsx agent/local/logview/components
 git commit -m "feat(logview): ink TUI dashboard, run/feature views, report CLI"
 ```
-Expected: lint + typecheck pass. (If `tsconfig` excludes `agent/`, add `agent/local/logview` to the typecheck include or give the tool its own `tsconfig.json` extending the root — confirm during this step.)
+Expected: lint + typecheck pass. (If `tsconfig` excludes `agent/`, add `agent/local/logview` to the typecheck include or give the tool its own `tsconfig.json` extending the root - confirm during this step.)
 
 ---
 
@@ -836,14 +836,14 @@ git commit -m "feat(logview): emit lifecycle events + capture agent stream in co
 - [ ] **Step 1: Write `agent/local/logview/README.md`**
 
 ```markdown
-# logview — continuation loop observability
+# logview - continuation loop observability
 
 The loop emits a typed JSONL event stream; this renders it.
 
-- `npm run logs` — live TUI dashboard (↑↓ runs, enter expands the reasoning trail, q quits)
-- `npm run logs -- run <run_id>` — full timeline + reasoning for one run
-- `npm run logs -- feature <feature_id>` — cross-run lifecycle (inception → runs → PRs → status)
-- `npm run logs -- report <run_id>` — write `agent/brain/logs/runs/<run_id>/report.md`
+- `npm run logs` - live TUI dashboard (↑↓ runs, enter expands the reasoning trail, q quits)
+- `npm run logs -- run <run_id>` - full timeline + reasoning for one run
+- `npm run logs -- feature <feature_id>` - cross-run lifecycle (inception → runs → PRs → status)
+- `npm run logs -- report <run_id>` - write `agent/brain/logs/runs/<run_id>/report.md`
 
 Data lives in `agent/brain/logs/` (gitignored): `loop.jsonl` (run-level), `runs/<id>/events.jsonl`
 (per-run timeline), `runs/<id>/agent.stream.jsonl` (raw Sonnet 4.6 reasoning). Event contract:
