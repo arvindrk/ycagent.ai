@@ -21,3 +21,13 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Switched the continuation auth model from a metered API key to ChatGPT-account auth on branch `codex/chatgpt-auth-ci` (draft PR). `openai/codex-action` cannot do ChatGPT auth (it always routes through the API-key proxy; see codex-action issue #92), so `generate-next-patch` now invokes the `codex` CLI directly: restore `CODEX_AUTH_JSON` into an ephemeral `$RUNNER_TEMP/codex-home` (600 perms, outside the work tree), then `codex exec --sandbox workspace-write` reading the autonomous-continue prompt from stdin. `open-draft-pr` is unchanged.
 - Human gates remaining for this PR: create the `CODEX_AUTH_JSON` secret from a local `codex login` (`cli_auth_credentials_store = "file"`), then review and merge the draft PR. `OPENAI_API_KEY` is no longer used by the workflow and can be removed.
 - Verification: workflow YAML parsed via js-yaml (jobs, steps, env, outputs intact). No app code changed.
+
+## 2026-06-20 (auth-build-env-cleanup)
+
+- Worktree: `continue-20260620-161549` on branch `codex/continue-local-20260620-161549`.
+- Task: `auth-build-env-cleanup` (priority 4). `dependency-security-audit` was already in-flight so this was selected next.
+- Root cause: `betterAuth()` was called at module scope in `src/lib/auth.ts`. During `next build`, Next.js statically evaluates all route files; importing the auth module triggered `betterAuth()` before env vars (BETTER_AUTH_SECRET, BETTER_AUTH_BASE_URL, DATABASE_URL) were available, producing loud build warnings.
+- Fix: converted `src/lib/auth.ts` to export `getAuth()` (lazy getter with `globalThis._auth` memoization, consistent with the existing `_authPool` pattern). Updated `src/app/api/auth/[...all]/route.ts` to call `getAuth()` at request time (memoized via `_handler`). Updated `src/lib/session.ts` (found during typecheck) to use `getAuth()`.
+- No env var changes, no new packages, no fake secrets.
+- Verification: `npm run lint` passed, `npm run typecheck` passed, `npm run build` passed with zero Better Auth warnings.
+- Next handoff: `research-agent-eval-harness` (priority 5) is the next unblocked planned task.
