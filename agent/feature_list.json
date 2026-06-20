@@ -19,12 +19,12 @@
   },
   {
     "id": "auth-build-env-cleanup",
-    "status": "planned",
+    "status": "completed",
     "priority": 4,
     "depends_on": ["codex-harness-foundation"],
     "description": "Remove Better Auth build-time warnings by making auth configuration build-safe without using fake production secrets.",
     "verify": "npm run build",
-    "passes": false
+    "passes": true
   },
   {
     "id": "autonomous-merge-continuation",
