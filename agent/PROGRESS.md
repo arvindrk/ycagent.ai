@@ -21,3 +21,20 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Switched the continuation auth model from a metered API key to ChatGPT-account auth on branch `codex/chatgpt-auth-ci` (draft PR). `openai/codex-action` cannot do ChatGPT auth (it always routes through the API-key proxy; see codex-action issue #92), so `generate-next-patch` now invokes the `codex` CLI directly: restore `CODEX_AUTH_JSON` into an ephemeral `$RUNNER_TEMP/codex-home` (600 perms, outside the work tree), then `codex exec --sandbox workspace-write` reading the autonomous-continue prompt from stdin. `open-draft-pr` is unchanged.
 - Human gates remaining for this PR: create the `CODEX_AUTH_JSON` secret from a local `codex login` (`cli_auth_credentials_store = "file"`), then review and merge the draft PR. `OPENAI_API_KEY` is no longer used by the workflow and can be removed.
 - Verification: workflow YAML parsed via js-yaml (jobs, steps, env, outputs intact). No app code changed.
+
+## 2026-06-20 (worktree: continue-20260620-143120)
+
+Task: dependency-security-audit
+
+Decisions:
+- Starting state: 54 vulnerabilities (3 low, 29 moderate, 21 high, 1 critical).
+- Ran `npm audit fix` (non-force) to resolve safe transitive fixes. Closed 1 critical (protobufjs) and many moderate/high indirect issues. Down to 27.
+- Manually updated `next` from exact pin `16.1.6` to `16.2.9` (HIGH CVE range 9.3.4-canary.0 to 16.3.0-canary.5; npm-recommended fix).
+- Updated `eslint-config-next` from `16.1.4` to `16.2.9` to stay in sync with next.
+- Ran `npm install` to reconcile lockfile. Final count: 27 vulnerabilities (2 low, 21 moderate, 4 high).
+- Skipped trigger.dev-rooted HIGHs (@opentelemetry/host-metrics, @trigger.dev/core, systeminformation, ws via engine.io chain): all require downgrading trigger.dev from 4.4.1 to 3.3.17, which is a breaking major regression. These remain as known risk pending a trigger.dev 4.x patch release.
+
+Commands: `npm audit fix`, `npm install`, `npm run lint`, `npm run typecheck`, `npm run build`.
+Verification: lint passed, typecheck passed, build passed (10 routes rendered, no new warnings).
+
+Next handoff: remaining 4 HIGH vulnerabilities are blocked on trigger.dev 4.x ecosystem releasing a patched version. No action needed until a trigger.dev 4.x.y > 4.4.1 ships with a fixed @trigger.dev/core.
