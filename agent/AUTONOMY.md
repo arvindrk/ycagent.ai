@@ -8,26 +8,25 @@ The harness defines how Codex agents work in the repo: rules, specialist persona
 
 It does not create new work by itself.
 
-## Layer 2: Continuation
+## Layer 2: Continuation (local, terminal-bound)
 
-Continuation starts when `.github/workflows/codex-continue-on-merge.yml` is present on `main` and the repository has:
+Continuation runs on the maintainer's Mac, not in CI, and only while a foreground
+watcher is running in Apple Terminal. Start it with `bash agent/local/watch.sh`
+(Ctrl-C to stop). It is scoped to THIS repo only and polls `origin/main` every ~180s
+(`WATCH_INTERVAL` to override). On a new merge SHA whose commit message lacks
+`[skip codex]`, it:
 
-- `CODEX_AUTH_JSON` configured as a GitHub Actions secret: the contents of `~/.codex/auth.json` from a local `codex login` (ChatGPT-account auth, with `cli_auth_credentials_store = "file"`). This runs the loop on a ChatGPT subscription instead of a metered API key.
-- `CODEX_GITHUB_TOKEN` configured as a fine-grained personal access token with repository contents and pull request write access.
-- GitHub Actions allowed to create pull requests (or rely on `CODEX_GITHUB_TOKEN`, which bypasses that restriction).
+1. Acquires a lock (`agent/brain/locks/`), then runs `agent/local/continue.sh`.
+2. Creates a git worktree off `origin/main` under `.codex/worktrees/`.
+3. Runs one headless Claude Code instance (`--model claude-sonnet-4-6`,
+   `--mcp-config` rooted at the main repo) that orchestrates via the Ruflo MCP and
+   implements the next unblocked `feature_list.json` task.
+4. If the worktree changed: commits, pushes `codex/continue-local-<ts>`, and opens a
+   draft PR with `gh`.
+5. Removes the worktree and records the SHA.
 
-On every push to `main`, the workflow:
-
-1. Checks out the merged state.
-2. Restores `CODEX_AUTH_JSON` into an ephemeral `CODEX_HOME` under `$RUNNER_TEMP` (600 perms, outside the repo working tree).
-3. Runs the Codex CLI directly (`codex exec`) with the `workspace-write` sandbox and read-only repository token permissions.
-4. Produces a patch artifact.
-5. Applies that patch in a separate job that has no Codex credential.
-6. Opens a draft PR against `main` using the personal GitHub token.
-
-Token note: ChatGPT-account credentials refresh roughly every 8 days; on ephemeral runners the refreshed tokens are discarded after the job. As long as the refresh token in `CODEX_AUTH_JSON` stays valid this keeps working. If a run starts failing auth, regenerate `auth.json` locally and update the secret.
-
-The system is autonomous at the point a merge to `main` triggers that workflow and it opens the next draft PR without a human prompt.
+The system is autonomous (while the watcher runs) at the point a merge to `main`
+triggers this loop and a draft PR is opened without a human prompt.
 
 ## Human Gates
 
@@ -42,7 +41,9 @@ Codex may create draft PRs. Humans must still approve irreversible actions:
 ## Operational Notes
 
 - Use `[skip codex]` in a merge commit message to prevent continuation for that merge.
-- If `CODEX_GITHUB_TOKEN` is absent, the workflow falls back to `GITHUB_TOKEN`; this may create the draft PR but can prevent downstream CI from triggering.
+- The local loop pushes and opens draft PRs using the maintainer's local `gh` auth.
+- Kill switch: stop the watcher (Ctrl-C in its Terminal, or close the window). Nothing runs when the watcher is not running.
+- Token note: ChatGPT/Codex auth is no longer used by the loop; it runs on local Claude auth.
 - Keep durable task state in `agent/feature_list.json`.
 - Keep append-only handoff notes in `agent/PROGRESS.md`.
 - Keep local/generated context in `agent/brain/`; it is git-ignored and separate from the Mercor Obsidian vault.
