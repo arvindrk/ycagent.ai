@@ -18,7 +18,7 @@ git -C "$REPO_ROOT" worktree add -b "$branch" "$wt" origin/main
 cleanup() {
   log "remove worktree $wt"
   git -C "$REPO_ROOT" worktree remove --force "$wt" 2>/dev/null || true
-  rm -f "$BRAIN_DIR/run/$ts-mcp.json" 2>/dev/null || true
+  rm -f "$BRAIN_DIR/run/$ts-mcp.json" "$BRAIN_DIR/run/$ts-prompt.md" 2>/dev/null || true
 }
 trap cleanup EXIT
 
@@ -40,10 +40,36 @@ node -e '
 ' "$REPO_ROOT/.mcp.json" "$REPO_ROOT" > "$mcp_cfg"
 
 mkdir -p "$wt/.codex/tmp"   # where the orchestrator writes run-summary.json (gitignored)
+
+# Guard against duplicate work: skip tasks that already have an open continuation
+# PR. Collect feature ids from open codex/continue-local-* PRs (title "[id] ...").
+inflight="$(gh pr list --repo arvindrk/ycagent.ai --base main --state open \
+  --json title,headRefName \
+  --jq '.[] | select(.headRefName | startswith("codex/continue-local-")) | .title' 2>/dev/null \
+  | sed -nE 's/^\[([^]]+)\].*/\1/p' | sort -u)"
+inflight_count="$(printf '%s' "$inflight" | grep -c . || true)"
+cap="${CONTINUE_MAX_INFLIGHT:-5}"
+if [[ "$inflight_count" -ge "$cap" ]]; then
+  log "guard: $inflight_count open continuation PRs >= cap $cap; skipping this run"
+  exit 0
+fi
+
+run_prompt="$BRAIN_DIR/run/$ts-prompt.md"
+cp "$REPO_ROOT/agent/local/continue-prompt.md" "$run_prompt"
+if [[ -n "$inflight" ]]; then
+  {
+    echo
+    echo "## Already in flight (do NOT select these)"
+    echo "These feature ids already have an open continuation PR. Do NOT pick any of them; choose the next-highest-priority unblocked task whose id is NOT listed. If every unblocked task is listed, make NO changes at all (the wrapper will then open no PR):"
+    while IFS= read -r _fid; do [[ -n "$_fid" ]] && echo "- $_fid"; done <<< "$inflight"
+  } >> "$run_prompt"
+  log "guard: excluding in-flight features: $(printf '%s' "$inflight" | tr '\n' ' ')"
+fi
+
 log "run Sonnet 4.6 orchestrator (Ruflo MCP rooted at main repo) in worktree"
 (
   cd "$wt"
-  claude -p "$(cat "$REPO_ROOT/agent/local/continue-prompt.md")" \
+  claude -p "$(cat "$run_prompt")" \
     --model claude-sonnet-4-6 \
     --mcp-config "$mcp_cfg" \
     --dangerously-skip-permissions
