@@ -1,5 +1,14 @@
 name: Codex continue after merge
 
+# Authentication model:
+#   The `generate-next-patch` job runs the Codex CLI directly (not openai/codex-action)
+#   so it can authenticate with a ChatGPT-account credential instead of a metered API key.
+#   Provide `CODEX_AUTH_JSON` as a repo secret: the contents of ~/.codex/auth.json from a
+#   local `codex login` (with cli_auth_credentials_store = "file"). The credential is written
+#   to an ephemeral CODEX_HOME under $RUNNER_TEMP with 600 perms, never logged, and lives
+#   outside the repo working tree so it cannot leak into the generated patch.
+#   See agent/AUTONOMY.md for the full setup.
+
 on:
   push:
     branches:
@@ -16,9 +25,12 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    env:
+      CODEX_HOME: ${{ runner.temp }}/codex-home
+      CODEX_VERSION: "0.141.0"
     outputs:
       has_patch: ${{ steps.diff.outputs.has_patch }}
-      final_message: ${{ steps.codex.outputs.final-message }}
+      final_message: ${{ steps.finalmsg.outputs.final-message }}
     steps:
       - uses: actions/checkout@v5
         with:
@@ -32,15 +44,49 @@ jobs:
         run: npm ci
       - name: Prepare Codex output directory
         run: mkdir -p .codex/tmp
+      - name: Restore Codex ChatGPT auth
+        env:
+          CODEX_AUTH_JSON: ${{ secrets.CODEX_AUTH_JSON }}
+        run: |
+          set -euo pipefail
+          if [ -z "${CODEX_AUTH_JSON:-}" ]; then
+            echo "::error::CODEX_AUTH_JSON secret is not set. Run 'codex login' locally (cli_auth_credentials_store = \"file\") and add ~/.codex/auth.json as the CODEX_AUTH_JSON repo secret. See agent/AUTONOMY.md."
+            exit 1
+          fi
+          mkdir -p "$CODEX_HOME"
+          chmod 700 "$CODEX_HOME"
+          printf '%s' "$CODEX_AUTH_JSON" > "$CODEX_HOME/auth.json"
+          chmod 600 "$CODEX_HOME/auth.json"
+          if ! jq empty "$CODEX_HOME/auth.json" >/dev/null 2>&1; then
+            echo "::error::CODEX_AUTH_JSON is not valid JSON. Re-copy the full contents of ~/.codex/auth.json into the secret."
+            exit 1
+          fi
+          printf 'cli_auth_credentials_store = "file"\n' > "$CODEX_HOME/config.toml"
+      - name: Install Codex CLI
+        run: npm install -g "@openai/codex@${CODEX_VERSION}"
       - id: codex
         name: Run Codex continuation
-        uses: openai/codex-action@v1
-        with:
-          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
-          prompt-file: .github/codex/prompts/autonomous-continue.md
-          sandbox: workspace-write
-          output-file: .codex/tmp/codex-next-plan.md
-          codex-args: '["--ephemeral"]'
+        run: |
+          set -euo pipefail
+          codex exec \
+            --skip-git-repo-check \
+            --cd "$GITHUB_WORKSPACE" \
+            --output-last-message .codex/tmp/codex-next-plan.md \
+            --ephemeral \
+            --sandbox workspace-write \
+            < .github/codex/prompts/autonomous-continue.md
+      - id: finalmsg
+        name: Capture Codex final message
+        run: |
+          {
+            echo "final-message<<CODEX_FINAL_EOF"
+            if [ -f .codex/tmp/codex-next-plan.md ]; then
+              cat .codex/tmp/codex-next-plan.md
+            else
+              echo "(no final message produced)"
+            fi
+            echo "CODEX_FINAL_EOF"
+          } >> "$GITHUB_OUTPUT"
       - id: diff
         name: Create patch artifact
         run: |
