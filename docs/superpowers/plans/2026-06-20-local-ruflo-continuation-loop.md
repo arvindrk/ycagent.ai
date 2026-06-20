@@ -421,19 +421,20 @@ while true; do
 done
 ```
 
-- [ ] **Step 2: Verify it ticks once and is stoppable**
+- [ ] **Step 2: Verify it ticks once and is stoppable (SAFE — no real continuation)**
 
-Run (a short interval so it loops quickly, then Ctrl-C or let the timeout kill it):
+Pre-seed the seen-SHA to the CURRENT `origin/main` so the watcher takes the no-change path and does **not** launch a continuation during this build step (a real run is exercised only in the gated Task 8):
 ```bash
 cd /Users/arvindkishore/personal/ycagent.ai
-rm -f agent/brain/state/last-merge-sha
+mkdir -p agent/brain/state
+git ls-remote origin refs/heads/main | awk '{print $1}' > agent/brain/state/last-merge-sha
 WATCH_INTERVAL=2 bash agent/local/watch.sh &
 wpid=$!
 sleep 5
 kill -INT "$wpid" 2>/dev/null || true
 wait "$wpid" 2>/dev/null || true
 ```
-Expected: a `watching origin/main every 2s` line, at least one merge-watch tick (e.g. `new merge ...` or `no change ...`), then `watcher stopped`. (If it kicked off a real continuation, that is expected behavior — a draft PR may appear; see Task 8.)
+Expected: a `watching origin/main every 2s` line, at least one `no change (<sha>)` tick, then `watcher stopped`. No worktree is created and no PR is opened. (Confirm: `git worktree list` shows only the main checkout.)
 
 - [ ] **Step 3: Shellcheck and commit**
 
