@@ -80,7 +80,7 @@ if [[ -n "$inflight" ]]; then
 fi
 
 log "run Grok Build orchestrator (Ruflo MCP) in worktree"
-emit_event phase.start phase=orchestrate
+emit_event phase.start phase=orchestrate engine="grok-build"
 (
   cd "$wt"
   grok --prompt-file "$run_prompt" \
