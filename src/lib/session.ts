@@ -1,4 +1,4 @@
-import { auth } from "./auth";
+import { getAuth } from "./auth";
 
 const DISABLE_AUTH = process.env.IS_DEV_MODE === "true";
 
@@ -8,5 +8,5 @@ const DEV_SESSION = {
 
 export async function getSession(headers: Headers) {
   if (DISABLE_AUTH) return DEV_SESSION;
-  return auth.api.getSession({ headers });
+  return getAuth().api.getSession({ headers });
 }
