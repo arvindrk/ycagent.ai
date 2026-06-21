@@ -14,6 +14,7 @@ export interface Run {
   changes?: { files: string[]; additions: number; deletions: number };
   verify?: { command: string; passed: boolean };
   pr?: { number: number; url: string; title: string };
+  engine?: string;
   events: LoopEvent[];
   reasoning: AgentStep[];
 }
@@ -27,6 +28,7 @@ export function buildRunFromEvents(runId: string, events: LoopEvent[], reasoning
     else if (e.type === "verify.result") run.verify = { command: e.command, passed: e.passed };
     else if (e.type === "pr.opened") run.pr = { number: e.number, url: e.url, title: e.title };
     else if (e.type === "run.end") run.status = e.status;
+    else if (e.type === "phase.start" && e.phase === "orchestrate" && e.engine) run.engine = e.engine;
   }
   return run;
 }
