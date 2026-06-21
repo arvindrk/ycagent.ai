@@ -87,3 +87,15 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Decisions: (1) Verified the `$N` numbering contract by parsing placeholder indices from the SQL string and asserting they are sequential. (2) Used the same zero-dependency test runner pattern. (3) The `countParams` helper uses a Set to de-duplicate `$N` references before comparing length.
 - Verification: `npm run eval:build-filter-sql-smoke` ran 17 tests, 17 passed, 0 failed. `npm run lint`, `npm run typecheck`, and `npm run build` all passed.
 - Next handoff: consider adding eval coverage for `parseSearchFilters` (URL param -> ParsedFilters) and a scenario-level semantic search eval with mocked embeddings and DB.
+
+## 2026-06-21 (parse-search-filters-eval-coverage)
+
+- Worktree: `continue-20260621-224529` on branch `grok/continue-local-20260621-224529`.
+- Task: `parse-search-filters-eval-coverage` (priority 10). All higher-priority tasks were completed or in-flight (`dependency-security-audit` had an open PR).
+- Root cause for selection: `parseSearchFilters` is the thin but critical function that turns validated URL search params (batch, tags=comma lists, is_hiring='true' etc) into ParsedFilters used in the /api/companies/search route. It had zero unit coverage despite being the explicit filter path alongside extract-from-query; a regression in split/trim/coerce would silently affect all filtered searches.
+- Created `src/eval/parse-search-filters-smoke.ts`: 16 tests covering string passthrough (batch/stage/status/location), array parse (split/trim/empty filter/[] result for commas-only), boolean 'true'/'false' -> true/false and absent->undefined, numeric min/max passthrough and absent, mixed filters, and empty input. Added edge cases (whitespace-only values, all-commas) following corridor security analysis for untrusted input handling.
+- Added `"eval:parse-search-filters-smoke": "tsx src/eval/parse-search-filters-smoke.ts"` to package.json scripts.
+- Decisions: (1) Followed the established zero-dependency custom runner + assert pattern from prior filter evals exactly (no new abstractions). (2) Used `Partial<SearchInput>` + cast for test inputs so no schema or I/O; focused strictly on parse's reshape logic. (3) No changes to any production source; minimal diff. (4) Selected this over other possibilities because it directly addresses the explicit next-handoff note from build-filter-sql work, is pure/eval/reliability focused, and unblocks future search evals.
+- No new dependencies. No DB schema or queries touched. One new file + two small metadata edits.
+- Verification: `npm run eval:parse-search-filters-smoke` ran 16 tests, 16 passed, 0 failed. `npm run lint`, `npm run typecheck`, and `npm run build` all passed.
+- Next handoff: all items in feature_list.json are now completed except the in-flight dependency-security-audit. Future work could add a small merged-filter integration smoke (parse + extract + build) or a mocked-embedding scenario-level eval for the full search path.
