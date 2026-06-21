@@ -28,7 +28,7 @@ export function getAuth(): ReturnType<typeof betterAuth> {
         prompt: "select_account consent",
       },
     },
-  });
+  }) as ReturnType<typeof betterAuth>;
 
-  return globalThis._auth;
+  return globalThis._auth!;
 }

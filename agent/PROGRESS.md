@@ -40,3 +40,16 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - No env var changes, no new packages, no fake secrets.
 - Verification: `npm run lint` passed, `npm run typecheck` passed, `npm run build` passed with zero Better Auth warnings.
 - Next handoff: `research-agent-eval-harness` (priority 5) is the next unblocked planned task.
+
+## 2026-06-21 (api-route-input-validation)
+
+- Worktree: `continue-20260621-192251` on branch `codex/continue-local-20260621-192251`.
+- Task: `api-route-input-validation` (priority 6). All higher-priority tasks were completed or in-flight.
+- Root cause: `src/app/api/companies/[id]/research/route.ts` and `src/app/api/research/cancel/route.ts` used TypeScript `as`-casts on `request.json()` with no runtime schema validation, violating the security rule in `.agents/rules/security.md` ("Validate all API route inputs with schema checks.").
+- Fix (research route): Added `researchRequestSchema` using `companySchema` (from `@/lib/schemas/company.schema`) for the `company` field, `z.tuple([z.number(), z.number()]).optional()` for `resolution`, and `z.string().min(1).optional()` for `sandboxId`. Used `safeParse` with a 400 response on failure. Removed the unused `Company` type import.
+- Fix (cancel route): Added `cancelRequestSchema` with `z.string().min(1)` for `runId`. Used `safeParse` with a 400 response on failure, removing the manual truthiness check.
+- Bonus fix: `src/lib/auth.ts` had two pre-existing TypeScript errors (`TS2322`) introduced by a `better-auth` version update after the `auth-build-env-cleanup` PR merged. Fixed by adding `as ReturnType<typeof betterAuth>` cast on assignment and a non-null assertion on return; both are safe because the value is assigned on the line immediately above.
+- Also fixed: `package.json` had a missing comma after `eval:research-smoke` script entry (pre-existing syntax error from the `research-agent-eval-harness` PR).
+- No new dependencies. No DB changes. No new files.
+- Verification: `npm run lint` passed, `npm run typecheck` passed, `npm run build` passed.
+- Next handoff: `dependency-security-audit` (priority 3) is the remaining planned task but already has an open PR.
