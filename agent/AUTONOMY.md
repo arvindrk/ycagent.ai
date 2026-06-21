@@ -18,10 +18,10 @@ watcher is running in Apple Terminal. Start it with `bash agent/local/watch.sh`
 
 1. Acquires a lock (`agent/brain/locks/`), then runs `agent/local/continue.sh`.
 2. Creates a git worktree off `origin/main` under `.codex/worktrees/`.
-3. Runs one headless Claude Code instance (`--model claude-sonnet-4-6`,
-   `--mcp-config` rooted at the main repo) that orchestrates via the Ruflo MCP and
-   implements the next unblocked `feature_list.json` task.
-4. If the worktree changed: commits, pushes `codex/continue-local-<ts>`, and opens a
+3. Runs one headless Grok Build instance (`-m grok-build`, --permission-mode bypassPermissions,
+   project .mcp.json for Ruflo MCP) that orchestrates via the Ruflo MCP (auto-discovered)
+   and implements the next unblocked `feature_list.json` task.
+4. If the worktree changed: commits, pushes `grok/continue-local-<ts>`, and opens a
    draft PR with `gh`.
 5. Removes the worktree and records the SHA.
 
@@ -30,7 +30,7 @@ triggers this loop and a draft PR is opened without a human prompt.
 
 ## Human Gates
 
-Codex may create draft PRs. Humans must still approve irreversible actions:
+The agent may create draft PRs. Humans must still approve irreversible actions:
 
 - Merge to `main`
 - Production deploy promotion
@@ -43,7 +43,7 @@ Codex may create draft PRs. Humans must still approve irreversible actions:
 - Use `[skip codex]` in a merge commit message to prevent continuation for that merge.
 - The local loop pushes and opens draft PRs using the maintainer's local `gh` auth.
 - Kill switch: stop the watcher (Ctrl-C in its Terminal, or close the window). Nothing runs when the watcher is not running.
-- Token note: ChatGPT/Codex auth is no longer used by the loop; it runs on local Claude auth.
+- Token note: ChatGPT/Codex auth is no longer used; it runs on local Grok Build auth (grok login or XAI_API_KEY).
 - Keep durable task state in `agent/feature_list.json`.
 - Keep append-only handoff notes in `agent/PROGRESS.md`.
 - Keep local/generated context in `agent/brain/`; it is git-ignored and separate from the Mercor Obsidian vault.

@@ -10,7 +10,7 @@ name: Codex continue after merge
 #   See agent/AUTONOMY.md for the full setup.
 
 on:
-  # Continuation now runs locally (terminal watcher + Ruflo + Claude Code). See agent/AUTONOMY.md.
+  # Continuation now runs locally (terminal watcher + Ruflo + Grok Build). See agent/AUTONOMY.md.
   # Kept as a manual fallback only; no automatic PR generation in CI.
   workflow_dispatch:
 
