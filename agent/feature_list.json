@@ -13,6 +13,7 @@
     "status": "completed",
     "priority": 3,
     "depends_on": ["codex-harness-foundation"],
+    "category": "tech_debt",
     "description": "Triage npm audit findings from the harness setup run, prioritizing the critical and high vulnerabilities without unsafe force upgrades.",
     "verify": "npm audit --audit-level=high",
     "passes": false

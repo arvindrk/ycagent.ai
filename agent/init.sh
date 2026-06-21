@@ -4,7 +4,7 @@ set -euo pipefail
 root="$(git rev-parse --show-toplevel)"
 cd "$root"
 
-echo "== ycagent.ai repo =="
+echo "== $(basename "$(git rev-parse --show-toplevel)") repo =="
 git status --short --branch
 
 echo
