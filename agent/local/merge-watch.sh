@@ -19,11 +19,11 @@ if [[ "$remote_sha" == "$last_sha" ]]; then
   exit 0
 fi
 
-# Fetch so we can read the new HEAD commit message for the [skip codex] guard.
+# Fetch so we can read the new HEAD commit message for the skip harness guard (supports legacy [skip codex]).
 git -C "$REPO_ROOT" fetch --quiet origin main || true
 msg="$(git -C "$REPO_ROOT" log -1 --format=%B "$remote_sha" 2>/dev/null || echo "")"
-if grep -qiF "[skip codex]" <<<"$msg"; then
-  log "[skip codex] on $remote_sha; recording and skipping"
+if grep -qiE '\[skip (codex|harness|agent|continuation)\]' <<<"$msg"; then
+  log "[skip harness] on $remote_sha; recording and skipping"
   [[ $DRY_RUN -eq 0 ]] && echo "$remote_sha" > "$STATE_DIR/last-merge-sha"
   exit 0
 fi

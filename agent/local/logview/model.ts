@@ -79,7 +79,8 @@ export function buildFeature(repoRoot: string, featureId: string): Feature {
   // PRs: gh (best-effort; empty on failure)
   let prs: Feature["prs"] = [];
   try {
-    const out = execFileSync("gh", ["pr", "list", "--repo", "arvindrk/ycagent.ai", "--state", "all", "--search", `[${featureId}] in:title`, "--json", "number,title,state"], { encoding: "utf8" });
+    const ghRepo = process.env.REPO_GH || require('child_process').execSync('git remote get-url origin 2>/dev/null || echo ""', {encoding:'utf8'}).trim().replace(/.*github.com[/:]([^/]+\/[^/.]+)(\.git)?$/i, '$1') || '';
+    const out = execFileSync("gh", ["pr", "list", "--repo", ghRepo, "--state", "all", "--search", `[${featureId}] in:title`, "--json", "number,title,state"], { encoding: "utf8" });
     prs = JSON.parse(out).map((p: any) => ({ number: p.number, title: p.title, state: p.state }));
   } catch { /* gh unavailable; leave prs empty */ }
   return { featureId, description: desc, priority: prio, status, runs, prs };

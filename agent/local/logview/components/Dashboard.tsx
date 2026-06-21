@@ -30,7 +30,7 @@ export function Dashboard({ repoRoot }: { repoRoot: string }) {
   const run = current ? loadRun(repoRoot, current) : undefined;
   return (
     <Box flexDirection="column" borderStyle="round" paddingX={1}>
-      <Text bold>ycagent.ai · continuation loop <Text dimColor>({runIds.length} runs)</Text></Text>
+      <Text bold>continuation loop <Text dimColor>({runIds.length} runs)</Text></Text>
       {run ? <RunTimeline run={run} expanded={expanded} /> : <Text dimColor>No runs yet. Trigger the watcher.</Text>}
       <Text dimColor>[↑↓] runs  [enter] expand reasoning  [q] quit</Text>
     </Box>

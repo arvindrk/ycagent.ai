@@ -1,0 +1,6 @@
+{
+  "gh_repo": "arvindrk/ycagent.ai",
+  "display_name": "ycagent.ai",
+  "agent_cmd": "grok",
+  "agent_model": "grok-build"
+}
