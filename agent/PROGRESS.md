@@ -59,3 +59,39 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - No env var changes, no new packages, no fake secrets.
 - Verification: `npm run lint` passed, `npm run typecheck` passed, `npm run build` passed with zero Better Auth warnings.
 - Next handoff: `research-agent-eval-harness` (priority 5) is the next unblocked planned task.
+
+## 2026-06-21 (api-route-input-validation)
+
+- Worktree: `continue-20260621-192251` on branch `codex/continue-local-20260621-192251`.
+- Task: `api-route-input-validation` (priority 6). All higher-priority tasks were completed or in-flight.
+- Root cause: `src/app/api/companies/[id]/research/route.ts` and `src/app/api/research/cancel/route.ts` used TypeScript `as`-casts on `request.json()` with no runtime schema validation, violating the security rule in `.agents/rules/security.md` ("Validate all API route inputs with schema checks.").
+- Fix (research route): Added `researchRequestSchema` using `companySchema` (from `@/lib/schemas/company.schema`) for the `company` field, `z.tuple([z.number(), z.number()]).optional()` for `resolution`, and `z.string().min(1).optional()` for `sandboxId`. Used `safeParse` with a 400 response on failure. Removed the unused `Company` type import.
+- Fix (cancel route): Added `cancelRequestSchema` with `z.string().min(1)` for `runId`. Used `safeParse` with a 400 response on failure, removing the manual truthiness check.
+- Bonus fix: `src/lib/auth.ts` had two pre-existing TypeScript errors (`TS2322`) introduced by a `better-auth` version update after the `auth-build-env-cleanup` PR merged. Fixed by adding `as ReturnType<typeof betterAuth>` cast on assignment and a non-null assertion on return; both are safe because the value is assigned on the line immediately above.
+- Also fixed: `package.json` had a missing comma after `eval:research-smoke` script entry (pre-existing syntax error from the `research-agent-eval-harness` PR).
+- No new dependencies. No DB changes. No new files.
+- Verification: `npm run lint` passed, `npm run typecheck` passed, `npm run build` passed.
+- Next handoff: `dependency-security-audit` (priority 3) is the remaining planned task but already has an open PR.
+
+## 2026-06-21 (research-route-error-recovery)
+
+- Worktree: `continue-20260621-202900` on branch `codex/continue-local-20260621-202900`.
+- Task: `research-route-error-recovery` (priority 7). All higher-priority tasks were completed or in-flight (`dependency-security-audit` had an open PR).
+- Root cause: in `src/app/api/companies/[id]/research/route.ts`, if `insertResearchRun` threw after `tasks.trigger()` succeeded, the catch block returned a 500 without cancelling the triggered run. The Trigger.dev run and its E2B sandbox kept running with no DB record to track or surface it to the user.
+- Fix: Added `let triggeredRunId: string | null = null` before the try block. Assigned `triggeredRunId = handle.id` immediately after `tasks.trigger()` succeeds. In the catch block, if `triggeredRunId` is set, call `runs.cancel(triggeredRunId).catch(() => undefined)` (fire-and-forget, ignoring its own errors to avoid masking the original failure).
+- Bonus fix: removed unnecessary optional chain `company?.id` in the catch block's analytics call; `company` is always defined at that point since it is destructured from `parsed.data` before the try block.
+- Added `runs` to the `@trigger.dev/sdk/v3` import alongside the existing `tasks` import.
+- No new dependencies, no DB schema changes, no new files.
+- Verification: `npm run lint` passed, `npm run typecheck` passed, `npm run build` passed (compiled successfully in 3.5s, all 9 pages generated).
+- Next handoff: all tasks in `feature_list.json` are now completed. Add new tasks in the next cycle as the application evolves.
+
+## 2026-06-21 (search-filter-eval-coverage)
+
+- Worktree: `continue-20260621-204040` on branch `codex/continue-local-20260621-204040`.
+- Task: `search-filter-eval-coverage` (priority 8). All higher-priority tasks were completed or in-flight.
+- Root cause for selection: `extractFiltersFromQuery` is a 200+ line pure function with complex regex and alias-table logic that silently degrades search quality on regression, yet had zero eval coverage.
+- Created `src/eval/search-filter-smoke.ts`: 16 tests covering batch short-form aliases (W24/S24/F24), team size range/under/over/phrase patterns, founded year exact/after/before patterns, is_hiring (true and false), is_nonprofit, cleanedQuery token removal, and cross-contamination guard. Zero env vars or I/O required.
+- Added `eval:search-filter-smoke` script to `package.json` pointing at `tsx src/eval/search-filter-smoke.ts`.
+- Decisions: (1) Chose test cases that exercise only regex and alias-table paths, not vocabulary-JSON paths, so tests are hermetically reproducible without a database or generated file. (2) Matched the same zero-dependency runner pattern from `src/eval/smoke.ts` (custom test()/assert(), process.exit(1) on failure).
+- Verification: `npm run eval:search-filter-smoke` ran 16 tests, 16 passed, 0 failed. `npm run lint`, `npm run typecheck`, and `npm run build` all passed.
+- Next handoff: all tasks in `feature_list.json` are now completed. Future cycles should add new tasks as the platform evolves (e.g., scenario-level semantic search eval with mocked embeddings).

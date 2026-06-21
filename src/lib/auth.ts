@@ -30,5 +30,5 @@ export function getAuth(): ReturnType<typeof betterAuth> {
     },
   }) as ReturnType<typeof betterAuth>;
 
-  return globalThis._auth;
+  return globalThis._auth!;
 }

@@ -52,5 +52,32 @@
     "description": "Add a lightweight scenario eval for the YC research agent using synthetic companies and rubric-based outcome checks.",
     "verify": "npm run eval:research-smoke",
     "passes": true
+  },
+  {
+    "id": "api-route-input-validation",
+    "status": "completed",
+    "priority": 6,
+    "depends_on": ["codex-harness-foundation"],
+    "description": "Add Zod schema validation to the two unvalidated API routes (research trigger and cancel) to enforce the security rule requiring schema checks at all API boundaries.",
+    "verify": "npm run lint && npm run typecheck && npm run build",
+    "passes": true
+  },
+  {
+    "id": "research-route-error-recovery",
+    "status": "completed",
+    "priority": 7,
+    "depends_on": ["api-route-input-validation"],
+    "description": "Fix the research trigger API route to cancel the Trigger.dev run when a subsequent DB insert fails, preventing dangling runs that keep E2B sandbox resources alive with no tracking record.",
+    "verify": "npm run lint && npm run typecheck && npm run build",
+    "passes": true
+  },
+  {
+    "id": "search-filter-eval-coverage",
+    "status": "completed",
+    "priority": 8,
+    "depends_on": ["codex-harness-foundation"],
+    "description": "Add an eval smoke test for the extractFiltersFromQuery pure function, covering batch aliases, team size patterns, founded year patterns, hiring flags, and cleanedQuery output. Zero I/O dependencies.",
+    "verify": "npm run eval:search-filter-smoke",
+    "passes": true
   }
 ]
