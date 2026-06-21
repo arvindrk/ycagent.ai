@@ -1,6 +1,6 @@
 # ycagent.ai Agent Guide
 
-Continuation runs locally: Ruflo (claude-flow) orchestrates and Claude Code on Sonnet 4.6 is the execution engine that writes code. It is triggered on merges to `main` by a foreground terminal watcher (`agent/local/watch.sh`, started in Apple Terminal and active only while running; see `agent/local/` and `agent/AUTONOMY.md`). The `.codex/` harness is retained for manual Codex use but is no longer the active continuation path.
+Continuation runs locally: Ruflo (claude-flow) orchestrates and Grok Build (grok-build model) is the execution engine that writes code. It is triggered on merges to `main` by a foreground terminal watcher (`agent/local/watch.sh`, started in Apple Terminal and active only while running; see `agent/local/` and `agent/AUTONOMY.md`). The `.codex/` harness is retained for manual Codex use but is no longer the active continuation path. Grok Build is compatible with the existing AGENTS.md, .claude/ layout, skills, hooks, and MCP configuration.
 
 ## Operating Model
 
