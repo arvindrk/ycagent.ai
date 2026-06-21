@@ -79,5 +79,14 @@
     "description": "Add an eval smoke test for the buildFilterSQL pure function, verifying that $N placeholder indices are sequential and that values array length matches the param count across all 13 filter types and paramOffset variants. Zero I/O dependencies.",
     "verify": "npm run eval:build-filter-sql-smoke",
     "passes": true
+  },
+  {
+    "id": "ci-eval-smoke-coverage",
+    "status": "completed",
+    "priority": 10,
+    "depends_on": ["codex-harness-foundation"],
+    "description": "Run the three pure smoke evals (research-agent, search-filter, build-filter-sql) inside the CI verify job so filter logic and research invariants are enforced on every PR and main merge.",
+    "verify": "npm run lint && npm run typecheck && npm run build && npm run eval:research-smoke && npm run eval:search-filter-smoke && npm run eval:build-filter-sql-smoke",
+    "passes": true
   }
 ]
