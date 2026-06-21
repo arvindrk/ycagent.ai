@@ -41,6 +41,15 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Deferred as `trigger-dev-major-upgrade` (new task, priority 6 in feature_list.json). Requires dedicated testing of Trigger.dev integration after upgrade.
 - Verification: `npm run lint` passed, `npm run typecheck` passed, `npm run build` passed (all 9 routes generated successfully).
 - Next handoff: `auth-build-env-cleanup` (priority 4) is now the highest-priority unblocked planned task.
+### research-agent-eval-harness (worktree: continue-20260620-164421)
+
+- Selected `research-agent-eval-harness` (priority 5): both priority-3 (`dependency-security-audit`) and priority-4 (`auth-build-env-cleanup`) had open continuation PRs in flight.
+- Explored codebase to identify eval seams: `getToolsForDomain` and `DOMAIN_REGISTRY` are pure functions with no I/O, and `FounderProfileResult` has well-defined JSON Schema constraints in `founderProfileResultToolSchema`.
+- Created `src/eval/smoke.ts`: 16 tests covering tool registry invariants, domain registry message generation, and rubric pass/fail cases for `FounderProfileResult`. No env vars or API calls required.
+- Added `eval:research-smoke` script to `package.json` pointing at `tsx src/eval/smoke.ts`.
+- Decisions: (1) Avoided importing the agentic loop (OpenAI/E2B) since a meaningful LLM eval requires live credentials; the seam chosen (tool schema + domain registry + rubric) covers the invariants that can actually break without live APIs. (2) Rubric enforces the same minItems/maxItems constraints as `founderProfileResultToolSchema` to keep schema and runtime checks in sync.
+- Verification: `npm run eval:research-smoke` ran 16 tests, 16 passed, 0 failed. `npm run lint` and `npm run typecheck` both passed.
+- Next handoff: once all planned tasks complete, a follow-up could add a scenario-level eval that mocks the OpenAI client and exercises the full `executeAgentLoop` generator end-to-end.
 ## 2026-06-20 (auth-build-env-cleanup)
 
 - Worktree: `continue-20260620-161549` on branch `codex/continue-local-20260620-161549`.
