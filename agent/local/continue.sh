@@ -22,6 +22,10 @@ git -C "$REPO_ROOT" worktree add -b "$branch" "$wt" origin/main
 cleanup() {
   log "remove worktree $wt"
   git -C "$REPO_ROOT" worktree remove --force "$wt" 2>/dev/null || true
+  # Delete the LOCAL continuation branch; the remote copy carries the PR and is
+  # auto-deleted on merge (repo "Automatically delete head branches" setting).
+  # This keeps local `git branch` from accumulating codex/continue-local-* refs.
+  git -C "$REPO_ROOT" branch -D "$branch" 2>/dev/null || true
   rm -f "$BRAIN_DIR/run/$ts-mcp.json" "$BRAIN_DIR/run/$ts-prompt.md" 2>/dev/null || true
 }
 trap cleanup EXIT
