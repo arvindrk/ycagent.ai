@@ -12,6 +12,7 @@ Continuation runs locally: Ruflo (claude-flow) orchestrates and Claude Code on S
 - Keep writes single-threaded within one branch or one worktree per feature thread.
 - Keep durable repo state in `agent/PROGRESS.md` and `agent/feature_list.json`.
 - Keep generated/local memory in `agent/brain/`, which is git-ignored and must not touch the Mercor Obsidian vault.
+- Observe the loop with `npm run logs` (live TUI), `logs run <id>`, `logs feature <id>`, `logs report <id>`. See `agent/local/logview/README.md`.
 
 ## Commands
 

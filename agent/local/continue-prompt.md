@@ -14,7 +14,11 @@ Required procedure:
 5. Implement only that one task yourself. Keep the diff scoped.
 6. Update `agent/feature_list.json` and append an entry to `agent/PROGRESS.md` (date, task, decisions, commands, verification, next handoff).
 7. Run the task's `verify` command when it is safe locally. If it cannot run, record why in `agent/PROGRESS.md`.
-8. End with a concise summary: selected task, changed files, verification result, remaining human-review notes.
+8. Write a run summary the wrapper uses to build the PR. Create `.codex/tmp/` if needed (it is gitignored and never committed) and write `.codex/tmp/run-summary.json` as JSON with exactly these keys:
+   - `feature_id`: the selected `agent/feature_list.json` id you implemented.
+   - `title`: a short imperative PR title for the work (do NOT prefix it with the feature id; the wrapper adds that).
+   - `pr_body_md`: a Markdown PR description that FOLLOWS the repo template at `.github/pull_request_template.md`. Fill the "PR Description" with what and why, tick the single correct "PR Nature" box, complete the "Miscellaneous Checks" honestly (uncheck "No package changes" and say which packages changed if you touched `package.json`/lockfile; tick "Dev Sanity" only if verify passed), and fill "DB Query Plan" only if the change touches the database. Do NOT add a traceability section, the wrapper appends it.
+9. End with a concise final message: selected task, changed files, verification result, remaining human-review notes.
 
 Hard safety constraints:
 - Do NOT push, open or merge pull requests, deploy, publish, force-push, or change repository settings. The wrapper script opens the draft PR.

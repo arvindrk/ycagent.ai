@@ -41,3 +41,12 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Deferred as `trigger-dev-major-upgrade` (new task, priority 6 in feature_list.json). Requires dedicated testing of Trigger.dev integration after upgrade.
 - Verification: `npm run lint` passed, `npm run typecheck` passed, `npm run build` passed (all 9 routes generated successfully).
 - Next handoff: `auth-build-env-cleanup` (priority 4) is now the highest-priority unblocked planned task.
+## 2026-06-20 (auth-build-env-cleanup)
+
+- Worktree: `continue-20260620-161549` on branch `codex/continue-local-20260620-161549`.
+- Task: `auth-build-env-cleanup` (priority 4). `dependency-security-audit` was already in-flight so this was selected next.
+- Root cause: `betterAuth()` was called at module scope in `src/lib/auth.ts`. During `next build`, Next.js statically evaluates all route files; importing the auth module triggered `betterAuth()` before env vars (BETTER_AUTH_SECRET, BETTER_AUTH_BASE_URL, DATABASE_URL) were available, producing loud build warnings.
+- Fix: converted `src/lib/auth.ts` to export `getAuth()` (lazy getter with `globalThis._auth` memoization, consistent with the existing `_authPool` pattern). Updated `src/app/api/auth/[...all]/route.ts` to call `getAuth()` at request time (memoized via `_handler`). Updated `src/lib/session.ts` (found during typecheck) to use `getAuth()`.
+- No env var changes, no new packages, no fake secrets.
+- Verification: `npm run lint` passed, `npm run typecheck` passed, `npm run build` passed with zero Better Auth warnings.
+- Next handoff: `research-agent-eval-harness` (priority 5) is the next unblocked planned task.
