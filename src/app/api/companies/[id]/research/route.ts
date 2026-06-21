@@ -1,13 +1,20 @@
 import { NextRequest } from "next/server";
+import { z } from "zod";
 import { tasks } from "@trigger.dev/sdk/v3";
 import { Sandbox } from "@e2b/desktop";
 import { DEFAULT_DESKTOP_TIMEOUT } from "@/constants/llm.constants";
 import type { researchOrchestrator } from "@/trigger/research-orchestrator";
-import type { Company } from "@/types/company.types";
 import { DEFAULT_RESOLUTION, Resolution } from "@/types/sandbox.types";
+import { companySchema } from "@/lib/schemas/company.schema";
 import { getSession } from "@/lib/session";
 import { insertResearchRun } from "@/lib/db/queries/research-runs.queries";
 import { captureServerEvent } from "@/lib/analytics/posthog";
+
+const researchRequestSchema = z.object({
+  company: companySchema,
+  resolution: z.tuple([z.number(), z.number()]).optional(),
+  sandboxId: z.string().min(1).optional(),
+});
 
 async function createSandbox(resolution: Resolution) {
   return Sandbox.create({
@@ -28,11 +35,13 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { company, resolution = DEFAULT_RESOLUTION, sandboxId } = await request.json() as {
-    company: Company;
-    resolution?: Resolution;
-    sandboxId?: string;
-  };
+  const body = await request.json();
+  const parsed = researchRequestSchema.safeParse(body);
+  if (!parsed.success) {
+    return Response.json({ error: "Invalid request body" }, { status: 400 });
+  }
+
+  const { company, resolution = DEFAULT_RESOLUTION, sandboxId } = parsed.data;
 
   try {
     let desktop: Sandbox;

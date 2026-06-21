@@ -43,5 +43,14 @@
     "description": "Add a lightweight scenario eval for the YC research agent using synthetic companies and rubric-based outcome checks.",
     "verify": "npm run eval:research-smoke",
     "passes": true
+  },
+  {
+    "id": "api-route-input-validation",
+    "status": "completed",
+    "priority": 6,
+    "depends_on": ["codex-harness-foundation"],
+    "description": "Add Zod schema validation to the two unvalidated API routes (research trigger and cancel) to enforce the security rule requiring schema checks at all API boundaries.",
+    "verify": "npm run lint && npm run typecheck && npm run build",
+    "passes": true
   }
 ]

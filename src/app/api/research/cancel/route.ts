@@ -1,6 +1,11 @@
 import { NextRequest } from "next/server";
+import { z } from "zod";
 import { runs } from "@trigger.dev/sdk/v3";
 import { getSession } from "@/lib/session";
+
+const cancelRequestSchema = z.object({
+  runId: z.string().min(1),
+});
 
 export async function POST(request: NextRequest) {
   const session = await getSession(request.headers);
@@ -8,11 +13,13 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { runId } = await request.json() as { runId: string };
-
-  if (!runId) {
+  const body = await request.json();
+  const parsed = cancelRequestSchema.safeParse(body);
+  if (!parsed.success) {
     return Response.json({ error: "runId is required" }, { status: 400 });
   }
+
+  const { runId } = parsed.data;
 
   try {
     await runs.cancel(runId);
