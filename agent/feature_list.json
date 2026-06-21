@@ -10,7 +10,7 @@
   },
   {
     "id": "dependency-security-audit",
-    "status": "planned",
+    "status": "completed",
     "priority": 3,
     "depends_on": ["codex-harness-foundation"],
     "description": "Triage npm audit findings from the harness setup run, prioritizing the critical and high vulnerabilities without unsafe force upgrades.",
