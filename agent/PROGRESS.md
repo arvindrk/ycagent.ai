@@ -99,6 +99,18 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Verification: `npm run eval:build-filter-sql-smoke` ran 17 tests, 17 passed, 0 failed. `npm run lint`, `npm run typecheck`, and `npm run build` all passed.
 - Next handoff: consider adding eval coverage for `parseSearchFilters` (URL param -> ParsedFilters) and a scenario-level semantic search eval with mocked embeddings and DB.
 
+## 2026-06-21 (ci-eval-smoke-coverage)
+
+- Worktree: `continue-20260621-225139` on branch `grok/continue-local-20260621-225139`.
+- Task: `ci-eval-smoke-coverage` (priority 10). All prior tasks in `feature_list.json` completed; no unblocked tasks remained (respecting in-flight exclusions for dependency-security-audit and parse-search-filters-eval-coverage).
+- Selection: Proactively defined a small high-value scoped follow-up per instructions: reliability + eval coverage + CI enforcement. Chose to wire the existing three zero-I/O smoke evals into the CI job rather than new code or new evals. Avoided any id matching the excluded in-flight list.
+- Root cause for value: the smoke evals (16+16+17 cases exercising extractFiltersFromQuery regex/aliases, buildFilterSQL $N sequencing and value counts, research domain/tool/rubric invariants) were added in prior cycles but not executed by CI (ci.yml only did lint/typecheck/build). A regression could ship undetected until manual run.
+- Changes (minimal, one file): appended three `- run: npm run eval:*` steps to the verify job in `.github/workflows/ci.yml` immediately after `npm run build`. Hardcoded commands only (no variables, per Corridor guidance on command injection).
+- Decisions: (1) Did not touch package.json (avoids any "package changes" checkbox issues; scripts remain as-is). (2) Did not alter main verify command in docs/AGENTS because evals are additive for CI. (3) Used priority 10, depends_on the foundation only (like prior evals). (4) Recorded via PROGRESS and feature_list. (5) Preferenced eval/reliability per guidelines over product work. (6) Attempted Ruflo MCP memory but ruflo server was unavailable (timed out); used local PROGRESS and corridor analyzePlan instead.
+- Commands: `bash agent/init.sh`, full reads of AGENTS.md / .agents/rules/* / feature_list / PROGRESS, `git rev-parse` for context, corridor__analyzePlan, edit via search_replace, `npm run lint && npm run typecheck && npm run build && npm run eval:research-smoke && npm run eval:search-filter-smoke && npm run eval:build-filter-sql-smoke`.
+- Verification: Full verify exited 0. Lint clean, typecheck clean, build succeeded (9 pages), all three evals: 16/16, 16/16, 17/17 passed. Pre-existing Next.js lockfile and cache warnings noted (unrelated to change).
+- Next handoff: future cycles can expand CI to other checks (e.g. npm audit on low, or add a combined `eval:smoke` script) or tackle observability, remaining audit highs with care, or new evals (avoiding the named in-flight parse one until its PR lands).
+
 ## 2026-06-21 (parse-search-filters-eval-coverage)
 
 - Worktree: `continue-20260621-224529` on branch `grok/continue-local-20260621-224529`.
