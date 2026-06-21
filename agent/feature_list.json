@@ -88,5 +88,14 @@
     "description": "Add an eval smoke test for the parseSearchFilters function (URL param to ParsedFilters), covering string passthrough, array comma-split, boolean coercion, numeric fields, and edge cases. Zero I/O dependencies.",
     "verify": "npm run eval:parse-search-filters-smoke",
     "passes": true
+  },
+  {
+    "id": "establish-vision-categories",
+    "status": "completed",
+    "priority": 11,
+    "depends_on": ["codex-harness-foundation"],
+    "description": "Create the foundational agent/vision.md (platform vision, current direction, strategic goals, success signals) and agent/categories.json (SDLC categories with weights for new_feature, feature_improvement, tech_debt, maintenance, testing_observability, dx_infra, innovation). These are heavily referenced throughout AGENTS.md, agent/harness/*, .agents/ docs and the planner procedure but do not yet exist on disk. Populating them from the canonical project profile enables all future horizon planning, vision alignment, and category-balanced slices. Directly advances the harness as the primary reusable value and the goal of exhaustive planner that uses vision + categories.",
+    "verify": "npm run lint && npm run typecheck && npm run build",
+    "passes": true
   }
 ]

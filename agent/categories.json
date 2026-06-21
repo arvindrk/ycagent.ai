@@ -1,0 +1,33 @@
+{
+  "categories": {
+    "new_feature": {
+      "weight": 0.25,
+      "description": "New user-facing capabilities or major functional additions."
+    },
+    "feature_improvement": {
+      "weight": 0.20,
+      "description": "Enhancements and quality-of-life improvements to existing features."
+    },
+    "tech_debt": {
+      "weight": 0.15,
+      "description": "Refactoring, internal quality, dependency hygiene, and maintainability work."
+    },
+    "maintenance": {
+      "weight": 0.10,
+      "description": "Keep-the-lights-on updates, small fixes, and routine upkeep."
+    },
+    "testing_observability": {
+      "weight": 0.15,
+      "description": "Evals, tests, logging, monitoring, tracing, and reliability instrumentation."
+    },
+    "dx_infra": {
+      "weight": 0.10,
+      "description": "Developer experience, harness, tooling, and infrastructure improvements."
+    },
+    "innovation": {
+      "weight": 0.05,
+      "description": "Exploratory experiments and forward-looking ideas with uncertain payoff."
+    }
+  },
+  "notes": "Weights are approximate targets for horizon planning. Planner must explain category mix rationale vs recent history and these targets. Vision alignment is mandatory for every task."
+}

@@ -1,0 +1,24 @@
+{
+  "slice": ["establish-vision-categories", "scenario-level-semantic-search-eval", "research-agent-scenario-eval-mock-loop", "harness-observability-loop", "search-quality-improvements"],
+  "rationale_per_step": {
+    "establish-vision-categories": "dx_infra: foundational files missing; required to make planner procedure and harness reusable per AGENTS.md and vision.",
+    "scenario-level-semantic-search-eval": "testing_observability: extends recent pure function evals to integration/scenario level with mocks; unblocks reliable search improvements.",
+    "research-agent-scenario-eval-mock-loop": "testing_observability + feature_improvement: addresses repeated handoff notes for full executeAgentLoop coverage with mocked providers.",
+    "harness-observability-loop": "dx_infra / testing_observability: improve logview, events, reports for the continuation loop itself.",
+    "search-quality-improvements": "feature_improvement: use better evals to drive quality in YC discovery agent (aligns to research agent goals)."
+  },
+  "category_mix": {
+    "dx_infra": 2,
+    "testing_observability": 2,
+    "feature_improvement": 1
+  },
+  "vision_refs": {
+    "establish-vision-categories": ["make-harness-primary-value", "decouple-harness", "exhaustive-planner"],
+    "scenario-level-semantic-search-eval": ["improve-research-agent-quality-via-better-evals", "observability-for-the-loop"],
+    "research-agent-scenario-eval-mock-loop": ["improve-research-agent-quality-via-better-evals"],
+    "harness-observability-loop": ["observability-for-the-loop-itself"],
+    "search-quality-improvements": ["build-reliable-yc-company-discovery", "research-runs-produce-verifiable-dossiers"]
+  },
+  "generated_by_run": "planner-continue-20260622-002342",
+  "notes": "First planner run using separated planner/executor. All prior feature_list items completed. Horizon opens with critical missing harness config files for balance and to unblock future aligned planning. Recent history: 4x testing_observability; this slice mixes in dx_infra first."
+}

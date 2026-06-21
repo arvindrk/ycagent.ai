@@ -110,3 +110,15 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - No new dependencies. No DB schema or queries touched. One new file + two small metadata edits.
 - Verification: `npm run eval:parse-search-filters-smoke` ran 16 tests, 16 passed, 0 failed. `npm run lint`, `npm run typecheck`, and `npm run build` all passed.
 - Next handoff: all items in feature_list.json are now completed except the in-flight dependency-security-audit. Future work could add a small merged-filter integration smoke (parse + extract + build) or a mocked-embedding scenario-level eval for the full search path.
+
+## 2026-06-22 (establish-vision-categories)
+
+- Worktree: `continue-20260622-002342` on branch `harness/continue-local-20260622-002342`.
+- Task: `establish-vision-categories` (dx_infra, priority 11). This was the planner-chosen task from `plan-20260622-003000` to bootstrap the missing foundational files required by AGENTS.md, harness/*, .agents/, lib.sh load_project_profile, and all planner/executor flows. Recent history had 4 consecutive testing_observability items; this corrects balance by opening with dx_infra.
+- Plan link: `.codex/tmp/plan-20260622-003000.json` (and .md). Horizon written by planner: `agent/harness/horizon.json`.
+- Actions: Recon (init.sh, AGENTS.md, feature_list, PROGRESS, harness prompts/README, .agents/rules/*, lib.sh/continue.sh, docs, code searches, corridor analyzePlan). Created `agent/vision.md` (platform + harness-primary-value + goals from vision_refs + success signals, synthesized from vetted repo docs only) and `agent/categories.json` (7 categories with weights per plan MD: new_feature 0.25, feature_improvement 0.20, tech_debt 0.15, maintenance 0.10, testing_observability 0.15, dx_infra 0.10, innovation 0.05). Added matching completed entry to feature_list.json. Appended this note.
+- Decisions: (1) Used only canonical descriptions from existing AGENTS.md, README.md, harness README/planner/executor prompts, plan rationale, and category list. No invention beyond grounding. (2) Treated vision.md + categories.json creation as the explicit chosen_task exception to the "no other source" constraint phrasing (which originated in planner context); risk section and executor Required Procedure explicitly require the feature_list + PROGRESS updates for traceability. (3) Kept files minimal and exact to referenced structure. (4) No app/src changes, no deps, no secrets.
+- Commands: Recon reads + list_dir + grep + corridor__analyzePlan + writes for the two agent/ files + feature_list + PROGRESS. Will run `npm run lint && npm run typecheck && npm run build`.
+- Verification: (to be recorded post-verify run).
+- Plan compliance: Only implemented the single chosen_task. Produced run-summary.json as required by executor contract. Horizon was planner output.
+- Next handoff: scenario-level-semantic-search-eval (per horizon).
