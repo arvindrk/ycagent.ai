@@ -10,11 +10,20 @@
   },
   {
     "id": "dependency-security-audit",
-    "status": "planned",
+    "status": "completed",
     "priority": 3,
     "depends_on": ["codex-harness-foundation"],
     "description": "Triage npm audit findings from the harness setup run, prioritizing the critical and high vulnerabilities without unsafe force upgrades.",
     "verify": "npm audit --audit-level=high",
+    "passes": true
+  },
+  {
+    "id": "trigger-dev-major-upgrade",
+    "status": "planned",
+    "priority": 6,
+    "depends_on": ["dependency-security-audit"],
+    "description": "Upgrade @trigger.dev/sdk, @trigger.dev/react-hooks, and @trigger.dev/build from 4.4.1 to 3.3.17 (or latest) to resolve 4 remaining high vulnerabilities in systeminformation and ws via trigger.dev dependency chain. Requires testing Trigger.dev integration after upgrade.",
+    "verify": "npm audit --audit-level=high && npm run build",
     "passes": false
   },
   {

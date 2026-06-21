@@ -22,6 +22,25 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Human gates remaining for this PR: create the `CODEX_AUTH_JSON` secret from a local `codex login` (`cli_auth_credentials_store = "file"`), then review and merge the draft PR. `OPENAI_API_KEY` is no longer used by the workflow and can be removed.
 - Verification: workflow YAML parsed via js-yaml (jobs, steps, env, outputs intact). No app code changed.
 
+## 2026-06-20 (dependency-security-audit)
+
+- Branch: `codex/continue-local-20260620-144216`
+- Task: `dependency-security-audit` (priority 3)
+- Starting state: 54 vulnerabilities (3 low, 29 moderate, 21 high, 1 critical) after initial harness setup.
+- Actions taken:
+  1. Updated `next` from `16.1.6` to `16.2.9` (latest stable, `isSemVerMajor: False`) to address 18 Next.js CVEs including middleware bypass, cache poisoning, SSRF, DoS, and XSS.
+  2. Updated `eslint-config-next` from `16.1.4` to `16.2.9` to stay in sync with next.
+  3. Ran `npm install` to update lockfile.
+  4. Ran `npm audit fix` three times to converge on non-breaking transitive fixes: resolved protobufjs (critical: code injection/prototype pollution), tar (high: path traversal), hono, axios, form-data, flatted, path-to-regexp, socket.io-parser, ws (partially), and many moderate/low issues.
+- Result: 27 vulnerabilities remain (2 low, 21 moderate, 4 high, 0 critical). The 1 critical is eliminated.
+- Remaining 4 high findings all require a trigger.dev major version breaking change:
+  - `systeminformation` command injection (3 CVEs): requires `@trigger.dev/build@3.3.17` (major bump from 4.4.1)
+  - `@opentelemetry/host-metrics`: via systeminformation, same fix
+  - `@trigger.dev/core`: via opentelemetry + socket.io chain, same fix
+  - `ws` memory exhaustion/disclosure: trapped inside `socket.io-client@4.7.5` in trigger.dev dependency chain, same fix
+- Deferred as `trigger-dev-major-upgrade` (new task, priority 6 in feature_list.json). Requires dedicated testing of Trigger.dev integration after upgrade.
+- Verification: `npm run lint` passed, `npm run typecheck` passed, `npm run build` passed (all 9 routes generated successfully).
+- Next handoff: `auth-build-env-cleanup` (priority 4) is now the highest-priority unblocked planned task.
 ### research-agent-eval-harness (worktree: continue-20260620-164421)
 
 - Selected `research-agent-eval-harness` (priority 5): both priority-3 (`dependency-security-audit`) and priority-4 (`auth-build-env-cleanup`) had open continuation PRs in flight.
