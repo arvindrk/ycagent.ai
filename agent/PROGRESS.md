@@ -53,3 +53,15 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - No new dependencies. No DB changes. No new files.
 - Verification: `npm run lint` passed, `npm run typecheck` passed, `npm run build` passed.
 - Next handoff: `dependency-security-audit` (priority 3) is the remaining planned task but already has an open PR.
+
+## 2026-06-21 (research-route-error-recovery)
+
+- Worktree: `continue-20260621-202900` on branch `codex/continue-local-20260621-202900`.
+- Task: `research-route-error-recovery` (priority 7). All higher-priority tasks were completed or in-flight (`dependency-security-audit` had an open PR).
+- Root cause: in `src/app/api/companies/[id]/research/route.ts`, if `insertResearchRun` threw after `tasks.trigger()` succeeded, the catch block returned a 500 without cancelling the triggered run. The Trigger.dev run and its E2B sandbox kept running with no DB record to track or surface it to the user.
+- Fix: Added `let triggeredRunId: string | null = null` before the try block. Assigned `triggeredRunId = handle.id` immediately after `tasks.trigger()` succeeds. In the catch block, if `triggeredRunId` is set, call `runs.cancel(triggeredRunId).catch(() => undefined)` (fire-and-forget, ignoring its own errors to avoid masking the original failure).
+- Bonus fix: removed unnecessary optional chain `company?.id` in the catch block's analytics call; `company` is always defined at that point since it is destructured from `parsed.data` before the try block.
+- Added `runs` to the `@trigger.dev/sdk/v3` import alongside the existing `tasks` import.
+- No new dependencies, no DB schema changes, no new files.
+- Verification: `npm run lint` passed, `npm run typecheck` passed, `npm run build` passed (compiled successfully in 3.5s, all 9 pages generated).
+- Next handoff: all tasks in `feature_list.json` are now completed. Add new tasks in the next cycle as the application evolves.
