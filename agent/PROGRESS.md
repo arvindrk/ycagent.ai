@@ -65,3 +65,14 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - No new dependencies, no DB schema changes, no new files.
 - Verification: `npm run lint` passed, `npm run typecheck` passed, `npm run build` passed (compiled successfully in 3.5s, all 9 pages generated).
 - Next handoff: all tasks in `feature_list.json` are now completed. Add new tasks in the next cycle as the application evolves.
+
+## 2026-06-21 (search-filter-eval-coverage)
+
+- Worktree: `continue-20260621-204040` on branch `codex/continue-local-20260621-204040`.
+- Task: `search-filter-eval-coverage` (priority 8). All higher-priority tasks were completed or in-flight.
+- Root cause for selection: `extractFiltersFromQuery` is a 200+ line pure function with complex regex and alias-table logic that silently degrades search quality on regression, yet had zero eval coverage.
+- Created `src/eval/search-filter-smoke.ts`: 16 tests covering batch short-form aliases (W24/S24/F24), team size range/under/over/phrase patterns, founded year exact/after/before patterns, is_hiring (true and false), is_nonprofit, cleanedQuery token removal, and cross-contamination guard. Zero env vars or I/O required.
+- Added `eval:search-filter-smoke` script to `package.json` pointing at `tsx src/eval/search-filter-smoke.ts`.
+- Decisions: (1) Chose test cases that exercise only regex and alias-table paths, not vocabulary-JSON paths, so tests are hermetically reproducible without a database or generated file. (2) Matched the same zero-dependency runner pattern from `src/eval/smoke.ts` (custom test()/assert(), process.exit(1) on failure).
+- Verification: `npm run eval:search-filter-smoke` ran 16 tests, 16 passed, 0 failed. `npm run lint`, `npm run typecheck`, and `npm run build` all passed.
+- Next handoff: all tasks in `feature_list.json` are now completed. Future cycles should add new tasks as the platform evolves (e.g., scenario-level semantic search eval with mocked embeddings).
