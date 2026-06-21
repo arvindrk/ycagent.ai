@@ -18,7 +18,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm install --no-save lightningcss-linux-x64-gnu @next/swc-linux-x64-gnu
+      - run: npm install
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run build
