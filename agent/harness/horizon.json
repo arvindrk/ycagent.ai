@@ -1,8 +1,21 @@
 {
-  "slice": [],
-  "rationale_per_step": {},
-  "category_mix": {},
-  "vision_refs": {},
-  "generated_by_run": null,
-  "notes": "Example horizon state. Planner (via harness-planner skill or prompt logic) maintains this using Ruflo memory + this file for human visibility. Populated on first planning run."
+  "slice": ["semantic-search-scenario-eval", "centralize-tier-config", "surface-search-scores-ux", "configurable-research-provider"],
+  "rationale_per_step": {
+    "semantic-search-scenario-eval": "Directly advances vector search + evals per vision and repeated PROGRESS handoffs. testing_observability. Highest priority next because individual filter pieces covered; integrated scenario now needed.",
+    "centralize-tier-config": "Tech debt: single source of truth for tier labels/descriptions used by search results (weights.ts vs tiered-results-display.tsx). Prevents future divergence.",
+    "surface-search-scores-ux": "Feature improvement on UI/UX: surface existing semantic_score, name_score, tier fields from SearchResult to users for trust and intuitive discovery.",
+    "configurable-research-provider": "Feature improvement: drive research agent LLM choice from config/env instead of hard-coded, improving reliability of agent research facet without changing core flows."
+  },
+  "category_mix": {
+    "testing_observability": 1,
+    "tech_debt": 1,
+    "feature_improvement": 2
+  },
+  "vision_refs": {
+    "semantic-search-scenario-eval": ["vector search", "measurable research quality and coverage"],
+    "surface-search-scores-ux": ["powerful, intuitive discovery", "UI/UX"],
+    "configurable-research-provider": ["reliable deep research", "Agent research"]
+  },
+  "generated_by_run": "continue-20260622-004603",
+  "notes": "First real horizon after exhaustive planner landed (commit 4ab0fe7). feature_list.json fully exhausted (all completed, see PROGRESS). New candidate ids proposed aligned to vision + category balance via sub-planning. Corridor analyzed. Ruflo memory 'harness:horizon' not writable (MCP server timed out); horizon.json + plan artifacts are the persisted state for executor. Planner used spawn_subagent for balance recon."
 }

@@ -19,6 +19,7 @@
         "eval:search-filter-smoke": "tsx src/eval/search-filter-smoke.ts",
         "eval:build-filter-sql-smoke": "tsx src/eval/build-filter-sql-smoke.ts",
         "eval:parse-search-filters-smoke": "tsx src/eval/parse-search-filters-smoke.ts",
+        "eval:semantic-search-scenario-smoke": "tsx src/eval/semantic-search-scenario-smoke.ts",
         "test:logview": "node --import tsx --test \"agent/local/logview/__tests__/*.test.ts\" \"agent/local/logview/__tests__/*.test.tsx\"",
         "logs": "tsx agent/local/logview/index.tsx"
     },
