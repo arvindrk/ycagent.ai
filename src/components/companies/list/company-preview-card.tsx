@@ -12,7 +12,13 @@ import Image from 'next/image';
 import { useState } from 'react';
 
 interface CompanyPreviewCardProps {
-  company: CompanyListItem;
+  company: CompanyListItem & {
+    semantic_score?: number;
+    name_score?: number;
+    text_score?: number;
+    final_score?: number;
+    tier?: string;
+  };
 }
 
 function formatBatch(batch: string): string {
@@ -89,6 +95,15 @@ export function CompanyPreviewCard({ company }: CompanyPreviewCardProps) {
             {company.batch && (
               <Badge variant="secondary" className="flex-shrink-0">
                 {formatBatch(company.batch)}
+              </Badge>
+            )}
+            {typeof company.final_score === 'number' && (
+              <Badge
+                variant="outline"
+                className="flex-shrink-0 text-[10px] px-1.5 py-0 tabular-nums"
+                title={`semantic: ${company.semantic_score?.toFixed(2)} name: ${company.name_score?.toFixed(2)} text: ${company.text_score?.toFixed(2)} final: ${company.final_score.toFixed(2)}`}
+              >
+                {company.final_score.toFixed(2)}
               </Badge>
             )}
           </div>
