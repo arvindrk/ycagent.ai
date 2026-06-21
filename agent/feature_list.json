@@ -88,5 +88,14 @@
     "description": "Add an eval smoke test for the parseSearchFilters function (URL param to ParsedFilters), covering string passthrough, array comma-split, boolean coercion, numeric fields, and edge cases. Zero I/O dependencies.",
     "verify": "npm run eval:parse-search-filters-smoke",
     "passes": true
+  },
+  {
+    "id": "merged-filter-integration-smoke",
+    "status": "completed",
+    "priority": 11,
+    "depends_on": ["codex-harness-foundation"],
+    "description": "Add a zero-dependency integration smoke eval for the search filter composition (extract + parse + explicit override merge + buildFilterSQL) used by the companies search route. Covers the integration point between previously unit-tested pieces.",
+    "verify": "npm run eval:merged-filter-smoke",
+    "passes": true
   }
 ]
