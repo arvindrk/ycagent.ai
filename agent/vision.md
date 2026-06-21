@@ -1,25 +1,23 @@
 # ycagent.ai Platform Vision
 
-This harness and the platform it develops aim for a reusable, autonomous development loop for personal/agentic TS repos, with strong safety, observability, and planning.
+ycagent.ai helps people discover and deeply understand Y Combinator companies through fast, intelligent search and reliable autonomous research.
 
-## Current Direction
-- Build reliable YC company discovery + deep research agents (search, crawl via E2B/Firecrawl/Serper/X, LLM extraction/synthesis, semantic search, evals).
-- Make the agent harness itself (this agent/ + .agents/ structure) the primary value: extensible, decoupled, scalable planner/orchestrator using Ruflo for memory + sub-agents.
-- Follow SDLC balance: new features, improvements, tech debt, maintenance, testing/observability/infra, DX, innovation.
-- Long-horizon planning: explicit vision alignment + category-balanced lookahead (3-5 steps) before execution.
-- Single-threaded writes (worktrees), fan-out reads, human gates only on merges/deploys.
+## Highest Value Facets
+The platform's highest long-term value comes from three core facets:
+- **Vector search** — powering fast, accurate, and intuitive discovery of relevant companies.
+- **Agent research** — delivering high-quality, evidence-backed deep insights that go beyond surface data.
+- **UI/UX** — creating an amazing, seamless experience that makes complex research feel effortless and delightful.
 
-## Strategic Goals
-- Decouple harness mechanics from any one repo's business logic so it ports easily.
-- Enable exhaustive planner that looks ahead using vision + categories.
-- Improve research agent quality via better evals, error recovery, coverage.
-- Observability for the loop itself (events, logview, reports).
+## Core Outcomes
+
+1. High-quality, evidence-backed intelligence on YC companies and founders — comprehensive, sourced, and fresh.
+2. Powerful, intuitive discovery — fast semantic + structured search that surfaces relevant companies with minimal noise.
+3. Reliable deep research — autonomous agents that go beyond surface data to surface non-obvious signals (team dynamics, traction, relationships, risks) with strong traceability.
+4. Measurable research quality and coverage — evals, freshness checks, and iteration loops that demonstrably reduce hallucinations and blind spots over time.
 
 ## Success Signals
-- Planner produces horizon slices that advance goals and maintain category mix.
-- New repos can adopt the harness with only vision.md + categories + .agents/ tweaks.
-- Research runs produce verifiable, sourced dossiers with minimal hallucination.
-- Continuation PRs are small, reviewable, and accumulate toward the vision.
 
-See agent/categories.json for work types and agent/harness/ for planner mechanics.
-Update this file (with rationale in PROGRESS) when direction shifts.
+- Users quickly find and trust comprehensive, sourced profiles and insights.
+- Research outputs are consistently up-to-date and evidence-backed.
+- The platform covers a broad set of companies with high signal and low noise.
+- Internal quality loops measurably improve accuracy, freshness, and coverage over time.
