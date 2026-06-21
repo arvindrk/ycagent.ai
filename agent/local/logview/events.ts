@@ -3,7 +3,7 @@ export type LoopEvent =
   | { ts: string; run_id: string; seq: number; type: "run.start"; base_sha: string; branch: string; watcher_pid?: string }
   | { ts: string; run_id: string; seq: number; type: "guard.inflight"; excluded: string[]; cap: number; count: number }
   | { ts: string; run_id: string; seq: number; type: "feature.selected"; feature_id: string; title?: string; priority?: number; why?: string; depends_on?: string[] }
-  | { ts: string; run_id: string; seq: number; type: "phase.start" | "phase.end"; phase: string; duration_ms?: number }
+  | { ts: string; run_id: string; seq: number; type: "phase.start" | "phase.end"; phase: string; engine?: string; duration_ms?: number }
   | { ts: string; run_id: string; seq: number; type: "impl.changes"; files: string[]; additions: number; deletions: number }
   | { ts: string; run_id: string; seq: number; type: "verify.result"; command: string; passed: boolean; summary?: string }
   | { ts: string; run_id: string; seq: number; type: "pr.opened"; number: number; url: string; title: string }
@@ -28,7 +28,7 @@ export type AgentStep =
   | { kind: "tool_result"; ok: boolean }
   | { kind: "result"; text: string };
 
-// Parse claude --output-format stream-json (one JSON object per line).
+// Parse agent stream JSONL (Grok Build streaming-json or compatible shapes).
 export function parseAgentStream(text: string): AgentStep[] {
   const out: AgentStep[] = [];
   for (const line of text.split("\n")) {
@@ -47,6 +47,12 @@ export function parseAgentStream(text: string): AgentStep[] {
       }
     } else if (o.type === "result") {
       out.push({ kind: "result", text: typeof o.result === "string" ? o.result : "" });
+    } else {
+      // Grok Build / other streaming-json fallbacks
+      if (typeof o.text === "string" && o.text) out.push({ kind: "text", text: o.text });
+      else if (o.delta?.text) out.push({ kind: "text", text: o.delta.text });
+      else if (o.content && typeof o.content === "string") out.push({ kind: "text", text: o.content });
+      if (o.tool && o.input) out.push({ kind: "tool_use", tool: o.tool, input: o.input });
     }
   }
   return out;
