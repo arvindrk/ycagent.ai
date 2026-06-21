@@ -1,0 +1,8 @@
+{
+  "slice": [],
+  "rationale_per_step": {},
+  "category_mix": {},
+  "vision_refs": {},
+  "generated_by_run": null,
+  "notes": "Example horizon state. Planner (via harness-planner skill or prompt logic) maintains this using Ruflo memory + this file for human visibility. Populated on first planning run."
+}

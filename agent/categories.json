@@ -1,0 +1,47 @@
+{
+  "categories": [
+    {
+      "id": "new_feature",
+      "label": "New Feature Development",
+      "weight": 0.25,
+      "description": "Brand new user-visible or API capabilities."
+    },
+    {
+      "id": "feature_improvement",
+      "label": "Improving Existing Features",
+      "weight": 0.20,
+      "description": "Enhancements, UX, performance to current functionality."
+    },
+    {
+      "id": "tech_debt",
+      "label": "Tech Debt / Refactoring",
+      "weight": 0.15,
+      "description": "Cleanup, modernization, reducing complexity without new behavior."
+    },
+    {
+      "id": "maintenance",
+      "label": "Maintenance / Bugfix",
+      "weight": 0.10,
+      "description": "Fixes, deps, stability."
+    },
+    {
+      "id": "testing_observability",
+      "label": "Testing, Evals, Observability",
+      "weight": 0.15,
+      "description": "Evals, tests, logging, monitoring, logview, harness infra."
+    },
+    {
+      "id": "dx_infra",
+      "label": "DX / Infra / Tooling",
+      "weight": 0.10,
+      "description": "Developer experience, build, CI, harness improvements."
+    },
+    {
+      "id": "innovation",
+      "label": "Innovation / Exploratory",
+      "weight": 0.05,
+      "description": "Speculative or research spikes (use sparingly)."
+    }
+  ],
+  "notes": "Planner aims for approximate distribution per horizon slice and over recent runs. Use vision.md to set strategic emphasis. Categories are optional on feature_list items for now."
+}

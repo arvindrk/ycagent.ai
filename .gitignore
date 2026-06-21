@@ -63,3 +63,5 @@ agent/brain/**
 .swarm/
 .mcp.json
 *.db
+*.rvf*
+Repo Setup.md
