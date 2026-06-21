@@ -51,10 +51,10 @@ node -e '
 mkdir -p "$wt/.codex/tmp"   # where the orchestrator writes run-summary.json (gitignored)
 
 # Guard against duplicate work: skip tasks that already have an open continuation
-# PR. Collect feature ids from open grok/continue-local-* PRs (title "[id] ...").
+# PR. Collect feature ids from open grok/continue-local-* or legacy codex/continue-local-* PRs (title "[id] ...").
 inflight="$(gh pr list --repo arvindrk/ycagent.ai --base main --state open \
   --json title,headRefName \
-  --jq '.[] | select(.headRefName | startswith("grok/continue-local-")) | .title' 2>/dev/null \
+  --jq '.[] | select(.headRefName | startswith("grok/continue-local-") or startswith("codex/continue-local-")) | .title' 2>/dev/null \
   | sed -nE 's/^\[([^]]+)\].*/\1/p' | sort -u)"
 inflight_count="$(printf '%s' "$inflight" | grep -c . || true)"
 cap="${CONTINUE_MAX_INFLIGHT:-5}"
