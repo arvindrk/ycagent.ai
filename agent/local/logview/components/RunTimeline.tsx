@@ -13,6 +13,7 @@ export function RunTimeline({ run, expanded }: { run: Run; expanded: boolean }) 
         <Text color={color}>  {dot} {run.status ?? "running"}</Text>
       </Text>
       {run.why ? <Text>{"  ├ inception   "}<Text dimColor>why: {run.why}</Text></Text> : null}
+      {run.engine ? <Text>{`  ├ orchestrate ${run.engine}`}</Text> : null}
       {run.changes ? <Text>{`  ├ implement   ${run.changes.files.length} file(s) +${run.changes.additions} −${run.changes.deletions}`}</Text> : null}
       {run.verify ? <Text>{"  ├ verify      "}<Text color={run.verify.passed ? "green" : "red"}>{run.verify.command} {run.verify.passed ? "✓" : "✗"}</Text></Text> : null}
       {run.pr ? <Text>{`  └ outcome     draft PR #${run.pr.number}`}</Text> : null}

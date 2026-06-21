@@ -8,7 +8,7 @@ The loop emits a typed JSONL event stream; this renders it.
 - `npm run logs -- report <run_id>`: write `agent/brain/logs/runs/<run_id>/report.md`
 
 Data lives in `agent/brain/logs/` (gitignored): `loop.jsonl` (run-level), `runs/<id>/events.jsonl`
-(per-run timeline), `runs/<id>/agent.stream.jsonl` (raw Sonnet 4.6 reasoning). Event contract:
+(per-run timeline), `runs/<id>/agent.stream.jsonl` (raw agent reasoning). Event contract:
 `events.ts`. Capture: `emit_event` in `agent/local/lib.sh`.
 
 ## Tests
