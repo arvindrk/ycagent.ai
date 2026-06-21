@@ -52,5 +52,14 @@
     "description": "Add Zod schema validation to the two unvalidated API routes (research trigger and cancel) to enforce the security rule requiring schema checks at all API boundaries.",
     "verify": "npm run lint && npm run typecheck && npm run build",
     "passes": true
+  },
+  {
+    "id": "research-route-error-recovery",
+    "status": "completed",
+    "priority": 7,
+    "depends_on": ["api-route-input-validation"],
+    "description": "Fix the research trigger API route to cancel the Trigger.dev run when a subsequent DB insert fails, preventing dangling runs that keep E2B sandbox resources alive with no tracking record.",
+    "verify": "npm run lint && npm run typecheck && npm run build",
+    "passes": true
   }
 ]

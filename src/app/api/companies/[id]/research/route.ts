@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { z } from "zod";
-import { tasks } from "@trigger.dev/sdk/v3";
+import { tasks, runs } from "@trigger.dev/sdk/v3";
 import { Sandbox } from "@e2b/desktop";
 import { DEFAULT_DESKTOP_TIMEOUT } from "@/constants/llm.constants";
 import type { researchOrchestrator } from "@/trigger/research-orchestrator";
@@ -43,6 +43,8 @@ export async function POST(request: NextRequest) {
 
   const { company, resolution = DEFAULT_RESOLUTION, sandboxId } = parsed.data;
 
+  let triggeredRunId: string | null = null;
+
   try {
     let desktop: Sandbox;
     if (sandboxId) {
@@ -65,6 +67,7 @@ export async function POST(request: NextRequest) {
         vncUrl,
       }
     );
+    triggeredRunId = handle.id;
 
     await insertResearchRun({
       userId: session.user.id,
@@ -88,8 +91,11 @@ export async function POST(request: NextRequest) {
       vncUrl,
     });
   } catch (error) {
+    if (triggeredRunId !== null) {
+      runs.cancel(triggeredRunId).catch(() => undefined);
+    }
     captureServerEvent(session.user.id, 'research_failed', {
-      company_id: company?.id,
+      company_id: company.id,
       error: error instanceof Error ? error.message : String(error),
     });
     return Response.json({ error: "Failed to start research task" }, { status: 500 });
