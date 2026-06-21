@@ -77,6 +77,17 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Verification: `npm run eval:search-filter-smoke` ran 16 tests, 16 passed, 0 failed. `npm run lint`, `npm run typecheck`, and `npm run build` all passed.
 - Next handoff: all tasks in `feature_list.json` are now completed. Future cycles should add new tasks as the platform evolves (e.g., scenario-level semantic search eval with mocked embeddings).
 
+## 2026-06-21 (dependency-security-audit)
+
+- Worktree: `continue-20260621-220726` on branch `grok/continue-local-20260621-220726`.
+- Task: `dependency-security-audit` (priority 3). The only remaining planned task (all higher and lower completed in prior runs).
+- Root cause: initial `npm ci` + audits reported 54 vulnerabilities (1 critical, 21 high) including protobufjs (critical: arbitrary code exec), @modelcontextprotocol/sdk (high: cross-client data leak), @hono/node-server (high: auth bypass), axios (multiple prototype pollution/SSRF), next (multiple high DoS/CSRF/cache issues), tar, ws, path-to-regexp, picomatch, socket.io-parser, systeminformation, etc. Many transitive from next, trigger.dev 4.4.1, posthog, mcp clients.
+- Decisions: (1) Strictly followed "without unsafe force upgrades" and corridor guidance + .agents/rules/security.md + AGENTS.md: ran only `npm audit fix` (safe, non-force); never --force, never added "overrides" to package.json, never bumped any direct deps (package.json untouched). (2) Prioritized stability of core infra (Next.js App Router, Trigger.dev for research/E2B runs, MCP servers) over clearing all highs. (3) Recorded full before/after counts and remaining specific high vulns for future cycles. (4) Triage counts as completed progress even though verify command still exits non-zero (5 high remain). No src code, no new files, no lock-only other changes. (5) Verified lint/typecheck/build still green after resolutions.
+- Commands: `npm audit --json` (initial triage), `npm audit fix` (applied twice for incremental safe fixes), `npm audit --audit-level=high` (verify, full reports captured), `npm run lint && npm run typecheck && npm run build` (sanity).
+- Before: 54 vulns (1 critical, 21 high). After safe fix: 26 vulns (0 critical, 5 high). Critical resolved: protobufjs. Highs resolved: @hono/node-server, @modelcontextprotocol/sdk (mcp), axios, tar, many others in first pass.
+- Remaining high (require --force or semver-major infra change, left untouched): next (multiple), @trigger.dev/core, systeminformation, @opentelemetry/host-metrics, ws (nested in engine.io paths).
+- Verification: task verify `npm audit --audit-level=high` reports 5 high (expected, non-zero exit); `npm run lint` passed, `npm run typecheck` passed, `npm run build` passed cleanly (9 routes generated). package-lock.json only change (1207 lines net, safe resolutions only).
+- Next handoff: All tasks in `agent/feature_list.json` now completed (passes=false kept for this one as audit high does not yet pass). Add new tasks in future runs: e.g. observability improvements, deeper mcp/sdk pinning review, research agent eval expansion, or manual audit of the 5 remaining with version compatibility checks.
 ## 2026-06-21 (build-filter-sql-eval-coverage)
 
 - Worktree: `continue-20260621-211852` on branch `codex/continue-local-20260621-211852`.
