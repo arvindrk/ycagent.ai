@@ -95,5 +95,15 @@
     "description": "Add an eval smoke test for the parseSearchFilters function (URL param to ParsedFilters), covering string passthrough, array comma-split, boolean coercion, numeric fields, and edge cases. Zero I/O dependencies.",
     "verify": "npm run eval:parse-search-filters-smoke",
     "passes": true
+  },
+  {
+    "id": "centralize-tier-config",
+    "status": "completed",
+    "priority": 11,
+    "depends_on": ["parse-search-filters-eval-coverage"],
+    "category": "tech_debt",
+    "description": "Unify tier metadata (labels, descriptions, styling) currently duplicated between weights.ts (used for result enrichment) and tiered-results-display.tsx to maintain consistent tiering that underpins powerful, intuitive discovery and vector search UX.",
+    "verify": "npm run lint && npm run typecheck && npm run build",
+    "passes": true
   }
 ]

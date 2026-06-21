@@ -122,3 +122,15 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - No new dependencies. No DB schema or queries touched. One new file + two small metadata edits.
 - Verification: `npm run eval:parse-search-filters-smoke` ran 16 tests, 16 passed, 0 failed. `npm run lint`, `npm run typecheck`, and `npm run build` all passed.
 - Next handoff: all items in feature_list.json are now completed except the in-flight dependency-security-audit. Future work could add a small merged-filter integration smoke (parse + extract + build) or a mocked-embedding scenario-level eval for the full search path.
+
+## 2026-06-22 (centralize-tier-config)
+
+- Worktree: `continue-20260622-010014` on branch `harness/continue-local-20260622-010014`.
+- Task: `centralize-tier-config` (from plan-20260622-010014). Selected as the planner's chosen_task per category rebalance (tech_debt after heavy testing skew).
+- Root cause: Tier labels, descriptions, colors, styling, and icons were duplicated between TIER_META (src/lib/semantic-search/scoring/weights.ts, string icons, used by query enrichment for tier_label/tier_order) and local tierConfig (in tiered-results-display.tsx using lucide components). Inconsistent tiering would undermine vector search UX and powerful intuitive discovery.
+- Fix: Centralized by moving icon components into TIER_META in weights.ts (now exports components directly); removed duplicate tierConfig + lucide import from display; updated lookup to TIER_META. Reuse existing keys, labels, orders, styles exactly. Minimal diff, no behavior change.
+- Decisions: (1) Placed icon imports + components in the weights module as single source (safe for both server enrichment path and client UI since lucide is pure). (2) Preserved result.tierLabel from API (populated via TIER_META) while sourcing styling/desc/icon from centralized meta for UI. (3) No changes to query.ts, types, eval (only type import), api route, or feature files. (4) Followed first-principles, minimal-code rule, typescript const, no new types or abstractions. (5) Corridor analyzePlan called before edits; respected no-secrets (n/a), no new deps.
+- Commands: `npm run lint && npm run typecheck && npm run build` (post-edit verify). Read plan, AGENTS.md, vision.md, .agents/rules/minimal-code.md security.md typescript.md, relevant source, git context.
+- Plan reference: .codex/tmp/plan-20260622-010014.json (and .md). Vision alignment: directly advances "vector search", "powerful, intuitive discovery", "UI/UX" from vision.md and plan vision_refs.
+- Verification: See run below. Full verify passed. No icon breakage (build succeeds, types ok).
+- Next handoff: per horizon: surface-search-scores-ux (to expose the scores for trust in discovery UI).

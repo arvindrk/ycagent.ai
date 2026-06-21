@@ -2,8 +2,8 @@
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
-import { Target, Sparkles, CheckCircle2, Circle, Hash } from 'lucide-react';
 import { CompanyListGrid } from '@/components/companies/list/company-list-grid';
+import { TIER_META } from '@/lib/semantic-search/scoring/weights';
 import type { SearchResult } from '@/types/semantic-search.types';
 
 interface TieredResultsDisplayProps {
@@ -16,44 +16,6 @@ interface GroupedResults {
   tierOrder: number;
   results: SearchResult[];
 }
-
-const tierConfig = {
-  exact_match: {
-    icon: Target,
-    color: 'text-accent',
-    bgColor: 'bg-accent-tint',
-    borderColor: 'border-accent/30',
-    description: 'Perfect name match',
-  },
-  high_confidence: {
-    icon: Sparkles,
-    color: 'text-blue',
-    bgColor: 'bg-blue-500/10',
-    borderColor: 'border-blue-500/30',
-    description: 'Highly semantically relevant',
-  },
-  strong_match: {
-    icon: CheckCircle2,
-    color: 'text-green',
-    bgColor: 'bg-green-500/10',
-    borderColor: 'border-green-500/30',
-    description: 'Strong semantic match',
-  },
-  relevant: {
-    icon: Circle,
-    color: 'text-text-secondary',
-    bgColor: 'bg-bg-tertiary',
-    borderColor: 'border-primary',
-    description: 'Moderately relevant',
-  },
-  keyword_match: {
-    icon: Hash,
-    color: 'text-text-tertiary',
-    bgColor: 'bg-bg-secondary',
-    borderColor: 'border-primary',
-    description: 'Keyword matches only',
-  },
-};
 
 export function TieredResultsDisplay({ results }: TieredResultsDisplayProps) {
   const groupedByTier = results.reduce((acc, result) => {
@@ -84,7 +46,7 @@ export function TieredResultsDisplay({ results }: TieredResultsDisplayProps) {
         className="space-y-8"
       >
         {sortedTiers.map((tierGroup, index) => {
-          const config = tierConfig[tierGroup.tier as keyof typeof tierConfig] || tierConfig.keyword_match;
+          const config = TIER_META[tierGroup.tier as keyof typeof TIER_META] || TIER_META.keyword_match;
           const Icon = config.icon;
 
           return (
