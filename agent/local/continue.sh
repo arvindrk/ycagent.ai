@@ -6,7 +6,7 @@ source "$_DIR/lib.sh"
 
 base_sha="${1:-origin/main}"
 ts="$(date +%Y%m%d-%H%M%S)"
-branch="codex/continue-local-$ts"
+branch="grok/continue-local-$ts"
 wt="$REPO_ROOT/.codex/worktrees/continue-$ts"
 
 init_run "$ts"
@@ -24,7 +24,7 @@ cleanup() {
   git -C "$REPO_ROOT" worktree remove --force "$wt" 2>/dev/null || true
   # Delete the LOCAL continuation branch; the remote copy carries the PR and is
   # auto-deleted on merge (repo "Automatically delete head branches" setting).
-  # This keeps local `git branch` from accumulating codex/continue-local-* refs.
+  # This keeps local `git branch` from accumulating grok/continue-local-* refs.
   git -C "$REPO_ROOT" branch -D "$branch" 2>/dev/null || true
   rm -f "$BRAIN_DIR/run/$ts-mcp.json" "$BRAIN_DIR/run/$ts-prompt.md" 2>/dev/null || true
 }
@@ -51,10 +51,10 @@ node -e '
 mkdir -p "$wt/.codex/tmp"   # where the orchestrator writes run-summary.json (gitignored)
 
 # Guard against duplicate work: skip tasks that already have an open continuation
-# PR. Collect feature ids from open codex/continue-local-* PRs (title "[id] ...").
+# PR. Collect feature ids from open grok/continue-local-* PRs (title "[id] ...").
 inflight="$(gh pr list --repo arvindrk/ycagent.ai --base main --state open \
   --json title,headRefName \
-  --jq '.[] | select(.headRefName | startswith("codex/continue-local-")) | .title' 2>/dev/null \
+  --jq '.[] | select(.headRefName | startswith("grok/continue-local-")) | .title' 2>/dev/null \
   | sed -nE 's/^\[([^]]+)\].*/\1/p' | sort -u)"
 inflight_count="$(printf '%s' "$inflight" | grep -c . || true)"
 cap="${CONTINUE_MAX_INFLIGHT:-5}"
