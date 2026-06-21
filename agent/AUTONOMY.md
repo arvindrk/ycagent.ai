@@ -21,7 +21,7 @@ watcher is running in Apple Terminal. Start it with `bash agent/local/watch.sh`
 3. Runs one headless Grok Build instance (`-m grok-build`, --permission-mode bypassPermissions,
    project .mcp.json for Ruflo MCP) that orchestrates via the Ruflo MCP (auto-discovered)
    and implements the next unblocked `feature_list.json` task.
-4. If the worktree changed: commits, pushes `codex/continue-local-<ts>`, and opens a
+4. If the worktree changed: commits, pushes `grok/continue-local-<ts>`, and opens a
    draft PR with `gh`.
 5. Removes the worktree and records the SHA.
 
