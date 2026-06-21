@@ -17,6 +17,7 @@
         "test:crawler": "dotenvx run -- tsx scripts/test-crawler.ts",
         "eval:research-smoke": "tsx src/eval/smoke.ts",
         "eval:search-filter-smoke": "tsx src/eval/search-filter-smoke.ts",
+        "eval:build-filter-sql-smoke": "tsx src/eval/build-filter-sql-smoke.ts",
         "test:logview": "node --import tsx --test \"agent/local/logview/__tests__/*.test.ts\" \"agent/local/logview/__tests__/*.test.tsx\"",
         "logs": "tsx agent/local/logview/index.tsx"
     },

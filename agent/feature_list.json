@@ -70,5 +70,14 @@
     "description": "Add an eval smoke test for the extractFiltersFromQuery pure function, covering batch aliases, team size patterns, founded year patterns, hiring flags, and cleanedQuery output. Zero I/O dependencies.",
     "verify": "npm run eval:search-filter-smoke",
     "passes": true
+  },
+  {
+    "id": "build-filter-sql-eval-coverage",
+    "status": "completed",
+    "priority": 9,
+    "depends_on": ["codex-harness-foundation"],
+    "description": "Add an eval smoke test for the buildFilterSQL pure function, verifying that $N placeholder indices are sequential and that values array length matches the param count across all 13 filter types and paramOffset variants. Zero I/O dependencies.",
+    "verify": "npm run eval:build-filter-sql-smoke",
+    "passes": true
   }
 ]
