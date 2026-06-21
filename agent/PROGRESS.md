@@ -76,3 +76,14 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Decisions: (1) Chose test cases that exercise only regex and alias-table paths, not vocabulary-JSON paths, so tests are hermetically reproducible without a database or generated file. (2) Matched the same zero-dependency runner pattern from `src/eval/smoke.ts` (custom test()/assert(), process.exit(1) on failure).
 - Verification: `npm run eval:search-filter-smoke` ran 16 tests, 16 passed, 0 failed. `npm run lint`, `npm run typecheck`, and `npm run build` all passed.
 - Next handoff: all tasks in `feature_list.json` are now completed. Future cycles should add new tasks as the platform evolves (e.g., scenario-level semantic search eval with mocked embeddings).
+
+## 2026-06-21 (build-filter-sql-eval-coverage)
+
+- Worktree: `continue-20260621-211852` on branch `codex/continue-local-20260621-211852`.
+- Task: `build-filter-sql-eval-coverage` (priority 9). All higher-priority tasks were completed or in-flight (`dependency-security-audit` had an open PR).
+- Root cause for selection: `buildFilterSQL` is a pure function that constructs parameterized SQL WHERE conditions using `$N` placeholders and a `paramOffset`. A regression (off-by-one in `$N` indices, or values array misaligned with placeholders) would silently break all filtered searches at runtime with no existing eval catching it.
+- Created `src/eval/build-filter-sql-smoke.ts`: 17 tests covering empty filters, single filter at offset=0 and offset=2, sequential `$N` invariant, values-length-equals-param-count invariant, all 13 individual filter types (batch, stage, status, tags, industries, regions, team_size_min/max, is_hiring, is_nonprofit, location, founded_year_min/max), all filters combined at offset=0 and offset=2.
+- Added `eval:build-filter-sql-smoke` script to `package.json` pointing at `tsx src/eval/build-filter-sql-smoke.ts`.
+- Decisions: (1) Verified the `$N` numbering contract by parsing placeholder indices from the SQL string and asserting they are sequential. (2) Used the same zero-dependency test runner pattern. (3) The `countParams` helper uses a Set to de-duplicate `$N` references before comparing length.
+- Verification: `npm run eval:build-filter-sql-smoke` ran 17 tests, 17 passed, 0 failed. `npm run lint`, `npm run typecheck`, and `npm run build` all passed.
+- Next handoff: consider adding eval coverage for `parseSearchFilters` (URL param -> ParsedFilters) and a scenario-level semantic search eval with mocked embeddings and DB.
