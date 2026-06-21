@@ -1,6 +1,6 @@
 # Local Agent Brain
 
-This directory is the repo-local memory area for ycagent.ai automation.
+This directory is the repo-local memory area for the autonomous continuation harness.
 
 It is intentionally git-ignored except for this README. Use it for generated,
 machine-local continuity state:

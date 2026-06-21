@@ -28,7 +28,7 @@ export type AgentStep =
   | { kind: "tool_result"; ok: boolean }
   | { kind: "result"; text: string };
 
-// Parse agent stream JSONL (Grok Build streaming-json or compatible shapes).
+// Parse agent stream JSONL (Grok, Claude, or other streaming-json / compatible shapes).
 export function parseAgentStream(text: string): AgentStep[] {
   const out: AgentStep[] = [];
   for (const line of text.split("\n")) {
@@ -48,7 +48,7 @@ export function parseAgentStream(text: string): AgentStep[] {
     } else if (o.type === "result") {
       out.push({ kind: "result", text: typeof o.result === "string" ? o.result : "" });
     } else {
-      // Grok Build / other streaming-json fallbacks
+      // Agent streaming-json / other fallbacks
       if (typeof o.text === "string" && o.text) out.push({ kind: "text", text: o.text });
       else if (o.delta?.text) out.push({ kind: "text", text: o.delta.text });
       else if (o.content && typeof o.content === "string") out.push({ kind: "text", text: o.content });
