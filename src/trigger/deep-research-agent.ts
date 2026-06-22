@@ -36,8 +36,11 @@ export const deepResearchAgent = task({
       throw new Error(`Sandbox connection failed: ${errorMessage}`);
     }
 
+    const raw = process.env.RESEARCH_LLM_PROVIDER?.toLowerCase();
+    const provider = raw === LLMProvider.ANTHROPIC ? LLMProvider.ANTHROPIC : raw === LLMProvider.GOOGLE ? LLMProvider.GOOGLE : LLMProvider.OPENAI;
+
     const streamer = StreamerFactory.getStreamer({
-      provider: LLMProvider.OPENAI,
+      provider,
       desktop,
       resolution,
       systemPrompt,
