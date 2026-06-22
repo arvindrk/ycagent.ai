@@ -6,7 +6,13 @@ import { OpenAIComputerStreamer } from "./providers/openai";
 import { GoogleComputerStreamer } from "./providers/google";
 
 export class StreamerFactory {
+  private static testStreamerOverride: BaseComputerStreamer | null = null;
+
   static getStreamer(config: ComputerAgentConfig): BaseComputerStreamer {
+    if (StreamerFactory.testStreamerOverride != null) {
+      return StreamerFactory.testStreamerOverride;
+    }
+
     const {
       desktop,
       provider = LLMProvider.ANTHROPIC,
@@ -25,5 +31,11 @@ export class StreamerFactory {
       default:
         throw new Error(`Unknown Computer Agent provider: ${provider}`);
     }
+  }
+
+  // Test seam only. Used exclusively by hermetic evals under src/eval/ for mocked LLM scenarios.
+  // Production code must never call this; override is cleared after use.
+  static __setTestStreamerOverride(impl: BaseComputerStreamer | null): void {
+    StreamerFactory.testStreamerOverride = impl;
   }
 }
