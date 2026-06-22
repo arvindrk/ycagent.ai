@@ -160,3 +160,26 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Plan reference: .codex/tmp/plan-20260622-012456.json (and .md). Vision alignment: advances vector search (leverages computed scores), powerful intuitive discovery + UI/UX (makes ranking evidence visible for trust).
 - Verification: `npm run lint && npm run typecheck && npm run build` passed cleanly (lint 0, tsc 0, build 9 pages generated). No behavior change to non-search paths (scores absent => no badge).
 - Next handoff: per plan horizon: configurable-research-provider.
+
+## 2026-06-23
+
+- Worktree: `continue-20260623-011216` on branch `harness/continue-local-20260623-011216`.
+- Task: `add-composite-eval-smoke-script` (plan_id: plan-20260623-011216 from Planner run continue-20260623-011216).
+- Selected per plan: first DX/Infra after testing dominance to rebalance categories; directly supports "measurable research quality and coverage" by making the pure zero-I/O smoke evals (post prior filter+research work) trivial to invoke together.
+- Plan link: `.codex/tmp/plan-20260623-011216.json` (authoritative); also `.codex/tmp/plan-20260623-011216.md`. Horizon after this: research-orchestrator-mock-eval, extend-ci-eval-coverage.
+- Changes (only chosen_task): Added exactly one script entry to package.json. The composite chains the 6 existing `eval:*-smoke` commands via `npm run ... && ...`. All individual commands untouched. Zero other code or file changes in impl.
+- Decisions (first-principles + rules): (1) Chain via `npm run` (not inlined tsx paths) to preserve the scripts as canonical. (2) 1-line addition is the least code (no runner file, no script helper, no package bin per minimal-code.md). (3) No new deps, no CI/docs/AGENTS updates (reserved for next horizon items per plan). (4) Corridor analyzePlan called before the edit (hermetic evals noted safe). (5) Restated principles/AGENTS/rules/vision/constraints verbatim before any edit. (6) State updates to feature_list + PROGRESS per executor procedure (feature_list was exhausted per planner note).
+- Commands executed: `npm run eval:smoke && npm run lint && npm run typecheck && npm run build`.
+- Verification result: exit 0 for full chain. eval:smoke invoked all 6:
+  - research-smoke: 16/16 passed
+  - search-filter-smoke: 16/16 passed
+  - build-filter-sql-smoke: 17/17 passed
+  - parse-search-filters-smoke: 16/16 passed
+  - merged-filter-smoke: 10/10 passed
+  - semantic-search-scenario-smoke: 8/8 passed
+  lint: clean (0 issues)
+  typecheck: clean (tsc + logview)
+  build: succeeded (compiled 3.2s, 9 routes generated)
+  (pre-existing worktree warnings only: lockfiles, no cache, telemetry)
+- Plan compliance note: Strictly followed. Implemented **nothing more** than the chosen_task "add-composite-eval-smoke-script". All execution_constraints satisfied. No scope creep. Single-threaded write in this worktree. Ready for harness to emit run-summary + draft PR.
+- Next handoff: harness wrapper (do not run planner items).

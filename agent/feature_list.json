@@ -121,5 +121,15 @@
     "description": "Feature improvement on UI/UX: surface existing semantic_score, name_score, text_score, final_score, tier fields from SearchResult (already computed and returned by API) in preview cards for trust and intuitive discovery. Advances vector search + UI/UX facets.",
     "verify": "npm run lint && npm run typecheck && npm run build",
     "passes": true
+  },
+  {
+    "id": "add-composite-eval-smoke-script",
+    "status": "completed",
+    "priority": 13,
+    "depends_on": [],
+    "category": "dx_infra",
+    "description": "DX/Infra: add a single 'eval:smoke' script that runs the existing pure zero-I/O smoke evals together. Improves DX, simplifies CI/docs/AGENTS, reduces repetition after the eval smoke work. No new tests.",
+    "verify": "npm run eval:smoke && npm run lint && npm run typecheck && npm run build",
+    "passes": true
   }
 ]
