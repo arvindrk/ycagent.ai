@@ -1,22 +1,23 @@
 {
-  "slice": ["surface-search-scores-ux", "configurable-research-provider", "remove-dead-vertex-env-requirement", "add-composite-eval-smoke-script"],
+  "slice": ["configurable-research-provider", "remove-dead-vertex-env-requirement", "add-composite-eval-smoke-script", "research-agent-scenario-eval-expansion"],
   "rationale_per_step": {
-    "surface-search-scores-ux": "Feature improvement on UI/UX: surface existing semantic_score, name_score, text_score, final_score, tier fields from SearchResult (already computed and returned by API) to users for trust and intuitive discovery. Advances vector search + UI/UX facets.",
     "configurable-research-provider": "Feature improvement: drive research agent LLM choice (deep-research-agent.ts hardcodes OPENAI) from config/env instead of hard-coded. Improves reliability of agent research facet without changing core flows.",
     "remove-dead-vertex-env-requirement": "Maintenance: remove unused VERTEX_API_KEY from required env schema (embeddings use only OpenAI provider; vertexai flag in Google LLM is unrelated). Reduces onboarding friction and stale config surface area.",
-    "add-composite-eval-smoke-script": "DX/Infra: add a single 'eval:smoke' script that runs the existing pure zero-I/O smoke evals together. Improves DX, simplifies CI/docs/AGENTS, reduces repetition after the eval smoke work. No new tests."
+    "add-composite-eval-smoke-script": "DX/Infra: add a single 'eval:smoke' script that runs the existing pure zero-I/O smoke evals together. Improves DX, simplifies CI/docs/AGENTS, reduces repetition after the eval smoke work. No new tests.",
+    "research-agent-scenario-eval-expansion": "Testing/Observability follow-up: add a mocked scenario-level eval exercising the full executeAgentLoop (with provider injection) for research agent quality and provider-agnostic invariants. Builds on prior smoke coverage."
   },
   "category_mix": {
-    "feature_improvement": 2,
+    "feature_improvement": 1,
     "maintenance": 1,
-    "dx_infra": 1
+    "dx_infra": 1,
+    "testing_observability": 1
   },
   "vision_refs": {
-    "surface-search-scores-ux": ["powerful, intuitive discovery", "UI/UX", "vector search"],
-    "configurable-research-provider": ["reliable deep research", "Agent research"],
-    "remove-dead-vertex-env-requirement": ["measurable research quality and coverage"],
-    "add-composite-eval-smoke-script": ["measurable research quality and coverage", "dx_infra"]
+    "configurable-research-provider": ["reliable deep research", "Agent research", "Core outcome 3"],
+    "remove-dead-vertex-env-requirement": ["measurable research quality and coverage", "Core outcome 4"],
+    "add-composite-eval-smoke-script": ["measurable research quality and coverage", "Core outcome 4", "dx_infra"],
+    "research-agent-scenario-eval-expansion": ["reliable deep research", "Agent research", "measurable research quality and coverage", "Core outcome 4"]
   },
-  "generated_by_run": "continue-20260622-012456",
-  "notes": "Planner run after centralize-tier-config merged. feature_list.json exhausted (all completed). Advanced carried horizon by dropping done item, added dx_infra item (documented follow-up in prior PROGRESS for combined smoke script) for category rebalance. 2x feature_improvement + maintenance + dx. Avoided testing_observability and excluded in-flights (dependency-security-audit, establish-vision-categories, merged-filter-integration-smoke). Used spawn_subagent (vision-align + category-balance) + corridor__analyzePlan. Ruflo 'harness:horizon' unavailable (MCP timeout, consistent with prior); persisted via horizon.json + .codex/tmp/plan-20260622-012456.* . Corridor guidance incorporated (careful score serialization for trust UI, no secret exposure on provider config). Next chosen per subagent: surface-search-scores-ux for strongest vector/UI/discovery alignment."
+  "generated_by_run": "continue-20260622-145336",
+  "notes": "Planner run in new worktree after surface-search-scores-ux merge (per PROGRESS handoff). Advanced carried horizon by dropping completed surface-search-scores-ux. Chose configurable-research-provider as immediate per explicit last handoff + strongest alignment to agent research facet (vision). Used spawn_subagent for vision-align and category-balance. Ruflo harness:* memory unavailable (MCP handshake failed, consistent with prior runs); state in this file + .codex/tmp/plan-20260622-150500.* . Corridor analyzePlan invoked for config externalization guidance (no secrets, env-driven only). Category rationale: avoided overloading testing after recent skew; included one testing item late in slice per vision subagent pairing with provider work for quality loops. Next slice should target new_feature (highest weight, zero recent representation) and tech_debt for better distribution. feature_list.json exhausted; new tasks will be activated during execution. Full plan artifacts written before handoff to executor."
 }
