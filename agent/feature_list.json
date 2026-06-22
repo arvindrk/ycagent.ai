@@ -97,6 +97,12 @@
     "passes": true
   },
   {
+    "id": "merged-filter-integration-smoke",
+    "status": "completed",
+    "priority": 11,
+    "depends_on": ["codex-harness-foundation"],
+    "description": "Add a zero-dependency integration smoke eval for the search filter composition (extract + parse + explicit override merge + buildFilterSQL) used by the companies search route. Covers the integration point between previously unit-tested pieces.",
+    "verify": "npm run eval:merged-filter-smoke",
     "id": "centralize-tier-config",
     "status": "completed",
     "priority": 11,
