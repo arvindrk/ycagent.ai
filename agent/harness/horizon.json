@@ -1,20 +1,19 @@
 {
-  "slice": ["remove-dead-vertex-env-requirement", "add-composite-eval-smoke-script", "mocked-embedding-scenario-eval"],
+  "slice": ["add-composite-eval-smoke-script", "research-orchestrator-mock-eval", "extend-ci-eval-coverage"],
   "rationale_per_step": {
-    "remove-dead-vertex-env-requirement": "Maintenance: remove unused VERTEX_API_KEY from required env schema (embeddings use only OpenAI provider; vertexai flag in Google LLM is unrelated). Reduces onboarding friction and stale config surface area.",
     "add-composite-eval-smoke-script": "DX/Infra: add a single 'eval:smoke' script that runs the existing pure zero-I/O smoke evals together. Improves DX, simplifies CI/docs/AGENTS, reduces repetition after the eval smoke work. No new tests.",
-    "mocked-embedding-scenario-eval": "Testing/Observability: add a scenario-level eval for the semantic search path (or research) using mocked embeddings. Exercises extract/parse/build + scoring or agent loop without live keys or DB. Directly supports measurable research quality and coverage per vision and prior PROGRESS handoffs."
+    "research-orchestrator-mock-eval": "Testing/Observability: add a hermetic scenario-level eval exercising more of the research agent loop (executeAgentLoop / orchestrator) using mocked LLM and no E2B/DB/keys. Current research-smoke only covers registry/rubric. Directly supports reliable deep research and measurable research quality per vision.",
+    "extend-ci-eval-coverage": "Testing/Observability + DX: wire the remaining smoke evals (parse, merged, semantic-search-scenario, and future composite) into the CI verify job so all quality invariants run on every PR/merge. Addresses partial CI state after incremental eval additions."
   },
   "category_mix": {
-    "maintenance": 1,
     "dx_infra": 1,
-    "testing_observability": 1
+    "testing_observability": 2
   },
   "vision_refs": {
-    "remove-dead-vertex-env-requirement": ["measurable research quality and coverage"],
-    "add-composite-eval-smoke-script": ["measurable research quality and coverage", "dx_infra"],
-    "mocked-embedding-scenario-eval": ["measurable research quality and coverage", "powerful, intuitive discovery"]
+    "add-composite-eval-smoke-script": ["measurable research quality and coverage"],
+    "research-orchestrator-mock-eval": ["measurable research quality and coverage", "reliable deep research"],
+    "extend-ci-eval-coverage": ["measurable research quality and coverage"]
   },
-  "generated_by_run": "continue-20260622-201719",
-  "notes": "Planner run in harness/continue-local-20260622-201719 after surface-search-scores-ux completion. feature_list.json exhausted per init.sh + PROGRESS. Skipped configurable-research-provider (and other in-flights) per explicit instructions. Selected remove-dead-vertex-env-requirement (first unblocked from carried horizon) as chosen for maintenance category rebalance after testing skew. Horizon slice of 3 produced. Used corridor__analyzePlan (Ruflo harness memory/agent_spawn unavailable per search + prior runs). Persisted only via horizon.json overwrite + .codex/tmp/plan-20260622-201719.* (no PROGRESS edit by planner). Recon confirmed VERTEX dead (only in schema + example + unrelated flag). All principles from AGENTS.md + .agents/rules + vision followed. Plan artifacts written before any further action."
+  "generated_by_run": "continue-20260623-011216",
+  "notes": "Planner run in harness/continue-local-20260623-011216. feature_list.json exhausted (all completed except in-flight dependency-security-audit). Skipped configurable-research-provider, dependency-security-audit, establish-vision-categories per explicit instructions. Carried prior horizon first item (remove-dead-vertex-env-requirement) determined moot on recon (no VERTEX_API_KEY in active env schema; confirmed via src/lib/env.ts + grep). Semantic search mock scenario already exists (semantic-search-scenario-smoke.ts fulfills the carried mocked-embedding item for search path). Chose add-composite-eval-smoke-script as immediate next for category rebalance (dx_infra after testing skew). Horizon slice of 3 produced. Used corridor__analyzePlan (Ruflo harness memory/agent_spawn unavailable per search + prior runs). Persisted only via horizon.json overwrite + .codex/tmp/plan-20260623-011216.* (no PROGRESS edit by planner, no source/feature_list changes). All principles from AGENTS.md + .agents/rules + vision followed. Plan artifacts written before any further action. Recon via init.sh + reads of vision/categories/PROGRESS/feature_list/horizon + package.json + ci.yml + eval sources + env.ts."
 }
