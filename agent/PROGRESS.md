@@ -99,6 +99,18 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Verification: `npm run eval:build-filter-sql-smoke` ran 17 tests, 17 passed, 0 failed. `npm run lint`, `npm run typecheck`, and `npm run build` all passed.
 - Next handoff: consider adding eval coverage for `parseSearchFilters` (URL param -> ParsedFilters) and a scenario-level semantic search eval with mocked embeddings and DB.
 
+## 2026-06-21 (ci-eval-smoke-coverage)
+
+- Worktree: `continue-20260621-225139` on branch `grok/continue-local-20260621-225139`.
+- Task: `ci-eval-smoke-coverage` (priority 10). All prior tasks in `feature_list.json` completed; no unblocked tasks remained (respecting in-flight exclusions for dependency-security-audit and parse-search-filters-eval-coverage).
+- Selection: Proactively defined a small high-value scoped follow-up per instructions: reliability + eval coverage + CI enforcement. Chose to wire the existing three zero-I/O smoke evals into the CI job rather than new code or new evals. Avoided any id matching the excluded in-flight list.
+- Root cause for value: the smoke evals (16+16+17 cases exercising extractFiltersFromQuery regex/aliases, buildFilterSQL $N sequencing and value counts, research domain/tool/rubric invariants) were added in prior cycles but not executed by CI (ci.yml only did lint/typecheck/build). A regression could ship undetected until manual run.
+- Changes (minimal, one file): appended three `- run: npm run eval:*` steps to the verify job in `.github/workflows/ci.yml` immediately after `npm run build`. Hardcoded commands only (no variables, per Corridor guidance on command injection).
+- Decisions: (1) Did not touch package.json (avoids any "package changes" checkbox issues; scripts remain as-is). (2) Did not alter main verify command in docs/AGENTS because evals are additive for CI. (3) Used priority 10, depends_on the foundation only (like prior evals). (4) Recorded via PROGRESS and feature_list. (5) Preferenced eval/reliability per guidelines over product work. (6) Attempted Ruflo MCP memory but ruflo server was unavailable (timed out); used local PROGRESS and corridor analyzePlan instead.
+- Commands: `bash agent/init.sh`, full reads of AGENTS.md / .agents/rules/* / feature_list / PROGRESS, `git rev-parse` for context, corridor__analyzePlan, edit via search_replace, `npm run lint && npm run typecheck && npm run build && npm run eval:research-smoke && npm run eval:search-filter-smoke && npm run eval:build-filter-sql-smoke`.
+- Verification: Full verify exited 0. Lint clean, typecheck clean, build succeeded (9 pages), all three evals: 16/16, 16/16, 17/17 passed. Pre-existing Next.js lockfile and cache warnings noted (unrelated to change).
+- Next handoff: future cycles can expand CI to other checks (e.g. npm audit on low, or add a combined `eval:smoke` script) or tackle observability, remaining audit highs with care, or new evals (avoiding the named in-flight parse one until its PR lands).
+
 ## 2026-06-21 (parse-search-filters-eval-coverage)
 
 - Worktree: `continue-20260621-224529` on branch `grok/continue-local-20260621-224529`.
@@ -125,3 +137,26 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 
 - Verification update (same run): `npm run eval:merged-filter-smoke` executed 10 tests, 10 passed, 0 failed. `npm run lint` passed (no errors). `npm run typecheck` passed (incl logview). `npm run build` passed (compiled 3.1s, 9 routes generated cleanly). Pre-existing worktree lockfile warning ignored. Passes=true recorded in feature_list.
 - Commands rerun for full verify: npm run eval:merged-filter-smoke && npm run lint && npm run typecheck && npm run build (all exit 0).
+## 2026-06-22 (centralize-tier-config)
+
+- Worktree: `continue-20260622-010014` on branch `harness/continue-local-20260622-010014`.
+- Task: `centralize-tier-config` (from plan-20260622-010014). Selected as the planner's chosen_task per category rebalance (tech_debt after heavy testing skew).
+- Root cause: Tier labels, descriptions, colors, styling, and icons were duplicated between TIER_META (src/lib/semantic-search/scoring/weights.ts, string icons, used by query enrichment for tier_label/tier_order) and local tierConfig (in tiered-results-display.tsx using lucide components). Inconsistent tiering would undermine vector search UX and powerful intuitive discovery.
+- Fix: Centralized by moving icon components into TIER_META in weights.ts (now exports components directly); removed duplicate tierConfig + lucide import from display; updated lookup to TIER_META. Reuse existing keys, labels, orders, styles exactly. Minimal diff, no behavior change.
+- Decisions: (1) Placed icon imports + components in the weights module as single source (safe for both server enrichment path and client UI since lucide is pure). (2) Preserved result.tierLabel from API (populated via TIER_META) while sourcing styling/desc/icon from centralized meta for UI. (3) No changes to query.ts, types, eval (only type import), api route, or feature files. (4) Followed first-principles, minimal-code rule, typescript const, no new types or abstractions. (5) Corridor analyzePlan called before edits; respected no-secrets (n/a), no new deps.
+- Commands: `npm run lint && npm run typecheck && npm run build` (post-edit verify). Read plan, AGENTS.md, vision.md, .agents/rules/minimal-code.md security.md typescript.md, relevant source, git context.
+- Plan reference: .codex/tmp/plan-20260622-010014.json (and .md). Vision alignment: directly advances "vector search", "powerful, intuitive discovery", "UI/UX" from vision.md and plan vision_refs.
+- Verification: See run below. Full verify passed. No icon breakage (build succeeds, types ok).
+- Next handoff: per horizon: surface-search-scores-ux (to expose the scores for trust in discovery UI).
+
+## 2026-06-22 (surface-search-scores-ux)
+
+- Worktree: `continue-20260622-012456` on branch `harness/continue-local-20260622-012456`.
+- Task: `surface-search-scores-ux` (from plan-20260622-012456). Selected as the planner's chosen_task (feature_improvement) to rebalance after testing skew and follow centralize-tier-config.
+- Root cause: `semantic_score`, `name_score`, `text_score`, `final_score`, `tier` (plus labels) are computed in query.ts, present in SearchResult, returned by public /search API (via z.any()), used for tiering and evals, but were never rendered in TieredResultsDisplay -> CompanyListGrid -> CompanyPreviewCard. Users could not see evidence behind rankings, undermining "find and trust" and intuitive vector search UX.
+- Fix: Minimal one-file change in company-preview-card.tsx: widened local prop interface with optional score fields (no top-level type change, no schema), added one conditional Badge (outline, small) next to batch showing final_score; used native title attr with full breakdown of all four scores. Renders only for search results (field present). No new files, imports, abstractions, or helpers.
+- Decisions: (1) Strictly minimal per .agents/rules/minimal-code.md and plan: 1 file, ~10 net LOC, no helpers (repeated access ok at use site), no defensive (>0 checks), compute at render. (2) Used native title= for hover details (zero deps/UI surface) rather than adding TooltipProvider/JSX (would be more code). (3) Chose final_score as visible value + full scores in title to surface all specified fields without permanent clutter. (4) Type intersect local only; follows TS rules (no `as`, narrow via ?). (5) No API or data changes (already exposed per corridor; executor confirmed no leakage of non-public). (6) Corridor analyzePlan called (twice) before edit; restatement of plan principles/AGENTS/rules/vision/constraints completed first. (7) Reused Badge, existing classes (tabular-nums, text-[10px]), no tokens added.
+- Commands: read plan + AGENTS.md + vision.md + .agents/rules/* (minimal-code, security, typescript, frontend etc), read source files (types, query, tiered, grid, card, schema, hook, api, page), grep for score usage, corridor__analyzePlan, search_replace x3 (card + feature_list + progress), `npm run lint && npm run typecheck && npm run build` (verified 0).
+- Plan reference: .codex/tmp/plan-20260622-012456.json (and .md). Vision alignment: advances vector search (leverages computed scores), powerful intuitive discovery + UI/UX (makes ranking evidence visible for trust).
+- Verification: `npm run lint && npm run typecheck && npm run build` passed cleanly (lint 0, tsc 0, build 9 pages generated). No behavior change to non-search paths (scores absent => no badge).
+- Next handoff: per plan horizon: configurable-research-provider.

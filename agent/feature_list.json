@@ -13,6 +13,7 @@
     "status": "completed",
     "priority": 3,
     "depends_on": ["codex-harness-foundation"],
+    "category": "tech_debt",
     "description": "Triage npm audit findings from the harness setup run, prioritizing the critical and high vulnerabilities without unsafe force upgrades.",
     "verify": "npm audit --audit-level=high",
     "passes": false
@@ -81,6 +82,12 @@
     "passes": true
   },
   {
+    "id": "ci-eval-smoke-coverage",
+    "status": "completed",
+    "priority": 10,
+    "depends_on": ["codex-harness-foundation"],
+    "description": "Run the three pure smoke evals (research-agent, search-filter, build-filter-sql) inside the CI verify job so filter logic and research invariants are enforced on every PR and main merge.",
+    "verify": "npm run lint && npm run typecheck && npm run build && npm run eval:research-smoke && npm run eval:search-filter-smoke && npm run eval:build-filter-sql-smoke",
     "id": "parse-search-filters-eval-coverage",
     "status": "completed",
     "priority": 10,
@@ -96,6 +103,23 @@
     "depends_on": ["codex-harness-foundation"],
     "description": "Add a zero-dependency integration smoke eval for the search filter composition (extract + parse + explicit override merge + buildFilterSQL) used by the companies search route. Covers the integration point between previously unit-tested pieces.",
     "verify": "npm run eval:merged-filter-smoke",
+    "id": "centralize-tier-config",
+    "status": "completed",
+    "priority": 11,
+    "depends_on": ["parse-search-filters-eval-coverage"],
+    "category": "tech_debt",
+    "description": "Unify tier metadata (labels, descriptions, styling) currently duplicated between weights.ts (used for result enrichment) and tiered-results-display.tsx to maintain consistent tiering that underpins powerful, intuitive discovery and vector search UX.",
+    "verify": "npm run lint && npm run typecheck && npm run build",
+    "passes": true
+  },
+  {
+    "id": "surface-search-scores-ux",
+    "status": "completed",
+    "priority": 12,
+    "depends_on": ["centralize-tier-config"],
+    "category": "feature_improvement",
+    "description": "Feature improvement on UI/UX: surface existing semantic_score, name_score, text_score, final_score, tier fields from SearchResult (already computed and returned by API) in preview cards for trust and intuitive discovery. Advances vector search + UI/UX facets.",
+    "verify": "npm run lint && npm run typecheck && npm run build",
     "passes": true
   }
 ]

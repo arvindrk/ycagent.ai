@@ -1,0 +1,22 @@
+{
+  "slice": ["surface-search-scores-ux", "configurable-research-provider", "remove-dead-vertex-env-requirement", "add-composite-eval-smoke-script"],
+  "rationale_per_step": {
+    "surface-search-scores-ux": "Feature improvement on UI/UX: surface existing semantic_score, name_score, text_score, final_score, tier fields from SearchResult (already computed and returned by API) to users for trust and intuitive discovery. Advances vector search + UI/UX facets.",
+    "configurable-research-provider": "Feature improvement: drive research agent LLM choice (deep-research-agent.ts hardcodes OPENAI) from config/env instead of hard-coded. Improves reliability of agent research facet without changing core flows.",
+    "remove-dead-vertex-env-requirement": "Maintenance: remove unused VERTEX_API_KEY from required env schema (embeddings use only OpenAI provider; vertexai flag in Google LLM is unrelated). Reduces onboarding friction and stale config surface area.",
+    "add-composite-eval-smoke-script": "DX/Infra: add a single 'eval:smoke' script that runs the existing pure zero-I/O smoke evals together. Improves DX, simplifies CI/docs/AGENTS, reduces repetition after the eval smoke work. No new tests."
+  },
+  "category_mix": {
+    "feature_improvement": 2,
+    "maintenance": 1,
+    "dx_infra": 1
+  },
+  "vision_refs": {
+    "surface-search-scores-ux": ["powerful, intuitive discovery", "UI/UX", "vector search"],
+    "configurable-research-provider": ["reliable deep research", "Agent research"],
+    "remove-dead-vertex-env-requirement": ["measurable research quality and coverage"],
+    "add-composite-eval-smoke-script": ["measurable research quality and coverage", "dx_infra"]
+  },
+  "generated_by_run": "continue-20260622-012456",
+  "notes": "Planner run after centralize-tier-config merged. feature_list.json exhausted (all completed). Advanced carried horizon by dropping done item, added dx_infra item (documented follow-up in prior PROGRESS for combined smoke script) for category rebalance. 2x feature_improvement + maintenance + dx. Avoided testing_observability and excluded in-flights (dependency-security-audit, establish-vision-categories, merged-filter-integration-smoke). Used spawn_subagent (vision-align + category-balance) + corridor__analyzePlan. Ruflo 'harness:horizon' unavailable (MCP timeout, consistent with prior); persisted via horizon.json + .codex/tmp/plan-20260622-012456.* . Corridor guidance incorporated (careful score serialization for trust UI, no secret exposure on provider config). Next chosen per subagent: surface-search-scores-ux for strongest vector/UI/discovery alignment."
+}

@@ -1,8 +1,10 @@
+import { Target, Sparkles, CheckCircle2, Circle, Hash } from 'lucide-react';
+
 export const TIER_META = {
   exact_match: {
     label: 'Exact Match',
     order: 1,
-    icon: 'Target',
+    icon: Target,
     color: 'text-accent',
     bgColor: 'bg-accent-tint',
     borderColor: 'border-accent/30',
@@ -11,7 +13,7 @@ export const TIER_META = {
   high_confidence: {
     label: 'Highly Relevant',
     order: 2,
-    icon: 'Sparkles',
+    icon: Sparkles,
     color: 'text-blue',
     bgColor: 'bg-blue-500/10',
     borderColor: 'border-blue-500/30',
@@ -20,7 +22,7 @@ export const TIER_META = {
   strong_match: {
     label: 'Strong Match',
     order: 3,
-    icon: 'CheckCircle2',
+    icon: CheckCircle2,
     color: 'text-green',
     bgColor: 'bg-green-500/10',
     borderColor: 'border-green-500/30',
@@ -29,7 +31,7 @@ export const TIER_META = {
   relevant: {
     label: 'Relevant',
     order: 4,
-    icon: 'Circle',
+    icon: Circle,
     color: 'text-text-secondary',
     bgColor: 'bg-bg-tertiary',
     borderColor: 'border-primary',
@@ -38,7 +40,7 @@ export const TIER_META = {
   keyword_match: {
     label: 'Keyword Match',
     order: 5,
-    icon: 'Hash',
+    icon: Hash,
     color: 'text-text-tertiary',
     bgColor: 'bg-bg-secondary',
     borderColor: 'border-primary',

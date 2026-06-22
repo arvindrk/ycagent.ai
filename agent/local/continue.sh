@@ -4,9 +4,26 @@ _DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=lib.sh
 source "$_DIR/lib.sh"
 
+# Provider-agnostic agent configuration.
+# Override with env: AGENT_CMD=claude AGENT_MODEL=... bash agent/local/continue.sh
+# Or via agent/harness-config.json (loaded below if present).
+# Note: flag differences between providers (grok vs claude) may require wrapper tweaks or direct override of the invocation for full compatibility.
+AGENT_CMD=${AGENT_CMD:-grok}
+AGENT_MODEL=${AGENT_MODEL:-grok-build}
+
+# Load optional harness config for overrides (provider, etc.)
+if [[ -f "$REPO_ROOT/agent/harness-config.json" ]]; then
+  cfg_agent_cmd=$(node -e 'try{const c=require(process.argv[1]); process.stdout.write(c.agent_cmd || c.agentCmd || "")}catch(e){}' "$REPO_ROOT/agent/harness-config.json" 2>/dev/null || echo "")
+  cfg_agent_model=$(node -e 'try{const c=require(process.argv[1]); process.stdout.write(c.agent_model || c.agentModel || "")}catch(e){}' "$REPO_ROOT/agent/harness-config.json" 2>/dev/null || echo "")
+  [[ -n "$cfg_agent_cmd" ]] && AGENT_CMD="$cfg_agent_cmd"
+  [[ -n "$cfg_agent_model" ]] && AGENT_MODEL="$cfg_agent_model"
+fi
+
 base_sha="${1:-origin/main}"
 ts="$(date +%Y%m%d-%H%M%S)"
-branch="grok/continue-local-$ts"
+# Provider-agnostic branch naming (harness/ for new runs)
+# Legacy detection below for grok/ and codex/ for backwards compat
+branch="harness/continue-local-$ts"
 wt="$REPO_ROOT/.codex/worktrees/continue-$ts"
 
 init_run "$ts"
@@ -24,7 +41,7 @@ cleanup() {
   git -C "$REPO_ROOT" worktree remove --force "$wt" 2>/dev/null || true
   # Delete the LOCAL continuation branch; the remote copy carries the PR and is
   # auto-deleted on merge (repo "Automatically delete head branches" setting).
-  # This keeps local `git branch` from accumulating grok/continue-local-* refs.
+  # This keeps local `git branch` from accumulating harness/continue-local-* (and legacy) refs.
   git -C "$REPO_ROOT" branch -D "$branch" 2>/dev/null || true
   rm -f "$BRAIN_DIR/run/$ts-mcp.json" "$BRAIN_DIR/run/$ts-prompt.md" 2>/dev/null || true
 }
@@ -36,8 +53,8 @@ log "refresh state (init.sh) in worktree"
 # Root the Ruflo MCP at the MAIN repo so its memory/learning store
 # (.claude-flow, .swarm) is shared across runs and with the running daemon,
 # NOT the throwaway worktree. We prepare an adjusted .mcp.json (servers' cwd=REPO_ROOT)
-# and copy it into the worktree root so Grok Build auto-discovers it (Grok Build
-# supports project .mcp.json + MCPs with AGENTS.md/.claude/ compatibility).
+# and copy it into the worktree root so the agent auto-discovers it (supports
+# project .mcp.json + MCPs with AGENTS.md/.claude/ compatibility or equivalent).
 # The copy is gitignored by design and cleaned up.
 mkdir -p "$BRAIN_DIR/run"
 mcp_cfg="$BRAIN_DIR/run/$ts-mcp.json"
@@ -51,10 +68,10 @@ node -e '
 mkdir -p "$wt/.codex/tmp"   # where the orchestrator writes run-summary.json (gitignored)
 
 # Guard against duplicate work: skip tasks that already have an open continuation
-# PR. Collect feature ids from open grok/continue-local-* or legacy codex/continue-local-* PRs (title "[id] ...").
-inflight="$(gh pr list --repo arvindrk/ycagent.ai --base main --state open \
+# PR. Support current harness/ prefix + legacy grok/ and codex/ for backwards compatibility.
+inflight="$(gh pr list --repo "${REPO_GH:-}" --base main --state open \
   --json title,headRefName \
-  --jq '.[] | select(.headRefName | startswith("grok/continue-local-") or startswith("codex/continue-local-")) | .title' 2>/dev/null \
+  --jq '.[] | select(.headRefName | startswith("harness/continue-local-") or startswith("grok/continue-local-") or startswith("codex/continue-local-")) | .title' 2>/dev/null \
   | sed -nE 's/^\[([^]]+)\].*/\1/p' | sort -u)"
 inflight_count="$(printf '%s' "$inflight" | grep -c . || true)"
 cap="${CONTINUE_MAX_INFLIGHT:-5}"
@@ -66,30 +83,83 @@ if [[ "$inflight_count" -ge "$cap" ]]; then
   exit 0
 fi
 
-run_prompt="$BRAIN_DIR/run/$ts-prompt.md"
-cp "$REPO_ROOT/agent/local/continue-prompt.md" "$run_prompt"
 cp "$mcp_cfg" "$wt/.mcp.json"
+
+# === SEPARATE PLANNING + EXECUTION RUNS (Approach A) ===
+# Same worktree. Planner first (read-heavy + artifact), then Executor (first-principles impl).
+# Only executor's run-summary drives commit/PR.
+
+load_project_profile
+
+# --- PLANNING PHASE ---
+planner_prompt="$BRAIN_DIR/run/$ts-planner-prompt.md"
+cp "$REPO_ROOT/agent/harness/planner-prompt.md" "$planner_prompt"
+
+if [[ -n "${VISION:-}" || -n "${CATEGORIES:-}" || -n "${HORIZON:-}" ]]; then
+  {
+    echo
+    echo "## Project Profile (for Planner)"
+    if [[ -n "${VISION:-}" ]]; then echo "### Vision"; echo "$VISION"; fi
+    if [[ -n "${CATEGORIES:-}" ]]; then echo "### Categories"; echo "$CATEGORIES"; fi
+    if [[ -n "${HORIZON:-}" ]]; then echo "### Current Horizon"; echo "$HORIZON"; fi
+  } >> "$planner_prompt"
+fi
+
 if [[ -n "$inflight" ]]; then
   {
     echo
     echo "## Already in flight (do NOT select these)"
-    echo "These feature ids already have an open continuation PR. Do NOT pick any of them; choose the next-highest-priority unblocked task whose id is NOT listed. If every unblocked task is listed, make NO changes at all (the wrapper will then open no PR):"
     while IFS= read -r _fid; do [[ -n "$_fid" ]] && echo "- $_fid"; done <<< "$inflight"
-  } >> "$run_prompt"
-  log "guard: excluding in-flight features: $(printf '%s' "$inflight" | tr '\n' ' ')"
+  } >> "$planner_prompt"
 fi
 
-log "run Grok Build orchestrator (Ruflo MCP) in worktree"
-emit_event phase.start phase=orchestrate engine="grok-build"
+log "run Planner (${AGENT_CMD:-grok})"
+emit_event phase.start phase=planning engine="${AGENT_CMD:-grok}"
 (
   cd "$wt"
-  grok --prompt-file "$run_prompt" \
-    -m grok-build \
+  ${AGENT_CMD:-grok} --prompt-file "$planner_prompt" \
+    -m "${AGENT_MODEL:-grok-build}" \
     --permission-mode bypassPermissions \
     --output-format streaming-json
-) > "$RUN_DIR/agent.stream.jsonl" 2>&1 || { log "grok run failed"; rm -f "$mcp_cfg" "$wt/.mcp.json" 2>/dev/null || true; emit_event run.end status=failed reason="grok-exit"; exit 1; }
+) > "$RUN_DIR/planning.stream.jsonl" 2>&1 || { log "planner agent failed"; rm -f "$mcp_cfg" "$wt/.mcp.json" 2>/dev/null || true; emit_event run.end status=failed reason="planner-agent-exit"; exit 1; }
+emit_event phase.end phase=planning
+
+# Discover the Plan artifact written by Planner (latest plan-*.json)
+plan_file=$(ls -1t "$wt/.codex/tmp"/plan-*.json 2>/dev/null | head -1 || true)
+if [[ -z "$plan_file" ]]; then
+  log "ERROR: Planner did not produce a plan artifact"
+  emit_event run.end status=failed reason="no-plan-artifact"
+  exit 1
+fi
+plan_content=$(cat "$plan_file")
+log "plan artifact discovered: $plan_file"
+
+# --- EXECUTION PHASE ---
+executor_prompt="$BRAIN_DIR/run/$ts-executor-prompt.md"
+cp "$REPO_ROOT/agent/harness/executor-prompt.md" "$executor_prompt"
+
+# Inject the Plan artifact as authoritative input
+{
+  echo
+  echo "## Plan Artifact from Planner Run (authoritative)"
+  echo '```json'
+  echo "$plan_content"
+  echo '```'
+  echo
+  echo "Follow the Plan exactly. First restate principles, then implement only the chosen_task within constraints."
+} >> "$executor_prompt"
+
+log "run Executor (${AGENT_CMD:-grok})"
+emit_event phase.start phase=execution engine="${AGENT_CMD:-grok}"
+(
+  cd "$wt"
+  ${AGENT_CMD:-grok} --prompt-file "$executor_prompt" \
+    -m "${AGENT_MODEL:-grok-build}" \
+    --permission-mode bypassPermissions \
+    --output-format streaming-json
+) > "$RUN_DIR/execution.stream.jsonl" 2>&1 || { log "executor agent failed"; rm -f "$mcp_cfg" "$wt/.mcp.json" 2>/dev/null || true; emit_event run.end status=failed reason="executor-agent-exit"; exit 1; }
 rm -f "$mcp_cfg" "$wt/.mcp.json" 2>/dev/null || true
-emit_event phase.end phase=orchestrate
+emit_event phase.end phase=execution
 
 # feature.selected from the run summary (best-effort)
 if [[ -f "$wt/.codex/tmp/run-summary.json" ]]; then
@@ -107,7 +177,7 @@ fi
 log "commit + push $branch"
 git -C "$wt" add -A
 git -C "$wt" -c user.name="Arvind Rk" -c user.email="arvindsuna10@gmail.com" \
-  commit -m "chore: continue ycagent work (local Ruflo + Grok Build)"
+  commit -m "chore: continue work (local Ruflo + agent harness)"
 git -C "$wt" push origin "$branch"
 
 adds="$(git -C "$wt" diff --numstat HEAD~1 | awk '{a+=$1} END{print a+0}')" || adds=0
@@ -115,8 +185,8 @@ dels="$(git -C "$wt" diff --numstat HEAD~1 | awk '{d+=$2} END{print d+0}')" || d
 files_json="$(git -C "$wt" diff --name-only HEAD~1 | jq -R . | jq -sc 'map(select(length>0))')" || files_json='[]'
 emit_event impl.changes files="$files_json" additions="$adds" deletions="$dels"
 
-# Build a template-compliant, traceable PR title + body from the orchestrator's
-# run summary (agent/local/continue-prompt.md step 8). Fall back gracefully if absent.
+# Build a template-compliant, traceable PR title + body from the executor's
+# run summary (from agent/harness/executor-prompt.md). Fall back gracefully if absent.
 summary="$wt/.codex/tmp/run-summary.json"
 feature_id=""; pr_title=""; pr_desc=""
 if [[ -f "$summary" ]]; then
@@ -155,12 +225,12 @@ body="$pr_desc
 - **Inception (feature):** \`$feature_id\` in \`agent/feature_list.json\`.
 - **Planning / autonomy model:** \`agent/AUTONOMY.md\`; design spec under \`docs/superpowers/specs/\`.
 - **Implementation record:** the \`agent/PROGRESS.md\` entry for worktree \`continue-$ts\`.
-- **Generated by:** local Ruflo + Grok Build (grok-build), off base \`$base_sha\`, branch \`$branch\`. Package changes in this PR: $pkg_changed.
+- **Generated by:** local Ruflo + provider-agnostic agent harness, off base \`$base_sha\`, branch \`$branch\`. Package changes in this PR: $pkg_changed.
 
 Human gate: review, verify, and approve before merge. This loop never merges or deploys."
 
 log "open draft PR: $title"
-pr_url="$(gh pr create --repo arvindrk/ycagent.ai \
+pr_url="$(gh pr create --repo "${REPO_GH:-}" \
   --draft --base main --head "$branch" \
   --title "$title" \
   --body "$body" 2>/dev/null)" \

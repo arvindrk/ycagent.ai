@@ -3,8 +3,13 @@
 set -euo pipefail
 
 # Resolve the MAIN repo root from this file's location (agent/local/ -> repo root).
-_LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd "$_LIB_DIR/../.." && pwd)"
+if [[ -n "${BASH_SOURCE[0]:-}" ]]; then
+  _LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  REPO_ROOT="$(cd "$_LIB_DIR/../.." && pwd)"
+else
+  REPO_ROOT="${REPO_ROOT:-$(pwd)}"
+  _LIB_DIR="$REPO_ROOT/agent/local"
+fi
 
 BRAIN_DIR="$REPO_ROOT/agent/brain"
 STATE_DIR="$BRAIN_DIR/state"
@@ -12,6 +17,55 @@ LOG_DIR="$BRAIN_DIR/logs"
 LOCK_DIR="$BRAIN_DIR/locks/continue.lock.d"
 
 mkdir -p "$STATE_DIR" "$LOG_DIR" "$(dirname "$LOCK_DIR")"
+
+# Derive repo identity for decoupling (used by gh, titles, prompts).
+# Prefers agent/harness-config.json if present; falls back to git remote parse.
+# Exports: REPO_GH (owner/repo for gh CLI), REPO_DISPLAY (human name).
+get_repo_identity() {
+  local cfg="$REPO_ROOT/agent/harness-config.json"
+  if [[ -f "$cfg" ]]; then
+    REPO_GH=$(node -e 'try{const c=require(process.argv[1]); process.stdout.write(c.gh_repo||c.repo||"")}catch(e){}' "$cfg" 2>/dev/null || echo "")
+    REPO_DISPLAY=$(node -e 'try{const c=require(process.argv[1]); process.stdout.write(c.display_name||c.name||"")}catch(e){}' "$cfg" 2>/dev/null || echo "")
+  fi
+  if [[ -z "${REPO_GH:-}" ]]; then
+    local url
+    url=$(git -C "$REPO_ROOT" remote get-url origin 2>/dev/null || echo "")
+    # Safe parse: expect https://github.com/owner/repo.git or git@...
+    REPO_GH=$(printf '%s' "$url" | sed -E 's#.*github.com[/:]([^/]+/[^/.]+)(\.git)?$#\1#; s#^git@[^:]+:##' | head -c 200)
+  fi
+  if [[ -z "${REPO_DISPLAY:-}" ]]; then
+    REPO_DISPLAY=$(basename "$REPO_ROOT")
+  fi
+  export REPO_GH REPO_DISPLAY
+}
+get_repo_identity
+
+# Load decoupled project profile for extensible planner (vision, categories, horizon).
+# These are project-owned files; harness remains generic.
+load_project_profile() {
+  local vision_path="$REPO_ROOT/agent/vision.md"
+  local cats_path="$REPO_ROOT/agent/categories.json"
+  local horizon_path="$REPO_ROOT/agent/harness/horizon.json"
+
+  VISION=""
+  if [[ -f "$vision_path" ]]; then
+    # Sanitize: take first ~200 lines, no secrets assumed (project file)
+    VISION=$(head -n 200 "$vision_path" | head -c 8000)
+  fi
+
+  CATEGORIES=""
+  if [[ -f "$cats_path" ]]; then
+    CATEGORIES=$(cat "$cats_path" 2>/dev/null | head -c 4000)
+  fi
+
+  HORIZON=""
+  if [[ -f "$horizon_path" ]]; then
+    HORIZON=$(cat "$horizon_path" 2>/dev/null | head -c 2000)
+  fi
+
+  export VISION CATEGORIES HORIZON
+}
+load_project_profile
 
 log() { printf '%s %s\n' "[$(date +%Y-%m-%dT%H:%M:%S)]" "$*"; }
 
