@@ -40,6 +40,7 @@ export function TieredResultsDisplay({ results }: TieredResultsDisplayProps) {
 
   return (
     <div className="space-y-6">
+      <div className="text-xs text-text-tertiary mb-2">{Object.values(TIER_META).sort((a, b) => a.order - b.order).map((t) => t.description).join(' • ')}. Higher final score ranks first (hover score badges on cards for breakdown).</div>
       <Accordion
         type="multiple"
         defaultValue={defaultOpenTiers}
