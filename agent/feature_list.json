@@ -105,5 +105,15 @@
     "description": "Unify tier metadata (labels, descriptions, styling) currently duplicated between weights.ts (used for result enrichment) and tiered-results-display.tsx to maintain consistent tiering that underpins powerful, intuitive discovery and vector search UX.",
     "verify": "npm run lint && npm run typecheck && npm run build",
     "passes": true
+  },
+  {
+    "id": "surface-search-scores-ux",
+    "status": "completed",
+    "priority": 12,
+    "depends_on": ["centralize-tier-config"],
+    "category": "feature_improvement",
+    "description": "Feature improvement on UI/UX: surface existing semantic_score, name_score, text_score, final_score, tier fields from SearchResult (already computed and returned by API) in preview cards for trust and intuitive discovery. Advances vector search + UI/UX facets.",
+    "verify": "npm run lint && npm run typecheck && npm run build",
+    "passes": true
   }
 ]
