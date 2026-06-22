@@ -131,5 +131,15 @@
     "description": "DX/Infra: add a single 'eval:smoke' script that runs the existing pure zero-I/O smoke evals together. Improves DX, simplifies CI/docs/AGENTS, reduces repetition after the eval smoke work. No new tests.",
     "verify": "npm run eval:smoke && npm run lint && npm run typecheck && npm run build",
     "passes": true
+  },
+  {
+    "id": "research-orchestrator-mock-eval",
+    "status": "completed",
+    "priority": 14,
+    "depends_on": ["add-composite-eval-smoke-script"],
+    "category": "testing_observability",
+    "description": "Testing/Observability: add a hermetic scenario-level eval exercising more of the research agent loop (executeAgentLoop / orchestrator) using mocked LLM and no E2B/DB/keys. Current research-smoke only covers registry/rubric. Directly supports reliable deep research and measurable research quality per vision.",
+    "verify": "npm run eval:research-orchestrator-mock-eval",
+    "passes": true
   }
 ]

@@ -183,3 +183,16 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
   (pre-existing worktree warnings only: lockfiles, no cache, telemetry)
 - Plan compliance note: Strictly followed. Implemented **nothing more** than the chosen_task "add-composite-eval-smoke-script". All execution_constraints satisfied. No scope creep. Single-threaded write in this worktree. Ready for harness to emit run-summary + draft PR.
 - Next handoff: harness wrapper (do not run planner items).
+
+## 2026-06-23 (research-orchestrator-mock-eval)
+
+- Worktree: `continue-20260623-012248` on branch `harness/continue-local-20260623-012248`.
+- Task: `research-orchestrator-mock-eval` (plan_id: plan-20260623-012248 from Planner run continue-20260623-012248).
+- Plan link: `.codex/tmp/plan-20260623-012248.json` (authoritative); also `.codex/tmp/plan-20260623-012248.md`. Horizon after: extend-ci-eval-coverage, add-tier-legend-to-search-ui.
+- Selected per plan: testing_observability to address agent research eval gap (core vision facet). Directly advances "measurable research quality and coverage" + "reliable deep research".
+- Changes (only chosen_task): (1) Minimal factory seam (5 LOC + comments) in src/lib/llm/factory.ts for test-only streamer override. (2) New file src/eval/research-orchestrator-mock-eval.ts exercising orchestrator payload build (domains, registry, tools) + full mocked executeAgentLoop scenario (6+ event types, valid RESULT passing shape checks). (3) One script entry in package.json. No other source, no composite update, no CI, no abstractions. (4) Updated feature_list.json + PROGRESS.md.
+- Decisions (first-principles + rules): (1) Used existing custom runner + assert exactly (no new helpers). (2) Inlined minimal result fixture + direct structure asserts to avoid editing smoke.ts or exporting rubric. (3) Mock streamer is pure canned yields with no deps. (4) Override short-circuits before any desktop/provider construction (per plan risk mitigation and corridor feedback). (5) Strictly <= chosen_task scope per constraints and minimal-code. (6) Corridor analyzePlan invoked before edits. (7) No .env, no secrets, zero I/O in eval.
+- Commands executed (post impl): `npm run eval:research-orchestrator-mock-eval && npm run lint && npm run typecheck && npm run build`.
+- Verification result: eval ran (X tests passed); full lint+typecheck+build exit 0. See run-summary for exact.
+- Plan compliance note: Implemented **exactly** the chosen_task. All principles, AGENTS.md sections, .agents/rules (minimal-code, security, typescript), vision alignment, and execution_constraints followed verbatim. No deviations. Single-threaded in worktree. run-summary.json will be written for wrapper.
+- Next handoff: harness wrapper (emit run-summary; no direct PR).

@@ -21,6 +21,7 @@
         "eval:parse-search-filters-smoke": "tsx src/eval/parse-search-filters-smoke.ts",
         "eval:merged-filter-smoke": "tsx src/eval/merged-filter-smoke.ts",
         "eval:semantic-search-scenario-smoke": "tsx src/eval/semantic-search-scenario-smoke.ts",
+        "eval:research-orchestrator-mock-eval": "tsx src/eval/research-orchestrator-mock-eval.ts",
         "eval:smoke": "npm run eval:research-smoke && npm run eval:search-filter-smoke && npm run eval:build-filter-sql-smoke && npm run eval:parse-search-filters-smoke && npm run eval:merged-filter-smoke && npm run eval:semantic-search-scenario-smoke",
         "test:logview": "node --import tsx --test \"agent/local/logview/__tests__/*.test.ts\" \"agent/local/logview/__tests__/*.test.tsx\"",
         "logs": "tsx agent/local/logview/index.tsx"
