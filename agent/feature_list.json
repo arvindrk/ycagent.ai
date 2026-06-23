@@ -141,5 +141,15 @@
     "description": "Testing/Observability: add a hermetic scenario-level eval exercising more of the research agent loop (executeAgentLoop / orchestrator) using mocked LLM and no E2B/DB/keys. Current research-smoke only covers registry/rubric. Directly supports reliable deep research and measurable research quality per vision.",
     "verify": "npm run eval:research-orchestrator-mock-eval",
     "passes": true
+  },
+  {
+    "id": "extend-ci-eval-coverage",
+    "status": "completed",
+    "priority": 15,
+    "depends_on": ["research-orchestrator-mock-eval", "add-composite-eval-smoke-script"],
+    "category": "testing_observability",
+    "description": "Testing/Observability + DX: wire the remaining smoke evals (parse, merged, semantic-search-scenario, orchestrator-mock, and the composite eval:smoke) into the CI verify job so all quality invariants run on every PR/merge. Completes the measurable research quality loop.",
+    "verify": "npm run lint && npm run typecheck && npm run build && npm run eval:research-smoke && npm run eval:search-filter-smoke && npm run eval:build-filter-sql-smoke && npm run eval:parse-search-filters-smoke && npm run eval:merged-filter-smoke && npm run eval:semantic-search-scenario-smoke && npm run eval:research-orchestrator-mock-eval && npm run eval:smoke",
+    "passes": true
   }
 ]

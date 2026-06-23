@@ -24,3 +24,8 @@ jobs:
       - run: npm run eval:research-smoke
       - run: npm run eval:search-filter-smoke
       - run: npm run eval:build-filter-sql-smoke
+      - run: npm run eval:parse-search-filters-smoke
+      - run: npm run eval:merged-filter-smoke
+      - run: npm run eval:semantic-search-scenario-smoke
+      - run: npm run eval:research-orchestrator-mock-eval
+      - run: npm run eval:smoke
