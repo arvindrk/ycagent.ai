@@ -1,19 +1,19 @@
 {
-  "slice": ["research-orchestrator-mock-eval", "extend-ci-eval-coverage", "add-tier-legend-to-search-ui"],
+  "slice": ["add-tier-legend-to-search-ui", "extend-ci-eval-coverage", "add-research-evidence-highlighting"],
   "rationale_per_step": {
-    "research-orchestrator-mock-eval": "Testing/Observability: add a hermetic scenario-level eval exercising more of the research agent loop (executeAgentLoop / orchestrator) using mocked LLM and no E2B/DB/keys. Current research-smoke only covers registry/rubric. Directly supports reliable deep research and measurable research quality per vision.",
-    "extend-ci-eval-coverage": "Testing/Observability + DX: wire the remaining smoke evals (parse, merged, semantic-search-scenario, and composite) into the CI verify job so all quality invariants run on every PR/merge. Addresses partial CI state after incremental eval additions.",
-    "add-tier-legend-to-search-ui": "Feature improvement on UI/UX + discovery: add a compact tier/score legend or explanation affordance in search results. Builds on surfaced scores and centralized tier meta so users understand and trust vector search rankings with minimal noise. Advances 'powerful, intuitive discovery' and 'UI/UX' facets."
+    "add-tier-legend-to-search-ui": "Feature improvement on UI/UX + discovery: add a compact tier/score legend or explanation affordance in search results. Builds on surfaced scores and centralized tier meta so users understand and trust vector search rankings with minimal noise. Advances 'powerful, intuitive discovery' and 'UI/UX' facets. Selected first for category rebalance after testing-heavy recent history.",
+    "extend-ci-eval-coverage": "Testing/Observability + DX: wire the remaining smoke evals (parse, merged, semantic-search-scenario, orchestrator-mock, and the composite eval:smoke) into the CI verify job so all quality invariants run on every PR/merge. Completes the measurable research quality loop.",
+    "add-research-evidence-highlighting": "Feature improvement / agent research: surface key evidence highlights or source links more prominently in research output and company profiles to strengthen traceability and user trust in 'evidence-backed' outcomes."
   },
   "category_mix": {
-    "testing_observability": 2,
-    "feature_improvement": 1
+    "feature_improvement": 2,
+    "testing_observability": 1
   },
   "vision_refs": {
-    "research-orchestrator-mock-eval": ["measurable research quality and coverage", "reliable deep research"],
+    "add-tier-legend-to-search-ui": ["powerful, intuitive discovery", "UI/UX"],
     "extend-ci-eval-coverage": ["measurable research quality and coverage"],
-    "add-tier-legend-to-search-ui": ["powerful, intuitive discovery", "UI/UX"]
+    "add-research-evidence-highlighting": ["reliable deep research", "high-quality, evidence-backed intelligence"]
   },
-  "generated_by_run": "continue-20260623-012248",
-  "notes": "Planner run in harness/continue-local-20260623-012248 after merge of prior continuation. feature_list.json exhausted (all completed). Skipped configurable-research-provider, dependency-security-audit, establish-vision-categories. Prior horizon first item (research-orchestrator-mock-eval) carried forward as chosen; extend-ci carried as #2. Added third item (add-tier-legend-to-search-ui) for category diversity (feature_improvement) and to reinforce vector search + discovery trust after recent scores work. Ruflo memory/agent_spawn unavailable (MCP timeout, as in prior runs); used file-based horizon + .codex/tmp plans + corridor__analyzePlan for validation. Recon: bash agent/init.sh, full reads of vision.md/categories.json/feature_list.json/PROGRESS.md/AGENTS.md/.agents/rules/*, source for trigger/*, eval/*, semantic-search/*, llm factory, domain-registry, CI, package.json, search UI components, git status. Plan artifacts + horizon written. No source changes. Next executor will implement chosen_task per plan."
+  "generated_by_run": "continue-20260623-013527",
+  "notes": "Planner run in harness/continue-local-20260623-013527. feature_list.json exhausted in prior state (all completed). Skipped in-flight: configurable-research-provider, dependency-security-audit, establish-vision-categories. Chose to lead with feature_improvement (add-tier-legend) for balance vs recent testing dominance and to advance vector search + UI/UX trust immediately after scores work. Ruflo memory/agent_spawn unavailable (MCP timeout, consistent with prior runs); used file-based horizon + .codex/tmp plans + corridor__analyzePlan for validation and security context. Recon performed: bash agent/init.sh, full reads of vision/categories/feature_list/PROGRESS/AGENTS/.agents/rules/*, CI, package.json scripts, search UI components (tiered, stats, preview-card, wrapper), eval scripts presence, git state. No source changes. Horizon + plan artifacts only. Next executor will implement chosen_task per plan schema and constraints."
 }

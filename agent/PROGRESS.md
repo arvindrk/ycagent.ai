@@ -196,3 +196,16 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Verification result: eval ran (X tests passed); full lint+typecheck+build exit 0. See run-summary for exact.
 - Plan compliance note: Implemented **exactly** the chosen_task. All principles, AGENTS.md sections, .agents/rules (minimal-code, security, typescript), vision alignment, and execution_constraints followed verbatim. No deviations. Single-threaded in worktree. run-summary.json will be written for wrapper.
 - Next handoff: harness wrapper (emit run-summary; no direct PR).
+
+## 2026-06-23 (add-tier-legend-to-search-ui)
+
+- Worktree: `continue-20260623-013527` on branch `harness/continue-local-20260623-013527`.
+- Task: `add-tier-legend-to-search-ui` (plan_id: plan-20260623-013527 from Planner run continue-20260623-013527).
+- Plan link: `.codex/tmp/plan-20260623-013527.json` (authoritative); also `.codex/tmp/plan-20260623-013527.md`. Horizon after: extend-ci-eval-coverage, add-research-evidence-highlighting.
+- Selected per plan: feature_improvement to restore category balance (UI/UX + vector search discovery) after testing_observability skew. Builds directly on prior centralize-tier + surface-scores work.
+- Changes (only chosen_task): Added one compact legend line inside the results div of TieredResultsDisplay (the sole file edited). Uses inline expression over TIER_META (already imported) to derive descriptions exactly. Placed before Accordion so visible immediately on first search with results. No new imports, components, files, or state. 1 file total.
+- Decisions (first-principles + rules): (1) Restated all principles/AGENTS/sections/rules/vision/constraints verbatim and printed before any edit. (2) Strictly 1 file <=3, 0 new deps, used only design tokens already in file (text-xs text-text-tertiary) and classes from existing (mb-2 like mt-8 used). (3) Inline expression at use site, no helper/var/abstraction per minimal-code.md. (4) No edit to feature_list.json (obeyed explicit constraint; used PROGRESS + run-summary only). No source logic, no evals, no non-UI files, preserved all prior tier/score render exactly. (5) Legend text derives from TIER_META descriptions + references the final_score already in cards (satisfies risks). (6) corridor__analyzePlan called (twice) on plan and impl. (7) Placement next to TieredResultsDisplay + after stats area = discoverable. (8) Ruflo unavailable, decisions in plan/horizon/PROGRESS. No raw colors or literals beyond used patterns.
+- Commands executed (post impl): `npm run lint && npm run typecheck && npm run build`.
+- Verification result: lint clean (0), typecheck clean (tsc + logview), build succeeded (2.8s compile, 9 routes generated, all static pages ok). Full exit 0. See run-summary for pr body.
+- Plan compliance note: Implemented **exactly** the chosen_task "add-tier-legend-to-search-ui". All execution_constraints followed (including no feature_list edit). Restatement + corridor before code. 1 file. Verification passed. Ready for wrapper run-summary.
+- Next handoff: harness wrapper (create run-summary.json; no PR push).
