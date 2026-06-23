@@ -151,5 +151,15 @@
     "description": "Testing/Observability + DX: wire the remaining smoke evals (parse, merged, semantic-search-scenario, orchestrator-mock, and the composite eval:smoke) into the CI verify job so all quality invariants run on every PR/merge. Completes the measurable research quality loop.",
     "verify": "npm run lint && npm run typecheck && npm run build && npm run eval:research-smoke && npm run eval:search-filter-smoke && npm run eval:build-filter-sql-smoke && npm run eval:parse-search-filters-smoke && npm run eval:merged-filter-smoke && npm run eval:semantic-search-scenario-smoke && npm run eval:research-orchestrator-mock-eval && npm run eval:smoke",
     "passes": true
+  },
+  {
+    "id": "add-research-evidence-highlighting",
+    "status": "completed",
+    "priority": 16,
+    "depends_on": ["extend-ci-eval-coverage"],
+    "category": "feature_improvement",
+    "description": "Feature improvement / agent research: surface key evidence highlights or source links more prominently in research output (research-summary, founder-profile, timeline) and company profiles to strengthen traceability and user trust in 'evidence-backed' outcomes. Builds on existing basic Sources lists.",
+    "verify": "npm run lint && npm run typecheck && npm run build",
+    "passes": true
   }
 ]
