@@ -1,19 +1,19 @@
 {
-  "slice": ["add-tier-legend-to-search-ui", "extend-ci-eval-coverage", "add-research-evidence-highlighting"],
+  "slice": ["extend-ci-eval-coverage", "add-research-evidence-highlighting", "expand-eval-coverage-freshness"],
   "rationale_per_step": {
-    "add-tier-legend-to-search-ui": "Feature improvement on UI/UX + discovery: add a compact tier/score legend or explanation affordance in search results. Builds on surfaced scores and centralized tier meta so users understand and trust vector search rankings with minimal noise. Advances 'powerful, intuitive discovery' and 'UI/UX' facets. Selected first for category rebalance after testing-heavy recent history.",
-    "extend-ci-eval-coverage": "Testing/Observability + DX: wire the remaining smoke evals (parse, merged, semantic-search-scenario, orchestrator-mock, and the composite eval:smoke) into the CI verify job so all quality invariants run on every PR/merge. Completes the measurable research quality loop.",
-    "add-research-evidence-highlighting": "Feature improvement / agent research: surface key evidence highlights or source links more prominently in research output and company profiles to strengthen traceability and user trust in 'evidence-backed' outcomes."
+    "extend-ci-eval-coverage": "Testing/Observability + DX: wire the remaining smoke evals (parse, merged, semantic-search-scenario, orchestrator-mock, and the composite eval:smoke) into the CI verify job so all quality invariants run on every PR/merge. Completes the measurable research quality loop. Current CI only runs the first three; scripts for the rest already exist and pass locally.",
+    "add-research-evidence-highlighting": "Feature improvement / agent research: surface key evidence highlights or source links more prominently in research output (research-summary, founder-profile, timeline) and company profiles to strengthen traceability and user trust in 'evidence-backed' outcomes. Builds on existing basic Sources lists.",
+    "expand-eval-coverage-freshness": "Testing/Observability: add or extend lightweight checks for data freshness (last-updated signals on companies) or broader scenario coverage in evals to close the 'measurable research quality' loop from vision. Low-I/O, hermetic where possible."
   },
   "category_mix": {
-    "feature_improvement": 2,
-    "testing_observability": 1
+    "testing_observability": 2,
+    "feature_improvement": 1
   },
   "vision_refs": {
-    "add-tier-legend-to-search-ui": ["powerful, intuitive discovery", "UI/UX"],
     "extend-ci-eval-coverage": ["measurable research quality and coverage"],
-    "add-research-evidence-highlighting": ["reliable deep research", "high-quality, evidence-backed intelligence"]
+    "add-research-evidence-highlighting": ["reliable deep research", "high-quality, evidence-backed intelligence"],
+    "expand-eval-coverage-freshness": ["measurable research quality and coverage"]
   },
-  "generated_by_run": "continue-20260623-013527",
-  "notes": "Planner run in harness/continue-local-20260623-013527. feature_list.json exhausted in prior state (all completed). Skipped in-flight: configurable-research-provider, dependency-security-audit, establish-vision-categories. Chose to lead with feature_improvement (add-tier-legend) for balance vs recent testing dominance and to advance vector search + UI/UX trust immediately after scores work. Ruflo memory/agent_spawn unavailable (MCP timeout, consistent with prior runs); used file-based horizon + .codex/tmp plans + corridor__analyzePlan for validation and security context. Recon performed: bash agent/init.sh, full reads of vision/categories/feature_list/PROGRESS/AGENTS/.agents/rules/*, CI, package.json scripts, search UI components (tiered, stats, preview-card, wrapper), eval scripts presence, git state. No source changes. Horizon + plan artifacts only. Next executor will implement chosen_task per plan schema and constraints."
+  "generated_by_run": "continue-20260623-233330",
+  "notes": "Planner run in harness/continue-local-20260623-233330. Ran bash agent/init.sh (repo clean on 85d49d6, prior task add-tier-legend-to-search-ui completed, full verify green). feature_list.json exhausted (all ~20 items status=completed). Current horizon (pre-this-run) had add-tier first; now advancing the next. Skipped in-flight per prompt: configurable-research-provider, dependency-security-audit, establish-vision-categories. Recon: full reads of vision.md, categories.json, feature_list.json, PROGRESS.md (last 3 runs: research-orchestrator-mock-eval (testing), add-tier-legend (feature_improvement)), AGENTS.md, .agents/rules/* (minimal-code, security, typescript, nextjs, subagents, frontend), agent/harness/*, package.json (6+ eval scripts + composite, note orchestrator-mock excluded from eval:smoke), .github/workflows/ci.yml (only 3 evals wired), research-summary.tsx + founder-profile (basic sources rendering), git state (branch harness/continue-local-20260623-233330, clean). Corridor__analyzePlan called (security context: follow no-secrets in CI, static steps safe). Ruflo MCP unavailable (timed out, no memory_search or agent_spawn for harness:*; prior runs same). Used file horizon + .codex/tmp for state. No source code / tests / feature_list edits performed (planner-only). Produced plan artifacts + overwrote this horizon. Balance: lead testing to finish quality invariants (core to vision outcomes 3+4 and vector+research facets), then feature_improvement for evidence/UX to rebalance after testing-heavy history. Horizon slice kept short (3). Next executor implements strictly per plan chosen_task + constraints."
 }
