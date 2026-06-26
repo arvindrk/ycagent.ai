@@ -80,7 +80,8 @@ function BulletPoint({ item }: { item: CleanedItem }) {
                 href={url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 px-2 py-0.5 bg-tertiary hover:bg-quaternary text-text-tertiary hover:text-accent text-xs rounded transition-colors border border-border"
+                title={url}
+                className="inline-flex items-center gap-1 px-2 py-0.5 bg-tertiary hover:bg-quaternary text-accent hover:text-accent text-xs rounded transition-colors border border-border font-medium"
               >
                 <ExternalLink className="w-3 h-3" />
                 <span>Source {j + 1}</span>
