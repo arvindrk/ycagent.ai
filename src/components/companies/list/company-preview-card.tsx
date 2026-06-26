@@ -18,6 +18,9 @@ interface CompanyPreviewCardProps {
     text_score?: number;
     final_score?: number;
     tier?: string;
+    last_synced_at?: string;
+    updated_at?: string;
+    created_at?: string;
   };
 }
 
@@ -104,6 +107,15 @@ export function CompanyPreviewCard({ company }: CompanyPreviewCardProps) {
                 title={`semantic: ${company.semantic_score?.toFixed(2)} name: ${company.name_score?.toFixed(2)} text: ${company.text_score?.toFixed(2)} final: ${company.final_score.toFixed(2)}`}
               >
                 {company.final_score.toFixed(2)}
+              </Badge>
+            )}
+            {company.last_synced_at && (
+              <Badge
+                variant="outline"
+                className="flex-shrink-0 text-[10px] px-1.5 py-0 tabular-nums"
+                title={`last_synced_at: ${company.last_synced_at} updated_at: ${company.updated_at || ''} created_at: ${company.created_at || ''}`}
+              >
+                {company.last_synced_at.slice(0, 10)}
               </Badge>
             )}
           </div>

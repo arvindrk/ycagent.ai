@@ -1,19 +1,20 @@
 {
-  "slice": ["expand-eval-coverage-freshness", "expand-research-eval-scenarios", "surface-freshness-signals-in-ui"],
+  "slice": ["surface-freshness-signals-in-ui", "expand-research-eval-scenarios", "extend-eval-smoke-composite"],
   "rationale_per_step": {
-    "expand-eval-coverage-freshness": "Testing/Observability: add or extend lightweight checks for data freshness (last_synced_at, updated_at on companies per schema; research run timestamps) or broader scenario coverage in evals to close the 'measurable research quality and coverage' loop from vision. Low-I/O, hermetic where possible. Uses existing fields (company.schema.ts).",
+    "surface-freshness-signals-in-ui": "Feature improvement / UI/UX + discovery: surface last_synced_at or derived freshness/recency signals (or research run age) in company preview cards, list, or detail to increase user trust in 'fresh' intelligence and make vector search results more actionable.",
     "expand-research-eval-scenarios": "Testing/Observability: extend scenario coverage or add lightweight research agent evals (building on orchestrator-mock and semantic-search-scenario) to further support measurable research quality per vision.",
-    "surface-freshness-signals-in-ui": "Feature improvement / UI/UX + discovery: surface last_synced_at or derived freshness/recency signals (or research run age) in company preview cards, list, or detail to increase user trust in 'fresh' intelligence and make vector search results more actionable."
+    "extend-eval-smoke-composite": "DX/Infra: extend the 'eval:smoke' composite script to invoke the full current set of hermetic smoke evals (freshness-smoke + research-orchestrator-mock-eval) so a single command exercises all zero-I/O quality checks that back measurable research quality."
   },
   "category_mix": {
-    "testing_observability": 2,
-    "feature_improvement": 1
+    "feature_improvement": 1,
+    "testing_observability": 1,
+    "dx_infra": 1
   },
   "vision_refs": {
-    "expand-eval-coverage-freshness": ["measurable research quality and coverage", "high-quality, evidence-backed intelligence", "fresh"],
+    "surface-freshness-signals-in-ui": ["high-quality, evidence-backed intelligence", "powerful, intuitive discovery", "fresh"],
     "expand-research-eval-scenarios": ["measurable research quality and coverage"],
-    "surface-freshness-signals-in-ui": ["powerful, intuitive discovery", "high-quality, evidence-backed intelligence"]
+    "extend-eval-smoke-composite": ["measurable research quality and coverage", "dx"]
   },
-  "generated_by_run": "continue-20260626-230001",
-  "notes": "Planner run in harness/continue-local-20260626-230001. Ran bash agent/init.sh (current on 81ee431 after merge of prior PR, repo clean). feature_list.json exhausted (all items completed). Advanced prior horizon: chose next expand-eval-coverage-freshness (testing_observability, directly per handoff to address freshness for measurable quality). Skipped in-flight: configurable-research-provider, dependency-security-audit, establish-vision-categories. Recon: vision.md, categories.json, current horizon, full feature_list (exhausted), PROGRESS tail (heavy testing then rebalance via evidence work), AGENTS.md, .agents/rules/* (minimal-code, security, typescript, frontend-conventions), agent/harness/*, package.json (evals + composite present, CI has all wired), company.schema.ts (has last_synced_at/updated_at/created_at), companies.queries (no freshness used in selects), git state (branch harness/continue-local-20260626-230001, clean). Corridor analyzePlan called (hermetic + read-only timestamp guidance followed). Ruflo MCP unavailable (timed out); used file-based state (horizon + plan artifacts). No source / tests / feature_list edits (planner-only). Produced plan + overwrote horizon. Balance: lead with targeted testing for vision freshness gap, follow with scenario + feature_improvement for mix. Horizon 3 items. Next executor implements strictly per chosen_task. Plan artifacts at .codex/tmp/plan-20260626-230001.json + .md"
+  "generated_by_run": "continue-20260626-231630",
+  "notes": "Planner run in harness/continue-local-20260626-231630. Ran bash agent/init.sh (current branch harness/continue-local-20260626-231630 on 3070a8e, clean). feature_list.json exhausted (all tracked items completed/passes true except noted audit). Prior horizon completed 'expand-eval-coverage-freshness'; remaining items carried forward. Chose surface-freshness-signals-in-ui first (feature_improvement) to rebalance after testing_observability dominance in recent slices. Skipped in-flight: configurable-research-provider, dependency-security-audit, establish-vision-categories. Recon: vision.md, categories.json, current horizon, feature_list (exhausted), full PROGRESS tail, AGENTS.md, .agents/rules/* (minimal-code, security, typescript, frontend-conventions), agent/harness/*, package.json (evals present but composite incomplete), company.schema.ts (last_synced/updated/created confirmed), git state (clean). Corridor analyzePlan called before artifacts (data integrity + pre-existing fields guidance followed). Ruflo MCP unavailable (timed out); used file-based state only (horizon + plan artifacts). No source/tests/feature_list edits (planner-only). Produced plan + overwrote horizon. Balance: rebalance toward feature_improvement + dx after testing skew; 3-item slice aligned to vision facets (discovery + research quality). Plan artifacts at .codex/tmp/plan-20260626-231630.json + .md"
 }
