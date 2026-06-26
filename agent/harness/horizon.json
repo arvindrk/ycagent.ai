@@ -1,19 +1,19 @@
 {
-  "slice": ["add-research-evidence-highlighting", "expand-eval-coverage-freshness", "expand-research-eval-scenarios"],
+  "slice": ["expand-eval-coverage-freshness", "expand-research-eval-scenarios", "surface-freshness-signals-in-ui"],
   "rationale_per_step": {
-    "add-research-evidence-highlighting": "Feature improvement / agent research: surface key evidence highlights or source links more prominently in research output (research-summary, founder-profile, timeline) and company profiles to strengthen traceability and user trust in 'evidence-backed' outcomes. Builds on existing basic Sources lists.",
-    "expand-eval-coverage-freshness": "Testing/Observability: add or extend lightweight checks for data freshness (last-updated signals on companies) or broader scenario coverage in evals to close the 'measurable research quality' loop from vision. Low-I/O, hermetic where possible.",
-    "expand-research-eval-scenarios": "Testing/Observability: extend scenario coverage or add lightweight research agent evals (building on orchestrator-mock and semantic-search-scenario) to further support measurable research quality per vision."
+    "expand-eval-coverage-freshness": "Testing/Observability: add or extend lightweight checks for data freshness (last_synced_at, updated_at on companies per schema; research run timestamps) or broader scenario coverage in evals to close the 'measurable research quality and coverage' loop from vision. Low-I/O, hermetic where possible. Uses existing fields (company.schema.ts).",
+    "expand-research-eval-scenarios": "Testing/Observability: extend scenario coverage or add lightweight research agent evals (building on orchestrator-mock and semantic-search-scenario) to further support measurable research quality per vision.",
+    "surface-freshness-signals-in-ui": "Feature improvement / UI/UX + discovery: surface last_synced_at or derived freshness/recency signals (or research run age) in company preview cards, list, or detail to increase user trust in 'fresh' intelligence and make vector search results more actionable."
   },
   "category_mix": {
-    "feature_improvement": 1,
-    "testing_observability": 2
+    "testing_observability": 2,
+    "feature_improvement": 1
   },
   "vision_refs": {
-    "add-research-evidence-highlighting": ["reliable deep research", "high-quality, evidence-backed intelligence"],
-    "expand-eval-coverage-freshness": ["measurable research quality and coverage"],
-    "expand-research-eval-scenarios": ["measurable research quality and coverage"]
+    "expand-eval-coverage-freshness": ["measurable research quality and coverage", "high-quality, evidence-backed intelligence", "fresh"],
+    "expand-research-eval-scenarios": ["measurable research quality and coverage"],
+    "surface-freshness-signals-in-ui": ["powerful, intuitive discovery", "high-quality, evidence-backed intelligence"]
   },
-  "generated_by_run": "continue-20260623-235009",
-  "notes": "Planner run in harness/continue-local-20260623-235009. Ran bash agent/init.sh (repo clean on 6feb68e, prior task extend-ci-eval-coverage completed, full verify green). feature_list.json exhausted (all items status=completed). Advanced prior horizon by selecting next: add-research-evidence-highlighting (feature_improvement to rebalance after testing skew of recent runs). Skipped in-flight per prompt: configurable-research-provider, dependency-security-audit, establish-vision-categories. Recon: full reads of vision.md, categories.json, feature_list.json, PROGRESS.md (last runs: research-orchestrator-mock-eval (testing), add-tier-legend (feature_improvement), extend-ci (testing)), AGENTS.md, .agents/rules/* (minimal-code, security, typescript, nextjs, subagents, frontend), agent/harness/*, package.json (all eval scripts present, CI fully wired), research UIs (basic Sources ul + inline pills in research-summary.tsx + founder-profile-view.tsx), .github/workflows/ci.yml (all evals), git state (branch harness/continue-local-20260623-235009, clean). Corridor analyzePlan invoked (minimal-code + safe untrusted URL handling for evidence). Ruflo MCP unavailable (timed out); used files for state. No source code / tests / feature_list edits performed (planner-only). Produced plan artifacts + overwrote this horizon. Balance: lead feature_improvement (rebalance) then testing follow-on. Horizon kept to 3. Next executor implements strictly per plan chosen_task + constraints. Plan artifacts at .codex/tmp/plan-20260623-235009.json + .md"
+  "generated_by_run": "continue-20260626-230001",
+  "notes": "Planner run in harness/continue-local-20260626-230001. Ran bash agent/init.sh (current on 81ee431 after merge of prior PR, repo clean). feature_list.json exhausted (all items completed). Advanced prior horizon: chose next expand-eval-coverage-freshness (testing_observability, directly per handoff to address freshness for measurable quality). Skipped in-flight: configurable-research-provider, dependency-security-audit, establish-vision-categories. Recon: vision.md, categories.json, current horizon, full feature_list (exhausted), PROGRESS tail (heavy testing then rebalance via evidence work), AGENTS.md, .agents/rules/* (minimal-code, security, typescript, frontend-conventions), agent/harness/*, package.json (evals + composite present, CI has all wired), company.schema.ts (has last_synced_at/updated_at/created_at), companies.queries (no freshness used in selects), git state (branch harness/continue-local-20260626-230001, clean). Corridor analyzePlan called (hermetic + read-only timestamp guidance followed). Ruflo MCP unavailable (timed out); used file-based state (horizon + plan artifacts). No source / tests / feature_list edits (planner-only). Produced plan + overwrote horizon. Balance: lead with targeted testing for vision freshness gap, follow with scenario + feature_improvement for mix. Horizon 3 items. Next executor implements strictly per chosen_task. Plan artifacts at .codex/tmp/plan-20260626-230001.json + .md"
 }

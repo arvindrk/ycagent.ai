@@ -161,5 +161,15 @@
     "description": "Feature improvement / agent research: surface key evidence highlights or source links more prominently in research output (research-summary, founder-profile, timeline) and company profiles to strengthen traceability and user trust in 'evidence-backed' outcomes. Builds on existing basic Sources lists.",
     "verify": "npm run lint && npm run typecheck && npm run build",
     "passes": true
+  },
+  {
+    "id": "expand-eval-coverage-freshness",
+    "status": "completed",
+    "priority": 17,
+    "depends_on": ["add-research-evidence-highlighting"],
+    "category": "testing_observability",
+    "description": "Testing/Observability: add or extend lightweight checks for data freshness (last_synced_at, updated_at on companies per schema; research run started/completed_at) or broader scenario coverage in evals to close the 'measurable research quality and coverage' loop from vision. Low-I/O, hermetic where possible. Directly supports fresh, evidence-backed intelligence.",
+    "verify": "npm run eval:freshness-smoke",
+    "passes": true
   }
 ]
