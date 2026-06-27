@@ -9,6 +9,7 @@
         "lint": "eslint",
         "typecheck": "tsc --noEmit && npm run typecheck:logview",
         "typecheck:logview": "tsc -p agent/local/logview/tsconfig.json --noEmit",
+        "verify": "npm run lint && npm run typecheck && npm run build && npm run eval:smoke",
         "db:migrate": "dotenvx run -- tsx scripts/run-migration.ts",
         "db:ingest-yc": "dotenvx run -- tsx scripts/ingest-yc-companies.ts",
         "db:test": "dotenvx run -- tsx scripts/test-queries.ts",
