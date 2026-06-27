@@ -296,3 +296,23 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Verification result: exit 0. lint: clean. typecheck: clean (tsc + logview). build: succeeded (2.8s compile, 9 routes, all static ok). (No evals run as none touched by this UI-only task.)
 - Plan compliance note: Implemented **exactly** the chosen_task within all execution_constraints. All restated principles/AGENTS/sections/rules/vision followed before and during. 1 file core. Corridor analyzePlan used before edits. No scope creep. Data optional per risks (sparse/absent until queries project; UI isolated). Ready for wrapper to use run-summary.json only.
 - Next handoff: harness wrapper (create .codex/tmp/run-summary.json; no direct PR, commit, or push).
+
+## 2026-06-27 (surface-research-freshness-ux)
+
+- Worktree: `continue-20260627-150011`
+- Task: `surface-research-freshness-ux` (plan_id: plan-20260627-152000 from Planner run continue-20260627-150011).
+- Plan link: `.codex/tmp/plan-20260627-152000.json` (authoritative); also `.codex/tmp/plan-20260627-152000.md`. Horizon after per plan: ["surface-research-freshness-ux", "canonical-verify-usage", "expand-research-eval-scenarios"].
+- Selected per plan: feature_improvement / UI/UX + agent research. Surfaces research run started_at/completed_at (and duration) inside ResearchViewer header (distinct from company.last_synced_at in hero/card). Advances "fresh", evidence-backed intelligence trust per vision.
+- Changes (only chosen_task, 2 files max per constraints): (1) `src/components/companies/detail/company-detail-layout.tsx`: destructure `run` (already returned by existing useDeepResearchTrigger + useRealtimeRun) and forward as prop. (2) `src/components/companies/research/research-viewer.tsx`: added optional run prop, imported Badge (for reuse), computed rs/rc/durS directly at use site (no useMemo, no named helper fn), rendered conditional Badge (exact `variant="outline" className="text-[10px] px-1.5 py-0 tabular-nums"` + title= full ISO+dur matching card/hero pattern) inside CardTitle flex. Display: "research live" or "research Xs". All optionals, no layout shift, side-effect free duration. No streaming changes, no DB, no research-summary edit needed.
+- Decisions (first-principles + rules): BEFORE ANY CODE the following were verbatim restated:
+  - The relevant `principles` from the Plan (source + text) [as listed at top of this session].
+  - The relevant sections from `AGENTS.md` (operating model, safety rules, review guidelines) [full blocks restated].
+  - The relevant `.agents/rules/*.md`: minimal-code.md (least code, simplest expression, compute at use site, no abstractions/helpers without second caller, no defensive for impossible), security.md (untrusted input).
+  - The vision alignment from the Plan and `agent/vision.md` (fresh + high-quality evidence-backed + reliable deep research + UI/UX + measurable coverage).
+  - Confirmed the `execution_constraints` from the Plan and commit to obeying them (core 1-2 files, no new deps, full verify required, reuse Badge+classes+patterns, no feature_list.json edit, graceful missing ts, etc).
+- Strictly implemented *only* the chosen_task. Used realtime run fields already present. No while-here changes. 2 files total.
+- Commands executed (post impl): `npm run lint && npm run typecheck && npm run build`.
+- Verification result: exit 0. lint: clean. typecheck: clean (tsc + logview). build: succeeded (2.8s compile, 334ms static pages, 9 routes generated, all good). Pre-existing workspace warnings (lockfiles, cache, telemetry) unrelated and unchanged. No evals touched/required per plan preference for this UI surface.
+- Plan compliance note: Implemented **exactly** the chosen_task "surface-research-freshness-ux" within execution_constraints. All restated principles, AGENTS.md, .agents/rules, vision followed. No deviations. Created .codex/tmp/run-summary.json at end.
+- Next handoff: harness wrapper (use the run-summary.json; no commit/push/PR).
+- Run summary emitted to .codex/tmp/run-summary.json (feature_id, title, pr_body_md following .github/pull_request_template.md).

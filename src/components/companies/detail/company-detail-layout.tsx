@@ -31,7 +31,8 @@ export function CompanyDetailLayout({
     events,
     startResearch,
     stopResearch,
-    researchContainerRef
+    researchContainerRef,
+    run
   } = useDeepResearchTrigger({ company, accessToken: researchAccessToken ?? "" });
 
   const handleStartResearch = () => {
@@ -75,6 +76,7 @@ export function CompanyDetailLayout({
           events={events}
           isResearching={isLoading || isResearching}
           onStopResearch={stopResearch}
+          run={run}
         />
       </div>
     </>
