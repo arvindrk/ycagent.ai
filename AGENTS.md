@@ -26,15 +26,6 @@ Continuation runs locally via the provider-agnostic Agent Harness: any agent CLI
 - Build: `npm run build`
 - Verify before PR: `npm run verify`
 
-## Commands
-
-- Install dependencies: `npm ci`
-- Start app: `npm run dev`
-- Lint: `npm run lint`
-- Typecheck: `npm run typecheck`
-- Build: `npm run build`
-- Verify before PR: `npm run verify`
-
 ## Repository Context
 
 This is a Next.js 16 / React 19 YC company discovery and research platform.
