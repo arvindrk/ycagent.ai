@@ -1,19 +1,19 @@
 {
-  "slice": ["canonical-verify-usage", "expand-research-eval-scenarios", "consolidate-harness-verify-usage"],
+  "slice": ["expand-research-eval-scenarios", "consolidate-harness-verify-usage", "extend-eval-invariants-for-agent-reliability"],
   "rationale_per_step": {
-    "canonical-verify-usage": "DX/Infra: now that the 'verify' script exists and fully chains lint + typecheck + build + eval:smoke, update AGENTS.md (and align CI/docs if minimal) to use the single canonical command. Rebalances category mix after testing density; zero-risk DX win that makes harness contributions easier. Directly addresses duplicated Commands sections in AGENTS.md.",
     "expand-research-eval-scenarios": "Testing/Observability: expand scenario coverage in research-orchestrator-mock-eval (or add lightweight checks) for result shape, non-empty sources, metadata presence, and basic non-obvious signals. Directly closes more of the measurable research quality + reliable deep research loop from vision. Builds on existing hermetic mock pattern.",
-    "consolidate-harness-verify-usage": "DX/Infra follow-on: ensure all harness entry points (AGENTS.md, harness README, any local scripts/docs) reference 'npm run verify' as the single source of truth after the canonical update. Prevents drift, reinforces quality loops."
+    "consolidate-harness-verify-usage": "DX/Infra follow-on: ensure all harness entry points (AGENTS.md, harness README, any local scripts/docs) reference 'npm run verify' as the single source of truth after the canonical update. Prevents drift, reinforces quality loops.",
+    "extend-eval-invariants-for-agent-reliability": "Testing/Observability follow-on: add targeted invariants in research evals or smoke for result fidelity, source presence, and key non-obvious fields surfaced by agents. Reinforces the quality loop."
   },
   "category_mix": {
-    "dx_infra": 2,
-    "testing_observability": 1
+    "testing_observability": 2,
+    "dx_infra": 1
   },
   "vision_refs": {
-    "canonical-verify-usage": ["measurable research quality and coverage", "dx"],
     "expand-research-eval-scenarios": ["measurable research quality and coverage", "reliable deep research"],
-    "consolidate-harness-verify-usage": ["measurable research quality and coverage", "dx"]
+    "consolidate-harness-verify-usage": ["measurable research quality and coverage"],
+    "extend-eval-invariants-for-agent-reliability": ["measurable research quality and coverage", "reliable deep research"]
   },
-  "generated_by_run": "continue-20260702-172519",
-  "notes": "Planner run in harness/continue-local-20260702-172519 (855c1a6, clean) on 2026-07-02. Ran bash agent/init.sh first (twice for confirmation). feature_list.json exhausted (all completed per tracked features + PROGRESS tail ending at surface-research-freshness-ux and expand-eval-coverage-freshness). Prior horizon slice advanced; surface-research-freshness-ux completed (see latest PROGRESS). Recon: init output (dupe commands in AGENTS noted, CI explicit evals + smoke, verify script full chain present), vision.md, categories.json, current horizon.json, full agent/feature_list.json (exhausted), agent/PROGRESS.md (heavy recent testing + UI freshness work), AGENTS.md (duplicated Commands sections both referencing verify now), .agents/rules/* (minimal-code, security, typescript read), package.json (verify + eval:smoke composite exact), .github/workflows/ci.yml (explicit steps still, acceptable), src/eval/research-orchestrator-mock-eval.ts (current coverage base for expansion), git context (clean). Corridor analyzePlan called on plan text (received: centralize verification in docs, accurate canonical references to prevent misconfig). No Ruflo harness:* memory tools available (MCP search returned no matching memory_store/agent_spawn for harness; mercor/vercel/corridor only); used file-based (horizon + .codex/tmp plans) + PROGRESS notes convention from prior planners. No source/tests/feature_list touched. Balance: starts with dx_infra to rebalance after testing+feature_improvement history; includes testing for vision depth on agent research. Skipped in-flights per user note (configurable-research-provider, dependency-security-audit, establish-vision-categories). Plan artifacts + this horizon written. Next executor will take canonical-verify-usage."
+  "generated_by_run": "continue-20260702-232222",
+  "notes": "Planner run in harness/continue-local-20260702-232222 (46ef100, post-merge of canonical) on 2026-07-02. Ran bash agent/init.sh first. feature_list.json exhausted (all items completed). Advanced prior horizon by selecting next pending 'expand-research-eval-scenarios'. Recon included: init output (verify full chain with 8 evals green), vision.md, categories.json, horizon (old slice), feature_list (exhausted), full PROGRESS.md (recent: canonical dx, prior surface freshness + evidence + many evals), AGENTS.md, .agents/rules/minimal-code + security, package.json (verify + all eval:smoke), ci.yml (all wired), src/eval/research-orchestrator-mock-eval.ts (base for expansion, 6+ event types + basic founder result asserted), domain-registry (only founder_profile currently), orchestrator (simple loop), git clean. No .codex/tmp plans at start of this worktree. No Ruflo harness:* memory (MCP timeout per init/prior); used file-based (horizon + .codex/tmp plans) exclusively. Corridor analyzePlan not called (planner authors no code changes). Balance: lead with testing_observability to deliver carried research-eval item for vision depth on agent research; follow with dx_infra; third testing follow-on. Skipped in-flights per user note. Plan artifacts (.codex/tmp/plan-20260702-233500.json + .md) written; horizon overwritten. Next executor takes expand-research-eval-scenarios."
 }

@@ -51,6 +51,10 @@ const validFounderResult: FounderProfileResult = {
     { name: "Alex Founder", title: "CEO" },
     { name: "Sam Co", title: "CTO" },
   ],
+  metadata: {
+    researchTimestamp: "2026-07-02T23:35:00.000Z",
+    signalTypes: ["founder_relationship", "track_record"],
+  },
 };
 
 // ---- Test runner (exact pattern) -------------------------------------
@@ -175,8 +179,14 @@ void (async () => {
     assert(!!res, "RESULT must carry result");
     const r = res as FounderProfileResult;
     assert(r.domain === "founder_profile", "wrong domain");
+    assert(typeof r.summary === "string" && r.summary.length > 0, "summary");
     assert(typeof r.executiveSummary === "string" && r.executiveSummary.length > 0, "executiveSummary");
-    assert(Array.isArray(r.sources) && r.sources.length > 0, "sources required");
+    assert(Array.isArray(r.sources) && r.sources.length > 0 && r.sources.every((s) => typeof s === "string" && s.length > 0), "sources non-empty strings");
+    assert(Array.isArray(r.founderRelationship) && r.founderRelationship.length > 0, "founderRelationship (non-obvious signal)");
+    assert(Array.isArray(r.complementarySkills) && r.complementarySkills.length > 0, "complementarySkills (non-obvious signal)");
+    assert(Array.isArray(r.socialPresence) && r.socialPresence.length > 0, "socialPresence (non-obvious signal)");
+    assert(Array.isArray(r.trackRecord) && r.trackRecord.length > 0, "trackRecord (non-obvious signal)");
+    assert(r.metadata != null && typeof r.metadata === "object", "metadata presence");
     assert(Array.isArray(r.founders) && r.founders.length >= 1, "founders required");
     assert(r.founders.every((f) => {
       const rec = f as Record<string, unknown>;
