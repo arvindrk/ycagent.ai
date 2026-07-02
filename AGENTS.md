@@ -24,7 +24,7 @@ Continuation runs locally via the provider-agnostic Agent Harness: any agent CLI
 - Lint: `npm run lint`
 - Typecheck: `npm run typecheck`
 - Build: `npm run build`
-- Verify before PR: `npm run lint && npm run typecheck && npm run build`
+- Verify before PR: `npm run verify`
 
 ## Commands
 
@@ -33,7 +33,7 @@ Continuation runs locally via the provider-agnostic Agent Harness: any agent CLI
 - Lint: `npm run lint`
 - Typecheck: `npm run typecheck`
 - Build: `npm run build`
-- Verify before PR: `npm run lint && npm run typecheck && npm run build`
+- Verify before PR: `npm run verify`
 
 ## Repository Context
 
