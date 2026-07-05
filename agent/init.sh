@@ -21,4 +21,4 @@ tail -40 agent/PROGRESS.md || true
 
 echo
 echo "== verification =="
-echo "npm run lint && npm run typecheck && npm run build"
+echo "npm run verify"

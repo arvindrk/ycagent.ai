@@ -42,6 +42,7 @@ Open http://localhost:3000
 ## Scripts
 
 ```bash
+npm run verify   # single source of truth for pre-PR / pre-merge (lint + typecheck + build + eval:smoke)
 bun run dev / build / lint
 bun run db:migrate / db:ingest-yc
 bunx trigger.dev@latest dev / deploy
