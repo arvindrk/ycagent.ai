@@ -1,19 +1,20 @@
 {
-  "slice": ["expand-research-eval-scenarios", "consolidate-harness-verify-usage", "extend-eval-invariants-for-agent-reliability"],
+  "slice": ["consolidate-harness-verify-usage", "extend-eval-invariants-for-agent-reliability", "surface-research-non-obvious-signals"],
   "rationale_per_step": {
-    "expand-research-eval-scenarios": "Testing/Observability: expand scenario coverage in research-orchestrator-mock-eval (or add lightweight checks) for result shape, non-empty sources, metadata presence, and basic non-obvious signals. Directly closes more of the measurable research quality + reliable deep research loop from vision. Builds on existing hermetic mock pattern.",
-    "consolidate-harness-verify-usage": "DX/Infra follow-on: ensure all harness entry points (AGENTS.md, harness README, any local scripts/docs) reference 'npm run verify' as the single source of truth after the canonical update. Prevents drift, reinforces quality loops.",
-    "extend-eval-invariants-for-agent-reliability": "Testing/Observability follow-on: add targeted invariants in research evals or smoke for result fidelity, source presence, and key non-obvious fields surfaced by agents. Reinforces the quality loop."
+    "consolidate-harness-verify-usage": "DX/Infra: consolidate references to the canonical 'npm run verify' across README, agent/ docs, init.sh, local harness scripts, and eval headers. Rebalances category after testing_observability-heavy recent runs. Directly supports measurable research quality by making the full quality gate (lint + typecheck + build + all evals) the obvious single command for contributors and the harness. Low-risk doc work; CI stays explicit intentionally.",
+    "extend-eval-invariants-for-agent-reliability": "Testing/Observability follow-on: add or strengthen targeted invariants (result shape fidelity, non-empty/valid sources, presence of non-obvious signals like founderRelationship/trackRecord when the mock produces them, metadata) inside research evals. Builds on the just-merged expand-research-eval-scenarios. Advances 'measurable research quality and coverage' + 'reliable deep research' from vision with hermetic checks.",
+    "surface-research-non-obvious-signals": "Feature improvement (research + UI/UX): surface the non-obvious signals (founderRelationship, complementarySkills, trackRecord, socialPresence) more prominently and readably in ResearchViewer / company research output (dedicated compact sections or enhanced evidence-style pills). Leverages recent eval expansion of these fields and prior evidence-highlighting work. Improves user trust and makes 'go beyond surface data' visible."
   },
   "category_mix": {
-    "testing_observability": 2,
-    "dx_infra": 1
+    "dx_infra": 1,
+    "testing_observability": 1,
+    "feature_improvement": 1
   },
   "vision_refs": {
-    "expand-research-eval-scenarios": ["measurable research quality and coverage", "reliable deep research"],
     "consolidate-harness-verify-usage": ["measurable research quality and coverage"],
-    "extend-eval-invariants-for-agent-reliability": ["measurable research quality and coverage", "reliable deep research"]
+    "extend-eval-invariants-for-agent-reliability": ["measurable research quality and coverage", "reliable deep research"],
+    "surface-research-non-obvious-signals": ["reliable deep research", "high-quality evidence-backed intelligence", "UI/UX"]
   },
-  "generated_by_run": "continue-20260702-232222",
-  "notes": "Planner run in harness/continue-local-20260702-232222 (46ef100, post-merge of canonical) on 2026-07-02. Ran bash agent/init.sh first. feature_list.json exhausted (all items completed). Advanced prior horizon by selecting next pending 'expand-research-eval-scenarios'. Recon included: init output (verify full chain with 8 evals green), vision.md, categories.json, horizon (old slice), feature_list (exhausted), full PROGRESS.md (recent: canonical dx, prior surface freshness + evidence + many evals), AGENTS.md, .agents/rules/minimal-code + security, package.json (verify + all eval:smoke), ci.yml (all wired), src/eval/research-orchestrator-mock-eval.ts (base for expansion, 6+ event types + basic founder result asserted), domain-registry (only founder_profile currently), orchestrator (simple loop), git clean. No .codex/tmp plans at start of this worktree. No Ruflo harness:* memory (MCP timeout per init/prior); used file-based (horizon + .codex/tmp plans) exclusively. Corridor analyzePlan not called (planner authors no code changes). Balance: lead with testing_observability to deliver carried research-eval item for vision depth on agent research; follow with dx_infra; third testing follow-on. Skipped in-flights per user note. Plan artifacts (.codex/tmp/plan-20260702-233500.json + .md) written; horizon overwritten. Next executor takes expand-research-eval-scenarios."
+  "generated_by_run": "continue-20260705-212545",
+  "notes": "Planner run in harness/continue-local-20260705-212545 on 2026-07-05. Ran bash agent/init.sh first (repo on harness branch post-merge of expand-research-eval-scenarios PR; clean; verify green). feature_list.json exhausted (all completed). Current horizon carried from prior (expand done). Rebalanced explicitly for dx_infra lead after testing skew (see category_mix and rationale). Recon: vision.md, categories.json, AGENTS.md, .agents/rules/* (esp minimal-code, security), PROGRESS tail (heavy testing + evidence surfacing + canonical verify), package.json (verify + 8 eval:smoke subs), src/eval/* (orchestrator now checks non-obvious + metadata + sources; semantic scenario + freshness present; all pure), domain-registry (only founder_profile), CI explicit, top README still uses old script list, Ruflo local memory empty (no prior harness:*). Used ruflo CLI for memory_search/stats (empty) + will store. No .codex/tmp plans at start. Corridor analyzePlan intentionally not called (planner authors no code per prior precedent + tool scope). Plan artifacts written to .codex/tmp/plan-20260705-160000.json + .md. Horizon overwritten + stored to Ruflo. Next executor takes consolidate-harness-verify-usage (doc-only, rebalance)."
 }

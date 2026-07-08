@@ -52,7 +52,7 @@ The old combined `continue-prompt.md` is deprecated in favor of the two dedicate
 - Edit vision + categories for your direction + balance targets.
 - Add/update rules/skills in .agents/.
 - The bash layer derives repo identity; override via harness-config.json.
-- See top-level AGENTS.md for operating model.
+- See top-level AGENTS.md (Verify before PR: `npm run verify`) for operating model.
 - To add new planner behavior: new skill + reference from prompt or feature-planning.
 
 ## Provider Agnosticism & Backwards Compatibility
