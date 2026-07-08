@@ -171,5 +171,15 @@
     "description": "Testing/Observability: add or extend lightweight checks for data freshness (last_synced_at, updated_at on companies per schema; research run started/completed_at) or broader scenario coverage in evals to close the 'measurable research quality and coverage' loop from vision. Low-I/O, hermetic where possible. Directly supports fresh, evidence-backed intelligence.",
     "verify": "npm run eval:freshness-smoke",
     "passes": true
+  },
+  {
+    "id": "enhance-source-presentation-for-trust",
+    "status": "completed",
+    "priority": 18,
+    "depends_on": ["expand-eval-coverage-freshness"],
+    "category": "feature_improvement",
+    "description": "Feature improvement / UI/UX + agent research: enhance the Sources section in ResearchSummary (rendered inside ResearchViewer for research output) to display the actual source URLs (or clean hostnames) instead of generic 'Source N' labels. This makes evidence-backed, sourced intelligence directly verifiable and builds user trust. Uses only the existing result.sources string[] data with no new fetches, schema changes, or I/O. Advances vision core outcomes for comprehensive sourced profiles and success signal of users trusting sourced insights. Small targeted presentation improvement only.",
+    "verify": "npm run verify",
+    "passes": true
   }
 ]
