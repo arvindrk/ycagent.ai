@@ -179,14 +179,18 @@ void (async () => {
     assert(!!res, "RESULT must carry result");
     const r = res as FounderProfileResult;
     assert(r.domain === "founder_profile", "wrong domain");
-    assert(typeof r.summary === "string" && r.summary.length > 0, "summary");
+    assert(typeof r.summary === "string" && r.summary.length >= 5, "summary shape");
     assert(typeof r.executiveSummary === "string" && r.executiveSummary.length > 0, "executiveSummary");
-    assert(Array.isArray(r.sources) && r.sources.length > 0 && r.sources.every((s) => typeof s === "string" && s.length > 0), "sources non-empty strings");
-    assert(Array.isArray(r.founderRelationship) && r.founderRelationship.length > 0, "founderRelationship (non-obvious signal)");
-    assert(Array.isArray(r.complementarySkills) && r.complementarySkills.length > 0, "complementarySkills (non-obvious signal)");
-    assert(Array.isArray(r.socialPresence) && r.socialPresence.length > 0, "socialPresence (non-obvious signal)");
-    assert(Array.isArray(r.trackRecord) && r.trackRecord.length > 0, "trackRecord (non-obvious signal)");
+    assert(Array.isArray(r.sources) && r.sources.length > 0 && r.sources.every((s) => typeof s === "string" && s.trim().length > 0), "sources non-empty strings");
+    assert(r.sources.some((s) => typeof s === "string" && (s.includes("://") || s.includes("."))), "sources url-like");
+    assert(Array.isArray(r.founderRelationship) && r.founderRelationship.length > 0 && r.founderRelationship.every((s) => typeof s === "string" && s.trim().length > 0), "founderRelationship (non-obvious signal)");
+    assert(Array.isArray(r.complementarySkills) && r.complementarySkills.length > 0 && r.complementarySkills.every((s) => typeof s === "string" && s.trim().length > 0), "complementarySkills (non-obvious signal)");
+    assert(Array.isArray(r.socialPresence) && r.socialPresence.length > 0 && r.socialPresence.every((s) => typeof s === "string" && s.trim().length > 0), "socialPresence (non-obvious signal)");
+    assert(Array.isArray(r.trackRecord) && r.trackRecord.length > 0 && r.trackRecord.every((s) => typeof s === "string" && s.trim().length > 0), "trackRecord (non-obvious signal)");
     assert(r.metadata != null && typeof r.metadata === "object", "metadata presence");
+    const md = r.metadata as Record<string, unknown>;
+    assert(typeof md.researchTimestamp === "string" && md.researchTimestamp.length > 10, "metadata.researchTimestamp");
+    assert(Array.isArray(md.signalTypes) && md.signalTypes.length > 0 && md.signalTypes.every((s) => typeof s === "string" && s.length > 0), "metadata.signalTypes non-empty");
     assert(Array.isArray(r.founders) && r.founders.length >= 1, "founders required");
     assert(r.founders.every((f) => {
       const rec = f as Record<string, unknown>;

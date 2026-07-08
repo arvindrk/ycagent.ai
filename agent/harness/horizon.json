@@ -1,19 +1,20 @@
 {
-  "slice": ["enhance-source-presentation-for-trust", "extend-eval-invariants-for-agent-reliability", "surface-additional-research-metadata"],
+  "slice": [
+    "extend-eval-invariants-for-agent-reliability",
+    "surface-additional-research-metadata",
+    "expand-research-domains"
+  ],
   "rationale_per_step": {
-    "enhance-source-presentation-for-trust": "Feature improvement (UI/UX + agent research): change generic 'Source N' labels in ResearchSummary Sources section to show actual URLs/hostnames for direct verifiability. Advances evidence-backed intelligence, user trust in sourced profiles, and traceability per vision. Minimal presentation-only change on existing data. Rebalances category mix after dx + testing runs.",
-    "extend-eval-invariants-for-agent-reliability": "Testing/Observability follow-on: strengthen result shape, sources non-emptiness, non-obvious signal presence, and metadata invariants inside research evals (mock + possibly others). Builds directly on expand-research-eval-scenarios and recent executor work. Supports measurable research quality + reliable deep research.",
-    "surface-additional-research-metadata": "Feature improvement (research + UI/UX): surface additional lightweight metadata (e.g. research duration, domains covered, or key signal counts) in research viewer/header or company cards to make 'fresh' and 'comprehensive' qualities visible during discovery and review. Leverages prior freshness and score surfacing work."
+    "extend-eval-invariants-for-agent-reliability": "Testing/Observability follow-on: strengthen result shape, sources non-emptiness, non-obvious signal presence, and metadata invariants inside research evals (mock + possibly others). Builds directly on recent executor work on research evals and source presentation. Supports measurable research quality + reliable deep research per vision core outcome 4 and 3.",
+    "surface-additional-research-metadata": "Feature improvement (research + UI/UX): surface additional lightweight metadata (e.g. research duration, domains covered, or key signal counts) in research viewer/header or company cards to make 'fresh' and 'comprehensive' qualities visible during discovery and review. Leverages prior freshness and score surfacing work.",
+    "expand-research-domains": "New Feature (agent research): expand DOMAIN_REGISTRY and orchestrator beyond the single founder_profile domain to cover additional high-value areas such as traction, risks, relationships, or company signals. Directly advances reliable deep research and non-obvious signals per vision. Requires accompanying schema/eval updates but starts with domain addition."
   },
   "category_mix": {
-    "feature_improvement": 2,
-    "testing_observability": 1
+    "testing_observability": 1,
+    "feature_improvement": 1,
+    "new_feature": 1
   },
   "vision_refs": {
-    "enhance-source-presentation-for-trust": [
-      "high-quality, evidence-backed intelligence on YC companies and founders — comprehensive, sourced, and fresh.",
-      "Users quickly find and trust comprehensive, sourced profiles and insights."
-    ],
     "extend-eval-invariants-for-agent-reliability": [
       "measurable research quality and coverage",
       "reliable deep research"
@@ -23,8 +24,13 @@
       "high-quality evidence-backed intelligence",
       "UI/UX",
       "powerful, intuitive discovery"
+    ],
+    "expand-research-domains": [
+      "reliable deep research",
+      "high-quality, evidence-backed intelligence on YC companies and founders",
+      "Agent research facet"
     ]
   },
-  "generated_by_run": "continue-20260708-215414",
-  "notes": "Planner run 2026-07-08 in harness/continue-local-20260708-215414. Ran bash agent/init.sh (clean post-consolidate worktree on harness branch, verify green in prior). feature_list.json fully exhausted (all completed, no unblocked items). Recon: vision.md + categories.json (weights), AGENTS.md + .agents/rules/* (minimal-code, security, nextjs, frontend, etc.), current horizon.json (stale, consolidate first), PROGRESS.md tail (latest executor: consolidate-harness-verify-usage; prior expand + surface-freshness), package.json (verify = lint+type+build+full eval:smoke with 8 subs), src/ (non-obvious signals present in types/schemas/domain-registry/founder-profile-view + asserts in evals; sources basic 'Source N' in research-summary; only founder_profile domain; evals comprehensive and hermetic; UI uses existing components). Ruflo memory empty (stats 0 entries, searches for harness returned none); used CLI for search + will store. .codex/tmp empty at start. Corridor analyzePlan called on the planning decision + sources code snippet before artifact write (response: link handling safe, keep rel and href validation). No source edits. Horizon slice chosen for vision alignment + explicit rebalance to feature_improvement lead. Plan artifacts + horizon.json + ruflo store only."
+  "generated_by_run": "continue-20260708-221359",
+  "notes": "Planner run 2026-07-08 in harness/continue-local-20260708-221359 (new worktree post-merge of enhance-source work). Ran bash agent/init.sh (clean state, verify green in prior executor). Recon: vision.md + categories.json (weights), AGENTS.md + .agents/rules/* (minimal-code, security, nextjs, frontend-conventions, typescript etc), feature_list.json (FULLY EXHAUSTED: all completed, 0 unblocked items, 185 lines), PROGRESS.md tail (last executor enhance + prior consolidate), package.json (verify = lint+typecheck+build + eval:smoke with 8 subs), src/ (only founder_profile domain in DOMAIN_REGISTRY + orchestrator loop; sources now use hostname expr post last task; evals full and hermetic including non-obvious signal asserts; UI/UX uses existing patterns). Ruflo memory: 0 harness entries (searches returned empty; first store this run). .codex/tmp was empty at start of this planner. No source edits performed. Horizon advanced from prior stale slice (dropped completed enhance-source...); chose projected next for continuity + rebalance to include new_feature for agent depth. Plan artifacts + horizon.json + ruflo harness:horizon only. Corridor not invoked (planner produces no code changes per tool rules)."
 }

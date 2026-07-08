@@ -78,6 +78,10 @@ const validResult: FounderProfileResult = {
       socialLinks: { x: "collision" },
     },
   ],
+  metadata: {
+    researchTimestamp: "2026-07-02T23:35:00.000Z",
+    signalTypes: ["founder_relationship", "track_record"],
+  },
 };
 
 // ---- Rubric -----------------------------------------------------------
@@ -129,6 +133,21 @@ function checkRubric(result: unknown): RubricResult {
   const sources = r["sources"];
   if (!Array.isArray(sources) || sources.length === 0) {
     failures.push("sources must be a non-empty array");
+  } else if (sources.some((s: unknown) => typeof s !== "string" || String(s).trim() === "")) {
+    failures.push("sources items must be non-empty strings");
+  }
+
+  const md = r["metadata"];
+  if (md != null && typeof md === "object") {
+    const mdRec = md as Record<string, unknown>;
+    const ts = mdRec["researchTimestamp"];
+    if (typeof ts !== "string" || ts === "") {
+      failures.push("metadata.researchTimestamp must be non-empty string when present");
+    }
+    const st = mdRec["signalTypes"];
+    if (!Array.isArray(st) || st.length === 0 || st.some((s: unknown) => typeof s !== "string" || s === "")) {
+      failures.push("metadata.signalTypes must be non-empty string array when present");
+    }
   }
 
   const founders = r["founders"];

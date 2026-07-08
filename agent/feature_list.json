@@ -181,5 +181,15 @@
     "description": "Feature improvement / UI/UX + agent research: enhance the Sources section in ResearchSummary (rendered inside ResearchViewer for research output) to display the actual source URLs (or clean hostnames) instead of generic 'Source N' labels. This makes evidence-backed, sourced intelligence directly verifiable and builds user trust. Uses only the existing result.sources string[] data with no new fetches, schema changes, or I/O. Advances vision core outcomes for comprehensive sourced profiles and success signal of users trusting sourced insights. Small targeted presentation improvement only.",
     "verify": "npm run verify",
     "passes": true
+  },
+  {
+    "id": "extend-eval-invariants-for-agent-reliability",
+    "status": "completed",
+    "priority": 19,
+    "depends_on": ["enhance-source-presentation-for-trust"],
+    "category": "testing_observability",
+    "description": "Testing/Observability follow-on: strengthen result shape, sources non-emptiness, non-obvious signal presence, and metadata invariants inside research evals (mock + possibly others). Builds directly on expand-research-eval-scenarios and recent executor work. Supports measurable research quality + reliable deep research.",
+    "verify": "npm run eval:research-orchestrator-mock-eval && npm run eval:research-smoke && npm run eval:smoke",
+    "passes": true
   }
 ]
