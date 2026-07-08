@@ -1,36 +1,35 @@
 {
   "slice": [
-    "extend-eval-invariants-for-agent-reliability",
     "surface-additional-research-metadata",
-    "expand-research-domains"
+    "expand-research-domains",
+    "surface-research-non-obvious-signals"
   ],
   "rationale_per_step": {
-    "extend-eval-invariants-for-agent-reliability": "Testing/Observability follow-on: strengthen result shape, sources non-emptiness, non-obvious signal presence, and metadata invariants inside research evals (mock + possibly others). Builds directly on recent executor work on research evals and source presentation. Supports measurable research quality + reliable deep research per vision core outcome 4 and 3.",
-    "surface-additional-research-metadata": "Feature improvement (research + UI/UX): surface additional lightweight metadata (e.g. research duration, domains covered, or key signal counts) in research viewer/header or company cards to make 'fresh' and 'comprehensive' qualities visible during discovery and review. Leverages prior freshness and score surfacing work.",
-    "expand-research-domains": "New Feature (agent research): expand DOMAIN_REGISTRY and orchestrator beyond the single founder_profile domain to cover additional high-value areas such as traction, risks, relationships, or company signals. Directly advances reliable deep research and non-obvious signals per vision. Requires accompanying schema/eval updates but starts with domain addition."
+    "surface-additional-research-metadata": "Feature improvement (research + UI/UX): surface additional lightweight metadata (e.g. research duration, domains covered, or key signal counts) in research viewer/header or company cards to make 'fresh' and 'comprehensive' qualities visible during discovery and review. Leverages prior freshness and score surfacing work. Continues the chain after completed extend-eval.",
+    "expand-research-domains": "New Feature (agent research): expand DOMAIN_REGISTRY and orchestrator beyond the single founder_profile domain to cover additional high-value areas such as traction, risks, relationships, or company signals. Directly advances reliable deep research and non-obvious signals per vision. Requires accompanying schema/eval updates but starts with domain addition. Brings new_feature category into the slice for balance.",
+    "surface-research-non-obvious-signals": "Feature improvement (UI/UX + agent research): surface the non-obvious signals (founderRelationship, complementarySkills, socialPresence, trackRecord, etc.) already produced by the research agent in cards, viewer summary, or detail sections so users see the value of deep research. Builds directly on source presentation and eval invariants work."
   },
   "category_mix": {
-    "testing_observability": 1,
-    "feature_improvement": 1,
+    "feature_improvement": 2,
     "new_feature": 1
   },
   "vision_refs": {
-    "extend-eval-invariants-for-agent-reliability": [
-      "measurable research quality and coverage",
-      "reliable deep research"
-    ],
     "surface-additional-research-metadata": [
-      "reliable deep research",
-      "high-quality evidence-backed intelligence",
       "UI/UX",
+      "high-quality evidence-backed intelligence",
       "powerful, intuitive discovery"
     ],
     "expand-research-domains": [
       "reliable deep research",
       "high-quality, evidence-backed intelligence on YC companies and founders",
       "Agent research facet"
+    ],
+    "surface-research-non-obvious-signals": [
+      "reliable deep research",
+      "high-quality, evidence-backed intelligence",
+      "UI/UX"
     ]
   },
-  "generated_by_run": "continue-20260708-221359",
-  "notes": "Planner run 2026-07-08 in harness/continue-local-20260708-221359 (new worktree post-merge of enhance-source work). Ran bash agent/init.sh (clean state, verify green in prior executor). Recon: vision.md + categories.json (weights), AGENTS.md + .agents/rules/* (minimal-code, security, nextjs, frontend-conventions, typescript etc), feature_list.json (FULLY EXHAUSTED: all completed, 0 unblocked items, 185 lines), PROGRESS.md tail (last executor enhance + prior consolidate), package.json (verify = lint+typecheck+build + eval:smoke with 8 subs), src/ (only founder_profile domain in DOMAIN_REGISTRY + orchestrator loop; sources now use hostname expr post last task; evals full and hermetic including non-obvious signal asserts; UI/UX uses existing patterns). Ruflo memory: 0 harness entries (searches returned empty; first store this run). .codex/tmp was empty at start of this planner. No source edits performed. Horizon advanced from prior stale slice (dropped completed enhance-source...); chose projected next for continuity + rebalance to include new_feature for agent depth. Plan artifacts + horizon.json + ruflo harness:horizon only. Corridor not invoked (planner produces no code changes per tool rules)."
+  "generated_by_run": "continue-20260708-223717",
+  "notes": "Planner run 2026-07-08 in harness/continue-local-20260708-223717 (new worktree after merges). Ran bash agent/init.sh (feature_list fully exhausted with 19/19 completed; pre-existing typecheck errors in use-deep-research-trigger.ts noted; last executor work on enhance-source + extend-eval). Recon: vision.md (3 facets, 4 outcomes), categories.json (weights), AGENTS.md + all .agents/rules/* (minimal-code, security, typescript, frontend-conventions, nextjs, react*), current horizon.json (stale, started with now-completed extend-eval), feature_list.json (exhausted), PROGRESS.md tail (recent: consolidate dx, enhance-source feature_improvement, extend-eval testing), package.json + evals (verify = full chain + 8 smoke evals), src research (only founder_profile domain; signals + metadata present in evals/results but minimally surfaced in UI beyond recent source hostname + freshness badges; ResearchViewer already receives run for duration). Ruflo memory_search for harness:* returned 0 entries (empty). .codex/tmp empty at start. Corridor analyzePlan called on planning summary. No source edits. Horizon advanced by dropping completed extend-eval, rebalancing to include new_feature, preserving continuity on metadata surfacing. Plan artifacts + horizon.json + ruflo harness:horizon only. This is planning-only."
 }
