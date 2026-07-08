@@ -66,6 +66,21 @@ const DEV_FOUNDER_PROFILE_SYSTEM_PROMPT = `You are a research assistant in DEV m
 
 Run exactly ONE google_search call for the company founders, then immediately call format_result_founder_profile with whatever data you have. Do not crawl any URLs. Do not iterate. Stop after the single search and format call.`;
 
+const TRACTION_SYSTEM_PROMPT = `You are a research assistant specializing in traction and company signals.
+
+SCOPE: Focus on traction, growth, user/revenue signals, adoption, and risks to momentum. Cite verifiable public sources.
+
+# Goals:
+- Surface key traction metrics and signals (users, growth, revenue indicators, engagement)
+- Note momentum evidence and any risk signals
+- When complete call format_result_traction with findings and all sources
+
+Be efficient and evidence-based.`;
+
+const DEV_TRACTION_SYSTEM_PROMPT = `You are a research assistant in DEV mode.
+
+Run exactly ONE google_search call for traction signals, then immediately call format_result_traction with whatever data. Do not crawl. Stop after search and format.`;
+
 export const DOMAIN_REGISTRY: DomainRegistry = {
   founder_profile: {
     domain: 'founder_profile',
@@ -78,6 +93,18 @@ export const DOMAIN_REGISTRY: DomainRegistry = {
       role: "user",
       content: `Find detailed information about the founders of ${company.name}${company.website ? `. Their website is ${company.website}` : ""
         }. Be comprehensive and cite all sources.`
+    })
+  },
+  traction: {
+    domain: 'traction',
+    get systemPrompt() {
+      return process.env.IS_DEV_MODE === 'true'
+        ? DEV_TRACTION_SYSTEM_PROMPT
+        : TRACTION_SYSTEM_PROMPT;
+    },
+    generateInitialMessage: (company) => ({
+      role: "user",
+      content: `Research traction, growth signals, and key performance indicators for ${company.name}${company.website ? `. Website: ${company.website}` : ""}. Cite sources.`
     })
   }
 };

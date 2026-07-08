@@ -191,5 +191,15 @@
     "description": "Testing/Observability follow-on: strengthen result shape, sources non-emptiness, non-obvious signal presence, and metadata invariants inside research evals (mock + possibly others). Builds directly on expand-research-eval-scenarios and recent executor work. Supports measurable research quality + reliable deep research.",
     "verify": "npm run eval:research-orchestrator-mock-eval && npm run eval:research-smoke && npm run eval:smoke",
     "passes": true
+  },
+  {
+    "id": "expand-research-domains",
+    "status": "completed",
+    "priority": 20,
+    "depends_on": ["extend-eval-invariants-for-agent-reliability"],
+    "category": "new_feature",
+    "description": "New Feature (agent research): expand DOMAIN_REGISTRY and orchestrator beyond the single founder_profile domain to cover additional high-value areas such as traction, risks, relationships, or company signals. Directly advances reliable deep research and non-obvious signals per vision. Requires accompanying schema/eval updates but starts with domain addition. Brings new_feature category into the slice for balance.",
+    "verify": "npm run eval:smoke && npm run lint && npm run typecheck && npm run build",
+    "passes": true
   }
 ]

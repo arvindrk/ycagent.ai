@@ -34,6 +34,11 @@ interface BaseResearchResult {
   summary: string;
   sources: string[];
   metadata?: Record<string, unknown>;
+  // optional for union compatibility across domains (founder signals used in counts/UI; present on founder results)
+  founderRelationship?: string[];
+  complementarySkills?: string[];
+  socialPresence?: string[];
+  trackRecord?: string[];
 }
 
 export interface FounderProfileResult extends BaseResearchResult {
@@ -58,7 +63,12 @@ export interface FounderProfileResult extends BaseResearchResult {
   }>;
 }
 
-export type ResearchResult = FounderProfileResult;
+export interface TractionResult extends BaseResearchResult {
+  domain: 'traction';
+  tractionSignals: string[];
+}
+
+export type ResearchResult = FounderProfileResult | TractionResult;
 
 export interface StreamChunk {
   type: SSEEvent;

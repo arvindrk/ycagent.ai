@@ -198,11 +198,11 @@ function assert(condition: boolean, message: string): asserts condition {
 console.log("\nresearch-agent eval: smoke\n");
 
 // Tool registry
-test("getResearchDomains returns [founder_profile]", () => {
+test("getResearchDomains includes founder_profile", () => {
   const domains = getResearchDomains();
   assert(
-    domains.length === 1 && domains[0] === "founder_profile",
-    `expected ['founder_profile'], got ${JSON.stringify(domains)}`,
+    domains.length >= 1 && domains.includes("founder_profile"),
+    `expected founder_profile present, got ${JSON.stringify(domains)}`,
   );
 });
 

@@ -1,24 +1,19 @@
 {
   "slice": [
-    "surface-additional-research-metadata",
     "expand-research-domains",
-    "surface-research-non-obvious-signals"
+    "surface-research-non-obvious-signals",
+    "surface-research-insights-in-preview-cards"
   ],
   "rationale_per_step": {
-    "surface-additional-research-metadata": "Feature improvement (research + UI/UX): surface additional lightweight metadata (e.g. research duration, domains covered, or key signal counts) in research viewer/header or company cards to make 'fresh' and 'comprehensive' qualities visible during discovery and review. Leverages prior freshness and score surfacing work. Continues the chain after completed extend-eval.",
     "expand-research-domains": "New Feature (agent research): expand DOMAIN_REGISTRY and orchestrator beyond the single founder_profile domain to cover additional high-value areas such as traction, risks, relationships, or company signals. Directly advances reliable deep research and non-obvious signals per vision. Requires accompanying schema/eval updates but starts with domain addition. Brings new_feature category into the slice for balance.",
-    "surface-research-non-obvious-signals": "Feature improvement (UI/UX + agent research): surface the non-obvious signals (founderRelationship, complementarySkills, socialPresence, trackRecord, etc.) already produced by the research agent in cards, viewer summary, or detail sections so users see the value of deep research. Builds directly on source presentation and eval invariants work."
+    "surface-research-non-obvious-signals": "Feature improvement (UI/UX + agent research): surface the non-obvious signals (founderRelationship, complementarySkills, socialPresence, trackRecord, etc.) already produced by the research agent in cards, viewer summary, or detail sections so users see the value of deep research. Builds directly on source presentation and eval invariants work.",
+    "surface-research-insights-in-preview-cards": "Feature improvement (UI/UX + discovery): surface lightweight research signals or metadata (e.g. key signal highlights, domain, sig count, or 'research available' indicators) in CompanyPreviewCard and search results to make deep research value visible during intuitive discovery without requiring navigation to detail view first."
   },
   "category_mix": {
-    "feature_improvement": 2,
-    "new_feature": 1
+    "new_feature": 1,
+    "feature_improvement": 2
   },
   "vision_refs": {
-    "surface-additional-research-metadata": [
-      "UI/UX",
-      "high-quality evidence-backed intelligence",
-      "powerful, intuitive discovery"
-    ],
     "expand-research-domains": [
       "reliable deep research",
       "high-quality, evidence-backed intelligence on YC companies and founders",
@@ -28,8 +23,13 @@
       "reliable deep research",
       "high-quality, evidence-backed intelligence",
       "UI/UX"
+    ],
+    "surface-research-insights-in-preview-cards": [
+      "powerful, intuitive discovery",
+      "UI/UX",
+      "Users quickly find and trust comprehensive, sourced profiles and insights"
     ]
   },
-  "generated_by_run": "continue-20260708-223717",
-  "notes": "Planner run 2026-07-08 in harness/continue-local-20260708-223717 (new worktree after merges). Ran bash agent/init.sh (feature_list fully exhausted with 19/19 completed; pre-existing typecheck errors in use-deep-research-trigger.ts noted; last executor work on enhance-source + extend-eval). Recon: vision.md (3 facets, 4 outcomes), categories.json (weights), AGENTS.md + all .agents/rules/* (minimal-code, security, typescript, frontend-conventions, nextjs, react*), current horizon.json (stale, started with now-completed extend-eval), feature_list.json (exhausted), PROGRESS.md tail (recent: consolidate dx, enhance-source feature_improvement, extend-eval testing), package.json + evals (verify = full chain + 8 smoke evals), src research (only founder_profile domain; signals + metadata present in evals/results but minimally surfaced in UI beyond recent source hostname + freshness badges; ResearchViewer already receives run for duration). Ruflo memory_search for harness:* returned 0 entries (empty). .codex/tmp empty at start. Corridor analyzePlan called on planning summary. No source edits. Horizon advanced by dropping completed extend-eval, rebalancing to include new_feature, preserving continuity on metadata surfacing. Plan artifacts + horizon.json + ruflo harness:horizon only. This is planning-only."
+  "generated_by_run": "continue-20260708-225415",
+  "notes": "Planner run 2026-07-08 in harness/continue-local-20260708-225415 (new worktree after merge of prior surface-additional-research-metadata). Ran bash agent/init.sh (feature_list fully exhausted 19/19 completed; pre-existing typecheck errors in use-deep-research-trigger.ts; last work on enhance-source + extend-eval + surface-metadata). Recon: vision (3 facets, 4 outcomes, success on sourced/trusted insights), categories (weights + balance notes), AGENTS.md + all .agents/rules (minimal-code, security, ts, nextjs, react, frontend), current horizon (stale with now-completed surface-additional first), feature_list (exhausted), PROGRESS tail (testing then FI surfacing chain), package.json (verify = lint+type+build+eval:smoke), src (DOMAIN_REGISTRY only founder_profile; signals in types/evals/FounderProfileView + header count badge; sources hostname in summary; preview cards have scores + freshness but no research signals; orchestrator loops domains). Ruflo memory search returned DB not found (empty prior state). .codex/tmp empty at start. Corridor analyzePlan called on planning summary (untrusted research data reminder noted). No source code/tests/feature_list edited. Horizon advanced: dropped completed surface-additional-research-metadata, promoted new_feature first for category diversity vs recent testing_observability + FI density, added discovery surfacing for UI/UX + discovery vision. Plan artifacts + horizon + ruflo harness:horizon only. This is planning-only."
 }
