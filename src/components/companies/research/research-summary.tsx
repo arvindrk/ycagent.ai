@@ -33,7 +33,7 @@ export function ResearchSummary({ result }: ResearchSummaryProps) {
               className="inline-flex items-center gap-1 px-2 py-0.5 bg-tertiary hover:bg-quaternary text-text-tertiary hover:text-accent text-xs rounded transition-colors border border-border"
             >
               <ExternalLink className="w-3 h-3" />
-              <span>Source {i + 1}</span>
+              <span>{url.replace(/^(https?:\/\/)?(www\.)?/, '').split(/[/?#]/)[0] || url}</span>
             </a>
           ))}
         </div>
