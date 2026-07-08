@@ -118,9 +118,9 @@ async function drain<T>(gen: AsyncGenerator<T>): Promise<T[]> {
 
 console.log("\nresearch-orchestrator-mock-eval\n");
 
-test("getResearchDomains returns founder_profile", () => {
+test("getResearchDomains includes founder_profile", () => {
   const domains = getResearchDomains();
-  assert(domains.length === 1 && domains[0] === "founder_profile", `got ${JSON.stringify(domains)}`);
+  assert(domains.length >= 1 && domains.includes("founder_profile"), `founder_profile missing, got ${JSON.stringify(domains)}`);
 });
 
 test("DOMAIN_REGISTRY provides systemPrompt and initialMessage builder", () => {

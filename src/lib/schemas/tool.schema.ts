@@ -216,8 +216,41 @@ export const SHARED_TOOLS: ToolSchema[] = [
   xGetUserToolSchema,
 ];
 
+export const tractionResultToolSchema: ToolSchema = {
+  name: 'format_result_traction',
+  description: 'Format traction and company signals research findings. Call this when traction research is complete. MUST include all sources/URLs consulted.',
+  inputSchema: {
+    type: 'object',
+    properties: {
+      domain: {
+        type: 'string',
+        enum: ['traction'],
+        description: 'Domain identifier'
+      },
+      summary: {
+        type: 'string',
+        description: 'Concise summary of traction status and key signals'
+      },
+      sources: {
+        type: 'array',
+        items: { type: 'string' },
+        description: 'All URLs and sources consulted during research.'
+      },
+      tractionSignals: {
+        type: 'array',
+        items: { type: 'string' },
+        description: 'Bullet points of key traction signals (users, growth, revenue indicators, adoption, risks)',
+        minItems: 1,
+        maxItems: 5
+      }
+    },
+    required: ['domain', 'summary', 'sources', 'tractionSignals']
+  }
+};
+
 export const DOMAIN_RESULT_TOOLS: Record<string, ToolSchema> = {
   founder_profile: founderProfileResultToolSchema,
+  traction: tractionResultToolSchema,
 };
 
 export function getToolsForDomain(domain: string): ToolSchema[] {
