@@ -211,5 +211,15 @@
     "description": "Feature improvement (UI/UX + discovery): surface lightweight research-related insights or metadata in CompanyPreviewCard so deep research value is visible during intuitive discovery without requiring navigation to the company detail view first. Prefer existing list/search payload fields and existing Badge patterns. No list API expansion or new dependencies.",
     "verify": "npm run lint && npm run typecheck && npm run build && npm run eval:smoke",
     "passes": true
+  },
+  {
+    "id": "traction-domain-eval-coverage",
+    "status": "completed",
+    "priority": 22,
+    "depends_on": ["expand-research-domains", "surface-research-insights-in-preview-cards"],
+    "category": "testing_observability",
+    "description": "Testing/Observability: add hermetic eval/rubric coverage for the traction domain introduced by expand-research-domains. Cover registry presence, tool wiring, and a TractionResult rubric aligned to tractionResultToolSchema (domain, summary, sources, tractionSignals 1-5). Pass plus fail cases for wrong domain, empty sources, empty/over-max tractionSignals. Zero I/O; preserve founder_profile invariants.",
+    "verify": "npm run eval:research-smoke && npm run eval:research-orchestrator-mock-eval && npm run eval:smoke",
+    "passes": true
   }
 ]

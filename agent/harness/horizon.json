@@ -1,31 +1,25 @@
 {
   "slice": [
-    "surface-research-insights-in-preview-cards",
     "traction-domain-eval-coverage",
     "fix-deep-research-trigger-types",
     "surface-traction-research-in-viewer"
   ],
   "rationale_per_step": {
-    "surface-research-insights-in-preview-cards": "Feature improvement (UI/UX + discovery): surface lightweight research-related insights or metadata on CompanyPreviewCard so deep research value is visible during search without requiring detail navigation. Prefer existing list/search props and Badge/CTA patterns. Advances powerful intuitive discovery + UI/UX after expand-research-domains completed and while surface-research-non-obvious-signals is in flight elsewhere.",
-    "traction-domain-eval-coverage": "Testing/Observability: add hermetic eval/rubric coverage for the traction domain (registry, result shape, sources, tractionSignals) introduced by expand-research-domains. Closes measurable research quality loop for multi-domain research.",
-    "fix-deep-research-trigger-types": "Maintenance: resolve pre-existing TypeScript errors in use-deep-research-trigger.ts (Trigger Task/realtime typing) that make full verify/typecheck noisy and can mask real regressions. Stability without new product behavior.",
-    "surface-traction-research-in-viewer": "Feature improvement (agent research + UI/UX): present TractionResult (summary/sources/tractionSignals) in ResearchViewer/summary path with the same evidence-backed presentation patterns used for founder profile, so the new domain is user-visible."
+    "traction-domain-eval-coverage": "Testing/Observability: hermetic registry/tool/rubric coverage for traction domain (summary, sources, tractionSignals 1-5) so multi-domain research quality is measurable before UI. Chosen next after surface-research-insights-in-preview-cards completed.",
+    "fix-deep-research-trigger-types": "Maintenance: resolve pre-existing TypeScript errors in use-deep-research-trigger.ts (useRealtimeRun Task constraint TS2344; useRealtimeStream overload TS2769) so typecheck/build verify are clean and regressions are not masked.",
+    "surface-traction-research-in-viewer": "Feature improvement (agent research + UI/UX): present TractionResult (summary/sources/tractionSignals) in ResearchViewer/ResearchSummary with evidence-backed source presentation patterns used for founder profile, after eval invariants exist."
   },
   "category_mix": {
-    "feature_improvement": 2,
     "testing_observability": 1,
-    "maintenance": 1
+    "maintenance": 1,
+    "feature_improvement": 1
   },
   "vision_refs": {
-    "surface-research-insights-in-preview-cards": [
-      "powerful, intuitive discovery",
-      "UI/UX",
-      "Users quickly find and trust comprehensive, sourced profiles and insights"
-    ],
     "traction-domain-eval-coverage": [
       "measurable research quality and coverage",
       "reliable deep research",
-      "Agent research facet"
+      "Agent research facet",
+      "non-obvious signals including traction"
     ],
     "fix-deep-research-trigger-types": [
       "reliable deep research",
@@ -38,6 +32,6 @@
       "UI/UX"
     ]
   },
-  "generated_by_run": "continue-20260715-194010",
-  "notes": "Planner run 2026-07-15 in harness/continue-local-20260715-194010. Init: feature_list 20/20 completed; expand-research-domains done; stale horizon dropped completed expand-research-domains and skipped in-flight surface-research-non-obvious-signals, configurable-research-provider, dependency-security-audit, establish-vision-categories. Recon: vision 3 facets + 4 outcomes; categories weights; CompanyPreviewCard already has score/freshness badges + deep research CTA; DOMAIN_REGISTRY has founder_profile + traction; no research result payload on list items. Ruflo MCP unavailable; local ruflo memory init+store. Corridor analyzePlan on planning summary. Planning-only: no source/tests/feature_list edits."
+  "generated_by_run": "continue-20260715-201755",
+  "notes": "Planner run 2026-07-15 in harness/continue-local-20260715-201755 @ 35e6ff1. Init: feature_list all completed including surface-research-insights-in-preview-cards; dropped that id from prior horizon. In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals. Recon: traction in DOMAIN_REGISTRY + tractionResultToolSchema + TractionResult; smoke/mock evals still founder-centric for rubric; ResearchViewer founder tabs; use-deep-research-trigger pre-existing TS errors confirmed. Ruflo memory init + store harness:horizon, harness:plan:20260715-144938, harness:vision. Corridor analyzePlan on planning summary. Planning-only: no source/tests/feature_list edits."
 }
