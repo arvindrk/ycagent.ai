@@ -6,12 +6,13 @@
  * Run: npm run eval:research-smoke
  */
 
-import type { FounderProfileResult } from "@/types/llm.types";
+import type { FounderProfileResult, TractionResult } from "@/types/llm.types";
 import type { Company } from "@/types/company.types";
 import {
   getToolsForDomain,
   SHARED_TOOLS,
   founderProfileResultToolSchema,
+  tractionResultToolSchema,
   DOMAIN_RESULT_TOOLS,
 } from "@/lib/schemas/tool.schema";
 import {
@@ -82,6 +83,20 @@ const validResult: FounderProfileResult = {
     researchTimestamp: "2026-07-02T23:35:00.000Z",
     signalTypes: ["founder_relationship", "track_record"],
   },
+};
+
+const validTractionResult: TractionResult = {
+  domain: "traction",
+  summary: "Clear growth signals with expanding enterprise adoption and strong retention.",
+  sources: [
+    "https://stripe.com/newsroom",
+    "https://www.ycombinator.com/companies/stripe",
+  ],
+  tractionSignals: [
+    "Large merchant base and payment volume growth reported publicly",
+    "Expanding product surface (billing, treasury) indicating adoption depth",
+    "Sustained hiring and global footprint as proxy for demand",
+  ],
 };
 
 // ---- Rubric -----------------------------------------------------------
@@ -167,6 +182,44 @@ function checkRubric(result: unknown): RubricResult {
         }
       }
     }
+  }
+
+  return { pass: failures.length === 0, failures };
+}
+
+/** Rubric aligned to tractionResultToolSchema (domain, summary, sources, tractionSignals 1–5). */
+function checkTractionRubric(result: unknown): RubricResult {
+  const failures: string[] = [];
+
+  if (typeof result !== "object" || result === null) {
+    return { pass: false, failures: ["result is not an object"] };
+  }
+
+  const r = result as Record<string, unknown>;
+
+  if (r["domain"] !== "traction") {
+    failures.push("domain must be 'traction'");
+  }
+  if (typeof r["summary"] !== "string" || r["summary"] === "") {
+    failures.push("summary must be a non-empty string");
+  }
+
+  const sources = r["sources"];
+  if (!Array.isArray(sources) || sources.length === 0) {
+    failures.push("sources must be a non-empty array");
+  } else if (sources.some((s: unknown) => typeof s !== "string" || String(s).trim() === "")) {
+    failures.push("sources items must be non-empty strings");
+  }
+
+  const signals = r["tractionSignals"];
+  if (!Array.isArray(signals)) {
+    failures.push("tractionSignals must be an array");
+  } else if (signals.length < 1) {
+    failures.push("tractionSignals must have at least 1 item");
+  } else if (signals.length > 5) {
+    failures.push("tractionSignals must have at most 5 items");
+  } else if (signals.some((item) => typeof item !== "string" || item === "")) {
+    failures.push("tractionSignals items must be non-empty strings");
   }
 
   return { pass: failures.length === 0, failures };
@@ -339,6 +392,91 @@ test("rubric catches missing executiveSummary", () => {
   delete partial["executiveSummary"];
   const { pass } = checkRubric(partial);
   assert(!pass, "expected rubric failure for missing executiveSummary");
+});
+
+// Traction domain (parity with expand-research-domains schema)
+test("getResearchDomains includes traction", () => {
+  const domains = getResearchDomains();
+  assert(
+    domains.includes("traction"),
+    `expected traction present, got ${JSON.stringify(domains)}`,
+  );
+});
+
+test("DOMAIN_REGISTRY has traction config with systemPrompt + generateInitialMessage", () => {
+  assert("traction" in DOMAIN_REGISTRY, "traction missing from DOMAIN_REGISTRY");
+  const config = DOMAIN_REGISTRY["traction"];
+  assert(config !== undefined, "missing traction config");
+  assert(
+    typeof config.systemPrompt === "string" && config.systemPrompt.length > 0,
+    "systemPrompt must be a non-empty string",
+  );
+  const msg = config.generateInitialMessage(syntheticCompany);
+  assert(msg.role === "user", `expected role 'user', got '${msg.role}'`);
+  assert(msg.content.includes("Stripe"), `message must contain company name; got: ${msg.content}`);
+  assert(
+    msg.content.includes("stripe.com"),
+    `message must contain website; got: ${msg.content}`,
+  );
+});
+
+test("getToolsForDomain('traction') returns shared + format_result_traction", () => {
+  const tools = getToolsForDomain("traction");
+  assert(
+    tools.length === SHARED_TOOLS.length + 1,
+    `expected ${SHARED_TOOLS.length + 1} tools, got ${tools.length}`,
+  );
+  const names = new Set(tools.map((t) => t.name));
+  for (const shared of SHARED_TOOLS) {
+    assert(names.has(shared.name), `missing shared tool: ${shared.name}`);
+  }
+  assert(
+    tools.some((t) => t.name === "format_result_traction"),
+    "result tool 'format_result_traction' missing",
+  );
+});
+
+test("DOMAIN_RESULT_TOOLS.traction === tractionResultToolSchema", () => {
+  assert("traction" in DOMAIN_RESULT_TOOLS, "traction missing from DOMAIN_RESULT_TOOLS");
+  assert(
+    DOMAIN_RESULT_TOOLS["traction"] === tractionResultToolSchema,
+    "wrong schema reference for traction",
+  );
+});
+
+test("tractionResultToolSchema requires domain, summary, sources, tractionSignals", () => {
+  const required = tractionResultToolSchema.inputSchema.required ?? [];
+  for (const field of ["domain", "summary", "sources", "tractionSignals"]) {
+    assert(required.includes(field), `'${field}' missing from required[]`);
+  }
+});
+
+test("traction rubric passes valid TractionResult", () => {
+  const { pass, failures } = checkTractionRubric(validTractionResult);
+  assert(pass, `traction rubric unexpectedly failed: ${failures.join("; ")}`);
+});
+
+test("traction rubric catches wrong domain value", () => {
+  const { pass } = checkTractionRubric({ ...validTractionResult, domain: "founder_profile" });
+  assert(!pass, "expected traction rubric failure for wrong domain");
+});
+
+test("traction rubric catches empty sources array", () => {
+  const { pass } = checkTractionRubric({ ...validTractionResult, sources: [] });
+  assert(!pass, "expected traction rubric failure for empty sources");
+});
+
+test("traction rubric catches empty tractionSignals", () => {
+  const { pass } = checkTractionRubric({ ...validTractionResult, tractionSignals: [] });
+  assert(!pass, "expected traction rubric failure for empty tractionSignals");
+});
+
+test("traction rubric catches tractionSignals exceeding maxItems (5)", () => {
+  const { pass } = checkTractionRubric({
+    ...validTractionResult,
+    tractionSignals: ["a", "b", "c", "d", "e", "f"],
+  });
+  assert(!pass, "expected traction rubric failure for >5 tractionSignals");
 });
 
 // ---- Summary ----------------------------------------------------------

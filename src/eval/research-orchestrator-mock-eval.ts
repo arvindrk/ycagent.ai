@@ -23,7 +23,12 @@ import {
   getResearchDomains,
   DOMAIN_REGISTRY,
 } from "@/lib/research/domain-registry";
-import { getToolsForDomain, SHARED_TOOLS } from "@/lib/schemas/tool.schema";
+import {
+  getToolsForDomain,
+  SHARED_TOOLS,
+  DOMAIN_RESULT_TOOLS,
+  tractionResultToolSchema,
+} from "@/lib/schemas/tool.schema";
 import type { Company } from "@/types/company.types";
 
 // ---- Fixtures (minimal, hermetic) ------------------------------------
@@ -137,6 +142,28 @@ test("getToolsForDomain returns shared plus format tool for founder_profile", ()
   const tools = getToolsForDomain("founder_profile");
   assert(tools.length === SHARED_TOOLS.length + 1, `expected ${SHARED_TOOLS.length + 1}`);
   assert(tools.some((t) => t.name === "format_result_founder_profile"), "missing format tool");
+});
+
+test("getResearchDomains includes traction", () => {
+  const domains = getResearchDomains();
+  assert(domains.includes("traction"), `traction missing, got ${JSON.stringify(domains)}`);
+});
+
+test("DOMAIN_REGISTRY provides systemPrompt and initialMessage builder for traction", () => {
+  const cfg = DOMAIN_REGISTRY["traction"];
+  assert(cfg !== undefined, "missing traction");
+  assert(typeof cfg.systemPrompt === "string" && cfg.systemPrompt.length > 10, "systemPrompt too short");
+  const msg = cfg.generateInitialMessage(syntheticCompany);
+  assert(msg.role === "user", "initial role user");
+  assert(msg.content.includes("TestCo"), "message must include name");
+  assert(msg.content.includes("testco.example"), "message must include website");
+});
+
+test("getToolsForDomain returns shared plus format_result_traction", () => {
+  const tools = getToolsForDomain("traction");
+  assert(tools.length === SHARED_TOOLS.length + 1, `expected ${SHARED_TOOLS.length + 1}`);
+  assert(tools.some((t) => t.name === "format_result_traction"), "missing format tool");
+  assert(DOMAIN_RESULT_TOOLS["traction"] === tractionResultToolSchema, "wrong traction schema ref");
 });
 
 // ---- Tests: factory seam + executeAgentLoop scenario ------------------
