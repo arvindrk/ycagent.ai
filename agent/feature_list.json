@@ -201,5 +201,15 @@
     "description": "New Feature (agent research): expand DOMAIN_REGISTRY and orchestrator beyond the single founder_profile domain to cover additional high-value areas such as traction, risks, relationships, or company signals. Directly advances reliable deep research and non-obvious signals per vision. Requires accompanying schema/eval updates but starts with domain addition. Brings new_feature category into the slice for balance.",
     "verify": "npm run eval:smoke && npm run lint && npm run typecheck && npm run build",
     "passes": true
+  },
+  {
+    "id": "surface-research-non-obvious-signals",
+    "status": "completed",
+    "priority": 21,
+    "depends_on": ["expand-research-domains"],
+    "category": "feature_improvement",
+    "description": "Feature improvement (UI/UX + agent research): surface the non-obvious signals already produced by the research agent so users see deep-research value without hunting. Cover founderRelationship, complementarySkills, socialPresence, and trackRecord (already fully rendered only inside FounderProfileView for founder_profile) and tractionSignals for the new traction domain (currently absent from ResearchSummary, which falls back to summary+sources only for non-founder results). Prefer ResearchSummary / viewer summary or detail sections using existing section/list/Badge patterns; plain-text rendering of untrusted signal strings; no new domains, schema, deps, or API changes. Builds on source hostname presentation, header signal-count badge, eval invariants, and expand-research-domains.",
+    "verify": "npm run lint && npm run typecheck && npm run build && npm run eval:smoke",
+    "passes": true
   }
 ]
