@@ -118,6 +118,14 @@ export function CompanyPreviewCard({ company }: CompanyPreviewCardProps) {
                 {company.last_synced_at.slice(0, 10)}
               </Badge>
             )}
+            <Badge
+              variant="outline"
+              className="flex-shrink-0 text-[10px] px-1.5 py-0 inline-flex items-center gap-0.5"
+              title="Deep research available for this company"
+            >
+              <Zap className="w-2.5 h-2.5" aria-hidden="true" />
+              Deep research
+            </Badge>
           </div>
         </CardHeader>
 

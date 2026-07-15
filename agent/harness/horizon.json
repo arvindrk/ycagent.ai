@@ -1,35 +1,43 @@
 {
   "slice": [
-    "expand-research-domains",
-    "surface-research-non-obvious-signals",
-    "surface-research-insights-in-preview-cards"
+    "surface-research-insights-in-preview-cards",
+    "traction-domain-eval-coverage",
+    "fix-deep-research-trigger-types",
+    "surface-traction-research-in-viewer"
   ],
   "rationale_per_step": {
-    "expand-research-domains": "New Feature (agent research): expand DOMAIN_REGISTRY and orchestrator beyond the single founder_profile domain to cover additional high-value areas such as traction, risks, relationships, or company signals. Directly advances reliable deep research and non-obvious signals per vision. Requires accompanying schema/eval updates but starts with domain addition. Brings new_feature category into the slice for balance.",
-    "surface-research-non-obvious-signals": "Feature improvement (UI/UX + agent research): surface the non-obvious signals (founderRelationship, complementarySkills, socialPresence, trackRecord, etc.) already produced by the research agent in cards, viewer summary, or detail sections so users see the value of deep research. Builds directly on source presentation and eval invariants work.",
-    "surface-research-insights-in-preview-cards": "Feature improvement (UI/UX + discovery): surface lightweight research signals or metadata (e.g. key signal highlights, domain, sig count, or 'research available' indicators) in CompanyPreviewCard and search results to make deep research value visible during intuitive discovery without requiring navigation to detail view first."
+    "surface-research-insights-in-preview-cards": "Feature improvement (UI/UX + discovery): surface lightweight research-related insights or metadata on CompanyPreviewCard so deep research value is visible during search without requiring detail navigation. Prefer existing list/search props and Badge/CTA patterns. Advances powerful intuitive discovery + UI/UX after expand-research-domains completed and while surface-research-non-obvious-signals is in flight elsewhere.",
+    "traction-domain-eval-coverage": "Testing/Observability: add hermetic eval/rubric coverage for the traction domain (registry, result shape, sources, tractionSignals) introduced by expand-research-domains. Closes measurable research quality loop for multi-domain research.",
+    "fix-deep-research-trigger-types": "Maintenance: resolve pre-existing TypeScript errors in use-deep-research-trigger.ts (Trigger Task/realtime typing) that make full verify/typecheck noisy and can mask real regressions. Stability without new product behavior.",
+    "surface-traction-research-in-viewer": "Feature improvement (agent research + UI/UX): present TractionResult (summary/sources/tractionSignals) in ResearchViewer/summary path with the same evidence-backed presentation patterns used for founder profile, so the new domain is user-visible."
   },
   "category_mix": {
-    "new_feature": 1,
-    "feature_improvement": 2
+    "feature_improvement": 2,
+    "testing_observability": 1,
+    "maintenance": 1
   },
   "vision_refs": {
-    "expand-research-domains": [
-      "reliable deep research",
-      "high-quality, evidence-backed intelligence on YC companies and founders",
-      "Agent research facet"
-    ],
-    "surface-research-non-obvious-signals": [
-      "reliable deep research",
-      "high-quality, evidence-backed intelligence",
-      "UI/UX"
-    ],
     "surface-research-insights-in-preview-cards": [
       "powerful, intuitive discovery",
       "UI/UX",
       "Users quickly find and trust comprehensive, sourced profiles and insights"
+    ],
+    "traction-domain-eval-coverage": [
+      "measurable research quality and coverage",
+      "reliable deep research",
+      "Agent research facet"
+    ],
+    "fix-deep-research-trigger-types": [
+      "reliable deep research",
+      "platform stability enabling trustworthy research UX"
+    ],
+    "surface-traction-research-in-viewer": [
+      "reliable deep research",
+      "high-quality, evidence-backed intelligence",
+      "non-obvious signals including traction",
+      "UI/UX"
     ]
   },
-  "generated_by_run": "continue-20260708-225415",
-  "notes": "Planner run 2026-07-08 in harness/continue-local-20260708-225415 (new worktree after merge of prior surface-additional-research-metadata). Ran bash agent/init.sh (feature_list fully exhausted 19/19 completed; pre-existing typecheck errors in use-deep-research-trigger.ts; last work on enhance-source + extend-eval + surface-metadata). Recon: vision (3 facets, 4 outcomes, success on sourced/trusted insights), categories (weights + balance notes), AGENTS.md + all .agents/rules (minimal-code, security, ts, nextjs, react, frontend), current horizon (stale with now-completed surface-additional first), feature_list (exhausted), PROGRESS tail (testing then FI surfacing chain), package.json (verify = lint+type+build+eval:smoke), src (DOMAIN_REGISTRY only founder_profile; signals in types/evals/FounderProfileView + header count badge; sources hostname in summary; preview cards have scores + freshness but no research signals; orchestrator loops domains). Ruflo memory search returned DB not found (empty prior state). .codex/tmp empty at start. Corridor analyzePlan called on planning summary (untrusted research data reminder noted). No source code/tests/feature_list edited. Horizon advanced: dropped completed surface-additional-research-metadata, promoted new_feature first for category diversity vs recent testing_observability + FI density, added discovery surfacing for UI/UX + discovery vision. Plan artifacts + horizon + ruflo harness:horizon only. This is planning-only."
+  "generated_by_run": "continue-20260715-194010",
+  "notes": "Planner run 2026-07-15 in harness/continue-local-20260715-194010. Init: feature_list 20/20 completed; expand-research-domains done; stale horizon dropped completed expand-research-domains and skipped in-flight surface-research-non-obvious-signals, configurable-research-provider, dependency-security-audit, establish-vision-categories. Recon: vision 3 facets + 4 outcomes; categories weights; CompanyPreviewCard already has score/freshness badges + deep research CTA; DOMAIN_REGISTRY has founder_profile + traction; no research result payload on list items. Ruflo MCP unavailable; local ruflo memory init+store. Corridor analyzePlan on planning summary. Planning-only: no source/tests/feature_list edits."
 }
