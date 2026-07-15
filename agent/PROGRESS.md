@@ -494,3 +494,30 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Verification result: eval:research-smoke 26/26 (was 16; +10 traction). eval:research-orchestrator-mock-eval 9/9 (was 6; +3 traction). eval:smoke all 8 sub-evals pass. lint: clean. typecheck/build: only pre-existing errors in src/hooks/use-deep-research-trigger.ts (TS2344/TS2769); 0 errors in edited eval files. Next compiled successfully before pre-existing TS gate. Delta clean for traction eval coverage.
 - Plan compliance note: Implemented exactly chosen_task within constraints. No horizon steps 2-3, no UI, no new deps. Founder_profile invariants preserved. Created `.codex/tmp/run-summary.json`.
 - Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor).
+
+## 2026-07-15 (planner run continue-20260715-234157)
+
+- Worktree: `continue-20260715-234157` (branch `harness/continue-local-20260715-234157` @ 37b5819).
+- Planner-only. Init via `bash agent/init.sh`: feature_list completed through traction-domain-eval-coverage; clean worktree; tracking origin/main.
+- Recon: vision.md (3 facets + 4 outcomes), categories.json weights, AGENTS.md + .agents/rules (minimal-code, security), prior horizon from continue-20260715-201755, typecheck still red on use-deep-research-trigger.ts (TS2344 Task/triggerAndSubscribe; TS2769 useRealtimeStream RealtimeDefinedStream), ResearchViewer/use-research-tabs founder-centric, traction evals green in smoke/orchestrator-mock, @trigger.dev/react-hooks 4.4.1, PROGRESS tail traction-domain-eval-coverage.
+- In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals.
+- Horizon updated to ["fix-deep-research-trigger-types", "surface-traction-research-in-viewer", "vector-search-result-explainability-ux", "hermetic-vector-search-ranking-smoke"] (maintenance first after TO streak; then FI traction UI; then vector FI + TO for discovery balance). Dropped completed traction-domain-eval-coverage.
+- Chosen next: fix-deep-research-trigger-types (plan_id plan-20260715-234329). Rationale: restore clean typecheck gate before more research UI; alternatives (traction viewer first, vector work first) deferred.
+- Artifacts: `.codex/tmp/plan-20260715-234329.json`, `.codex/tmp/plan-20260715-234329.md`, `agent/harness/horizon.json`.
+- Ruflo: `ruflo memory init` + store harness:horizon, harness:plan:20260715-234329, harness:vision (local CLI; MCP ruflo timed out).
+- Corridor analyzePlan on planning summary (type-level fix only; no network; respect trigger hooks 4.4.1).
+- No source code, tests, or feature_list.json edits.
+
+## 2026-07-15 (fix-deep-research-trigger-types)
+
+- Worktree: `continue-20260715-234157` (branch `harness/continue-local-20260715-234157` @ 37b5819).
+- Task: `fix-deep-research-trigger-types` (plan_id: plan-20260715-234329 from Planner run continue-20260715-234157).
+- Plan link: `.codex/tmp/plan-20260715-234329.json` (authoritative); also `.codex/tmp/plan-20260715-234329.md`. Horizon after per plan: ["fix-deep-research-trigger-types", "surface-traction-research-in-viewer", "vector-search-result-explainability-ux", "hermetic-vector-search-ranking-smoke"].
+- Selected per plan: Maintenance: clear TS2344/TS2769 in use-deep-research-trigger.ts so typecheck/build verify are trustworthy before more research UX.
+- Root cause: `@trigger.dev/react-hooks@4.4.1` resolves `@trigger.dev/core@4.5.1` while `@trigger.dev/sdk@4.4.1` pins `@trigger.dev/core@4.4.1`. Cross-package types diverge: core 4.5 Task requires `triggerAndSubscribe`; core 4.5 `RealtimeDefinedStream.pipe().waitUntilComplete()` returns `Promise<StreamWriteResult>` vs core 4.4 `Promise<void>`.
+- Changes (only chosen_task): single file `src/hooks/use-deep-research-trigger.ts`. (1) Drop `useRealtimeRun<typeof researchOrchestrator>` generic and remove type-only orchestrator import so client hook is not constrained against sdk Task shape from a different core. Runtime still subscribes by runId + accessToken with `enabled: !!runId`. (2) Switch to `useRealtimeStream<StreamChunk>(runIdOrEmpty, researchStream.id, opts)` stream-key overload instead of passing `RealtimeDefinedStream` object. Stream key remains `researchStream.id`. (3) `agent/feature_list.json`: added completed maintenance entry. No API routes, orchestrator, UI, deps, or lockfile changes.
+- Decisions (first-principles + rules): (1) Read Plan artifact first. (2) Verbatim restated Plan principles, AGENTS.md operating/safety/review, .agents/rules (minimal-code, security, typescript), vision alignment BEFORE code edits. (3) Confirmed and obeyed execution_constraints. (4) Corridor analyzePlan before edits (type-only; accessToken prop unchanged; no secrets). (5) Preferred zero dep changes over pinning core or bumping trigger packages (plan: no lockfile churn unless required). (6) Avoided `as` casts; selected correct overloads/generics. (7) No .env/secrets. Horizon steps 2-4 not implemented.
+- Commands executed (post impl): `npm run typecheck && npm run lint && npm run build && npm run eval:smoke`.
+- Verification result: typecheck clean (0 errors, including logview). lint clean. build succeeded (Next.js 16.1.6, 9 routes). eval:smoke all 8 sub-evals pass (research 26, search-filter 16, build-filter-sql 17, parse 16, merged 10, semantic 8, orchestrator-mock 9, freshness 8).
+- Plan compliance note: Implemented exactly chosen_task within constraints. Runtime research trigger API contract unchanged (same fetch payload shape, cancel path, enabled pattern). Created `.codex/tmp/run-summary.json`.
+- Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: surface-traction-research-in-viewer.
