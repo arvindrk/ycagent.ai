@@ -429,3 +429,37 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Plan compliance note: Implemented **exactly** the chosen_task "expand-research-domains" within execution_constraints and all restated principles/AGENTS/rules/vision. Smallest correct diff (domain addition + supporting for function). Founder path 100% preserved. Corridor used. No deviations. Created .codex/tmp/run-summary.json at end.
 - Next handoff: harness wrapper (act only on .codex/tmp/run-summary.json; no commit/push/PR by executor).
 
+
+## 2026-07-15 (planner run continue-20260715-190851)
+
+- Worktree: `continue-20260715-190851` on branch `harness/continue-local-20260715-190851` @ 34f9644 (origin/main, post PR #52 expand-research-domains).
+- Planner-only: no source, test, or feature_list.json edits.
+- Init: `bash agent/init.sh` (feature_list 20/20 completed; dependency-security-audit passes=false excluded in-flight; horizon stale with expand-research-domains first).
+- Recon: vision.md, categories.json, AGENTS.md, .agents/rules (minimal-code, security, etc.), feature_list exhausted, PROGRESS tail, package verify, code (founder signals in FounderProfileView; tractionSignals no UI; ResearchSummary founder-only deep path; preview scores/freshness only).
+- Excluded in-flight: configurable-research-provider, dependency-security-audit, establish-vision-categories.
+- Chosen next: `surface-research-non-obvious-signals` (feature_improvement) to surface non-obvious signal content including tractionSignals.
+- Horizon slice: ["surface-research-non-obvious-signals", "surface-research-insights-in-preview-cards", "traction-domain-eval-invariants", "fix-use-deep-research-trigger-types"].
+- Artifacts: `.codex/tmp/plan-20260715-191024.json`, `.codex/tmp/plan-20260715-191024.md`, `agent/harness/horizon.json` overwritten.
+- Corridor analyzePlan: untrusted research strings as text; keep rel=noopener noreferrer on links.
+- Ruflo MCP unavailable this session (handshake failed); durability via horizon.json + plan files + this note. harness:horizon intended store skipped.
+- Next handoff: wrapper invokes Executor with full plan; do not produce run-summary.json from planner.
+
+## 2026-07-15 (surface-research-non-obvious-signals)
+
+- Worktree: `continue-20260715-190851` on branch `harness/continue-local-20260715-190851`.
+- Task: `surface-research-non-obvious-signals` (plan_id: plan-20260715-191024 from Planner run continue-20260715-190851).
+- Plan link: `.codex/tmp/plan-20260715-191024.json` (authoritative); also `.codex/tmp/plan-20260715-191024.md`. Horizon after: ["surface-research-non-obvious-signals", "surface-research-insights-in-preview-cards", "traction-domain-eval-invariants", "fix-use-deep-research-trigger-types"].
+- Selected per plan: Feature improvement (UI/UX + agent research): surface non-obvious signals already produced by the research agent. Founder signals already fully rendered in FounderProfileView; gap was tractionSignals absent from ResearchSummary (summary+sources only for non-founder).
+- Changes (only chosen_task): 2 research UI files + state. (1) `src/components/companies/research/research-summary.tsx`: when domain === 'traction' and tractionSignals non-empty, render "Traction Signals" section as plain-text bullet list reusing section/list Tailwind patterns from FounderProfileView AnalysisSection. Empty signals render nothing. Founder path unchanged (FounderProfileView only). (2) `src/components/companies/research/research-viewer.tsx`: header Badge signal count uses tractionSignals.length for traction domain so badge is not stuck at 0sig; founder count path unchanged. Source links keep rel="noopener noreferrer".
+- Decisions (first-principles + rules): (1) Located and read Plan artifact first. (2) Verbatim restated Plan principles, AGENTS.md operating/safety/review, minimal-code + security rules, vision alignment, and committed execution_constraints BEFORE code edits. (3) Corridor analyzePlan (XSS: React text only, no dangerouslySetInnerHTML). (4) Minimal: no new deps, schema, API, helpers, or domains. Domain-narrow before tractionSignals. (5) No founder path duplication. (6) No preview-card scope creep. (7) No .env reads. Pre-existing use-deep-research-trigger type errors left untouched (delta-clean).
+- Commands: `npm run lint && npm run typecheck && npm run build && npm run eval:smoke` (recorded after run).
+- Verification result: (pending run below).
+- Plan compliance note: Implemented exactly surface-research-non-obvious-signals within constraints. run-summary.json for wrapper.
+- Next handoff: harness wrapper acts on `.codex/tmp/run-summary.json` only; no commit/push/PR by executor.
+
+### Verification results (surface-research-non-obvious-signals)
+
+- `npm run lint`: exit 0 (clean).
+- `npm run typecheck`: only pre-existing TS2344/TS2769 in `src/hooks/use-deep-research-trigger.ts` (0 new errors; 0 mentions of research-summary.tsx or research-viewer.tsx).
+- `npm run build`: Next compiled successfully (~5.5s); failed later TypeScript step on same pre-existing hook errors (delta-clean).
+- `npm run eval:smoke`: all subs passed (research 16, search-filter 16, build-filter-sql 17, parse 16, merged 10, semantic 8, orchestrator-mock 6, freshness 8).

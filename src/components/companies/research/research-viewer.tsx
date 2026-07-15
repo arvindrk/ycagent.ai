@@ -64,9 +64,20 @@ export function ResearchViewer({
             <Badge
               variant="outline"
               className="text-[10px] px-1.5 py-0"
-              title={`domain: ${researchResult.domain} sources: ${researchResult.sources.length} founderRelationship: ${researchResult.founderRelationship?.length || 0} complementarySkills: ${researchResult.complementarySkills?.length || 0} socialPresence: ${researchResult.socialPresence?.length || 0} trackRecord: ${researchResult.trackRecord?.length || 0}`}
+              title={
+                researchResult.domain === 'traction'
+                  ? `domain: traction sources: ${researchResult.sources.length} tractionSignals: ${researchResult.tractionSignals.length}`
+                  : `domain: ${researchResult.domain} sources: ${researchResult.sources.length} founderRelationship: ${researchResult.founderRelationship?.length || 0} complementarySkills: ${researchResult.complementarySkills?.length || 0} socialPresence: ${researchResult.socialPresence?.length || 0} trackRecord: ${researchResult.trackRecord?.length || 0}`
+              }
             >
-              {researchResult.domain} {((researchResult.founderRelationship?.length || 0) + (researchResult.complementarySkills?.length || 0) + (researchResult.socialPresence?.length || 0) + (researchResult.trackRecord?.length || 0))}sig/{researchResult.sources.length}src
+              {researchResult.domain}{' '}
+              {researchResult.domain === 'traction'
+                ? researchResult.tractionSignals.length
+                : ((researchResult.founderRelationship?.length || 0) +
+                    (researchResult.complementarySkills?.length || 0) +
+                    (researchResult.socialPresence?.length || 0) +
+                    (researchResult.trackRecord?.length || 0))}
+              sig/{researchResult.sources.length}src
             </Badge>
           )}
         </CardTitle>
