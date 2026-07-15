@@ -201,5 +201,15 @@
     "description": "New Feature (agent research): expand DOMAIN_REGISTRY and orchestrator beyond the single founder_profile domain to cover additional high-value areas such as traction, risks, relationships, or company signals. Directly advances reliable deep research and non-obvious signals per vision. Requires accompanying schema/eval updates but starts with domain addition. Brings new_feature category into the slice for balance.",
     "verify": "npm run eval:smoke && npm run lint && npm run typecheck && npm run build",
     "passes": true
+  },
+  {
+    "id": "surface-research-insights-in-preview-cards",
+    "status": "completed",
+    "priority": 21,
+    "depends_on": ["expand-research-domains"],
+    "category": "feature_improvement",
+    "description": "Feature improvement (UI/UX + discovery): surface lightweight research-related insights or metadata in CompanyPreviewCard so deep research value is visible during intuitive discovery without requiring navigation to the company detail view first. Prefer existing list/search payload fields and existing Badge patterns. No list API expansion or new dependencies.",
+    "verify": "npm run lint && npm run typecheck && npm run build && npm run eval:smoke",
+    "passes": true
   }
 ]

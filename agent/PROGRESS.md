@@ -429,3 +429,29 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Plan compliance note: Implemented **exactly** the chosen_task "expand-research-domains" within execution_constraints and all restated principles/AGENTS/rules/vision. Smallest correct diff (domain addition + supporting for function). Founder path 100% preserved. Corridor used. No deviations. Created .codex/tmp/run-summary.json at end.
 - Next handoff: harness wrapper (act only on .codex/tmp/run-summary.json; no commit/push/PR by executor).
 
+
+## 2026-07-15 (planner run continue-20260715-194010)
+
+- Worktree: `continue-20260715-194010` (branch `harness/continue-local-20260715-194010` @ a87f445).
+- Planner-only. Init via `bash agent/init.sh`: feature_list 20/20 completed; clean worktree; origin/main.
+- Recon: vision.md, categories.json, AGENTS.md, .agents/rules (minimal-code, security), stale horizon (expand-research-domains completed; surface-research-non-obvious-signals in flight), CompanyPreviewCard (scores + last_synced + deep research CTA), DOMAIN_REGISTRY founder_profile + traction, PROGRESS tail expand-research-domains.
+- In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals.
+- Horizon updated to ["surface-research-insights-in-preview-cards", "traction-domain-eval-coverage", "fix-deep-research-trigger-types", "surface-traction-research-in-viewer"] (FI lead for discovery UX + testing + maintenance + FI traction viewer).
+- Chosen next: surface-research-insights-in-preview-cards (plan_id plan-20260715-141256).
+- Artifacts: `.codex/tmp/plan-20260715-141256.json`, `.codex/tmp/plan-20260715-141256.md`, `agent/harness/horizon.json`.
+- Ruflo MCP timed out; local `ruflo memory init` + store for harness:horizon, harness:plan:20260715-141256, harness:vision.
+- Corridor analyzePlan on planning summary (plain-text for untrusted research strings).
+- No source code, tests, or feature_list.json edits.
+
+## 2026-07-15 (surface-research-insights-in-preview-cards)
+
+- Worktree: `continue-20260715-194010` on branch `harness/continue-local-20260715-194010` @ a87f445.
+- Task: `surface-research-insights-in-preview-cards` (plan_id: plan-20260715-141256 from Planner run continue-20260715-194010).
+- Plan link: `.codex/tmp/plan-20260715-141256.json` (authoritative); also `.codex/tmp/plan-20260715-141256.md`. Horizon after per plan: ["surface-research-insights-in-preview-cards", "traction-domain-eval-coverage", "fix-deep-research-trigger-types", "surface-traction-research-in-viewer"].
+- Selected per plan: Feature improvement (UI/UX + discovery): surface lightweight research-related metadata on CompanyPreviewCard so deep research value is visible during search without requiring detail navigation. Bridges Agent research into discovery surface.
+- Changes (only chosen_task): Exactly 1 source file. `src/components/companies/list/company-preview-card.tsx`: after existing score/freshness badges in the header row, added always-visible compact Badge (variant outline, text-[10px] px-1.5 py-0) with existing Zap icon + static plain-text label "Deep research" and static title tooltip "Deep research available for this company". Mobile CTA and desktop hover CTA unchanged. No list API/schema/DB changes, no new deps, no helpers, no detail/viewer edits.
+- Decisions (first-principles + rules): (1) Located and read Plan artifact first. (2) Verbatim restated Plan principles, AGENTS.md operating/safety/review, .agents/rules (minimal-code, security, frontend-conventions, typescript), and vision alignment BEFORE code edits. (3) Confirmed execution_constraints and obeyed them. (4) Corridor analyzePlan before edits (plain-text static labels; no XSS path). (5) Recon: CompanyListItem/SearchResult have no research result payloads; only existing card props + CTA patterns available; plan allows research-available/Deep research indicator chip without API expansion. (6) Smallest correct UI diff: one Badge block, reuse Badge/Zap already in file. (7) Skipped in-flight surface-research-non-obvious-signals and other excluded ids. (8) No .env reads. Pre-existing use-deep-research-trigger TS errors left untouched (out of scope; horizon step 3).
+- Commands executed (post impl): `npm run lint && npm run typecheck && npm run build && npm run eval:smoke`.
+- Verification result: lint: clean (exit 0). typecheck: only pre-existing 2 errors in src/hooks/use-deep-research-trigger.ts (TS2344/TS2769 on Trigger types; 0 errors/mentions of company-preview-card.tsx). build: Next compiled successfully in ~3.9s, then failed only on identical pre-existing hook TS error. eval:smoke: all 8 sub-evals pass (research-smoke 16/16, search-filter 16/16, build-filter-sql 17/17, parse 16/16, merged 10/10, semantic-scenario 8/8, orchestrator-mock 6/6, freshness 8/8). Delta clean for the preview-card change.
+- Plan compliance note: Implemented exactly chosen_task within constraints. Updated feature_list + PROGRESS + run-summary. No push/PR/main from executor.
+- Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`).
