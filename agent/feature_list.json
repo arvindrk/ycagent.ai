@@ -221,5 +221,15 @@
     "description": "Testing/Observability: add hermetic eval/rubric coverage for the traction domain introduced by expand-research-domains. Cover registry presence, tool wiring, and a TractionResult rubric aligned to tractionResultToolSchema (domain, summary, sources, tractionSignals 1-5). Pass plus fail cases for wrong domain, empty sources, empty/over-max tractionSignals. Zero I/O; preserve founder_profile invariants.",
     "verify": "npm run eval:research-smoke && npm run eval:research-orchestrator-mock-eval && npm run eval:smoke",
     "passes": true
+  },
+  {
+    "id": "fix-deep-research-trigger-types",
+    "status": "completed",
+    "priority": 23,
+    "depends_on": ["traction-domain-eval-coverage"],
+    "category": "maintenance",
+    "description": "Maintenance: resolve pre-existing TypeScript errors in src/hooks/use-deep-research-trigger.ts (useRealtimeRun Task constraint TS2344 where Task lacks triggerAndSubscribe; useRealtimeStream overload TS2769 where RealtimeDefinedStream pipe waitUntilComplete return types diverge) so npm run typecheck and build verify are clean and regressions are not masked. Align types with @trigger.dev/react-hooks@4.4.1 and local researchOrchestrator / researchStream definitions without changing runtime research trigger behavior. No new dependencies preferred; version pin only if required within existing major.",
+    "verify": "npm run lint && npm run typecheck && npm run build",
+    "passes": true
   }
 ]

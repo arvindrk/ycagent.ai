@@ -1,37 +1,44 @@
 {
   "slice": [
-    "traction-domain-eval-coverage",
     "fix-deep-research-trigger-types",
-    "surface-traction-research-in-viewer"
+    "surface-traction-research-in-viewer",
+    "vector-search-result-explainability-ux",
+    "hermetic-vector-search-ranking-smoke"
   ],
   "rationale_per_step": {
-    "traction-domain-eval-coverage": "Testing/Observability: hermetic registry/tool/rubric coverage for traction domain (summary, sources, tractionSignals 1-5) so multi-domain research quality is measurable before UI. Chosen next after surface-research-insights-in-preview-cards completed.",
-    "fix-deep-research-trigger-types": "Maintenance: resolve pre-existing TypeScript errors in use-deep-research-trigger.ts (useRealtimeRun Task constraint TS2344; useRealtimeStream overload TS2769) so typecheck/build verify are clean and regressions are not masked.",
-    "surface-traction-research-in-viewer": "Feature improvement (agent research + UI/UX): present TractionResult (summary/sources/tractionSignals) in ResearchViewer/ResearchSummary with evidence-backed source presentation patterns used for founder profile, after eval invariants exist."
+    "fix-deep-research-trigger-types": "Maintenance: clear pre-existing TS2344/TS2769 in use-deep-research-trigger.ts so typecheck/build verify are trustworthy before more research UX. Chosen next after traction-domain-eval-coverage completed.",
+    "surface-traction-research-in-viewer": "Feature improvement (agent research + UI/UX): present TractionResult (summary/sources/tractionSignals) in ResearchViewer/ResearchSummary with domain-aware tabs; founder-centric tabs/badge today. After eval invariants exist.",
+    "vector-search-result-explainability-ux": "Feature improvement (vector search + UI/UX): surface or clarify existing score/tier signals so discovery feels intuitive and trustworthy. Rebalances toward underweighted vector facet after research-heavy streak.",
+    "hermetic-vector-search-ranking-smoke": "Testing/Observability: zero-I/O smoke for ranking/score composition invariants supporting measurable discovery quality (vision outcome 2 + 4)."
   },
   "category_mix": {
-    "testing_observability": 1,
     "maintenance": 1,
-    "feature_improvement": 1
+    "feature_improvement": 2,
+    "testing_observability": 1
   },
   "vision_refs": {
-    "traction-domain-eval-coverage": [
-      "measurable research quality and coverage",
-      "reliable deep research",
-      "Agent research facet",
-      "non-obvious signals including traction"
-    ],
     "fix-deep-research-trigger-types": [
       "reliable deep research",
-      "platform stability enabling trustworthy research UX"
+      "platform stability enabling trustworthy research UX",
+      "Agent research facet"
     ],
     "surface-traction-research-in-viewer": [
       "reliable deep research",
       "high-quality, evidence-backed intelligence",
       "non-obvious signals including traction",
       "UI/UX"
+    ],
+    "vector-search-result-explainability-ux": [
+      "powerful, intuitive discovery",
+      "Vector search facet",
+      "UI/UX"
+    ],
+    "hermetic-vector-search-ranking-smoke": [
+      "powerful, intuitive discovery",
+      "measurable research quality and coverage",
+      "Vector search facet"
     ]
   },
-  "generated_by_run": "continue-20260715-201755",
-  "notes": "Planner run 2026-07-15 in harness/continue-local-20260715-201755 @ 35e6ff1. Init: feature_list all completed including surface-research-insights-in-preview-cards; dropped that id from prior horizon. In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals. Recon: traction in DOMAIN_REGISTRY + tractionResultToolSchema + TractionResult; smoke/mock evals still founder-centric for rubric; ResearchViewer founder tabs; use-deep-research-trigger pre-existing TS errors confirmed. Ruflo memory init + store harness:horizon, harness:plan:20260715-144938, harness:vision. Corridor analyzePlan on planning summary. Planning-only: no source/tests/feature_list edits."
+  "generated_by_run": "continue-20260715-234157",
+  "notes": "Planner run 2026-07-15 in harness/continue-local-20260715-234157 @ 37b5819. Init: traction-domain-eval-coverage completed; dropped from prior horizon. Typecheck still fails on use-deep-research-trigger.ts (TS2344/TS2769 confirmed). In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals. Recon: ResearchViewer/use-research-tabs founder-centric; TractionResult evals green; @trigger.dev/react-hooks 4.4.1. Ruflo memory init + store harness:horizon, harness:plan:20260715-234329. Corridor analyzePlan on planning summary. Planning-only: no source/tests/feature_list edits."
 }

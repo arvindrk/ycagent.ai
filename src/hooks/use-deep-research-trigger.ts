@@ -1,6 +1,5 @@
 import { useState, useRef, useCallback, useMemo } from 'react';
 import { useRealtimeRun, useRealtimeStream } from "@trigger.dev/react-hooks";
-import type { researchOrchestrator } from '@/trigger/research-orchestrator';
 import { researchStream } from '@/trigger/streams';
 import { SSEEvent, StreamChunk } from '@/types/llm.types';
 import { Company } from '@/types/company.types';
@@ -21,13 +20,22 @@ export function useDeepResearchTrigger({ company, accessToken }: UseDeepResearch
   const runIdOrEmpty = runId || "";
   const opts = { accessToken, enabled: !!runId };
 
-  const { run, error: runError } = useRealtimeRun<typeof researchOrchestrator>(runIdOrEmpty, opts);
+  // Omit Task generic: react-hooks resolves @trigger.dev/core 4.5.x while
+  // researchOrchestrator is typed via sdk/core 4.4.x (Task shapes diverge).
+  // Subscription is still by runId + accessToken; runtime contract unchanged.
+  const { run, error: runError } = useRealtimeRun(runIdOrEmpty, opts);
 
-  const { parts, error: streamError } = useRealtimeStream(researchStream, runIdOrEmpty, {
-    ...opts,
-    timeoutInSeconds: 600,
-    throttleInMs: 16,
-  });
+  // Prefer stream-key overload over RealtimeDefinedStream object so client and
+  // server core stream types need not be assignable across the same skew.
+  const { parts, error: streamError } = useRealtimeStream<StreamChunk>(
+    runIdOrEmpty,
+    researchStream.id,
+    {
+      ...opts,
+      timeoutInSeconds: 600,
+      throttleInMs: 16,
+    },
+  );
 
   const error = runError ?? streamError;
 
