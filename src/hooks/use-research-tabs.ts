@@ -23,16 +23,20 @@ export function useResearchTabs(events: StreamChunk[]): UseResearchTabsResult {
     return resultEvent?.result ?? null;
   }, [events]);
 
+  const resultsTabId = researchResult?.domain ?? 'founder_profile';
+  const resultsTabLabel =
+    researchResult?.domain === 'traction' ? 'Traction' : 'Founder Profile';
+
   const tabs = useMemo((): TabConfig[] => [
     { id: 'timeline', label: 'Timeline' },
-    { id: 'founder_profile', label: 'Founder Profile', disabled: !researchResult },
+    { id: resultsTabId, label: resultsTabLabel, disabled: !researchResult },
     { id: 'investor_profile', label: 'Investor Profile (Coming Soon)', disabled: true },
     { id: 'hiring', label: 'Jobs (Coming Soon)', disabled: true },
-  ], [researchResult]);
+  ], [researchResult, resultsTabId, resultsTabLabel]);
 
   const activeTab = useMemo(() => {
     if (userSelectedTab) return userSelectedTab;
-    return researchResult ? 'founder_profile' : 'timeline';
+    return researchResult ? researchResult.domain : 'timeline';
   }, [userSelectedTab, researchResult]);
 
   const processedEvents = useMemo(() => {

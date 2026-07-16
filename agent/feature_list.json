@@ -231,5 +231,15 @@
     "description": "Maintenance: resolve pre-existing TypeScript errors in src/hooks/use-deep-research-trigger.ts (useRealtimeRun Task constraint TS2344 where Task lacks triggerAndSubscribe; useRealtimeStream overload TS2769 where RealtimeDefinedStream pipe waitUntilComplete return types diverge) so npm run typecheck and build verify are clean and regressions are not masked. Align types with @trigger.dev/react-hooks@4.4.1 and local researchOrchestrator / researchStream definitions without changing runtime research trigger behavior. No new dependencies preferred; version pin only if required within existing major.",
     "verify": "npm run lint && npm run typecheck && npm run build",
     "passes": true
+  },
+  {
+    "id": "surface-traction-research-in-viewer",
+    "status": "completed",
+    "priority": 24,
+    "depends_on": ["expand-research-domains", "traction-domain-eval-coverage", "fix-deep-research-trigger-types"],
+    "category": "feature_improvement",
+    "description": "Feature improvement (agent research + UI/UX): surface TractionResult (summary, sources, tractionSignals) in ResearchViewer when researchResult.domain === 'traction'. Domain-aware results tab/default active tab, tractionSignals plain-text list, header badge signal count for traction. Preserve founder_profile path, hostname sources, Coming Soon tabs. No new domains, deps, API, schema, or DB.",
+    "verify": "npm run lint && npm run typecheck && npm run build && npm run eval:smoke",
+    "passes": true
   }
 ]
