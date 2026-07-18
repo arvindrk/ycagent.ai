@@ -2,9 +2,8 @@
  * Hermetic smoke for vector ranking + score composition invariants used by
  * searchCompanies in src/lib/semantic-search/query.ts (vector branch SQL).
  *
- * Pure mirror only: local constants cite production literals so drift fails
- * this eval until centralize-search-score-weights lands. Distinct from
- * semantic-search-scenario-smoke (filter integration + partial ranking).
+ * Imports shared pure score-constants (same source as production SQL). Distinct
+ * from semantic-search-scenario-smoke (filter integration + partial ranking).
  *
  * Zero I/O: no DB, embeddings API, network, or env.
  *
@@ -12,32 +11,23 @@
  */
 
 import { TIER_META, type TierKey } from "@/lib/semantic-search/scoring/weights";
-
-// ---- Literals mirrored from query.ts searchCompanies vector SQL ----------
-// Cite: semantic * 0.8 + name * 0.15 + text * 0.05
-const W_SEMANTIC = 0.8;
-const W_NAME = 0.15;
-const W_TEXT = 0.05;
-
-// Cite: prefilter (semantic >= 0.25 OR name >= 0.7)
-const PREFILTER_SEMANTIC_MIN = 0.25;
-const PREFILTER_NAME_MIN = 0.7;
-
-// Cite: exact_match name similarity threshold; prefix path LENGTH($2) >= 3
-const EXACT_NAME_SIM_MIN = 0.9;
-const EXACT_PREFIX_MIN_LEN = 3;
-
-// Cite: semantic tier thresholds 0.7 / 0.5 / 0.3
-const TIER_HIGH_SEM = 0.7;
-const TIER_STRONG_SEM = 0.5;
-const TIER_RELEVANT_SEM = 0.3;
-
-// Cite: multipliers 2.5 / 1.5 / 1.0 / 0.8 / 0.5
-const MULT_EXACT = 2.5;
-const MULT_HIGH = 1.5;
-const MULT_STRONG = 1.0;
-const MULT_RELEVANT = 0.8;
-const MULT_KEYWORD = 0.5;
+import {
+  EXACT_NAME_SIM_MIN,
+  EXACT_PREFIX_MIN_LEN,
+  MULT_EXACT,
+  MULT_HIGH,
+  MULT_KEYWORD,
+  MULT_RELEVANT,
+  MULT_STRONG,
+  PREFILTER_NAME_MIN,
+  PREFILTER_SEMANTIC_MIN,
+  TIER_HIGH_SEM,
+  TIER_RELEVANT_SEM,
+  TIER_STRONG_SEM,
+  W_NAME,
+  W_SEMANTIC,
+  W_TEXT,
+} from "@/lib/semantic-search/scoring/score-constants";
 
 // ---- Pure ranking mirror (no SQL / no I/O) --------------------------------
 
