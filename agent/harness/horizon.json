@@ -1,33 +1,24 @@
 {
   "slice": [
-    "vector-search-result-explainability-ux",
     "hermetic-vector-search-ranking-smoke",
     "centralize-search-score-weights",
     "wire-vector-ranking-eval-into-ci"
   ],
   "rationale_per_step": {
-    "vector-search-result-explainability-ux": "Feature improvement (vector search + UI/UX): surface tier_label with existing score fields on result cards so ranking is explainable without hover-only breakdown. Chosen next after surface-traction-research-in-viewer completed; rebalances toward underweighted vector facet.",
-    "hermetic-vector-search-ranking-smoke": "Testing/Observability: zero-I/O smoke locking ranking/score composition invariants (weights, tier thresholds, final_score ordering) so discovery quality is measurable and does not silently drift from query.ts.",
-    "centralize-search-score-weights": "Tech debt: extract score weights and tier thresholds from inline SQL/literals in query.ts (and mirrored evals) into one pure source of truth shared by ranking UX, SQL path, and smokes.",
-    "wire-vector-ranking-eval-into-ci": "DX/Infra: once ranking smoke exists, add it to package.json eval:smoke composite and CI verify so discovery invariants run on every PR/merge."
+    "hermetic-vector-search-ranking-smoke": "Testing/Observability: dedicated zero-I/O smoke locking ranking/score composition invariants from query.ts so discovery quality is measurable after vector card explainability UX shipped. Chosen next.",
+    "centralize-search-score-weights": "Tech debt: extract score weights, thresholds, and multipliers from inline SQL/literals in query.ts (and mirrored evals) into one pure source of truth shared by ranking path and smokes.",
+    "wire-vector-ranking-eval-into-ci": "DX/Infra: once ranking smoke exists, add it to package.json eval:smoke composite (and CI via verify) so discovery ranking invariants run on every PR/merge."
   },
   "category_mix": {
-    "feature_improvement": 1,
     "testing_observability": 1,
     "tech_debt": 1,
     "dx_infra": 1
   },
   "vision_refs": {
-    "vector-search-result-explainability-ux": [
-      "powerful, intuitive discovery",
-      "Vector search facet",
-      "UI/UX",
-      "Users quickly find and trust"
-    ],
     "hermetic-vector-search-ranking-smoke": [
+      "Vector search facet",
       "powerful, intuitive discovery",
-      "measurable research quality and coverage",
-      "Vector search facet"
+      "measurable research quality and coverage"
     ],
     "centralize-search-score-weights": [
       "Vector search facet",
@@ -38,6 +29,6 @@
       "Vector search facet"
     ]
   },
-  "generated_by_run": "continue-20260718-141746",
-  "notes": "Planner run 2026-07-18 in harness/continue-local-20260718-141746 @ acaa4c7. Init: feature_list completed through surface-traction-research-in-viewer (priority 24); typecheck/build/eval green per last executor; clean worktree tracking origin/main. Dropped completed surface-traction-research-in-viewer from prior horizon. In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals. Recon: CompanyPreviewCard final_score badge + title breakdown; no tier_label on card; TieredResultsDisplay legend + accordion; semantic-search-scenario-smoke duplicates weight literals vs query.ts. Ruflo memory store harness:horizon + harness:plan:20260718-084837 (CLI; MCP ruflo timed out). Corridor analyzePlan on planning summary. Planning-only: no source/tests/feature_list edits."
+  "generated_by_run": "continue-20260718-192325",
+  "notes": "Planner run 2026-07-18 in harness/continue-local-20260718-192325 @ 0b35487. Init: feature_list all 25 completed through vector-search-result-explainability-ux (priority 25); typecheck/build/eval green per last executor; clean worktree tracking origin/main. Dropped completed vector-search-result-explainability-ux from prior horizon. In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals. Recon: query.ts owns inline ranking weights/thresholds; weights.ts is TIER_META only; semantic-search-scenario-smoke partially mirrors scoring with duplicated literals. Ruflo memory store harness:horizon + harness:plan:20260718-135432 (CLI; MCP ruflo unavailable). Corridor analyzePlan on planning summary. Planning-only: no source/tests/feature_list edits."
 }
