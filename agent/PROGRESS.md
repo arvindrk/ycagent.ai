@@ -547,3 +547,29 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Verification result: lint clean. typecheck clean (0 errors, including logview). build succeeded (Next.js 16.1.6, 9 routes). eval:smoke all 8 sub-evals pass (research 26, search-filter 16, build-filter-sql 17, parse 16, merged 10, semantic 8, orchestrator-mock 9, freshness 8).
 - Plan compliance note: Implemented exactly chosen_task within constraints. founder_profile default tab/view/badge path preserved. Created `.codex/tmp/run-summary.json`.
 - Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: vector-search-result-explainability-ux.
+
+## 2026-07-18 (planner run continue-20260718-141746)
+
+- Worktree: `continue-20260718-141746` (branch `harness/continue-local-20260718-141746` @ acaa4c7).
+- Planner-only. Init via `bash agent/init.sh`: feature_list completed through surface-traction-research-in-viewer (priority 24); typecheck/build/eval green per last executor; clean worktree; tracking origin/main.
+- Recon: vision.md (3 facets + 4 outcomes), categories.json weights, AGENTS.md + .agents/rules (minimal-code, security), prior horizon from continue-20260716-200017, CompanyPreviewCard final_score badge + hover breakdown only (no tier_label), TieredResultsDisplay legend + accordion, semantic-search-scenario-smoke duplicates weight literals vs query.ts SQL, PROGRESS tail surface-traction-research-in-viewer.
+- In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals.
+- Horizon updated to ["vector-search-result-explainability-ux", "hermetic-vector-search-ranking-smoke", "centralize-search-score-weights", "wire-vector-ranking-eval-into-ci"] (vector FI lead after research-heavy streak; then TO ranking smoke, tech_debt weight centralization, dx_infra CI wire-up). Dropped completed surface-traction-research-in-viewer.
+- Chosen next: vector-search-result-explainability-ux (plan_id plan-20260718-084837). Rationale: discovery ranking still not card-local/explainable; alternatives (ranking smoke first, centralize weights first) deferred.
+- Artifacts: `.codex/tmp/plan-20260718-084837.json`, `.codex/tmp/plan-20260718-084837.md`, `agent/harness/horizon.json`.
+- Ruflo: `ruflo memory init` + store harness:horizon, harness:plan:20260718-084837, harness:vision (local CLI; MCP ruflo timed out).
+- Corridor analyzePlan on planning summary (plain-text for search metadata; no HTML sinks).
+- No source code, tests, or feature_list.json edits.
+
+## 2026-07-18 (vector-search-result-explainability-ux)
+
+- Worktree: `continue-20260718-141746` (branch `harness/continue-local-20260718-141746` @ acaa4c7).
+- Task: `vector-search-result-explainability-ux` (plan_id: plan-20260718-084837 from Planner run continue-20260718-141746).
+- Plan link: `.codex/tmp/plan-20260718-084837.json` (authoritative); also `.codex/tmp/plan-20260718-084837.md`. Horizon after per plan: ["vector-search-result-explainability-ux", "hermetic-vector-search-ranking-smoke", "centralize-search-score-weights", "wire-vector-ranking-eval-into-ci"].
+- Selected per plan: Feature improvement (vector search + UI/UX): make ranking explainable on search result cards by surfacing existing SearchResult tier_label/tier with final_score and accessible score breakdown.
+- Changes (only chosen_task): 1 UI file + state. (1) `src/components/companies/list/company-preview-card.tsx`: optional `tier_label`; compact outline tier badge when `tier_label` or `tier` present (search path); score badge `title` + `aria-label` plain-text breakdown (tier + semantic/name/text/final). Non-search list path unchanged (no tier/scores). (2) `agent/feature_list.json`: completed FI entry priority 25. No API/schema/SQL/weights/deps/new components.
+- Decisions (first-principles + rules): (1) Read Plan artifact first. (2) Verbatim restated Plan principles, AGENTS.md, .agents/rules (minimal-code, security, frontend), vision alignment BEFORE code edits. (3) Confirmed and obeyed execution_constraints. (4) Corridor analyzePlan before edits (plain-text React nodes only; no dangerouslySetInnerHTML). (5) Prefer single file company-preview-card.tsx; reuse Badge; no Tooltip stack. (6) Only public SearchResult fields already returned by API. (7) No .env/secrets. Horizon steps 2-4 not implemented.
+- Commands executed (post impl): `npm run lint && npm run typecheck && npm run build && npm run eval:smoke`.
+- Verification result: lint clean. typecheck clean (0 errors, including logview). build succeeded (Next.js 16.1.6, 9 routes). eval:smoke all 8 sub-evals pass (research 26, search-filter 16, build-filter-sql 17, parse 16, merged 10, semantic 8, orchestrator-mock 9, freshness 8).
+- Plan compliance note: Implemented exactly chosen_task within constraints. Created `.codex/tmp/run-summary.json`.
+- Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: hermetic-vector-search-ranking-smoke.

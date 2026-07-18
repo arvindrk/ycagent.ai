@@ -241,5 +241,15 @@
     "description": "Feature improvement (agent research + UI/UX): surface TractionResult (summary, sources, tractionSignals) in ResearchViewer when researchResult.domain === 'traction'. Domain-aware results tab/default active tab, tractionSignals plain-text list, header badge signal count for traction. Preserve founder_profile path, hostname sources, Coming Soon tabs. No new domains, deps, API, schema, or DB.",
     "verify": "npm run lint && npm run typecheck && npm run build && npm run eval:smoke",
     "passes": true
+  },
+  {
+    "id": "vector-search-result-explainability-ux",
+    "status": "completed",
+    "priority": 25,
+    "depends_on": ["surface-search-scores-ux"],
+    "category": "feature_improvement",
+    "description": "Feature improvement (vector search + UI/UX): surface existing SearchResult tier_label/tier on CompanyPreviewCard alongside final_score, with semantic/name/text/final breakdown in title and aria-label for accessible ranking explainability without hover-only UX. UI-only; no API/SQL/weights/schema/deps.",
+    "verify": "npm run lint && npm run typecheck && npm run build && npm run eval:smoke",
+    "passes": true
   }
 ]

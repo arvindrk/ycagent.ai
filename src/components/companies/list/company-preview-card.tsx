@@ -18,6 +18,7 @@ interface CompanyPreviewCardProps {
     text_score?: number;
     final_score?: number;
     tier?: string;
+    tier_label?: string;
     last_synced_at?: string;
     updated_at?: string;
     created_at?: string;
@@ -45,6 +46,19 @@ export function CompanyPreviewCard({ company }: CompanyPreviewCardProps) {
   const router = useRouter();
   const displayTags = company.tags.slice(0, 3);
   const hasMoreTags = company.tags.length > 3;
+  const tierDisplay = company.tier_label || company.tier;
+  const scoreBreakdown =
+    typeof company.final_score === 'number'
+      ? [
+          tierDisplay ? `tier: ${tierDisplay}` : null,
+          `semantic: ${company.semantic_score?.toFixed(2) ?? 'n/a'}`,
+          `name: ${company.name_score?.toFixed(2) ?? 'n/a'}`,
+          `text: ${company.text_score?.toFixed(2) ?? 'n/a'}`,
+          `final: ${company.final_score.toFixed(2)}`,
+        ]
+          .filter(Boolean)
+          .join(' ')
+      : null;
 
   const handleDeepResearch = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -100,11 +114,21 @@ export function CompanyPreviewCard({ company }: CompanyPreviewCardProps) {
                 {formatBatch(company.batch)}
               </Badge>
             )}
-            {typeof company.final_score === 'number' && (
+            {tierDisplay && (
+              <Badge
+                variant="outline"
+                className="flex-shrink-0 text-[10px] px-1.5 py-0"
+                title={tierDisplay}
+              >
+                {tierDisplay}
+              </Badge>
+            )}
+            {typeof company.final_score === 'number' && scoreBreakdown && (
               <Badge
                 variant="outline"
                 className="flex-shrink-0 text-[10px] px-1.5 py-0 tabular-nums"
-                title={`semantic: ${company.semantic_score?.toFixed(2)} name: ${company.name_score?.toFixed(2)} text: ${company.text_score?.toFixed(2)} final: ${company.final_score.toFixed(2)}`}
+                title={scoreBreakdown}
+                aria-label={scoreBreakdown}
               >
                 {company.final_score.toFixed(2)}
               </Badge>
