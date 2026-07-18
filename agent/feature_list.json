@@ -251,5 +251,15 @@
     "description": "Feature improvement (vector search + UI/UX): surface existing SearchResult tier_label/tier on CompanyPreviewCard alongside final_score, with semantic/name/text/final breakdown in title and aria-label for accessible ranking explainability without hover-only UX. UI-only; no API/SQL/weights/schema/deps.",
     "verify": "npm run lint && npm run typecheck && npm run build && npm run eval:smoke",
     "passes": true
+  },
+  {
+    "id": "hermetic-vector-search-ranking-smoke",
+    "status": "completed",
+    "priority": 26,
+    "depends_on": ["vector-search-result-explainability-ux"],
+    "category": "testing_observability",
+    "description": "Testing/Observability: dedicated zero-I/O hermetic smoke locking vector ranking and score composition invariants used by searchCompanies (weights 0.8/0.15/0.05, tier thresholds and multipliers, prefilter, final_score, TIER_META labels/orders, boundary cases). Distinct from semantic-search-scenario-smoke. No production ranking/SQL change; no weight centralization this step.",
+    "verify": "npm run eval:vector-ranking-smoke && npm run lint && npm run typecheck && npm run build && npm run eval:smoke",
+    "passes": true
   }
 ]
