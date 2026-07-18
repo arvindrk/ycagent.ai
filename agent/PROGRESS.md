@@ -521,3 +521,29 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Verification result: typecheck clean (0 errors, including logview). lint clean. build succeeded (Next.js 16.1.6, 9 routes). eval:smoke all 8 sub-evals pass (research 26, search-filter 16, build-filter-sql 17, parse 16, merged 10, semantic 8, orchestrator-mock 9, freshness 8).
 - Plan compliance note: Implemented exactly chosen_task within constraints. Runtime research trigger API contract unchanged (same fetch payload shape, cancel path, enabled pattern). Created `.codex/tmp/run-summary.json`.
 - Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: surface-traction-research-in-viewer.
+
+## 2026-07-16 (planner run continue-20260716-200017)
+
+- Worktree: `continue-20260716-200017` (branch `harness/continue-local-20260716-200017` @ b7eea0d).
+- Planner-only. Init via `bash agent/init.sh`: feature_list completed through fix-deep-research-trigger-types; typecheck/build green per last executor; clean worktree; tracking origin/main.
+- Recon: vision.md (3 facets + 4 outcomes), categories.json weights, AGENTS.md + .agents/rules (minimal-code, security), prior horizon from continue-20260715-234157, ResearchViewer/use-research-tabs founder-centric, research-summary summary/sources generic + FounderProfileView only for founder, TractionResult + traction evals green, PROGRESS tail fix-deep-research-trigger-types.
+- In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals.
+- Horizon updated to ["surface-traction-research-in-viewer", "vector-search-result-explainability-ux", "hermetic-vector-search-ranking-smoke"] (FI lead to close multi-domain research UX; then vector FI + TO for discovery balance). Dropped completed fix-deep-research-trigger-types.
+- Chosen next: surface-traction-research-in-viewer (plan_id plan-20260716-143100). Rationale: traction domain+evals exist but UI still founder-only; alternatives (vector explainability first, ranking smoke first) deferred one step.
+- Artifacts: `.codex/tmp/plan-20260716-143100.json`, `.codex/tmp/plan-20260716-143100.md`, `agent/harness/horizon.json`.
+- Ruflo: `ruflo memory init` + store harness:horizon, harness:plan:20260716-143100, harness:vision (local CLI; MCP ruflo timed out).
+- Corridor analyzePlan on planning summary (plain-text for untrusted research strings; noopener links).
+- No source code, tests, or feature_list.json edits.
+
+## 2026-07-16 (surface-traction-research-in-viewer)
+
+- Worktree: `continue-20260716-200017` (branch `harness/continue-local-20260716-200017` @ b7eea0d).
+- Task: `surface-traction-research-in-viewer` (plan_id: plan-20260716-143100 from Planner run continue-20260716-200017).
+- Plan link: `.codex/tmp/plan-20260716-143100.json` (authoritative); also `.codex/tmp/plan-20260716-143100.md`. Horizon after per plan: ["surface-traction-research-in-viewer", "vector-search-result-explainability-ux", "hermetic-vector-search-ranking-smoke"].
+- Selected per plan: Feature improvement (agent research + UI/UX): present TractionResult in ResearchViewer with domain-aware tabs/badge; founder-centric UI today despite traction domain+evals shipping.
+- Changes (only chosen_task): 3 UI/hook files + state. (1) `src/hooks/use-research-tabs.ts`: results tab id/label from researchResult.domain (traction -> Traction, else Founder Profile); default activeTab prefers researchResult.domain when present, else timeline; Coming Soon tabs unchanged. (2) `src/components/companies/research/research-viewer.tsx`: TabsContent value matches resultsTabId; header Badge signal count uses tractionSignals.length for traction and founder signal arrays for founder_profile; title attributes domain-specific. (3) `src/components/companies/research/research-summary.tsx`: traction branch renders tractionSignals as plain-text ul/li bullets; founder FounderProfileView path preserved; summary/sources already domain-generic with hostname + noopener. (4) `agent/feature_list.json`: completed FI entry priority 24. No API/schema/registry/DB/deps.
+- Decisions (first-principles + rules): (1) Read Plan artifact first. (2) Verbatim restated Plan principles, AGENTS.md operating/safety/review, .agents/rules (minimal-code, security, frontend, typescript), vision alignment BEFORE code edits. (3) Confirmed and obeyed execution_constraints. (4) Corridor analyzePlan before edits (plain-text only; noopener; no dangerouslySetInnerHTML). (5) Inline traction section in research-summary (no new component; plan allowed optional section only if needed). (6) No new domains or fields; only presentation of existing TractionResult. (7) No .env/secrets. Horizon steps 2-3 not implemented.
+- Commands executed (post impl): `npm run lint && npm run typecheck && npm run build && npm run eval:smoke`.
+- Verification result: lint clean. typecheck clean (0 errors, including logview). build succeeded (Next.js 16.1.6, 9 routes). eval:smoke all 8 sub-evals pass (research 26, search-filter 16, build-filter-sql 17, parse 16, merged 10, semantic 8, orchestrator-mock 9, freshness 8).
+- Plan compliance note: Implemented exactly chosen_task within constraints. founder_profile default tab/view/badge path preserved. Created `.codex/tmp/run-summary.json`.
+- Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: vector-search-result-explainability-ux.

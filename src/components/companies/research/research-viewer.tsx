@@ -38,6 +38,15 @@ export function ResearchViewer({
   const durS = (rs && rc && !isNaN(rs.getTime()) && !isNaN(rc.getTime()) && rc.getTime() >= rs.getTime())
     ? Math.round((rc.getTime() - rs.getTime()) / 1000)
     : null;
+  const resultsTabId = researchResult?.domain ?? 'founder_profile';
+  const signalCount = researchResult
+    ? researchResult.domain === 'traction'
+      ? researchResult.tractionSignals.length
+      : (researchResult.founderRelationship?.length || 0)
+        + (researchResult.complementarySkills?.length || 0)
+        + (researchResult.socialPresence?.length || 0)
+        + (researchResult.trackRecord?.length || 0)
+    : 0;
 
   useEffect(() => {
     if (timelineRef.current) {
@@ -64,9 +73,13 @@ export function ResearchViewer({
             <Badge
               variant="outline"
               className="text-[10px] px-1.5 py-0"
-              title={`domain: ${researchResult.domain} sources: ${researchResult.sources.length} founderRelationship: ${researchResult.founderRelationship?.length || 0} complementarySkills: ${researchResult.complementarySkills?.length || 0} socialPresence: ${researchResult.socialPresence?.length || 0} trackRecord: ${researchResult.trackRecord?.length || 0}`}
+              title={
+                researchResult.domain === 'traction'
+                  ? `domain: traction sources: ${researchResult.sources.length} tractionSignals: ${researchResult.tractionSignals.length}`
+                  : `domain: ${researchResult.domain} sources: ${researchResult.sources.length} founderRelationship: ${researchResult.founderRelationship?.length || 0} complementarySkills: ${researchResult.complementarySkills?.length || 0} socialPresence: ${researchResult.socialPresence?.length || 0} trackRecord: ${researchResult.trackRecord?.length || 0}`
+              }
             >
-              {researchResult.domain} {((researchResult.founderRelationship?.length || 0) + (researchResult.complementarySkills?.length || 0) + (researchResult.socialPresence?.length || 0) + (researchResult.trackRecord?.length || 0))}sig/{researchResult.sources.length}src
+              {researchResult.domain} {signalCount}sig/{researchResult.sources.length}src
             </Badge>
           )}
         </CardTitle>
@@ -117,7 +130,7 @@ export function ResearchViewer({
                   </div>
                 </TabsContent>
 
-                <TabsContent value="founder_profile" className="flex-1 overflow-hidden mt-0">
+                <TabsContent value={resultsTabId} className="flex-1 overflow-hidden mt-0">
                   <div className="h-full overflow-y-scroll">
                     {researchResult ? (
                       <ResearchSummary result={researchResult} />

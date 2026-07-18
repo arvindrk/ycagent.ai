@@ -1,32 +1,25 @@
 {
   "slice": [
-    "fix-deep-research-trigger-types",
     "surface-traction-research-in-viewer",
     "vector-search-result-explainability-ux",
     "hermetic-vector-search-ranking-smoke"
   ],
   "rationale_per_step": {
-    "fix-deep-research-trigger-types": "Maintenance: clear pre-existing TS2344/TS2769 in use-deep-research-trigger.ts so typecheck/build verify are trustworthy before more research UX. Chosen next after traction-domain-eval-coverage completed.",
-    "surface-traction-research-in-viewer": "Feature improvement (agent research + UI/UX): present TractionResult (summary/sources/tractionSignals) in ResearchViewer/ResearchSummary with domain-aware tabs; founder-centric tabs/badge today. After eval invariants exist.",
+    "surface-traction-research-in-viewer": "Feature improvement (agent research + UI/UX): present TractionResult (summary/sources/tractionSignals) in ResearchViewer with domain-aware tabs/badge; founder-centric today. Chosen next after fix-deep-research-trigger-types completed and typecheck is clean.",
     "vector-search-result-explainability-ux": "Feature improvement (vector search + UI/UX): surface or clarify existing score/tier signals so discovery feels intuitive and trustworthy. Rebalances toward underweighted vector facet after research-heavy streak.",
     "hermetic-vector-search-ranking-smoke": "Testing/Observability: zero-I/O smoke for ranking/score composition invariants supporting measurable discovery quality (vision outcome 2 + 4)."
   },
   "category_mix": {
-    "maintenance": 1,
     "feature_improvement": 2,
     "testing_observability": 1
   },
   "vision_refs": {
-    "fix-deep-research-trigger-types": [
-      "reliable deep research",
-      "platform stability enabling trustworthy research UX",
-      "Agent research facet"
-    ],
     "surface-traction-research-in-viewer": [
       "reliable deep research",
       "high-quality, evidence-backed intelligence",
       "non-obvious signals including traction",
-      "UI/UX"
+      "UI/UX",
+      "Agent research facet"
     ],
     "vector-search-result-explainability-ux": [
       "powerful, intuitive discovery",
@@ -39,6 +32,6 @@
       "Vector search facet"
     ]
   },
-  "generated_by_run": "continue-20260715-234157",
-  "notes": "Planner run 2026-07-15 in harness/continue-local-20260715-234157 @ 37b5819. Init: traction-domain-eval-coverage completed; dropped from prior horizon. Typecheck still fails on use-deep-research-trigger.ts (TS2344/TS2769 confirmed). In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals. Recon: ResearchViewer/use-research-tabs founder-centric; TractionResult evals green; @trigger.dev/react-hooks 4.4.1. Ruflo memory init + store harness:horizon, harness:plan:20260715-234329. Corridor analyzePlan on planning summary. Planning-only: no source/tests/feature_list edits."
+  "generated_by_run": "continue-20260716-200017",
+  "notes": "Planner run 2026-07-16 in harness/continue-local-20260716-200017 @ b7eea0d. Init: fix-deep-research-trigger-types completed; typecheck clean. Dropped completed fix-deep-research-trigger-types from prior horizon. In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals. Recon: ResearchViewer/use-research-tabs founder-centric; TractionResult + evals green; feature_list all completed through priority 23. Ruflo memory store harness:horizon + harness:plan:20260716-143100. Corridor analyzePlan on planning summary. Planning-only: no source/tests/feature_list edits."
 }
