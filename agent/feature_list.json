@@ -12,7 +12,9 @@
     "id": "dependency-security-audit",
     "status": "completed",
     "priority": 3,
-    "depends_on": ["codex-harness-foundation"],
+    "depends_on": [
+      "codex-harness-foundation"
+    ],
     "category": "tech_debt",
     "description": "Triage npm audit findings from the harness setup run, prioritizing the critical and high vulnerabilities without unsafe force upgrades.",
     "verify": "npm audit --audit-level=high",
@@ -22,7 +24,9 @@
     "id": "auth-build-env-cleanup",
     "status": "completed",
     "priority": 4,
-    "depends_on": ["codex-harness-foundation"],
+    "depends_on": [
+      "codex-harness-foundation"
+    ],
     "description": "Remove Better Auth build-time warnings by making auth configuration build-safe without using fake production secrets.",
     "verify": "npm run build",
     "passes": true
@@ -31,7 +35,9 @@
     "id": "autonomous-merge-continuation",
     "status": "completed",
     "priority": 2,
-    "depends_on": ["codex-harness-foundation"],
+    "depends_on": [
+      "codex-harness-foundation"
+    ],
     "description": "Detect merges to main, refresh local context, choose the next unblocked feature, and continue in an isolated Codex worktree that opens a draft PR.",
     "verify": "manual workflow inspection plus CI passing on this draft PR",
     "passes": true
@@ -40,7 +46,9 @@
     "id": "research-agent-eval-harness",
     "status": "completed",
     "priority": 5,
-    "depends_on": ["codex-harness-foundation"],
+    "depends_on": [
+      "codex-harness-foundation"
+    ],
     "description": "Add a lightweight scenario eval for the YC research agent using synthetic companies and rubric-based outcome checks.",
     "verify": "npm run eval:research-smoke",
     "passes": true
@@ -49,7 +57,9 @@
     "id": "api-route-input-validation",
     "status": "completed",
     "priority": 6,
-    "depends_on": ["codex-harness-foundation"],
+    "depends_on": [
+      "codex-harness-foundation"
+    ],
     "description": "Add Zod schema validation to the two unvalidated API routes (research trigger and cancel) to enforce the security rule requiring schema checks at all API boundaries.",
     "verify": "npm run lint && npm run typecheck && npm run build",
     "passes": true
@@ -58,7 +68,9 @@
     "id": "research-route-error-recovery",
     "status": "completed",
     "priority": 7,
-    "depends_on": ["api-route-input-validation"],
+    "depends_on": [
+      "api-route-input-validation"
+    ],
     "description": "Fix the research trigger API route to cancel the Trigger.dev run when a subsequent DB insert fails, preventing dangling runs that keep E2B sandbox resources alive with no tracking record.",
     "verify": "npm run lint && npm run typecheck && npm run build",
     "passes": true
@@ -67,7 +79,9 @@
     "id": "search-filter-eval-coverage",
     "status": "completed",
     "priority": 8,
-    "depends_on": ["codex-harness-foundation"],
+    "depends_on": [
+      "codex-harness-foundation"
+    ],
     "description": "Add an eval smoke test for the extractFiltersFromQuery pure function, covering batch aliases, team size patterns, founded year patterns, hiring flags, and cleanedQuery output. Zero I/O dependencies.",
     "verify": "npm run eval:search-filter-smoke",
     "passes": true
@@ -76,47 +90,43 @@
     "id": "build-filter-sql-eval-coverage",
     "status": "completed",
     "priority": 9,
-    "depends_on": ["codex-harness-foundation"],
+    "depends_on": [
+      "codex-harness-foundation"
+    ],
     "description": "Add an eval smoke test for the buildFilterSQL pure function, verifying that $N placeholder indices are sequential and that values array length matches the param count across all 13 filter types and paramOffset variants. Zero I/O dependencies.",
     "verify": "npm run eval:build-filter-sql-smoke",
     "passes": true
   },
   {
-    "id": "ci-eval-smoke-coverage",
-    "status": "completed",
-    "priority": 10,
-    "depends_on": ["codex-harness-foundation"],
-    "description": "Run the three pure smoke evals (research-agent, search-filter, build-filter-sql) inside the CI verify job so filter logic and research invariants are enforced on every PR and main merge.",
-    "verify": "npm run lint && npm run typecheck && npm run build && npm run eval:research-smoke && npm run eval:search-filter-smoke && npm run eval:build-filter-sql-smoke",
     "id": "parse-search-filters-eval-coverage",
     "status": "completed",
     "priority": 10,
-    "depends_on": ["codex-harness-foundation"],
+    "depends_on": [
+      "codex-harness-foundation"
+    ],
     "description": "Add an eval smoke test for the parseSearchFilters function (URL param to ParsedFilters), covering string passthrough, array comma-split, boolean coercion, numeric fields, and edge cases. Zero I/O dependencies.",
     "verify": "npm run eval:parse-search-filters-smoke",
     "passes": true
   },
   {
-    "id": "merged-filter-integration-smoke",
-    "status": "completed",
-    "priority": 11,
-    "depends_on": ["codex-harness-foundation"],
-    "description": "Add a zero-dependency integration smoke eval for the search filter composition (extract + parse + explicit override merge + buildFilterSQL) used by the companies search route. Covers the integration point between previously unit-tested pieces.",
-    "verify": "npm run eval:merged-filter-smoke",
     "id": "centralize-tier-config",
     "status": "completed",
     "priority": 11,
-    "depends_on": ["parse-search-filters-eval-coverage"],
-    "category": "tech_debt",
+    "depends_on": [
+      "parse-search-filters-eval-coverage"
+    ],
     "description": "Unify tier metadata (labels, descriptions, styling) currently duplicated between weights.ts (used for result enrichment) and tiered-results-display.tsx to maintain consistent tiering that underpins powerful, intuitive discovery and vector search UX.",
     "verify": "npm run lint && npm run typecheck && npm run build",
+    "category": "tech_debt",
     "passes": true
   },
   {
     "id": "surface-search-scores-ux",
     "status": "completed",
     "priority": 12,
-    "depends_on": ["centralize-tier-config"],
+    "depends_on": [
+      "centralize-tier-config"
+    ],
     "category": "feature_improvement",
     "description": "Feature improvement on UI/UX: surface existing semantic_score, name_score, text_score, final_score, tier fields from SearchResult (already computed and returned by API) in preview cards for trust and intuitive discovery. Advances vector search + UI/UX facets.",
     "verify": "npm run lint && npm run typecheck && npm run build",
@@ -136,7 +146,9 @@
     "id": "research-orchestrator-mock-eval",
     "status": "completed",
     "priority": 14,
-    "depends_on": ["add-composite-eval-smoke-script"],
+    "depends_on": [
+      "add-composite-eval-smoke-script"
+    ],
     "category": "testing_observability",
     "description": "Testing/Observability: add a hermetic scenario-level eval exercising more of the research agent loop (executeAgentLoop / orchestrator) using mocked LLM and no E2B/DB/keys. Current research-smoke only covers registry/rubric. Directly supports reliable deep research and measurable research quality per vision.",
     "verify": "npm run eval:research-orchestrator-mock-eval",
@@ -146,7 +158,10 @@
     "id": "extend-ci-eval-coverage",
     "status": "completed",
     "priority": 15,
-    "depends_on": ["research-orchestrator-mock-eval", "add-composite-eval-smoke-script"],
+    "depends_on": [
+      "research-orchestrator-mock-eval",
+      "add-composite-eval-smoke-script"
+    ],
     "category": "testing_observability",
     "description": "Testing/Observability + DX: wire the remaining smoke evals (parse, merged, semantic-search-scenario, orchestrator-mock, and the composite eval:smoke) into the CI verify job so all quality invariants run on every PR/merge. Completes the measurable research quality loop.",
     "verify": "npm run lint && npm run typecheck && npm run build && npm run eval:research-smoke && npm run eval:search-filter-smoke && npm run eval:build-filter-sql-smoke && npm run eval:parse-search-filters-smoke && npm run eval:merged-filter-smoke && npm run eval:semantic-search-scenario-smoke && npm run eval:research-orchestrator-mock-eval && npm run eval:smoke",
@@ -156,7 +171,9 @@
     "id": "add-research-evidence-highlighting",
     "status": "completed",
     "priority": 16,
-    "depends_on": ["extend-ci-eval-coverage"],
+    "depends_on": [
+      "extend-ci-eval-coverage"
+    ],
     "category": "feature_improvement",
     "description": "Feature improvement / agent research: surface key evidence highlights or source links more prominently in research output (research-summary, founder-profile, timeline) and company profiles to strengthen traceability and user trust in 'evidence-backed' outcomes. Builds on existing basic Sources lists.",
     "verify": "npm run lint && npm run typecheck && npm run build",
@@ -166,7 +183,9 @@
     "id": "expand-eval-coverage-freshness",
     "status": "completed",
     "priority": 17,
-    "depends_on": ["add-research-evidence-highlighting"],
+    "depends_on": [
+      "add-research-evidence-highlighting"
+    ],
     "category": "testing_observability",
     "description": "Testing/Observability: add or extend lightweight checks for data freshness (last_synced_at, updated_at on companies per schema; research run started/completed_at) or broader scenario coverage in evals to close the 'measurable research quality and coverage' loop from vision. Low-I/O, hermetic where possible. Directly supports fresh, evidence-backed intelligence.",
     "verify": "npm run eval:freshness-smoke",
@@ -176,7 +195,9 @@
     "id": "enhance-source-presentation-for-trust",
     "status": "completed",
     "priority": 18,
-    "depends_on": ["expand-eval-coverage-freshness"],
+    "depends_on": [
+      "expand-eval-coverage-freshness"
+    ],
     "category": "feature_improvement",
     "description": "Feature improvement / UI/UX + agent research: enhance the Sources section in ResearchSummary (rendered inside ResearchViewer for research output) to display the actual source URLs (or clean hostnames) instead of generic 'Source N' labels. This makes evidence-backed, sourced intelligence directly verifiable and builds user trust. Uses only the existing result.sources string[] data with no new fetches, schema changes, or I/O. Advances vision core outcomes for comprehensive sourced profiles and success signal of users trusting sourced insights. Small targeted presentation improvement only.",
     "verify": "npm run verify",
@@ -186,7 +207,9 @@
     "id": "extend-eval-invariants-for-agent-reliability",
     "status": "completed",
     "priority": 19,
-    "depends_on": ["enhance-source-presentation-for-trust"],
+    "depends_on": [
+      "enhance-source-presentation-for-trust"
+    ],
     "category": "testing_observability",
     "description": "Testing/Observability follow-on: strengthen result shape, sources non-emptiness, non-obvious signal presence, and metadata invariants inside research evals (mock + possibly others). Builds directly on expand-research-eval-scenarios and recent executor work. Supports measurable research quality + reliable deep research.",
     "verify": "npm run eval:research-orchestrator-mock-eval && npm run eval:research-smoke && npm run eval:smoke",
@@ -196,7 +219,9 @@
     "id": "expand-research-domains",
     "status": "completed",
     "priority": 20,
-    "depends_on": ["extend-eval-invariants-for-agent-reliability"],
+    "depends_on": [
+      "extend-eval-invariants-for-agent-reliability"
+    ],
     "category": "new_feature",
     "description": "New Feature (agent research): expand DOMAIN_REGISTRY and orchestrator beyond the single founder_profile domain to cover additional high-value areas such as traction, risks, relationships, or company signals. Directly advances reliable deep research and non-obvious signals per vision. Requires accompanying schema/eval updates but starts with domain addition. Brings new_feature category into the slice for balance.",
     "verify": "npm run eval:smoke && npm run lint && npm run typecheck && npm run build",
@@ -206,7 +231,9 @@
     "id": "surface-research-insights-in-preview-cards",
     "status": "completed",
     "priority": 21,
-    "depends_on": ["expand-research-domains"],
+    "depends_on": [
+      "expand-research-domains"
+    ],
     "category": "feature_improvement",
     "description": "Feature improvement (UI/UX + discovery): surface lightweight research-related insights or metadata in CompanyPreviewCard so deep research value is visible during intuitive discovery without requiring navigation to the company detail view first. Prefer existing list/search payload fields and existing Badge patterns. No list API expansion or new dependencies.",
     "verify": "npm run lint && npm run typecheck && npm run build && npm run eval:smoke",
@@ -216,7 +243,10 @@
     "id": "traction-domain-eval-coverage",
     "status": "completed",
     "priority": 22,
-    "depends_on": ["expand-research-domains", "surface-research-insights-in-preview-cards"],
+    "depends_on": [
+      "expand-research-domains",
+      "surface-research-insights-in-preview-cards"
+    ],
     "category": "testing_observability",
     "description": "Testing/Observability: add hermetic eval/rubric coverage for the traction domain introduced by expand-research-domains. Cover registry presence, tool wiring, and a TractionResult rubric aligned to tractionResultToolSchema (domain, summary, sources, tractionSignals 1-5). Pass plus fail cases for wrong domain, empty sources, empty/over-max tractionSignals. Zero I/O; preserve founder_profile invariants.",
     "verify": "npm run eval:research-smoke && npm run eval:research-orchestrator-mock-eval && npm run eval:smoke",
@@ -226,7 +256,9 @@
     "id": "fix-deep-research-trigger-types",
     "status": "completed",
     "priority": 23,
-    "depends_on": ["traction-domain-eval-coverage"],
+    "depends_on": [
+      "traction-domain-eval-coverage"
+    ],
     "category": "maintenance",
     "description": "Maintenance: resolve pre-existing TypeScript errors in src/hooks/use-deep-research-trigger.ts (useRealtimeRun Task constraint TS2344 where Task lacks triggerAndSubscribe; useRealtimeStream overload TS2769 where RealtimeDefinedStream pipe waitUntilComplete return types diverge) so npm run typecheck and build verify are clean and regressions are not masked. Align types with @trigger.dev/react-hooks@4.4.1 and local researchOrchestrator / researchStream definitions without changing runtime research trigger behavior. No new dependencies preferred; version pin only if required within existing major.",
     "verify": "npm run lint && npm run typecheck && npm run build",
@@ -236,7 +268,11 @@
     "id": "surface-traction-research-in-viewer",
     "status": "completed",
     "priority": 24,
-    "depends_on": ["expand-research-domains", "traction-domain-eval-coverage", "fix-deep-research-trigger-types"],
+    "depends_on": [
+      "expand-research-domains",
+      "traction-domain-eval-coverage",
+      "fix-deep-research-trigger-types"
+    ],
     "category": "feature_improvement",
     "description": "Feature improvement (agent research + UI/UX): surface TractionResult (summary, sources, tractionSignals) in ResearchViewer when researchResult.domain === 'traction'. Domain-aware results tab/default active tab, tractionSignals plain-text list, header badge signal count for traction. Preserve founder_profile path, hostname sources, Coming Soon tabs. No new domains, deps, API, schema, or DB.",
     "verify": "npm run lint && npm run typecheck && npm run build && npm run eval:smoke",
@@ -246,7 +282,9 @@
     "id": "vector-search-result-explainability-ux",
     "status": "completed",
     "priority": 25,
-    "depends_on": ["surface-search-scores-ux"],
+    "depends_on": [
+      "surface-search-scores-ux"
+    ],
     "category": "feature_improvement",
     "description": "Feature improvement (vector search + UI/UX): surface existing SearchResult tier_label/tier on CompanyPreviewCard alongside final_score, with semantic/name/text/final breakdown in title and aria-label for accessible ranking explainability without hover-only UX. UI-only; no API/SQL/weights/schema/deps.",
     "verify": "npm run lint && npm run typecheck && npm run build && npm run eval:smoke",
@@ -256,7 +294,9 @@
     "id": "hermetic-vector-search-ranking-smoke",
     "status": "completed",
     "priority": 26,
-    "depends_on": ["vector-search-result-explainability-ux"],
+    "depends_on": [
+      "vector-search-result-explainability-ux"
+    ],
     "category": "testing_observability",
     "description": "Testing/Observability: dedicated zero-I/O hermetic smoke locking vector ranking and score composition invariants used by searchCompanies (weights 0.8/0.15/0.05, tier thresholds and multipliers, prefilter, final_score, TIER_META labels/orders, boundary cases). Distinct from semantic-search-scenario-smoke. No production ranking/SQL change; no weight centralization this step.",
     "verify": "npm run eval:vector-ranking-smoke && npm run lint && npm run typecheck && npm run build && npm run eval:smoke",
@@ -266,7 +306,9 @@
     "id": "centralize-search-score-weights",
     "status": "completed",
     "priority": 27,
-    "depends_on": ["hermetic-vector-search-ranking-smoke"],
+    "depends_on": [
+      "hermetic-vector-search-ranking-smoke"
+    ],
     "category": "tech_debt",
     "description": "Tech debt (vector search): extract ranking score weights, prefilter thresholds, tier thresholds, exact-match name rules, and tier multipliers from inline SQL/literals in query.ts and mirrored constants in vector-ranking-smoke and semantic-search-scenario-smoke into one pure source of truth under scoring/score-constants.ts. query.ts and both smokes import the same constants so ranking math cannot drift. Preserve exact numeric values; no intentional ranking behavior change; no API/schema/DB/SQL structure change beyond constant interpolation; no new deps.",
     "verify": "npm run lint && npm run typecheck && npm run build && npm run eval:vector-ranking-smoke && npm run eval:semantic-search-scenario-smoke && npm run eval:smoke",
@@ -276,7 +318,9 @@
     "id": "wire-vector-ranking-eval-into-ci",
     "status": "completed",
     "priority": 28,
-    "depends_on": ["centralize-search-score-weights"],
+    "depends_on": [
+      "centralize-search-score-weights"
+    ],
     "category": "dx_infra",
     "description": "DX/Infra: add existing hermetic eval:vector-ranking-smoke into package.json eval:smoke composite (and thus npm run verify). Optionally add an explicit static CI step for eval:vector-ranking-smoke in .github/workflows/ci.yml for parity with other individual eval steps. Ensures discovery ranking invariants (score-constants weights, prefilter, tiers, multipliers) run on every PR/merge after centralize-search-score-weights. No production ranking/SQL/API/schema change; no new deps; no new eval file required.",
     "verify": "npm run eval:vector-ranking-smoke && npm run eval:smoke && npm run lint && npm run typecheck && npm run build",
@@ -286,9 +330,23 @@
     "id": "search-vector-keyword-path-indicator-ux",
     "status": "completed",
     "priority": 29,
-    "depends_on": ["wire-vector-ranking-eval-into-ci"],
+    "depends_on": [
+      "wire-vector-ranking-eval-into-ci"
+    ],
     "category": "feature_improvement",
     "description": "Feature improvement (vector search + UI/UX): surface whether the active search used the semantic/vector path vs keyword/filter-only path (skipVectorSearch when cleanedQuery is empty) so users trust discovery mode. Expose additive response meta from GET /api/companies/search (search_path: vector | keyword) using the already-computed skipVectorSearch decision; thread through SearchResponse types/schema and show a compact indicator in SearchStats. No ranking math, SQL structure, score-constants, tier, or embedding-model change; no new deps.",
+    "verify": "npm run lint && npm run typecheck && npm run build && npm run eval:smoke",
+    "passes": true
+  },
+  {
+    "id": "research-domain-coverage-checklist-ux",
+    "status": "completed",
+    "priority": 30,
+    "depends_on": [
+      "search-vector-keyword-path-indicator-ux"
+    ],
+    "category": "feature_improvement",
+    "description": "Feature improvement (agent research + UI/UX): on company detail/research chrome (ResearchViewer), show which DOMAIN_REGISTRY domains have results vs missing for coverage visibility. Derive present domains from existing research stream RESULT event(s) / researchResult only; missing = registry keys not present. Read-only presentational checklist (compact badges or checklist row); no new domains; no orchestrator, Trigger, API, DB, or ranking changes; no new deps.",
     "verify": "npm run lint && npm run typecheck && npm run build && npm run eval:smoke",
     "passes": true
   }
