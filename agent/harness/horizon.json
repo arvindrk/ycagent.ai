@@ -1,35 +1,43 @@
 {
   "slice": [
-    "centralize-search-score-weights",
     "wire-vector-ranking-eval-into-ci",
-    "surface-company-data-freshness-ux"
+    "search-vector-keyword-path-indicator-ux",
+    "research-domain-coverage-checklist-ux",
+    "hermetic-search-path-decision-smoke"
   ],
   "rationale_per_step": {
-    "centralize-search-score-weights": "Tech debt: extract ranking weights/thresholds/multipliers from query.ts SQL and mirrored evals into one pure scoring module after hermetic ranking smoke landed. Chosen next.",
-    "wire-vector-ranking-eval-into-ci": "DX/Infra: once weights are centralized, add eval:vector-ranking-smoke into package.json eval:smoke composite (and thus verify/CI) so discovery ranking invariants run on every PR/merge.",
-    "surface-company-data-freshness-ux": "Feature improvement (UI/UX + freshness): surface existing company/research freshness timestamps in profile or list UI so users can trust recency of intelligence (vision outcome: up-to-date, evidence-backed)."
+    "wire-vector-ranking-eval-into-ci": "DX/Infra: after centralize-search-score-weights, append hermetic eval:vector-ranking-smoke to eval:smoke (and thus verify/CI) so ranking invariants cannot regress silently. Chosen next.",
+    "search-vector-keyword-path-indicator-ux": "Feature improvement (vector search + UI/UX): surface whether the active search used semantic/vector path vs keyword/filter-only (skipVector) so users trust discovery mode. Builds on existing path decision in route/evals.",
+    "research-domain-coverage-checklist-ux": "Feature improvement (agent research + UI/UX): on company detail, show which research domains have results vs missing to make coverage visible and drive deep research. Read-only over existing research payloads; no new domains.",
+    "hermetic-search-path-decision-smoke": "Testing/Observability: dedicated or extended hermetic coverage for skipVector/cleanedQuery path decisions and keyword-zero-score invariants if gaps remain after semantic-search-scenario-smoke, closing the measurable quality loop for discovery routing."
   },
   "category_mix": {
-    "tech_debt": 1,
     "dx_infra": 1,
-    "feature_improvement": 1
+    "feature_improvement": 2,
+    "testing_observability": 1
   },
   "vision_refs": {
-    "centralize-search-score-weights": [
+    "wire-vector-ranking-eval-into-ci": [
       "Vector search facet",
       "powerful, intuitive discovery",
       "measurable research quality and coverage"
     ],
-    "wire-vector-ranking-eval-into-ci": [
-      "measurable research quality and coverage",
-      "Vector search facet"
+    "search-vector-keyword-path-indicator-ux": [
+      "Vector search facet",
+      "UI/UX facet",
+      "powerful, intuitive discovery"
     ],
-    "surface-company-data-freshness-ux": [
+    "research-domain-coverage-checklist-ux": [
+      "Agent research facet",
       "UI/UX facet",
       "High-quality, evidence-backed intelligence",
-      "Research outputs are consistently up-to-date"
+      "Reliable deep research"
+    ],
+    "hermetic-search-path-decision-smoke": [
+      "Vector search facet",
+      "measurable research quality and coverage"
     ]
   },
-  "generated_by_run": "continue-20260718-234026",
-  "notes": "Planner run 2026-07-18 in harness/continue-local-20260718-234026 @ c59a6dc. Init: feature_list all 26 completed through hermetic-vector-search-ranking-smoke (priority 26); typecheck/build/eval green per last executor; clean worktree tracking origin/main. Dropped completed hermetic-vector-search-ranking-smoke from prior horizon. In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals. Recon: query.ts still owns inline 0.8/0.15/0.05 + thresholds/multipliers; weights.ts is TIER_META only; vector-ranking-smoke and semantic-search-scenario-smoke duplicate literals. Ruflo memory store harness:horizon + harness:plan:20260718-181157 (CLI; MCP ruflo timed out). Corridor analyzePlan on planning summary (constant extraction; keep SQL params). Planning-only: no source/tests/feature_list edits."
+  "generated_by_run": "continue-20260721-220744",
+  "notes": "Planner run 2026-07-21 in harness/continue-local-20260721-220744 @ d93c255. Init: feature_list completed through centralize-search-score-weights (priority 27); typecheck/build/eval green per last executor; clean worktree tracking origin/main (PR #61). Dropped completed centralize-search-score-weights. Dropped prior surface-company-data-freshness-ux (already shipped via surface-freshness-signals-in-ui / surface-research-freshness-ux; last_synced_at on preview card + hero). In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals. Recon: eval:vector-ranking-smoke exists and imports score-constants; eval:smoke composite still omits it (verify/CI gap). Ruflo memory init + store harness:horizon + harness:plan:20260721-163842 (CLI; MCP ruflo timed out). Corridor analyzePlan on planning summary (static npm scripts only). Planning-only: no source/tests/feature_list edits."
 }

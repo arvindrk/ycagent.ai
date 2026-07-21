@@ -271,5 +271,15 @@
     "description": "Tech debt (vector search): extract ranking score weights, prefilter thresholds, tier thresholds, exact-match name rules, and tier multipliers from inline SQL/literals in query.ts and mirrored constants in vector-ranking-smoke and semantic-search-scenario-smoke into one pure source of truth under scoring/score-constants.ts. query.ts and both smokes import the same constants so ranking math cannot drift. Preserve exact numeric values; no intentional ranking behavior change; no API/schema/DB/SQL structure change beyond constant interpolation; no new deps.",
     "verify": "npm run lint && npm run typecheck && npm run build && npm run eval:vector-ranking-smoke && npm run eval:semantic-search-scenario-smoke && npm run eval:smoke",
     "passes": true
+  },
+  {
+    "id": "wire-vector-ranking-eval-into-ci",
+    "status": "completed",
+    "priority": 28,
+    "depends_on": ["centralize-search-score-weights"],
+    "category": "dx_infra",
+    "description": "DX/Infra: add existing hermetic eval:vector-ranking-smoke into package.json eval:smoke composite (and thus npm run verify). Optionally add an explicit static CI step for eval:vector-ranking-smoke in .github/workflows/ci.yml for parity with other individual eval steps. Ensures discovery ranking invariants (score-constants weights, prefilter, tiers, multipliers) run on every PR/merge after centralize-search-score-weights. No production ranking/SQL/API/schema change; no new deps; no new eval file required.",
+    "verify": "npm run eval:vector-ranking-smoke && npm run eval:smoke && npm run lint && npm run typecheck && npm run build",
+    "passes": true
   }
 ]
