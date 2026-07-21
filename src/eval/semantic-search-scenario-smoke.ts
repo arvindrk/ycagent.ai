@@ -17,6 +17,20 @@ import { buildFilterSQL } from "@/lib/semantic-search/filters/build";
 import type { ParsedFilters } from "@/lib/semantic-search/filters/parse";
 import type { SearchInput } from "@/lib/schemas/search.schema";
 import type { TierKey } from "@/lib/semantic-search/scoring/weights";
+import {
+  EXACT_NAME_SIM_MIN,
+  MULT_EXACT,
+  MULT_HIGH,
+  MULT_KEYWORD,
+  MULT_RELEVANT,
+  MULT_STRONG,
+  TIER_HIGH_SEM,
+  TIER_RELEVANT_SEM,
+  TIER_STRONG_SEM,
+  W_NAME,
+  W_SEMANTIC,
+  W_TEXT,
+} from "@/lib/semantic-search/scoring/score-constants";
 
 // ---- Test runner (exact pattern from src/eval/*-smoke.ts) --------------
 
@@ -50,25 +64,25 @@ function computeTierAndFinal(
   let mult: number;
 
   // exact_match condition (name sim or prefix like) driven via provided nameScore in scenarios
-  if (nameScore >= 0.9) {
+  if (nameScore >= EXACT_NAME_SIM_MIN) {
     tier = "exact_match";
-    mult = 2.5;
-  } else if (semanticScore >= 0.7) {
+    mult = MULT_EXACT;
+  } else if (semanticScore >= TIER_HIGH_SEM) {
     tier = "high_confidence";
-    mult = 1.5;
-  } else if (semanticScore >= 0.5) {
+    mult = MULT_HIGH;
+  } else if (semanticScore >= TIER_STRONG_SEM) {
     tier = "strong_match";
-    mult = 1.0;
-  } else if (semanticScore >= 0.3) {
+    mult = MULT_STRONG;
+  } else if (semanticScore >= TIER_RELEVANT_SEM) {
     tier = "relevant";
-    mult = 0.8;
+    mult = MULT_RELEVANT;
   } else {
     tier = "keyword_match";
-    mult = 0.5;
+    mult = MULT_KEYWORD;
   }
 
   const weighted =
-    semanticScore * 0.8 + nameScore * 0.15 + textScore * 0.05;
+    semanticScore * W_SEMANTIC + nameScore * W_NAME + textScore * W_TEXT;
   const final_score = weighted * mult;
   return { tier, final_score };
 }
@@ -160,8 +174,8 @@ test("vector branch high semantic yields high_confidence and correct final_score
   const text = 0.05;
   const { tier, final_score } = computeTierAndFinal(sem, name, text);
   assert(tier === "high_confidence", `got ${tier}`);
-  // (0.82*0.8 + 0.35*0.15 + 0.05*0.05) * 1.5
-  const expected = (0.82 * 0.8 + 0.35 * 0.15 + 0.05 * 0.05) * 1.5;
+  const expected =
+    (0.82 * W_SEMANTIC + 0.35 * W_NAME + 0.05 * W_TEXT) * MULT_HIGH;
   assert(Math.abs(final_score - expected) < 0.0001, `final ${final_score} != ${expected}`);
 });
 
@@ -169,8 +183,8 @@ test("vector branch high semantic yields high_confidence and correct final_score
 test("name sim >=0.9 yields exact_match * 2.5", () => {
   const { tier, final_score } = computeTierAndFinal(0.4, 0.93, 0.2);
   assert(tier === "exact_match", "tier exact");
-  const base = 0.4 * 0.8 + 0.93 * 0.15 + 0.2 * 0.05;
-  assert(Math.abs(final_score - base * 2.5) < 0.0001, "final exact mult");
+  const base = 0.4 * W_SEMANTIC + 0.93 * W_NAME + 0.2 * W_TEXT;
+  assert(Math.abs(final_score - base * MULT_EXACT) < 0.0001, "final exact mult");
 });
 
 // Scenario 6: scoring invariants across tiers

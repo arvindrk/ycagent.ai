@@ -1,5 +1,22 @@
 import { getDBClient } from '../db/client';
 import { TIER_META, type TierKey } from './scoring/weights';
+import {
+  EXACT_NAME_SIM_MIN,
+  EXACT_PREFIX_MIN_LEN,
+  MULT_EXACT,
+  MULT_HIGH,
+  MULT_KEYWORD,
+  MULT_RELEVANT,
+  MULT_STRONG,
+  PREFILTER_NAME_MIN,
+  PREFILTER_SEMANTIC_MIN,
+  TIER_HIGH_SEM,
+  TIER_RELEVANT_SEM,
+  TIER_STRONG_SEM,
+  W_NAME,
+  W_SEMANTIC,
+  W_TEXT,
+} from './scoring/score-constants';
 import { buildFilterSQL } from './filters/build';
 import type { ParsedFilters } from './filters/parse';
 import { HNSW_CONFIG } from '@/constants/embedding.constants';
@@ -68,34 +85,34 @@ export async function searchCompanies(
         ts_rank_cd(search_vector, plainto_tsquery('english', $2)) AS text_score,
         CASE
           WHEN (
-            similarity(name, $2) >= 0.9
-            OR (LOWER(name) LIKE LOWER($2) || '%' AND LENGTH($2) >= 3)
+            similarity(name, $2) >= ${EXACT_NAME_SIM_MIN}
+            OR (LOWER(name) LIKE LOWER($2) || '%' AND LENGTH($2) >= ${EXACT_PREFIX_MIN_LEN})
           ) THEN 'exact_match'
-          WHEN (1 - (embedding <=> $1::vector)) >= 0.7 THEN 'high_confidence'
-          WHEN (1 - (embedding <=> $1::vector)) >= 0.5 THEN 'strong_match'
-          WHEN (1 - (embedding <=> $1::vector)) >= 0.3 THEN 'relevant'
+          WHEN (1 - (embedding <=> $1::vector)) >= ${TIER_HIGH_SEM} THEN 'high_confidence'
+          WHEN (1 - (embedding <=> $1::vector)) >= ${TIER_STRONG_SEM} THEN 'strong_match'
+          WHEN (1 - (embedding <=> $1::vector)) >= ${TIER_RELEVANT_SEM} THEN 'relevant'
           ELSE 'keyword_match'
         END AS tier,
         (
-          (1 - (embedding <=> $1::vector)) * 0.8 + 
-          similarity(name, $2) * 0.15 +
-          ts_rank_cd(search_vector, plainto_tsquery('english', $2)) * 0.05
+          (1 - (embedding <=> $1::vector)) * ${W_SEMANTIC} + 
+          similarity(name, $2) * ${W_NAME} +
+          ts_rank_cd(search_vector, plainto_tsquery('english', $2)) * ${W_TEXT}
         ) * 
         CASE
           WHEN (
-            similarity(name, $2) >= 0.9
-            OR (LOWER(name) LIKE LOWER($2) || '%' AND LENGTH($2) >= 3)
-          ) THEN 2.5
-          WHEN (1 - (embedding <=> $1::vector)) >= 0.7 THEN 1.5
-          WHEN (1 - (embedding <=> $1::vector)) >= 0.5 THEN 1.0
-          WHEN (1 - (embedding <=> $1::vector)) >= 0.3 THEN 0.8
-          ELSE 0.5
+            similarity(name, $2) >= ${EXACT_NAME_SIM_MIN}
+            OR (LOWER(name) LIKE LOWER($2) || '%' AND LENGTH($2) >= ${EXACT_PREFIX_MIN_LEN})
+          ) THEN ${MULT_EXACT}
+          WHEN (1 - (embedding <=> $1::vector)) >= ${TIER_HIGH_SEM} THEN ${MULT_HIGH}
+          WHEN (1 - (embedding <=> $1::vector)) >= ${TIER_STRONG_SEM} THEN ${MULT_STRONG}
+          WHEN (1 - (embedding <=> $1::vector)) >= ${TIER_RELEVANT_SEM} THEN ${MULT_RELEVANT}
+          ELSE ${MULT_KEYWORD}
         END AS final_score
       FROM companies
       WHERE ${filterConditions.sql}
         AND (
-          (1 - (embedding <=> $1::vector)) >= 0.25
-          OR similarity(name, $2) >= 0.7
+          (1 - (embedding <=> $1::vector)) >= ${PREFILTER_SEMANTIC_MIN}
+          OR similarity(name, $2) >= ${PREFILTER_NAME_MIN}
         )
       ORDER BY final_score DESC, team_size DESC NULLS LAST
       LIMIT ${limit}

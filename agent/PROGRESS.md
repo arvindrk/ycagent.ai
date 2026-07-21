@@ -599,3 +599,29 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Verification result: vector-ranking 13/13 pass. semantic-search-scenario 8/8 pass. lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes). eval:smoke all 8 sub-evals pass (research 26, search-filter 16, build-filter-sql 17, parse 16, merged 10, semantic 8, orchestrator-mock 9, freshness 8).
 - Plan compliance note: Implemented exactly chosen_task within constraints. Created `.codex/tmp/run-summary.json`.
 - Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: centralize-search-score-weights.
+
+## 2026-07-18 (planner run continue-20260718-234026)
+
+- Worktree: `continue-20260718-234026` (branch `harness/continue-local-20260718-234026` @ c59a6dc).
+- Planner-only. Init via `bash agent/init.sh`: feature_list all 26 completed through hermetic-vector-search-ranking-smoke (priority 26); typecheck/build/eval green per last executor; clean worktree; tracking origin/main.
+- Recon: vision.md (3 facets + 4 outcomes), categories.json weights, AGENTS.md + .agents/rules (minimal-code, security), prior horizon from continue-20260718-192325, query.ts owns inline ranking weights/thresholds/multipliers/prefilter, weights.ts is TIER_META only, vector-ranking-smoke + semantic-search-scenario-smoke duplicate ranking literals, PROGRESS tail hermetic-vector-search-ranking-smoke.
+- In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals.
+- Horizon updated to ["centralize-search-score-weights", "wire-vector-ranking-eval-into-ci", "surface-company-data-freshness-ux"] (tech_debt lead after TO smoke; then dx_infra CI wire-up; then FI freshness UX). Dropped completed hermetic-vector-search-ranking-smoke.
+- Chosen next: centralize-search-score-weights (plan_id plan-20260718-181157). Rationale: hermetic smoke now locks invariants so constant extraction is safe; alternatives (wire CI first, freshness UX first) deferred.
+- Artifacts: `.codex/tmp/plan-20260718-181157.json`, `.codex/tmp/plan-20260718-181157.md`, `agent/harness/horizon.json`.
+- Ruflo: `ruflo memory init` + store harness:horizon, harness:plan:20260718-181157, harness:vision (local CLI; MCP ruflo unavailable).
+- Corridor analyzePlan on planning summary (constant extraction; keep $1/$2 parameterization; no ranking math change).
+- No source code, tests, or feature_list.json edits.
+
+## 2026-07-18 (centralize-search-score-weights)
+
+- Worktree: `continue-20260718-234026` (branch `harness/continue-local-20260718-234026` @ c59a6dc).
+- Task: `centralize-search-score-weights` (plan_id: plan-20260718-181157 from Planner run continue-20260718-234026).
+- Plan link: `.codex/tmp/plan-20260718-181157.json` (authoritative); also `.codex/tmp/plan-20260718-181157.md`. Horizon after per plan: ["centralize-search-score-weights", "wire-vector-ranking-eval-into-ci", "surface-company-data-freshness-ux"].
+- Selected per plan: Tech debt (vector search): single pure source of truth for ranking weights/thresholds/multipliers so production SQL and hermetic smokes cannot drift.
+- Changes (only chosen_task): (1) `src/lib/semantic-search/scoring/score-constants.ts`: pure numeric exports (W_SEMANTIC/W_NAME/W_TEXT, prefilter, exact-name rules, tier thresholds, multipliers) with bit-identical values; no lucide/UI. (2) `src/lib/semantic-search/query.ts`: vector-branch SQL interpolates those constants; $1 embedding / $2 query remain bound params. (3) `src/eval/vector-ranking-smoke.ts` + `src/eval/semantic-search-scenario-smoke.ts`: import same constants for pure ranking mirror. (4) `agent/feature_list.json`: completed tech_debt entry priority 27. weights.ts TIER_META unchanged (icons stay UI-only). No ranking math/API/schema/SQL structure change beyond constant interpolation; no new deps; no CI wire-up or freshness UX.
+- Decisions (first-principles + rules): (1) Read Plan artifact first. (2) Verbatim restated Plan principles, AGENTS.md operating/safety/review, .agents/rules (minimal-code, security, typescript), vision alignment BEFORE code edits. (3) Confirmed and obeyed execution_constraints. (4) Corridor analyzePlan before edits (bound params retained; pure immutable constants). (5) Sibling pure module instead of stuffing numbers into weights.ts so eval/server never need lucide-react for ranking constants. (6) No .env/secrets. Horizon steps wire-vector-ranking-eval-into-ci and surface-company-data-freshness-ux not implemented.
+- Commands executed (post impl): `npm run lint && npm run typecheck && npm run build && npm run eval:vector-ranking-smoke && npm run eval:semantic-search-scenario-smoke && npm run eval:smoke`.
+- Verification result: lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes). vector-ranking 13/13 pass. semantic-search-scenario 8/8 pass. eval:smoke all 8 sub-evals pass (research 26, search-filter 16, build-filter-sql 17, parse 16, merged 10, semantic 8, orchestrator-mock 9, freshness 8).
+- Plan compliance note: Implemented exactly chosen_task within constraints. Created `.codex/tmp/run-summary.json`.
+- Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: wire-vector-ranking-eval-into-ci.

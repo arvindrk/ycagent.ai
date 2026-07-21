@@ -261,5 +261,15 @@
     "description": "Testing/Observability: dedicated zero-I/O hermetic smoke locking vector ranking and score composition invariants used by searchCompanies (weights 0.8/0.15/0.05, tier thresholds and multipliers, prefilter, final_score, TIER_META labels/orders, boundary cases). Distinct from semantic-search-scenario-smoke. No production ranking/SQL change; no weight centralization this step.",
     "verify": "npm run eval:vector-ranking-smoke && npm run lint && npm run typecheck && npm run build && npm run eval:smoke",
     "passes": true
+  },
+  {
+    "id": "centralize-search-score-weights",
+    "status": "completed",
+    "priority": 27,
+    "depends_on": ["hermetic-vector-search-ranking-smoke"],
+    "category": "tech_debt",
+    "description": "Tech debt (vector search): extract ranking score weights, prefilter thresholds, tier thresholds, exact-match name rules, and tier multipliers from inline SQL/literals in query.ts and mirrored constants in vector-ranking-smoke and semantic-search-scenario-smoke into one pure source of truth under scoring/score-constants.ts. query.ts and both smokes import the same constants so ranking math cannot drift. Preserve exact numeric values; no intentional ranking behavior change; no API/schema/DB/SQL structure change beyond constant interpolation; no new deps.",
+    "verify": "npm run lint && npm run typecheck && npm run build && npm run eval:vector-ranking-smoke && npm run eval:semantic-search-scenario-smoke && npm run eval:smoke",
+    "passes": true
   }
 ]
