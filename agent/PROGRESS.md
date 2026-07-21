@@ -677,3 +677,29 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Verification result: lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes). eval:smoke all 9 sub-evals pass (research 26, search-filter 16, build-filter-sql 17, parse 16, merged 10, semantic 8, orchestrator-mock 9, freshness 8, vector-ranking 13).
 - Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to search schema, search route, SearchStats, SearchContainer, feature_list, PROGRESS. Created `.codex/tmp/run-summary.json`.
 - Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: research-domain-coverage-checklist-ux.
+
+## 2026-07-22 (planner run continue-20260722-020137)
+
+- Worktree: `continue-20260722-020137` (branch `harness/continue-local-20260722-020137` @ 4731d4e).
+- Planner-only. Init via `bash agent/init.sh`: feature_list through search-vector-keyword-path-indicator-ux (priority 29); worktree clean tracking origin/main; dependency-security-audit completed but passes=false (excluded in-flight).
+- Recon: vision 3 facets + 4 outcomes; prior horizon had path-indicator (now completed), research-domain-coverage-checklist-ux, hermetic-search-path-decision-smoke; DOMAIN_REGISTRY founder_profile+traction; ResearchViewer single domain badge + Coming Soon tabs; orchestrator multi-domain loop.
+- In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals.
+- Horizon updated to ["research-domain-coverage-checklist-ux", "hermetic-search-path-decision-smoke", "multi-domain-research-results-presentation", "hermetic-domain-coverage-matrix-smoke"] (FI/TO rebalance after vector-search streak).
+- Chosen next: research-domain-coverage-checklist-ux (plan_id plan-20260722-020315). Rationale: agent-research coverage UX unblocked; highest user-visible gap vs vector-search work already closed.
+- Artifacts: `.codex/tmp/plan-20260722-020315.json`, `.codex/tmp/plan-20260722-020315.md`, `agent/harness/horizon.json`.
+- Ruflo: `ruflo memory init` + store harness:horizon, harness:plan:20260722-020315 (local CLI; MCP ruflo timed out).
+- Corridor analyzePlan on planning summary (read-only checklist; registry keys only; no secrets).
+- No source code, tests, or feature_list.json edits.
+
+## 2026-07-22 (research-domain-coverage-checklist-ux)
+
+- Worktree: `continue-20260722-020137` (branch `harness/continue-local-20260722-020137` @ 4731d4e).
+- Task: `research-domain-coverage-checklist-ux` (plan_id: plan-20260722-020315 from Planner run continue-20260722-020137).
+- Plan link: `.codex/tmp/plan-20260722-020315.json` (authoritative); also `.codex/tmp/plan-20260722-020315.md`. Horizon after per plan: ["research-domain-coverage-checklist-ux", "hermetic-search-path-decision-smoke", "multi-domain-research-results-presentation", "hermetic-domain-coverage-matrix-smoke"].
+- Selected per plan: Feature improvement (agent research + UI/UX): show DOMAIN_REGISTRY present vs missing coverage checklist on ResearchViewer.
+- Changes (only chosen_task): (1) `src/lib/research/domain-coverage.ts`: pure helper `getDomainCoverage` over Object.keys(DOMAIN_REGISTRY) only; present set from input domains; static labels; no Coming Soon tabs. (2) `src/components/companies/research/research-viewer.tsx`: derive present domains from RESULT event(s) + researchResult.domain; compact Badge checklist row (info=present, outline+missing label). (3) `agent/feature_list.json`: completed feature_improvement entry priority 30. No orchestrator/API/DB/ranking/deps; no lockfile churn.
+- Decisions (first-principles + rules): (1) Read Plan artifact first. (2) Verbatim restated Plan principles, AGENTS.md operating/safety/review, .agents/rules (minimal-code, security, typescript, frontend), vision alignment BEFORE code edits. (3) Confirmed and obeyed execution_constraints. (4) Corridor analyzePlan before edits (read-only UI; registry keys; static text labels; no secrets). (5) Checklist keys === DOMAIN_REGISTRY only (founder_profile, traction); investor_profile/hiring excluded. (6) Zero/single RESULT safe: present from result.domain; missing = registry - present. (7) No dangerouslySetInnerHTML. Horizon TO/FI steps not implemented.
+- Commands executed (post impl): `npm run lint && npm run typecheck && npm run build && npm run eval:smoke`.
+- Verification result: lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes). eval:smoke all 9 sub-evals pass (research 26, search-filter 16, build-filter-sql 17, parse 16, merged 10, semantic 8, orchestrator-mock 9, freshness 8, vector-ranking 13).
+- Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to domain-coverage helper, ResearchViewer, feature_list, PROGRESS (+ run-summary). Created `.codex/tmp/run-summary.json`.
+- Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: hermetic-search-path-decision-smoke.

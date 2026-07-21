@@ -1,35 +1,42 @@
 {
   "slice": [
-    "search-vector-keyword-path-indicator-ux",
     "research-domain-coverage-checklist-ux",
-    "hermetic-search-path-decision-smoke"
+    "hermetic-search-path-decision-smoke",
+    "multi-domain-research-results-presentation",
+    "hermetic-domain-coverage-matrix-smoke"
   ],
   "rationale_per_step": {
-    "search-vector-keyword-path-indicator-ux": "Feature improvement (vector search + UI/UX): expose existing skipVectorSearch decision as API meta and surface path indicator in SearchStats. Chosen next after wire-vector-ranking-eval-into-ci completed.",
-    "research-domain-coverage-checklist-ux": "Feature improvement (agent research + UI/UX): on company detail/research chrome, show which DOMAIN_REGISTRY domains have results vs missing for coverage visibility. Read-only over existing research payloads; no new domains.",
-    "hermetic-search-path-decision-smoke": "Testing/Observability: hermetic coverage for path decision + response meta (vector vs keyword) after indicator lands, closing measurable discovery quality loop."
+    "research-domain-coverage-checklist-ux": "Feature improvement (agent research + UI/UX): show DOMAIN_REGISTRY present vs missing on ResearchViewer after vector-search path-indicator completed. Chosen next.",
+    "hermetic-search-path-decision-smoke": "Testing/Observability: hermetic coverage for skipVectorSearch -> search_path meta (vector vs keyword) after path indicator landed.",
+    "multi-domain-research-results-presentation": "Feature improvement (agent research + UI/UX): orchestrator runs all domains but UI surfaces a single RESULT; present multi-domain results clearly after coverage checklist defines the model.",
+    "hermetic-domain-coverage-matrix-smoke": "Testing/Observability: hermetic pure-function smoke for domain coverage matrix (registry keys vs present domains) once checklist helper exists."
   },
   "category_mix": {
     "feature_improvement": 2,
-    "testing_observability": 1
+    "testing_observability": 2
   },
   "vision_refs": {
-    "search-vector-keyword-path-indicator-ux": [
-      "Vector search facet",
-      "UI/UX facet",
-      "powerful, intuitive discovery"
-    ],
     "research-domain-coverage-checklist-ux": [
       "Agent research facet",
       "UI/UX facet",
       "High-quality, evidence-backed intelligence",
-      "Reliable deep research"
+      "Reliable deep research",
+      "Measurable research quality and coverage"
     ],
     "hermetic-search-path-decision-smoke": [
       "Vector search facet",
-      "measurable research quality and coverage"
+      "Measurable research quality and coverage"
+    ],
+    "multi-domain-research-results-presentation": [
+      "Agent research facet",
+      "UI/UX facet",
+      "Reliable deep research"
+    ],
+    "hermetic-domain-coverage-matrix-smoke": [
+      "Agent research facet",
+      "Measurable research quality and coverage"
     ]
   },
-  "generated_by_run": "continue-20260721-225253",
-  "notes": "Planner run 2026-07-21 in harness/continue-local-20260721-225253 @ 75a2aec. Init: feature_list 28/28 completed through wire-vector-ranking-eval-into-ci (priority 28); clean worktree tracking origin/main. Dropped completed wire-vector-ranking-eval-into-ci from prior horizon. In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals. Recon: route computes skipVectorSearch but SearchResponse has no path meta; SearchStats shows total+ms only; DOMAIN_REGISTRY has founder_profile+traction with no coverage checklist UI. Ruflo memory init + store harness:horizon + harness:plan:20260721-172447 (CLI; MCP ruflo failed handshake). Corridor analyzePlan on planning summary (additive meta only; no secrets). Planning-only: no source/tests/feature_list edits."
+  "generated_by_run": "continue-20260722-020137",
+  "notes": "Planner run 2026-07-22 in harness/continue-local-20260722-020137 @ 4731d4e. Init: feature_list 29 completed through search-vector-keyword-path-indicator-ux (priority 29); dependency-security-audit completed but passes=false and excluded in-flight. Dropped completed search-vector-keyword-path-indicator-ux from prior horizon. In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals. Recon: DOMAIN_REGISTRY has founder_profile+traction; ResearchViewer shows single domain badge + Coming Soon tabs; orchestrator loops all domains; use-research-tabs extracts one RESULT. Ruflo memory init + store harness:horizon + harness:plan:20260722-020315 (CLI; MCP ruflo timed out). Corridor analyzePlan on planning summary (read-only UI; registry keys; no secrets). Planning-only: no source/tests/feature_list edits."
 }

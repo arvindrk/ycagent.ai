@@ -1,17 +1,18 @@
 "use client";
 
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { StreamChunk } from '@/types/llm.types';
+import { StreamChunk, SSEEvent } from '@/types/llm.types';
 import { Laptop, Activity, Square } from 'lucide-react';
 import { TimelineEvent } from './timeline-event';
 import { ResearchViewerSkeleton } from './research-viewer-skeleton';
 import { ResearchViewerCardSkeleton } from './research-viewer-card-skeleton';
 import { ResearchSummary } from './research-summary';
 import { useResearchTabs } from '../../../hooks/use-research-tabs';
+import { getDomainCoverage } from '@/lib/research/domain-coverage';
 
 interface ResearchViewerProps {
   companyName: string;
@@ -48,6 +49,20 @@ export function ResearchViewer({
         + (researchResult.trackRecord?.length || 0)
     : 0;
 
+  // Present domains from RESULT event(s) and researchResult; missing = registry - present.
+  const domainCoverage = useMemo(() => {
+    const present: string[] = [];
+    for (const event of events) {
+      if (event.type === SSEEvent.RESULT && event.result?.domain) {
+        present.push(event.result.domain);
+      }
+    }
+    if (researchResult?.domain) {
+      present.push(researchResult.domain);
+    }
+    return getDomainCoverage(present);
+  }, [events, researchResult]);
+
   useEffect(() => {
     if (timelineRef.current) {
       timelineRef.current.scrollTo({ top: timelineRef.current.scrollHeight, behavior: 'smooth' });
@@ -83,6 +98,32 @@ export function ResearchViewer({
             </Badge>
           )}
         </CardTitle>
+        <div
+          className="flex flex-wrap items-center gap-1.5 mt-2"
+          role="list"
+          aria-label="Research domain coverage"
+        >
+          {domainCoverage.map(({ domain, label, present }) => (
+            <Badge
+              key={domain}
+              role="listitem"
+              variant={present ? 'info' : 'outline'}
+              className={
+                present
+                  ? 'text-[10px] px-1.5 py-0'
+                  : 'text-[10px] px-1.5 py-0 text-text-tertiary'
+              }
+              title={
+                present
+                  ? `${domain}: result present`
+                  : `${domain}: missing from research results`
+              }
+            >
+              {label}
+              {present ? '' : ' · missing'}
+            </Badge>
+          ))}
+        </div>
       </CardHeader>
       <CardContent>
         {vncUrl ? (
