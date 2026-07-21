@@ -28,4 +28,5 @@ jobs:
       - run: npm run eval:merged-filter-smoke
       - run: npm run eval:semantic-search-scenario-smoke
       - run: npm run eval:research-orchestrator-mock-eval
+      - run: npm run eval:vector-ranking-smoke
       - run: npm run eval:smoke

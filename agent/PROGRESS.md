@@ -625,3 +625,29 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Verification result: lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes). vector-ranking 13/13 pass. semantic-search-scenario 8/8 pass. eval:smoke all 8 sub-evals pass (research 26, search-filter 16, build-filter-sql 17, parse 16, merged 10, semantic 8, orchestrator-mock 9, freshness 8).
 - Plan compliance note: Implemented exactly chosen_task within constraints. Created `.codex/tmp/run-summary.json`.
 - Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: wire-vector-ranking-eval-into-ci.
+
+## 2026-07-21 (planner run continue-20260721-220744)
+
+- Worktree: `continue-20260721-220744` (branch `harness/continue-local-20260721-220744` @ d93c255).
+- Planner-only. Init via `bash agent/init.sh`: feature_list completed through centralize-search-score-weights (priority 27); typecheck/build/eval green per last executor; clean worktree; tracking origin/main (PR #61).
+- Recon: vision.md (3 facets + 4 outcomes), categories.json weights, AGENTS.md + .agents/rules (minimal-code, security), prior horizon from continue-20260718-234026, score-constants.ts is SoT for ranking weights, eval:vector-ranking-smoke exists but omitted from eval:smoke composite and CI individual steps, last_synced_at already on company-preview-card + company-hero.
+- In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals.
+- Horizon updated to ["wire-vector-ranking-eval-into-ci", "search-vector-keyword-path-indicator-ux", "research-domain-coverage-checklist-ux", "hermetic-search-path-decision-smoke"] (dx_infra lead after tech_debt weights; then FI path indicator + domain coverage; then TO path decision smoke). Dropped completed centralize-search-score-weights. Dropped surface-company-data-freshness-ux (already shipped).
+- Chosen next: wire-vector-ranking-eval-into-ci (plan_id plan-20260721-163842). Rationale: close verify/CI hole for ranking invariants after score-constants centralization.
+- Artifacts: `.codex/tmp/plan-20260721-163842.json`, `.codex/tmp/plan-20260721-163842.md`, `agent/harness/horizon.json`.
+- Ruflo: `ruflo memory init` + store harness:horizon, harness:plan:20260721-163842, harness:vision (local CLI; MCP ruflo timed out).
+- Corridor analyzePlan on planning summary (static npm scripts only; hermetic eval; no secrets).
+- No source code, tests, or feature_list.json edits.
+
+## 2026-07-21 (wire-vector-ranking-eval-into-ci)
+
+- Worktree: `continue-20260721-220744` (branch `harness/continue-local-20260721-220744` @ d93c255).
+- Task: `wire-vector-ranking-eval-into-ci` (plan_id: plan-20260721-163842 from Planner run continue-20260721-220744).
+- Plan link: `.codex/tmp/plan-20260721-163842.json` (authoritative); also `.codex/tmp/plan-20260721-163842.md`. Horizon after per plan: ["wire-vector-ranking-eval-into-ci", "search-vector-keyword-path-indicator-ux", "research-domain-coverage-checklist-ux", "hermetic-search-path-decision-smoke"].
+- Selected per plan: DX/Infra close the quality loop by wiring existing hermetic eval:vector-ranking-smoke into eval:smoke (and thus npm run verify) plus explicit static CI step for parity with other individual evals.
+- Changes (only chosen_task): (1) `package.json` eval:smoke composite appends `&& npm run eval:vector-ranking-smoke` (static string only). (2) `.github/workflows/ci.yml` adds static `- run: npm run eval:vector-ranking-smoke` before the composite eval:smoke step. (3) `agent/feature_list.json`: completed dx_infra entry priority 28. No production ranking/SQL/API/schema change; no new deps; no new eval file; no lockfile churn.
+- Decisions (first-principles + rules): (1) Read Plan artifact first. (2) Verbatim restated Plan principles, AGENTS.md operating/safety/review, .agents/rules (minimal-code, security), vision alignment BEFORE code edits. (3) Confirmed and obeyed execution_constraints. (4) Corridor analyzePlan before edits (static npm scripts only; hermetic zero-I/O eval; no secrets). (5) Both composite and explicit CI step to avoid yaml drift (plan risk #2). (6) No .env/secrets. Horizon items after this task not implemented.
+- Commands executed (post impl): `npm run eval:vector-ranking-smoke && npm run eval:smoke && npm run lint && npm run typecheck && npm run build`.
+- Verification result: vector-ranking 13/13 pass. eval:smoke all 9 sub-evals pass (research 26, search-filter 16, build-filter-sql 17, parse 16, merged 10, semantic 8, orchestrator-mock 9, freshness 8, vector-ranking 13). lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes).
+- Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to package.json, ci.yml, feature_list, PROGRESS (+ prior planner horizon.json). Created `.codex/tmp/run-summary.json`.
+- Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: search-vector-keyword-path-indicator-ux.
