@@ -651,3 +651,29 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Verification result: vector-ranking 13/13 pass. eval:smoke all 9 sub-evals pass (research 26, search-filter 16, build-filter-sql 17, parse 16, merged 10, semantic 8, orchestrator-mock 9, freshness 8, vector-ranking 13). lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes).
 - Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to package.json, ci.yml, feature_list, PROGRESS (+ prior planner horizon.json). Created `.codex/tmp/run-summary.json`.
 - Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: search-vector-keyword-path-indicator-ux.
+
+## 2026-07-21 (planner run continue-20260721-225253)
+
+- Worktree: `continue-20260721-225253` (branch `harness/continue-local-20260721-225253` @ 75a2aec).
+- Planner-only. Init via `bash agent/init.sh`: feature_list 28/28 completed through wire-vector-ranking-eval-into-ci (priority 28); clean worktree tracking origin/main.
+- Recon: vision.md (3 facets + 4 outcomes), categories.json weights, AGENTS.md + .agents/rules (minimal-code, security), prior horizon from continue-20260721-220744, route computes skipVectorSearch but SearchResponse has no path meta, SearchStats shows total+ms only, DOMAIN_REGISTRY founder_profile+traction without coverage checklist UI.
+- In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals.
+- Horizon updated to ["search-vector-keyword-path-indicator-ux", "research-domain-coverage-checklist-ux", "hermetic-search-path-decision-smoke"] (FI path indicator after completed dx_infra CI wire; then FI domain coverage; then TO path-decision smoke). Dropped completed wire-vector-ranking-eval-into-ci.
+- Chosen next: search-vector-keyword-path-indicator-ux (plan_id plan-20260721-172447). Rationale: user-visible discovery trust on vector vs keyword path after ranking plumbing closed.
+- Artifacts: `.codex/tmp/plan-20260721-172447.json`, `.codex/tmp/plan-20260721-172447.md`, `agent/harness/horizon.json`.
+- Ruflo: `ruflo memory init` + store harness:horizon, harness:plan:20260721-172447, harness:vision (local CLI; MCP ruflo handshake failed).
+- Corridor analyzePlan on planning summary (additive path meta only; no secrets).
+- No source code, tests, or feature_list.json edits.
+
+## 2026-07-21 (search-vector-keyword-path-indicator-ux)
+
+- Worktree: `continue-20260721-225253` (branch `harness/continue-local-20260721-225253` @ 75a2aec).
+- Task: `search-vector-keyword-path-indicator-ux` (plan_id: plan-20260721-172447 from Planner run continue-20260721-225253).
+- Plan link: `.codex/tmp/plan-20260721-172447.json` (authoritative); also `.codex/tmp/plan-20260721-172447.md`. Horizon after per plan: ["search-vector-keyword-path-indicator-ux", "research-domain-coverage-checklist-ux", "hermetic-search-path-decision-smoke"].
+- Selected per plan: Feature improvement (vector search + UI/UX): expose additive `search_path` meta from GET /api/companies/search and show Semantic vs Filter-only in SearchStats.
+- Changes (only chosen_task): (1) `src/lib/schemas/search.schema.ts`: additive optional `search_path` enum (`vector` | `keyword`) on SearchResponse. (2) `src/app/api/companies/search/route.ts`: set `search_path` from existing `skipVectorSearch` decision; include in JSON response and coarse analytics field. (3) `src/components/companies/semantic-search/search-stats.tsx`: compact Badge from explicit `searchPath` prop only (Semantic / Filter-only; not tier). (4) `search-container.tsx`: pass `data?.search_path`. (5) `agent/feature_list.json`: completed feature_improvement entry priority 29. No ranking/SQL/score-constants/tier/embedding change; no new deps; no lockfile churn.
+- Decisions (first-principles + rules): (1) Read Plan artifact first. (2) Verbatim restated Plan principles, AGENTS.md operating/safety/review, .agents/rules (minimal-code, security, typescript, frontend), vision alignment BEFORE code edits. (3) Confirmed and obeyed execution_constraints. (4) Corridor analyzePlan before edits (additive coarse enum only; input schema unchanged). (5) UI uses API meta only, never scores/tiers. (6) Copy distinguishes mode from match tier; TIER_META untouched. (7) No .env/secrets. Horizon steps research-domain-coverage-checklist-ux and hermetic-search-path-decision-smoke not implemented.
+- Commands executed (post impl): `npm run lint && npm run typecheck && npm run build && npm run eval:smoke`.
+- Verification result: lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes). eval:smoke all 9 sub-evals pass (research 26, search-filter 16, build-filter-sql 17, parse 16, merged 10, semantic 8, orchestrator-mock 9, freshness 8, vector-ranking 13).
+- Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to search schema, search route, SearchStats, SearchContainer, feature_list, PROGRESS. Created `.codex/tmp/run-summary.json`.
+- Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: research-domain-coverage-checklist-ux.

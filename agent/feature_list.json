@@ -281,5 +281,15 @@
     "description": "DX/Infra: add existing hermetic eval:vector-ranking-smoke into package.json eval:smoke composite (and thus npm run verify). Optionally add an explicit static CI step for eval:vector-ranking-smoke in .github/workflows/ci.yml for parity with other individual eval steps. Ensures discovery ranking invariants (score-constants weights, prefilter, tiers, multipliers) run on every PR/merge after centralize-search-score-weights. No production ranking/SQL/API/schema change; no new deps; no new eval file required.",
     "verify": "npm run eval:vector-ranking-smoke && npm run eval:smoke && npm run lint && npm run typecheck && npm run build",
     "passes": true
+  },
+  {
+    "id": "search-vector-keyword-path-indicator-ux",
+    "status": "completed",
+    "priority": 29,
+    "depends_on": ["wire-vector-ranking-eval-into-ci"],
+    "category": "feature_improvement",
+    "description": "Feature improvement (vector search + UI/UX): surface whether the active search used the semantic/vector path vs keyword/filter-only path (skipVectorSearch when cleanedQuery is empty) so users trust discovery mode. Expose additive response meta from GET /api/companies/search (search_path: vector | keyword) using the already-computed skipVectorSearch decision; thread through SearchResponse types/schema and show a compact indicator in SearchStats. No ranking math, SQL structure, score-constants, tier, or embedding-model change; no new deps.",
+    "verify": "npm run lint && npm run typecheck && npm run build && npm run eval:smoke",
+    "passes": true
   }
 ]
