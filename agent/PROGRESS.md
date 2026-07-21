@@ -703,3 +703,29 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Verification result: lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes). eval:smoke all 9 sub-evals pass (research 26, search-filter 16, build-filter-sql 17, parse 16, merged 10, semantic 8, orchestrator-mock 9, freshness 8, vector-ranking 13).
 - Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to domain-coverage helper, ResearchViewer, feature_list, PROGRESS (+ run-summary). Created `.codex/tmp/run-summary.json`.
 - Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: hermetic-search-path-decision-smoke.
+
+## 2026-07-22 (planner run continue-20260722-024140)
+
+- Worktree: `continue-20260722-024140` (branch `harness/continue-local-20260722-024140` @ 9c33d3c).
+- Planner-only. Init via `bash agent/init.sh`: feature_list through research-domain-coverage-checklist-ux (priority 30); worktree clean tracking origin/main; dependency-security-audit completed but passes=false (excluded in-flight).
+- Recon: vision 3 facets + 4 outcomes; prior horizon had research-domain-coverage-checklist-ux (now completed), hermetic-search-path-decision-smoke, multi-domain-research-results-presentation, hermetic-domain-coverage-matrix-smoke; search route sets search_path from cleanedQuery; getDomainCoverage pure helper landed; use-research-tabs still single RESULT.
+- In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals.
+- Horizon updated to ["hermetic-search-path-decision-smoke", "multi-domain-research-results-presentation", "hermetic-domain-coverage-matrix-smoke", "research-multi-domain-stream-contract-smoke"] (TO-heavy after consecutive FI ships; added stream-contract smoke ahead of multi-domain UI risk).
+- Chosen next: hermetic-search-path-decision-smoke (plan_id plan-20260722-024500). Rationale: lock vector|keyword path decision hermetically after path-indicator UX; unblocked pure eval; highest leverage before multi-domain research presentation.
+- Artifacts: `.codex/tmp/plan-20260722-024500.json`, `.codex/tmp/plan-20260722-024500.md`, `agent/harness/horizon.json`.
+- Ruflo: `ruflo memory init` + store harness:horizon, harness:plan:20260722-024500, harness:vision (local CLI; MCP ruflo timed out).
+- Corridor analyzePlan on planning summary (hermetic eval; optional pure helper; no secrets/ranking).
+- No source code, tests, or feature_list.json edits.
+
+## 2026-07-22 (hermetic-search-path-decision-smoke)
+
+- Worktree: `continue-20260722-024140` (branch `harness/continue-local-20260722-024140` @ 9c33d3c).
+- Task: `hermetic-search-path-decision-smoke` (plan_id: plan-20260722-024500 from Planner run continue-20260722-024140).
+- Plan link: `.codex/tmp/plan-20260722-024500.json` (authoritative); also `.codex/tmp/plan-20260722-024500.md`. Horizon after per plan: ["hermetic-search-path-decision-smoke", "multi-domain-research-results-presentation", "hermetic-domain-coverage-matrix-smoke", "research-multi-domain-stream-contract-smoke"].
+- Selected per plan: Testing/Observability hermetic lock for skipVectorSearch -> search_path (vector|keyword) after path-indicator UX.
+- Changes (only chosen_task): (1) `src/lib/semantic-search/resolve-search-path.ts`: pure `resolveSearchPath(cleanedQuery)` empty trimmed => keyword else vector. (2) `src/app/api/companies/search/route.ts`: use helper; `skipVectorSearch = search_path === 'keyword'`. (3) `src/eval/search-path-decision-smoke.ts`: hermetic cases for empty/whitespace cleaned, filter-only batch/status/hiring, free-text, mixed filter+text, schema enum vector|keyword, skipVector contract. (4) `package.json`: `eval:search-path-decision-smoke` + wired into `eval:smoke`. (5) `agent/feature_list.json`: completed testing_observability entry priority 31.
+- Decisions (first-principles + rules): (1) Read Plan artifact first. (2) Verbatim restated Plan principles, AGENTS.md operating/safety/review, .agents/rules (minimal-code, security, typescript), vision alignment BEFORE code edits. (3) Confirmed and obeyed execution_constraints. (4) Corridor analyzePlan before edits (deterministic path from sanitized residue; no secrets). (5) Single SoT helper imported by route + eval (no brittle mirror). (6) Filter-only fixtures use fully consumed queries (W24, is hiring, went public). (7) No ranking/SQL/score-constants/tier/embedding/.env/deps. Horizon later items not implemented.
+- Commands executed (post impl): `npm run eval:search-path-decision-smoke && npm run eval:smoke && npm run lint && npm run typecheck && npm run build`.
+- Verification result: search-path-decision 11/11 pass. eval:smoke all 10 sub-evals pass (research 26, search-filter 16, build-filter-sql 17, parse 16, merged 10, semantic 8, orchestrator-mock 9, freshness 8, vector-ranking 13, search-path-decision 11). lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes).
+- Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to pure helper, search route call site, new eval, package.json scripts, feature_list + PROGRESS (+ run-summary). Created `.codex/tmp/run-summary.json`.
+- Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: multi-domain-research-results-presentation.
