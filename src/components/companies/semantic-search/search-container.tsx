@@ -49,6 +49,7 @@ export function SearchContainer({ onSearchStateChange }: SearchContainerProps) {
             queryTime={data?.query_time_ms}
             query={searchQuery}
             isLoading={isLoading}
+            searchPath={data?.search_path}
           />
 
           {isLoading && <CompanyListSkeleton />}

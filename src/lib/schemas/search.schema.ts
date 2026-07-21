@@ -20,11 +20,16 @@ export const searchInputSchema = z.object({
 
 export type SearchInput = z.infer<typeof searchInputSchema>;
 
+export const searchPathSchema = z.enum(['vector', 'keyword']);
+
 export const searchResponseSchema = z.object({
   data: z.array(z.any()),
   total: z.number(),
   limit: z.number(),
   query_time_ms: z.number(),
+  /** Discovery mode: semantic/vector path vs filter-only when cleanedQuery is empty. */
+  search_path: searchPathSchema.optional(),
 });
 
+export type SearchPath = z.infer<typeof searchPathSchema>;
 export type SearchResponse = z.infer<typeof searchResponseSchema>;

@@ -1,27 +1,19 @@
 {
   "slice": [
-    "wire-vector-ranking-eval-into-ci",
     "search-vector-keyword-path-indicator-ux",
     "research-domain-coverage-checklist-ux",
     "hermetic-search-path-decision-smoke"
   ],
   "rationale_per_step": {
-    "wire-vector-ranking-eval-into-ci": "DX/Infra: after centralize-search-score-weights, append hermetic eval:vector-ranking-smoke to eval:smoke (and thus verify/CI) so ranking invariants cannot regress silently. Chosen next.",
-    "search-vector-keyword-path-indicator-ux": "Feature improvement (vector search + UI/UX): surface whether the active search used semantic/vector path vs keyword/filter-only (skipVector) so users trust discovery mode. Builds on existing path decision in route/evals.",
-    "research-domain-coverage-checklist-ux": "Feature improvement (agent research + UI/UX): on company detail, show which research domains have results vs missing to make coverage visible and drive deep research. Read-only over existing research payloads; no new domains.",
-    "hermetic-search-path-decision-smoke": "Testing/Observability: dedicated or extended hermetic coverage for skipVector/cleanedQuery path decisions and keyword-zero-score invariants if gaps remain after semantic-search-scenario-smoke, closing the measurable quality loop for discovery routing."
+    "search-vector-keyword-path-indicator-ux": "Feature improvement (vector search + UI/UX): expose existing skipVectorSearch decision as API meta and surface path indicator in SearchStats. Chosen next after wire-vector-ranking-eval-into-ci completed.",
+    "research-domain-coverage-checklist-ux": "Feature improvement (agent research + UI/UX): on company detail/research chrome, show which DOMAIN_REGISTRY domains have results vs missing for coverage visibility. Read-only over existing research payloads; no new domains.",
+    "hermetic-search-path-decision-smoke": "Testing/Observability: hermetic coverage for path decision + response meta (vector vs keyword) after indicator lands, closing measurable discovery quality loop."
   },
   "category_mix": {
-    "dx_infra": 1,
     "feature_improvement": 2,
     "testing_observability": 1
   },
   "vision_refs": {
-    "wire-vector-ranking-eval-into-ci": [
-      "Vector search facet",
-      "powerful, intuitive discovery",
-      "measurable research quality and coverage"
-    ],
     "search-vector-keyword-path-indicator-ux": [
       "Vector search facet",
       "UI/UX facet",
@@ -38,6 +30,6 @@
       "measurable research quality and coverage"
     ]
   },
-  "generated_by_run": "continue-20260721-220744",
-  "notes": "Planner run 2026-07-21 in harness/continue-local-20260721-220744 @ d93c255. Init: feature_list completed through centralize-search-score-weights (priority 27); typecheck/build/eval green per last executor; clean worktree tracking origin/main (PR #61). Dropped completed centralize-search-score-weights. Dropped prior surface-company-data-freshness-ux (already shipped via surface-freshness-signals-in-ui / surface-research-freshness-ux; last_synced_at on preview card + hero). In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals. Recon: eval:vector-ranking-smoke exists and imports score-constants; eval:smoke composite still omits it (verify/CI gap). Ruflo memory init + store harness:horizon + harness:plan:20260721-163842 (CLI; MCP ruflo timed out). Corridor analyzePlan on planning summary (static npm scripts only). Planning-only: no source/tests/feature_list edits."
+  "generated_by_run": "continue-20260721-225253",
+  "notes": "Planner run 2026-07-21 in harness/continue-local-20260721-225253 @ 75a2aec. Init: feature_list 28/28 completed through wire-vector-ranking-eval-into-ci (priority 28); clean worktree tracking origin/main. Dropped completed wire-vector-ranking-eval-into-ci from prior horizon. In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals. Recon: route computes skipVectorSearch but SearchResponse has no path meta; SearchStats shows total+ms only; DOMAIN_REGISTRY has founder_profile+traction with no coverage checklist UI. Ruflo memory init + store harness:horizon + harness:plan:20260721-172447 (CLI; MCP ruflo failed handshake). Corridor analyzePlan on planning summary (additive meta only; no secrets). Planning-only: no source/tests/feature_list edits."
 }

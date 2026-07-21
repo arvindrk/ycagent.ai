@@ -38,6 +38,7 @@ export async function GET(request: NextRequest) {
 
     // Skip vector search only when ALL tokens were consumed by filter extraction
     const skipVectorSearch = cleanedQuery.trim().length === 0;
+    const search_path = skipVectorSearch ? 'keyword' : 'vector';
 
     const embedding = skipVectorSearch
       ? null
@@ -57,6 +58,7 @@ export async function GET(request: NextRequest) {
       result_count: results.length,
       query_time_ms: queryTime,
       has_results: results.length > 0,
+      search_path,
       results,
     });
 
@@ -65,6 +67,7 @@ export async function GET(request: NextRequest) {
       total: results.length,
       limit: validatedParams.limit,
       query_time_ms: queryTime,
+      search_path,
     });
   } catch (error) {
     if (error instanceof Error && error.name === 'AbortError') {
