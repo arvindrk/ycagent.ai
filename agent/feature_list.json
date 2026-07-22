@@ -361,5 +361,17 @@
     "description": "Testing/Observability: add a hermetic zero-I/O smoke eval for the discovery search_path decision (vector vs keyword) that powers SearchStats after search-vector-keyword-path-indicator-ux. Derive path from extractFiltersFromQuery.cleanedQuery the same way as GET /api/companies/search (skipVectorSearch when cleanedQuery.trim() is empty => keyword; else vector). Prefer extracting a tiny pure helper (e.g. resolveSearchPath(cleanedQuery)) used by the route so the eval imports production logic rather than a brittle mirror. Cover filter-only queries (batch/status/hiring tokens fully consumed), semantic residue queries, whitespace-only cleaned residue, and schema enum vector|keyword. Wire package.json script eval:search-path-decision-smoke and add it to the eval:smoke composite (and verify path). No ranking math, SQL structure, embedding model, tier, or score-constants change; no new deps; no .env/network/DB.",
     "verify": "npm run eval:search-path-decision-smoke && npm run eval:smoke && npm run lint && npm run typecheck && npm run build",
     "passes": true
+  },
+  {
+    "id": "multi-domain-research-results-presentation",
+    "status": "completed",
+    "priority": 32,
+    "depends_on": [
+      "research-domain-coverage-checklist-ux"
+    ],
+    "category": "feature_improvement",
+    "description": "Feature improvement (agent research + UI/UX): orchestrator/stream can emit multiple RESULT events across DOMAIN_REGISTRY domains (founder_profile, traction), and research-domain-coverage-checklist-ux already derives present vs missing from all RESULT domains, but useResearchTabs still uses events.find (first RESULT only) and ResearchViewer exposes a single domain results tab. Collect all RESULT events into a domain→ResearchResult map (last-wins per domain); emit one enabled results tab per present registry domain with Founder Profile / Traction labels; render ResearchSummary for the active domain result; default active tab to the first present registry domain (registry key order) when any result exists, else timeline; keep timeline tab and Coming Soon investor_profile/hiring disabled tabs; preserve coverage checklist and hostname source presentation. No new domains; no orchestrator, Trigger, API, DB, ranking, SQL, score-constants, or embedding changes; no new dependencies.",
+    "verify": "npm run lint && npm run typecheck && npm run build && npm run eval:smoke",
+    "passes": true
   }
 ]

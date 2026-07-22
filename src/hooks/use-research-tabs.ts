@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react';
 import { StreamChunk, SSEEvent, ResearchResult } from '@/types/llm.types';
+import { getResearchDomains } from '@/lib/research/domain-registry';
+import { getDomainCoverage } from '@/lib/research/domain-coverage';
 
 export interface TabConfig {
   id: string;
@@ -12,32 +14,47 @@ export interface UseResearchTabsResult {
   setActiveTab: (id: string) => void;
   tabs: TabConfig[];
   processedEvents: StreamChunk[];
-  researchResult: ResearchResult | null;
+  /** Last-wins map of domain id -> ResearchResult from all RESULT events. */
+  researchResultsByDomain: Record<string, ResearchResult>;
+  /** Registry domains that have a result, in DOMAIN_REGISTRY key order. */
+  presentDomainIds: string[];
 }
 
 export function useResearchTabs(events: StreamChunk[]): UseResearchTabsResult {
   const [userSelectedTab, setUserSelectedTab] = useState<string | null>(null);
 
-  const researchResult = useMemo((): ResearchResult | null => {
-    const resultEvent = events.find(e => e.type === SSEEvent.RESULT);
-    return resultEvent?.result ?? null;
+  const researchResultsByDomain = useMemo((): Record<string, ResearchResult> => {
+    const map: Record<string, ResearchResult> = {};
+    for (const event of events) {
+      if (event.type === SSEEvent.RESULT && event.result?.domain) {
+        map[event.result.domain] = event.result;
+      }
+    }
+    return map;
   }, [events]);
 
-  const resultsTabId = researchResult?.domain ?? 'founder_profile';
-  const resultsTabLabel =
-    researchResult?.domain === 'traction' ? 'Traction' : 'Founder Profile';
+  const presentDomainIds = useMemo(
+    () => getResearchDomains().filter((domain) => researchResultsByDomain[domain] != null),
+    [researchResultsByDomain],
+  );
 
-  const tabs = useMemo((): TabConfig[] => [
-    { id: 'timeline', label: 'Timeline' },
-    { id: resultsTabId, label: resultsTabLabel, disabled: !researchResult },
-    { id: 'investor_profile', label: 'Investor Profile (Coming Soon)', disabled: true },
-    { id: 'hiring', label: 'Jobs (Coming Soon)', disabled: true },
-  ], [researchResult, resultsTabId, resultsTabLabel]);
+  const tabs = useMemo((): TabConfig[] => {
+    const domainTabs = getDomainCoverage(presentDomainIds)
+      .filter((item) => item.present)
+      .map((item) => ({ id: item.domain, label: item.label }));
+
+    return [
+      { id: 'timeline', label: 'Timeline' },
+      ...domainTabs,
+      { id: 'investor_profile', label: 'Investor Profile (Coming Soon)', disabled: true },
+      { id: 'hiring', label: 'Jobs (Coming Soon)', disabled: true },
+    ];
+  }, [presentDomainIds]);
 
   const activeTab = useMemo(() => {
     if (userSelectedTab) return userSelectedTab;
-    return researchResult ? researchResult.domain : 'timeline';
-  }, [userSelectedTab, researchResult]);
+    return presentDomainIds[0] ?? 'timeline';
+  }, [userSelectedTab, presentDomainIds]);
 
   const processedEvents = useMemo(() => {
     const result: StreamChunk[] = [];
@@ -70,6 +87,7 @@ export function useResearchTabs(events: StreamChunk[]): UseResearchTabsResult {
     setActiveTab: setUserSelectedTab,
     tabs,
     processedEvents,
-    researchResult,
+    researchResultsByDomain,
+    presentDomainIds,
   };
 }

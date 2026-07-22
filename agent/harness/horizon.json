@@ -1,30 +1,26 @@
 {
   "slice": [
-    "hermetic-search-path-decision-smoke",
     "multi-domain-research-results-presentation",
     "hermetic-domain-coverage-matrix-smoke",
-    "research-multi-domain-stream-contract-smoke"
+    "research-multi-domain-stream-contract-smoke",
+    "domain-coverage-badge-tab-sync-ux"
   ],
   "rationale_per_step": {
-    "hermetic-search-path-decision-smoke": "Testing/Observability: hermetic lock for skipVectorSearch -> search_path (vector|keyword) after path-indicator UX and before more discovery/research UI. Chosen next.",
-    "multi-domain-research-results-presentation": "Feature improvement (agent research + UI/UX): orchestrator runs all DOMAIN_REGISTRY domains but use-research-tabs keeps a single RESULT; present multi-domain results clearly after coverage checklist defines present/missing.",
-    "hermetic-domain-coverage-matrix-smoke": "Testing/Observability: hermetic pure-function smoke for getDomainCoverage (registry keys vs present domains) now that domain-coverage helper exists.",
-    "research-multi-domain-stream-contract-smoke": "Testing/Observability: hermetic contract checks for multi-RESULT stream aggregation (events -> present domains / primary tab) to de-risk multi-domain presentation without E2B/Trigger."
+    "multi-domain-research-results-presentation": "Feature improvement (agent research + UI/UX): aggregate multi RESULT events into per-domain tabs + ResearchSummary. Chosen next after hermetic-search-path-decision-smoke completed.",
+    "hermetic-domain-coverage-matrix-smoke": "Testing/Observability: hermetic pure-function smoke for getDomainCoverage (registry keys vs present domains) after multi-domain UI stabilizes present-domain usage.",
+    "research-multi-domain-stream-contract-smoke": "Testing/Observability: hermetic contract for multi-RESULT stream aggregation (events -> domain map / primary tab) without E2B/Trigger.",
+    "domain-coverage-badge-tab-sync-ux": "Feature improvement (UI/UX): click present coverage checklist badges to switch to the matching results tab after multi-domain tabs exist."
   },
   "category_mix": {
-    "testing_observability": 3,
-    "feature_improvement": 1
+    "feature_improvement": 2,
+    "testing_observability": 2
   },
   "vision_refs": {
-    "hermetic-search-path-decision-smoke": [
-      "Vector search facet",
-      "Powerful, intuitive discovery",
-      "Measurable research quality and coverage"
-    ],
     "multi-domain-research-results-presentation": [
       "Agent research facet",
       "UI/UX facet",
-      "Reliable deep research"
+      "Reliable deep research",
+      "High-quality, evidence-backed intelligence"
     ],
     "hermetic-domain-coverage-matrix-smoke": [
       "Agent research facet",
@@ -34,8 +30,12 @@
       "Agent research facet",
       "Reliable deep research",
       "Measurable research quality and coverage"
+    ],
+    "domain-coverage-badge-tab-sync-ux": [
+      "UI/UX facet",
+      "Agent research facet"
     ]
   },
-  "generated_by_run": "continue-20260722-024140",
-  "notes": "Planner run 2026-07-22 in harness/continue-local-20260722-024140 @ 9c33d3c. Init: feature_list 30 completed through research-domain-coverage-checklist-ux (priority 30); dependency-security-audit completed but passes=false and excluded in-flight. Dropped completed research-domain-coverage-checklist-ux from prior horizon. Replaced trailing slot with research-multi-domain-stream-contract-smoke (TO) to prepare multi-domain UI safely. In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals. Recon: search route sets search_path from cleanedQuery; extractFiltersFromQuery pure; getDomainCoverage pure; use-research-tabs single RESULT. Ruflo memory init + store harness:horizon + harness:plan:20260722-024500 (CLI; MCP ruflo timed out). Corridor analyzePlan on planning summary. Planning-only: no source/tests/feature_list edits."
+  "generated_by_run": "continue-20260722-190242",
+  "notes": "Planner run 2026-07-22 in harness/continue-local-20260722-190242 @ b9834d6. Init: feature_list through hermetic-search-path-decision-smoke (priority 31); dependency-security-audit completed but passes=false and excluded in-flight. Dropped completed hermetic-search-path-decision-smoke from prior horizon. Replaced trailing slot with domain-coverage-badge-tab-sync-ux (FI) for UX polish after multi-domain tabs. In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals. Recon: useResearchTabs events.find first RESULT only; ResearchViewer coverage iterates all RESULT domains; DOMAIN_REGISTRY founder_profile+traction. Ruflo memory init + store harness:horizon + harness:plan:20260722-133400 (CLI; MCP ruflo handshake failed). Corridor analyzePlan on planning summary. Planning-only: no source/tests/feature_list edits."
 }
