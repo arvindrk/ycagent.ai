@@ -349,5 +349,17 @@
     "description": "Feature improvement (agent research + UI/UX): on company detail/research chrome (ResearchViewer), show which DOMAIN_REGISTRY domains have results vs missing for coverage visibility. Derive present domains from existing research stream RESULT event(s) / researchResult only; missing = registry keys not present. Read-only presentational checklist (compact badges or checklist row); no new domains; no orchestrator, Trigger, API, DB, or ranking changes; no new deps.",
     "verify": "npm run lint && npm run typecheck && npm run build && npm run eval:smoke",
     "passes": true
+  },
+  {
+    "id": "hermetic-search-path-decision-smoke",
+    "status": "completed",
+    "priority": 31,
+    "depends_on": [
+      "search-vector-keyword-path-indicator-ux"
+    ],
+    "category": "testing_observability",
+    "description": "Testing/Observability: add a hermetic zero-I/O smoke eval for the discovery search_path decision (vector vs keyword) that powers SearchStats after search-vector-keyword-path-indicator-ux. Derive path from extractFiltersFromQuery.cleanedQuery the same way as GET /api/companies/search (skipVectorSearch when cleanedQuery.trim() is empty => keyword; else vector). Prefer extracting a tiny pure helper (e.g. resolveSearchPath(cleanedQuery)) used by the route so the eval imports production logic rather than a brittle mirror. Cover filter-only queries (batch/status/hiring tokens fully consumed), semantic residue queries, whitespace-only cleaned residue, and schema enum vector|keyword. Wire package.json script eval:search-path-decision-smoke and add it to the eval:smoke composite (and verify path). No ranking math, SQL structure, embedding model, tier, or score-constants change; no new deps; no .env/network/DB.",
+    "verify": "npm run eval:search-path-decision-smoke && npm run eval:smoke && npm run lint && npm run typecheck && npm run build",
+    "passes": true
   }
 ]

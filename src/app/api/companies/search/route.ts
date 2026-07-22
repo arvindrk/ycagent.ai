@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { searchCompanies as dbSearchCompanies } from '@/lib/semantic-search/query';
 import { parseSearchFilters } from '@/lib/semantic-search/filters/parse';
 import { extractFiltersFromQuery } from '@/lib/semantic-search/filters/extract-from-query';
+import { resolveSearchPath } from '@/lib/semantic-search/resolve-search-path';
 import { generateEmbedding } from '@/lib/semantic-search/embeddings/generate';
 import { searchInputSchema } from '@/lib/schemas/search.schema';
 import type { ParsedFilters } from '@/lib/semantic-search/filters/parse';
@@ -36,9 +37,9 @@ export async function GET(request: NextRequest) {
     ) as Partial<ParsedFilters>;
     const mergedFilters: ParsedFilters = { ...extractedFilters, ...definedExplicitFilters };
 
-    // Skip vector search only when ALL tokens were consumed by filter extraction
-    const skipVectorSearch = cleanedQuery.trim().length === 0;
-    const search_path = skipVectorSearch ? 'keyword' : 'vector';
+    // Skip vector when cleaned residue is empty (all tokens consumed or whitespace-only)
+    const search_path = resolveSearchPath(cleanedQuery);
+    const skipVectorSearch = search_path === 'keyword';
 
     const embedding = skipVectorSearch
       ? null
