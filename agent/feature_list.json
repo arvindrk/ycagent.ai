@@ -373,5 +373,17 @@
     "description": "Feature improvement (agent research + UI/UX): orchestrator/stream can emit multiple RESULT events across DOMAIN_REGISTRY domains (founder_profile, traction), and research-domain-coverage-checklist-ux already derives present vs missing from all RESULT domains, but useResearchTabs still uses events.find (first RESULT only) and ResearchViewer exposes a single domain results tab. Collect all RESULT events into a domain→ResearchResult map (last-wins per domain); emit one enabled results tab per present registry domain with Founder Profile / Traction labels; render ResearchSummary for the active domain result; default active tab to the first present registry domain (registry key order) when any result exists, else timeline; keep timeline tab and Coming Soon investor_profile/hiring disabled tabs; preserve coverage checklist and hostname source presentation. No new domains; no orchestrator, Trigger, API, DB, ranking, SQL, score-constants, or embedding changes; no new dependencies.",
     "verify": "npm run lint && npm run typecheck && npm run build && npm run eval:smoke",
     "passes": true
+  },
+  {
+    "id": "hermetic-domain-coverage-matrix-smoke",
+    "status": "completed",
+    "priority": 33,
+    "depends_on": [
+      "multi-domain-research-results-presentation"
+    ],
+    "category": "testing_observability",
+    "description": "Testing/Observability: add a hermetic zero-I/O smoke eval for getDomainCoverage (coverage matrix used by research-domain-coverage-checklist-ux and multi-domain-research-results-presentation tabs). Import production getDomainCoverage from src/lib/research/domain-coverage.ts and DOMAIN_REGISTRY / getResearchDomains from domain-registry.ts (no brittle mirror). Lock: returned length equals Object.keys(DOMAIN_REGISTRY); order matches registry key order; present=true only for registry keys present in the input set; unknown/non-registry present ids are ignored (no extra rows); null/undefined/empty-string inputs skipped; founder_profile and traction labels are the human labels (Founder Profile, Traction); all registry domains absent from input have present=false; empty input yields all present=false. Add package.json script eval:domain-coverage-matrix-smoke and wire into eval:smoke composite (and thus verify). No UI, orchestrator, Trigger, API, DB, ranking, SQL, score-constants, embedding, or schema changes; no new domains; no new dependencies; no network/.env.",
+    "verify": "npm run eval:domain-coverage-matrix-smoke && npm run eval:smoke && npm run lint && npm run typecheck && npm run build",
+    "passes": true
   }
 ]
