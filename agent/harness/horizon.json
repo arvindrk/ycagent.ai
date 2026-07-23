@@ -1,25 +1,21 @@
 {
   "slice": [
-    "hermetic-domain-coverage-matrix-smoke",
     "research-multi-domain-stream-contract-smoke",
     "domain-coverage-badge-tab-sync-ux",
-    "research-missing-domain-prompt-ux"
+    "research-missing-domain-prompt-ux",
+    "research-timeline-domain-result-crosslink-ux"
   ],
   "rationale_per_step": {
-    "hermetic-domain-coverage-matrix-smoke": "Testing/Observability: hermetic pure-function smoke for getDomainCoverage (registry keys vs present domains) after multi-domain UI stabilizes present-domain usage. Chosen next.",
-    "research-multi-domain-stream-contract-smoke": "Testing/Observability: hermetic contract for multi-RESULT stream aggregation (events -> domain map / primary tab) without E2B/Trigger.",
-    "domain-coverage-badge-tab-sync-ux": "Feature improvement (UI/UX): click present coverage checklist badges to switch to the matching results tab after multi-domain tabs exist.",
-    "research-missing-domain-prompt-ux": "Feature improvement (agent research + UI/UX): clearer empty/missing-domain guidance when coverage checklist shows absent registry domains, after badge-tab sync."
+    "research-multi-domain-stream-contract-smoke": "Testing/Observability: hermetic contract for multi-RESULT stream aggregation (events -> last-wins domain map, registry-ordered presentDomainIds, default active tab). Chosen next after domain-coverage matrix lock.",
+    "domain-coverage-badge-tab-sync-ux": "Feature improvement (UI/UX): click present coverage checklist badges to switch to the matching multi-domain results tab after stream contract is locked.",
+    "research-missing-domain-prompt-ux": "Feature improvement (agent research + UI/UX): clearer empty/missing-domain guidance when coverage checklist shows absent registry domains, after badge-tab sync.",
+    "research-timeline-domain-result-crosslink-ux": "Feature improvement (UI/UX + agent research): light timeline ↔ domain-result cross-links (e.g. jump from timeline completion to the domain results tab) once multi-domain tabs, contract smoke, and badge sync exist."
   },
   "category_mix": {
-    "testing_observability": 2,
-    "feature_improvement": 2
+    "testing_observability": 1,
+    "feature_improvement": 3
   },
   "vision_refs": {
-    "hermetic-domain-coverage-matrix-smoke": [
-      "Agent research facet",
-      "Measurable research quality and coverage"
-    ],
     "research-multi-domain-stream-contract-smoke": [
       "Agent research facet",
       "Reliable deep research",
@@ -33,8 +29,12 @@
       "UI/UX facet",
       "Agent research facet",
       "Reliable deep research"
+    ],
+    "research-timeline-domain-result-crosslink-ux": [
+      "UI/UX facet",
+      "Agent research facet"
     ]
   },
-  "generated_by_run": "continue-20260723-182706",
-  "notes": "Planner run 2026-07-23 in harness/continue-local-20260723-182706 @ 3b3ac51. Init: feature_list through multi-domain-research-results-presentation (priority 32); worktree clean tracking origin/main; dependency-security-audit completed but passes=false and excluded in-flight. Dropped completed multi-domain-research-results-presentation from prior horizon. Added research-missing-domain-prompt-ux (FI) as fourth slot for UX guidance after dual TO locks + badge sync. In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals. Recon: getDomainCoverage pure helper; useResearchTabs last-wins multi-RESULT map; DOMAIN_REGISTRY founder_profile+traction. Ruflo memory store harness:horizon + harness:plan:20260723-182851 (CLI; MCP ruflo handshake failed). Corridor analyzePlan on planning summary. Planning-only: no source/tests/feature_list edits."
+  "generated_by_run": "continue-20260723-190028",
+  "notes": "Planner run 2026-07-23 in harness/continue-local-20260723-190028 @ a09b98c. Init: feature_list through hermetic-domain-coverage-matrix-smoke (priority 33); worktree clean tracking origin/main; dependency-security-audit completed but passes=false and excluded in-flight. Dropped completed hermetic-domain-coverage-matrix-smoke from prior horizon. Chosen research-multi-domain-stream-contract-smoke (TO) as next; kept dual FI (badge sync + missing-domain prompt); added research-timeline-domain-result-crosslink-ux as fourth FI for seamless multi-domain navigation after locks. In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals. Recon: useResearchTabs last-wins multi-RESULT map + presentDomainIds; getDomainCoverage hermetically locked; DOMAIN_REGISTRY founder_profile+traction. Ruflo memory init + store harness:horizon + harness:plan:20260723-190220 (CLI; MCP ruflo timed out). Corridor analyzePlan on planning summary. Planning-only: no source/tests/feature_list edits."
 }

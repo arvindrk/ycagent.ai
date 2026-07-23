@@ -781,3 +781,29 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Verification result: domain-coverage-matrix 11/11 pass. eval:smoke all 11 sub-evals pass (research 26, search-filter 16, build-filter-sql 17, parse 16, merged 10, semantic 8, orchestrator-mock 9, freshness 8, vector-ranking 13, search-path-decision 11, domain-coverage-matrix 11). lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes).
 - Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to new eval file, package.json scripts, feature_list, PROGRESS (+ run-summary). Created `.codex/tmp/run-summary.json`.
 - Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: research-multi-domain-stream-contract-smoke.
+
+## 2026-07-23 (planner run continue-20260723-190028)
+
+- Worktree: `continue-20260723-190028` (branch `harness/continue-local-20260723-190028` @ a09b98c).
+- Planner-only. Init via `bash agent/init.sh`: feature_list through hermetic-domain-coverage-matrix-smoke (priority 33); worktree clean tracking origin/main; dependency-security-audit completed but passes=false (excluded in-flight).
+- Recon: vision 3 facets + 4 outcomes; prior horizon had hermetic-domain-coverage-matrix-smoke (now completed), research-multi-domain-stream-contract-smoke, domain-coverage-badge-tab-sync-ux, research-missing-domain-prompt-ux; useResearchTabs last-wins multi-RESULT map + presentDomainIds; getDomainCoverage hermetically locked; DOMAIN_REGISTRY founder_profile+traction.
+- In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals.
+- Horizon updated to ["research-multi-domain-stream-contract-smoke", "domain-coverage-badge-tab-sync-ux", "research-missing-domain-prompt-ux", "research-timeline-domain-result-crosslink-ux"] (TO stream-contract after matrix lock; then FI badge sync, missing-domain prompt, timeline-domain crosslink).
+- Chosen next: research-multi-domain-stream-contract-smoke (plan_id plan-20260723-190220). Rationale: lock events->map->present->default tab pure contract before more multi-domain UX depends on it.
+- Artifacts: `.codex/tmp/plan-20260723-190220.json`, `.codex/tmp/plan-20260723-190220.md`, `agent/harness/horizon.json`.
+- Ruflo: `ruflo memory init` + store harness:horizon, harness:plan:20260723-190220, harness:vision, harness:planner:last (local CLI; MCP ruflo timed out).
+- Corridor analyzePlan on planning summary (hermetic eval + pure helper extract; no secrets/orchestrator/API).
+- No source code, tests, or feature_list.json edits.
+
+## 2026-07-23 (research-multi-domain-stream-contract-smoke)
+
+- Worktree: `continue-20260723-190028` (branch `harness/continue-local-20260723-190028` @ a09b98c).
+- Task: `research-multi-domain-stream-contract-smoke` (plan_id: plan-20260723-190220 from Planner run continue-20260723-190028).
+- Plan link: `.codex/tmp/plan-20260723-190220.json` (authoritative); also `.codex/tmp/plan-20260723-190220.md`. Horizon after per plan: ["research-multi-domain-stream-contract-smoke", "domain-coverage-badge-tab-sync-ux", "research-missing-domain-prompt-ux", "research-timeline-domain-result-crosslink-ux"].
+- Selected per plan: Testing/Observability hermetic lock of multi-RESULT stream aggregation (last-wins map, presentDomainIds registry order, defaultActiveTab) used by useResearchTabs.
+- Changes (only chosen_task): (1) `src/lib/research/multi-domain-stream.ts`: pure helpers `buildResearchResultsByDomain`, `getPresentDomainIds`, `getDefaultActiveTab` (production SoT). (2) `src/hooks/use-research-tabs.ts`: hook imports pure helpers only (no behavior change). (3) `src/eval/research-multi-domain-stream-contract-smoke.ts`: hermetic smoke locking empty/single/order/last-wins/missing-empty-domain/non-RESULT/unknown-domain/default tab. (4) `package.json`: `eval:research-multi-domain-stream-contract-smoke` + wired into `eval:smoke`. (5) `agent/feature_list.json`: completed testing_observability entry priority 34. No UI redesign/orchestrator/API/DB/ranking/deps; no lockfile churn; never evaluates systemPrompt getters.
+- Decisions (first-principles + rules): (1) Read Plan artifact first. (2) Verbatim restated Plan principles, AGENTS.md operating/safety/review, .agents/rules (minimal-code, security, typescript), vision alignment BEFORE code edits. (3) Confirmed and obeyed execution_constraints. (4) Corridor analyzePlan before edits (hermetic pure helpers + eval; no secrets/network). (5) Production imports only (no brittle mirror). (6) Horizon later items not implemented.
+- Commands executed (post impl): `npm run eval:research-multi-domain-stream-contract-smoke && npm run eval:smoke && npm run lint && npm run typecheck && npm run build`.
+- Verification result: stream-contract 9/9 pass. eval:smoke all 12 sub-evals pass (research 26, search-filter 16, build-filter-sql 17, parse 16, merged 10, semantic 8, orchestrator-mock 9, freshness 8, vector-ranking 13, search-path-decision 11, domain-coverage-matrix 11, stream-contract 9). lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes).
+- Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to pure helper module, hook import wiring, new eval, package.json scripts, feature_list, PROGRESS (+ run-summary). Created `.codex/tmp/run-summary.json`.
+- Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: domain-coverage-badge-tab-sync-ux.
