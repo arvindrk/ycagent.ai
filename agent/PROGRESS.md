@@ -729,3 +729,29 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Verification result: search-path-decision 11/11 pass. eval:smoke all 10 sub-evals pass (research 26, search-filter 16, build-filter-sql 17, parse 16, merged 10, semantic 8, orchestrator-mock 9, freshness 8, vector-ranking 13, search-path-decision 11). lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes).
 - Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to pure helper, search route call site, new eval, package.json scripts, feature_list + PROGRESS (+ run-summary). Created `.codex/tmp/run-summary.json`.
 - Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: multi-domain-research-results-presentation.
+
+## 2026-07-22 (planner run continue-20260722-190242)
+
+- Worktree: `continue-20260722-190242` (branch `harness/continue-local-20260722-190242` @ b9834d6).
+- Planner-only. Init via `bash agent/init.sh`: feature_list through hermetic-search-path-decision-smoke (priority 31); worktree clean tracking origin/main; dependency-security-audit completed but passes=false (excluded in-flight).
+- Recon: vision 3 facets + 4 outcomes; prior horizon had hermetic-search-path-decision-smoke (now completed), multi-domain-research-results-presentation, hermetic-domain-coverage-matrix-smoke, research-multi-domain-stream-contract-smoke; useResearchTabs events.find first RESULT only; ResearchViewer coverage iterates all RESULT domains; DOMAIN_REGISTRY founder_profile+traction.
+- In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals.
+- Horizon updated to ["multi-domain-research-results-presentation", "hermetic-domain-coverage-matrix-smoke", "research-multi-domain-stream-contract-smoke", "domain-coverage-badge-tab-sync-ux"] (FI lead after TO path-decision smoke; dual TO locks then FI badge-tab sync).
+- Chosen next: multi-domain-research-results-presentation (plan_id plan-20260722-133400). Rationale: user-visible multi-domain research gap; coverage checklist already multi-RESULT aware; tabs still single-result.
+- Artifacts: `.codex/tmp/plan-20260722-133400.json`, `.codex/tmp/plan-20260722-133400.md`, `agent/harness/horizon.json`.
+- Ruflo: `ruflo memory init` + store harness:horizon, harness:plan:20260722-133400, harness:vision (local CLI; MCP ruflo handshake failed).
+- Corridor analyzePlan on planning summary (UI aggregation only; no secrets/orchestrator/API).
+- No source code, tests, or feature_list.json edits.
+
+## 2026-07-22 (multi-domain-research-results-presentation)
+
+- Worktree: `continue-20260722-190242` (branch `harness/continue-local-20260722-190242` @ b9834d6).
+- Task: `multi-domain-research-results-presentation` (plan_id: plan-20260722-133400 from Planner run continue-20260722-190242).
+- Plan link: `.codex/tmp/plan-20260722-133400.json` (authoritative); also `.codex/tmp/plan-20260722-133400.md`. Horizon after per plan: ["multi-domain-research-results-presentation", "hermetic-domain-coverage-matrix-smoke", "research-multi-domain-stream-contract-smoke", "domain-coverage-badge-tab-sync-ux"].
+- Selected per plan: Feature improvement (agent research + UI/UX) to present multi-domain RESULT events as separate results tabs.
+- Changes (only chosen_task): (1) `src/hooks/use-research-tabs.ts`: last-wins `researchResultsByDomain` map from all RESULT events; `presentDomainIds` in DOMAIN_REGISTRY key order; tabs = timeline + one enabled tab per present registry domain (labels via getDomainCoverage) + disabled Coming Soon investor_profile/hiring; default activeTab = first present domain else timeline. (2) `src/components/companies/research/research-viewer.tsx`: TabsContent per present domain with ResearchSummary; coverage checklist from presentDomainIds; header badge for active or first present result; signal counts domain-aware. (3) `agent/feature_list.json`: completed FI entry priority 32.
+- Decisions (first-principles + rules): (1) Read Plan artifact first. (2) Verbatim restated Plan principles, AGENTS.md operating/safety/review, .agents/rules (minimal-code, security), vision alignment BEFORE code edits. (3) Confirmed and obeyed execution_constraints. (4) Corridor analyzePlan before edits (UI aggregation only; no XSS path; no secrets). (5) Reused getDomainCoverage for labels (no new helper). (6) No orchestrator/Trigger/API/DB/ranking/deps/new domains; Coming Soon stay disabled. Horizon later items not implemented.
+- Commands executed (post impl): `npm run lint && npm run typecheck && npm run build && npm run eval:smoke`.
+- Verification result: lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes). eval:smoke all 10 sub-evals pass (research 26, search-filter 16, build-filter-sql 17, parse 16, merged 10, semantic 8, orchestrator-mock 9, freshness 8, vector-ranking 13, search-path-decision 11).
+- Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to use-research-tabs + research-viewer + feature_list + PROGRESS (+ run-summary). Created `.codex/tmp/run-summary.json`.
+- Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: hermetic-domain-coverage-matrix-smoke.

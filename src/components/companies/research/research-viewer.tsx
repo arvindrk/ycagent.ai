@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { StreamChunk, SSEEvent } from '@/types/llm.types';
+import { StreamChunk, ResearchResult } from '@/types/llm.types';
 import { Laptop, Activity, Square } from 'lucide-react';
 import { TimelineEvent } from './timeline-event';
 import { ResearchViewerSkeleton } from './research-viewer-skeleton';
@@ -23,6 +23,16 @@ interface ResearchViewerProps {
   run?: { startedAt?: string | Date; completedAt?: string | Date } | null;
 }
 
+function signalCountForResult(result: ResearchResult): number {
+  if (result.domain === 'traction') {
+    return result.tractionSignals.length;
+  }
+  return (result.founderRelationship?.length || 0)
+    + (result.complementarySkills?.length || 0)
+    + (result.socialPresence?.length || 0)
+    + (result.trackRecord?.length || 0);
+}
+
 export function ResearchViewer({
   companyName,
   vncUrl,
@@ -32,36 +42,30 @@ export function ResearchViewer({
   run
 }: ResearchViewerProps) {
   const timelineRef = useRef<HTMLDivElement>(null);
-  const { activeTab, setActiveTab, tabs, processedEvents, researchResult } = useResearchTabs(events);
+  const {
+    activeTab,
+    setActiveTab,
+    tabs,
+    processedEvents,
+    researchResultsByDomain,
+    presentDomainIds,
+  } = useResearchTabs(events);
 
   const rs = run?.startedAt ? new Date(run.startedAt) : null;
   const rc = run?.completedAt ? new Date(run.completedAt) : null;
   const durS = (rs && rc && !isNaN(rs.getTime()) && !isNaN(rc.getTime()) && rc.getTime() >= rs.getTime())
     ? Math.round((rc.getTime() - rs.getTime()) / 1000)
     : null;
-  const resultsTabId = researchResult?.domain ?? 'founder_profile';
-  const signalCount = researchResult
-    ? researchResult.domain === 'traction'
-      ? researchResult.tractionSignals.length
-      : (researchResult.founderRelationship?.length || 0)
-        + (researchResult.complementarySkills?.length || 0)
-        + (researchResult.socialPresence?.length || 0)
-        + (researchResult.trackRecord?.length || 0)
-    : 0;
 
-  // Present domains from RESULT event(s) and researchResult; missing = registry - present.
-  const domainCoverage = useMemo(() => {
-    const present: string[] = [];
-    for (const event of events) {
-      if (event.type === SSEEvent.RESULT && event.result?.domain) {
-        present.push(event.result.domain);
-      }
-    }
-    if (researchResult?.domain) {
-      present.push(researchResult.domain);
-    }
-    return getDomainCoverage(present);
-  }, [events, researchResult]);
+  const headerResult =
+    researchResultsByDomain[activeTab]
+    ?? (presentDomainIds[0] ? researchResultsByDomain[presentDomainIds[0]] : undefined);
+  const signalCount = headerResult ? signalCountForResult(headerResult) : 0;
+
+  const domainCoverage = useMemo(
+    () => getDomainCoverage(presentDomainIds),
+    [presentDomainIds],
+  );
 
   useEffect(() => {
     if (timelineRef.current) {
@@ -84,17 +88,17 @@ export function ResearchViewer({
               {rc && !isNaN(rc.getTime()) ? `research ${durS}s` : 'research live'}
             </Badge>
           )}
-          {researchResult && (
+          {headerResult && (
             <Badge
               variant="outline"
               className="text-[10px] px-1.5 py-0"
               title={
-                researchResult.domain === 'traction'
-                  ? `domain: traction sources: ${researchResult.sources.length} tractionSignals: ${researchResult.tractionSignals.length}`
-                  : `domain: ${researchResult.domain} sources: ${researchResult.sources.length} founderRelationship: ${researchResult.founderRelationship?.length || 0} complementarySkills: ${researchResult.complementarySkills?.length || 0} socialPresence: ${researchResult.socialPresence?.length || 0} trackRecord: ${researchResult.trackRecord?.length || 0}`
+                headerResult.domain === 'traction'
+                  ? `domain: traction sources: ${headerResult.sources.length} tractionSignals: ${headerResult.tractionSignals.length}`
+                  : `domain: ${headerResult.domain} sources: ${headerResult.sources.length} founderRelationship: ${headerResult.founderRelationship?.length || 0} complementarySkills: ${headerResult.complementarySkills?.length || 0} socialPresence: ${headerResult.socialPresence?.length || 0} trackRecord: ${headerResult.trackRecord?.length || 0}`
               }
             >
-              {researchResult.domain} {signalCount}sig/{researchResult.sources.length}src
+              {headerResult.domain} {signalCount}sig/{headerResult.sources.length}src
             </Badge>
           )}
         </CardTitle>
@@ -171,17 +175,22 @@ export function ResearchViewer({
                   </div>
                 </TabsContent>
 
-                <TabsContent value={resultsTabId} className="flex-1 overflow-hidden mt-0">
-                  <div className="h-full overflow-y-scroll">
-                    {researchResult ? (
-                      <ResearchSummary result={researchResult} />
-                    ) : (
-                      <div className="flex items-center justify-center h-full text-text-tertiary text-sm">
-                        No summary available yet
+                {presentDomainIds.map((domainId) => {
+                  const domainResult = researchResultsByDomain[domainId];
+                  return (
+                    <TabsContent key={domainId} value={domainId} className="flex-1 overflow-hidden mt-0">
+                      <div className="h-full overflow-y-scroll">
+                        {domainResult ? (
+                          <ResearchSummary result={domainResult} />
+                        ) : (
+                          <div className="flex items-center justify-center h-full text-text-tertiary text-sm">
+                            No summary available yet
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                </TabsContent>
+                    </TabsContent>
+                  );
+                })}
               </Tabs>
             </div>
 
