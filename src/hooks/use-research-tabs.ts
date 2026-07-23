@@ -1,7 +1,11 @@
 import { useMemo, useState } from 'react';
 import { StreamChunk, SSEEvent, ResearchResult } from '@/types/llm.types';
-import { getResearchDomains } from '@/lib/research/domain-registry';
 import { getDomainCoverage } from '@/lib/research/domain-coverage';
+import {
+  buildResearchResultsByDomain,
+  getDefaultActiveTab,
+  getPresentDomainIds,
+} from '@/lib/research/multi-domain-stream';
 
 export interface TabConfig {
   id: string;
@@ -23,18 +27,13 @@ export interface UseResearchTabsResult {
 export function useResearchTabs(events: StreamChunk[]): UseResearchTabsResult {
   const [userSelectedTab, setUserSelectedTab] = useState<string | null>(null);
 
-  const researchResultsByDomain = useMemo((): Record<string, ResearchResult> => {
-    const map: Record<string, ResearchResult> = {};
-    for (const event of events) {
-      if (event.type === SSEEvent.RESULT && event.result?.domain) {
-        map[event.result.domain] = event.result;
-      }
-    }
-    return map;
-  }, [events]);
+  const researchResultsByDomain = useMemo(
+    () => buildResearchResultsByDomain(events),
+    [events],
+  );
 
   const presentDomainIds = useMemo(
-    () => getResearchDomains().filter((domain) => researchResultsByDomain[domain] != null),
+    () => getPresentDomainIds(researchResultsByDomain),
     [researchResultsByDomain],
   );
 
@@ -53,7 +52,7 @@ export function useResearchTabs(events: StreamChunk[]): UseResearchTabsResult {
 
   const activeTab = useMemo(() => {
     if (userSelectedTab) return userSelectedTab;
-    return presentDomainIds[0] ?? 'timeline';
+    return getDefaultActiveTab(presentDomainIds);
   }, [userSelectedTab, presentDomainIds]);
 
   const processedEvents = useMemo(() => {

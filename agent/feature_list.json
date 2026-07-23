@@ -385,5 +385,17 @@
     "description": "Testing/Observability: add a hermetic zero-I/O smoke eval for getDomainCoverage (coverage matrix used by research-domain-coverage-checklist-ux and multi-domain-research-results-presentation tabs). Import production getDomainCoverage from src/lib/research/domain-coverage.ts and DOMAIN_REGISTRY / getResearchDomains from domain-registry.ts (no brittle mirror). Lock: returned length equals Object.keys(DOMAIN_REGISTRY); order matches registry key order; present=true only for registry keys present in the input set; unknown/non-registry present ids are ignored (no extra rows); null/undefined/empty-string inputs skipped; founder_profile and traction labels are the human labels (Founder Profile, Traction); all registry domains absent from input have present=false; empty input yields all present=false. Add package.json script eval:domain-coverage-matrix-smoke and wire into eval:smoke composite (and thus verify). No UI, orchestrator, Trigger, API, DB, ranking, SQL, score-constants, embedding, or schema changes; no new domains; no new dependencies; no network/.env.",
     "verify": "npm run eval:domain-coverage-matrix-smoke && npm run eval:smoke && npm run lint && npm run typecheck && npm run build",
     "passes": true
+  },
+  {
+    "id": "research-multi-domain-stream-contract-smoke",
+    "status": "completed",
+    "priority": 34,
+    "depends_on": [
+      "hermetic-domain-coverage-matrix-smoke"
+    ],
+    "category": "testing_observability",
+    "description": "Testing/Observability: add a hermetic zero-I/O smoke eval for the multi-RESULT stream aggregation contract used by multi-domain research tabs (useResearchTabs). Extract pure production helpers (single source of truth imported by the hook and the eval; no brittle mirror) that: (1) build a last-wins domain id -> ResearchResult map from StreamChunk[] by accepting only SSEEvent.RESULT events with a non-empty result.domain; (2) compute presentDomainIds as getResearchDomains() filtered to domains present in the map (DOMAIN_REGISTRY key order); (3) compute defaultActiveTab as presentDomainIds[0] ?? 'timeline'. Lock at least: empty events => empty map, empty presentDomainIds, defaultActiveTab timeline; single founder_profile RESULT => map has founder only, present=[founder_profile], default=founder_profile; founder then traction (and reverse event order) => presentDomainIds always registry order [founder_profile, traction] when both present; two RESULT events same domain => last-wins overwrite; RESULT missing domain or empty domain ignored for map; non-RESULT events ignored for map; unknown non-registry domain may appear in map but must not appear in presentDomainIds; optional minimal ResearchResult fixtures (domain/summary/sources only, no network). Add package.json script eval:research-multi-domain-stream-contract-smoke and wire into eval:smoke (and thus verify). No UI visual redesign; hook may switch to pure helpers only. No orchestrator, Trigger, API, DB, ranking, SQL, score-constants, embedding, or schema changes; no new domains; no new dependencies; no lockfile churn; no network/.env; never evaluates systemPrompt getters.",
+    "verify": "npm run eval:research-multi-domain-stream-contract-smoke && npm run eval:smoke && npm run lint && npm run typecheck && npm run build",
+    "passes": true
   }
 ]
