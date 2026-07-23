@@ -1,27 +1,21 @@
 {
   "slice": [
-    "multi-domain-research-results-presentation",
     "hermetic-domain-coverage-matrix-smoke",
     "research-multi-domain-stream-contract-smoke",
-    "domain-coverage-badge-tab-sync-ux"
+    "domain-coverage-badge-tab-sync-ux",
+    "research-missing-domain-prompt-ux"
   ],
   "rationale_per_step": {
-    "multi-domain-research-results-presentation": "Feature improvement (agent research + UI/UX): aggregate multi RESULT events into per-domain tabs + ResearchSummary. Chosen next after hermetic-search-path-decision-smoke completed.",
-    "hermetic-domain-coverage-matrix-smoke": "Testing/Observability: hermetic pure-function smoke for getDomainCoverage (registry keys vs present domains) after multi-domain UI stabilizes present-domain usage.",
+    "hermetic-domain-coverage-matrix-smoke": "Testing/Observability: hermetic pure-function smoke for getDomainCoverage (registry keys vs present domains) after multi-domain UI stabilizes present-domain usage. Chosen next.",
     "research-multi-domain-stream-contract-smoke": "Testing/Observability: hermetic contract for multi-RESULT stream aggregation (events -> domain map / primary tab) without E2B/Trigger.",
-    "domain-coverage-badge-tab-sync-ux": "Feature improvement (UI/UX): click present coverage checklist badges to switch to the matching results tab after multi-domain tabs exist."
+    "domain-coverage-badge-tab-sync-ux": "Feature improvement (UI/UX): click present coverage checklist badges to switch to the matching results tab after multi-domain tabs exist.",
+    "research-missing-domain-prompt-ux": "Feature improvement (agent research + UI/UX): clearer empty/missing-domain guidance when coverage checklist shows absent registry domains, after badge-tab sync."
   },
   "category_mix": {
-    "feature_improvement": 2,
-    "testing_observability": 2
+    "testing_observability": 2,
+    "feature_improvement": 2
   },
   "vision_refs": {
-    "multi-domain-research-results-presentation": [
-      "Agent research facet",
-      "UI/UX facet",
-      "Reliable deep research",
-      "High-quality, evidence-backed intelligence"
-    ],
     "hermetic-domain-coverage-matrix-smoke": [
       "Agent research facet",
       "Measurable research quality and coverage"
@@ -34,8 +28,13 @@
     "domain-coverage-badge-tab-sync-ux": [
       "UI/UX facet",
       "Agent research facet"
+    ],
+    "research-missing-domain-prompt-ux": [
+      "UI/UX facet",
+      "Agent research facet",
+      "Reliable deep research"
     ]
   },
-  "generated_by_run": "continue-20260722-190242",
-  "notes": "Planner run 2026-07-22 in harness/continue-local-20260722-190242 @ b9834d6. Init: feature_list through hermetic-search-path-decision-smoke (priority 31); dependency-security-audit completed but passes=false and excluded in-flight. Dropped completed hermetic-search-path-decision-smoke from prior horizon. Replaced trailing slot with domain-coverage-badge-tab-sync-ux (FI) for UX polish after multi-domain tabs. In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals. Recon: useResearchTabs events.find first RESULT only; ResearchViewer coverage iterates all RESULT domains; DOMAIN_REGISTRY founder_profile+traction. Ruflo memory init + store harness:horizon + harness:plan:20260722-133400 (CLI; MCP ruflo handshake failed). Corridor analyzePlan on planning summary. Planning-only: no source/tests/feature_list edits."
+  "generated_by_run": "continue-20260723-182706",
+  "notes": "Planner run 2026-07-23 in harness/continue-local-20260723-182706 @ 3b3ac51. Init: feature_list through multi-domain-research-results-presentation (priority 32); worktree clean tracking origin/main; dependency-security-audit completed but passes=false and excluded in-flight. Dropped completed multi-domain-research-results-presentation from prior horizon. Added research-missing-domain-prompt-ux (FI) as fourth slot for UX guidance after dual TO locks + badge sync. In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals. Recon: getDomainCoverage pure helper; useResearchTabs last-wins multi-RESULT map; DOMAIN_REGISTRY founder_profile+traction. Ruflo memory store harness:horizon + harness:plan:20260723-182851 (CLI; MCP ruflo handshake failed). Corridor analyzePlan on planning summary. Planning-only: no source/tests/feature_list edits."
 }

@@ -755,3 +755,29 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Verification result: lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes). eval:smoke all 10 sub-evals pass (research 26, search-filter 16, build-filter-sql 17, parse 16, merged 10, semantic 8, orchestrator-mock 9, freshness 8, vector-ranking 13, search-path-decision 11).
 - Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to use-research-tabs + research-viewer + feature_list + PROGRESS (+ run-summary). Created `.codex/tmp/run-summary.json`.
 - Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: hermetic-domain-coverage-matrix-smoke.
+
+## 2026-07-23 (planner run continue-20260723-182706)
+
+- Worktree: `continue-20260723-182706` (branch `harness/continue-local-20260723-182706` @ 3b3ac51).
+- Planner-only. Init via `bash agent/init.sh`: feature_list through multi-domain-research-results-presentation (priority 32); worktree clean tracking origin/main; dependency-security-audit completed but passes=false (excluded in-flight).
+- Recon: vision 3 facets + 4 outcomes; prior horizon had multi-domain-research-results-presentation (now completed), hermetic-domain-coverage-matrix-smoke, research-multi-domain-stream-contract-smoke, domain-coverage-badge-tab-sync-ux; getDomainCoverage pure helper; useResearchTabs last-wins multi-RESULT; DOMAIN_REGISTRY founder_profile+traction.
+- In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals.
+- Horizon updated to ["hermetic-domain-coverage-matrix-smoke", "research-multi-domain-stream-contract-smoke", "domain-coverage-badge-tab-sync-ux", "research-missing-domain-prompt-ux"] (TO lead after FI multi-domain ship; dual TO locks then FI badge sync + missing-domain prompt UX).
+- Chosen next: hermetic-domain-coverage-matrix-smoke (plan_id plan-20260723-182851). Rationale: multi-domain tabs+checklist both depend on getDomainCoverage; lock matrix before stream-contract and badge UX.
+- Artifacts: `.codex/tmp/plan-20260723-182851.json`, `.codex/tmp/plan-20260723-182851.md`, `agent/harness/horizon.json`.
+- Ruflo: `ruflo memory init` + store harness:horizon, harness:plan:20260723-182851, harness:vision (local CLI; MCP ruflo handshake failed).
+- Corridor analyzePlan on planning summary (hermetic eval only; no secrets/orchestrator/API).
+- No source code, tests, or feature_list.json edits.
+
+## 2026-07-23 (hermetic-domain-coverage-matrix-smoke)
+
+- Worktree: `continue-20260723-182706` (branch `harness/continue-local-20260723-182706` @ 3b3ac51).
+- Task: `hermetic-domain-coverage-matrix-smoke` (plan_id: plan-20260723-182851 from Planner run continue-20260723-182706).
+- Plan link: `.codex/tmp/plan-20260723-182851.json` (authoritative); also `.codex/tmp/plan-20260723-182851.md`. Horizon after per plan: ["hermetic-domain-coverage-matrix-smoke", "research-multi-domain-stream-contract-smoke", "domain-coverage-badge-tab-sync-ux", "research-missing-domain-prompt-ux"].
+- Selected per plan: Testing/Observability hermetic lock of getDomainCoverage (shared by checklist + multi-domain tabs).
+- Changes (only chosen_task): (1) `src/eval/domain-coverage-matrix-smoke.ts`: hermetic smoke importing production getDomainCoverage + DOMAIN_REGISTRY/getResearchDomains; locks length=registry keys, order, present flags, unknown-id ignore, nullish/empty skip, Founder Profile/Traction labels, empty input all present=false. (2) `package.json`: `eval:domain-coverage-matrix-smoke` + wired into `eval:smoke`. (3) `agent/feature_list.json`: completed testing_observability entry priority 33. No UI/orchestrator/API/DB/ranking/deps; no lockfile churn; never evaluates systemPrompt getters.
+- Decisions (first-principles + rules): (1) Read Plan artifact first. (2) Verbatim restated Plan principles, AGENTS.md operating/safety/review, .agents/rules (minimal-code, security), vision alignment BEFORE code edits. (3) Confirmed and obeyed execution_constraints. (4) Corridor analyzePlan before edits (hermetic eval only; no secrets/network). (5) Production imports only (no mirror of labels/keys). (6) Horizon later items not implemented.
+- Commands executed (post impl): `npm run eval:domain-coverage-matrix-smoke && npm run eval:smoke && npm run lint && npm run typecheck && npm run build`.
+- Verification result: domain-coverage-matrix 11/11 pass. eval:smoke all 11 sub-evals pass (research 26, search-filter 16, build-filter-sql 17, parse 16, merged 10, semantic 8, orchestrator-mock 9, freshness 8, vector-ranking 13, search-path-decision 11, domain-coverage-matrix 11). lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes).
+- Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to new eval file, package.json scripts, feature_list, PROGRESS (+ run-summary). Created `.codex/tmp/run-summary.json`.
+- Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: research-multi-domain-stream-contract-smoke.
