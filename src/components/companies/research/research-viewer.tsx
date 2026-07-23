@@ -4,7 +4,7 @@ import { useRef, useEffect, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
+import { Badge, badgeVariants } from '@/components/ui/badge';
 import { StreamChunk, ResearchResult } from '@/types/llm.types';
 import { Laptop, Activity, Square } from 'lucide-react';
 import { TimelineEvent } from './timeline-event';
@@ -13,6 +13,7 @@ import { ResearchViewerCardSkeleton } from './research-viewer-card-skeleton';
 import { ResearchSummary } from './research-summary';
 import { useResearchTabs } from '../../../hooks/use-research-tabs';
 import { getDomainCoverage } from '@/lib/research/domain-coverage';
+import { cn } from '@/lib/utils';
 
 interface ResearchViewerProps {
   companyName: string;
@@ -107,26 +108,36 @@ export function ResearchViewer({
           role="list"
           aria-label="Research domain coverage"
         >
-          {domainCoverage.map(({ domain, label, present }) => (
-            <Badge
-              key={domain}
-              role="listitem"
-              variant={present ? 'info' : 'outline'}
-              className={
-                present
-                  ? 'text-[10px] px-1.5 py-0'
-                  : 'text-[10px] px-1.5 py-0 text-text-tertiary'
-              }
-              title={
-                present
-                  ? `${domain}: result present`
-                  : `${domain}: missing from research results`
-              }
-            >
-              {label}
-              {present ? '' : ' · missing'}
-            </Badge>
-          ))}
+          {domainCoverage.map(({ domain, label, present }) =>
+            present ? (
+              <span key={domain} role="listitem" className="inline-flex">
+                <button
+                  type="button"
+                  onClick={() => setActiveTab(domain)}
+                  className={cn(
+                    badgeVariants({ variant: 'info' }),
+                    'text-[10px] px-1.5 py-0 cursor-pointer',
+                  )}
+                  title={`${domain}: result present (switch to tab)`}
+                  aria-label={`Show ${label} research results`}
+                  aria-current={activeTab === domain ? 'true' : undefined}
+                >
+                  {label}
+                </button>
+              </span>
+            ) : (
+              <span key={domain} role="listitem" className="inline-flex">
+                <Badge
+                  variant="outline"
+                  className="text-[10px] px-1.5 py-0 text-text-tertiary"
+                  title={`${domain}: missing from research results`}
+                >
+                  {label}
+                  {' · missing'}
+                </Badge>
+              </span>
+            ),
+          )}
         </div>
       </CardHeader>
       <CardContent>
