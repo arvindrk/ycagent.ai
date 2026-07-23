@@ -833,3 +833,29 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Verification result: lint clean (0 warnings after a11y fix). typecheck clean. build succeeded (Next.js 16.1.6, 9 routes). eval:smoke all 12 sub-evals pass (research 26, search-filter 16, build-filter-sql 17, parse 16, merged 10, semantic 8, orchestrator-mock 9, freshness 8, vector-ranking 13, search-path-decision 11, domain-coverage-matrix 11, stream-contract 9).
 - Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to ResearchViewer presentational wiring, feature_list, PROGRESS (+ run-summary). Created `.codex/tmp/run-summary.json`.
 - Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: research-missing-domain-prompt-ux.
+
+## 2026-07-24 (planner run continue-20260724-002022)
+
+- Worktree: `continue-20260724-002022` (branch `harness/continue-local-20260724-002022` @ c6a4834).
+- Planner-only. Init via `bash agent/init.sh`: feature_list all 35 completed (through domain-coverage-badge-tab-sync-ux priority 35); worktree clean tracking origin/main; dependency-security-audit completed but passes=false (excluded in-flight).
+- Recon: vision 3 facets + 4 outcomes; prior horizon head domain-coverage-badge-tab-sync-ux completed; present coverage badges call setActiveTab; missing badges non-button · missing only; getDomainCoverage + multi-domain-stream helpers hermetically locked; DOMAIN_REGISTRY founder_profile+traction.
+- In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals.
+- Horizon updated to ["research-missing-domain-prompt-ux", "hermetic-present-domain-tab-parity-smoke", "research-timeline-domain-result-crosslink-ux"] (FI missing-domain prompt next; TO present/tab parity smoke; FI timeline-domain crosslink).
+- Chosen next: research-missing-domain-prompt-ux (plan_id plan-20260724-002200). Rationale: prior handoff after badge-tab sync; users still lack clear live vs completed guidance for absent registry domains.
+- Artifacts: `.codex/tmp/plan-20260724-002200.json`, `.codex/tmp/plan-20260724-002200.md`, `agent/harness/horizon.json`.
+- Ruflo: `ruflo memory init` + store harness:horizon, harness:plan:20260724-002200, harness:vision, harness:planner:last (local CLI; MCP ruflo unavailable).
+- Corridor analyzePlan on planning summary (UI copy only; no secrets/orchestrator/API; XSS-safe static labels).
+- No source code, tests, or feature_list.json edits.
+
+## 2026-07-24 (research-missing-domain-prompt-ux)
+
+- Worktree: `continue-20260724-002022` (branch `harness/continue-local-20260724-002022` @ c6a4834).
+- Task: `research-missing-domain-prompt-ux` (plan_id: plan-20260724-002200 from Planner run continue-20260724-002022).
+- Plan link: `.codex/tmp/plan-20260724-002200.json` (authoritative); also `.codex/tmp/plan-20260724-002200.md`. Horizon after per plan: ["research-missing-domain-prompt-ux", "hermetic-present-domain-tab-parity-smoke", "research-timeline-domain-result-crosslink-ux"].
+- Selected per plan: Feature improvement show compact missing-domain guidance under coverage checklist from getDomainCoverage + isResearching/events/presentDomainIds only.
+- Changes (only chosen_task): (1) `src/components/companies/research/research-viewer.tsx`: derive missingDomainLabels via filter(!present) on domainCoverage; gate showMissingDomainPrompt when missing AND (isResearching || events.length > 0 || presentDomainIds.length > 0); informational prompt under checklist (still gathering vs not produced); missing badges remain non-button · missing; present badges still setActiveTab; no TabsContent for missing. (2) `agent/feature_list.json`: completed feature_improvement entry priority 36. No orchestrator/Trigger/API/DB/ranking/deps/lockfile; getDomainCoverage and multi-domain-stream helpers untouched.
+- Decisions (first-principles + rules): (1) Read Plan artifact first. (2) Verbatim restated Plan principles, AGENTS.md, .agents/rules, vision BEFORE code edits. (3) Confirmed and obeyed execution_constraints. (4) Corridor analyzePlan before edits (UI copy only; labels from coverage). (5) Inline filter instead of new helper (minimal-code). (6) Horizon later items not implemented.
+- Commands executed (post impl): `npm run lint && npm run typecheck && npm run build && npm run eval:smoke`.
+- Verification result: lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes). eval:smoke all 12 sub-evals pass (research 26, search-filter 16, build-filter-sql 17, parse 16, merged 10, semantic 8, orchestrator-mock 9, freshness 8, vector-ranking 13, search-path-decision 11, domain-coverage-matrix 11, stream-contract 9).
+- Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to ResearchViewer presentational prompt, feature_list, PROGRESS (+ run-summary). Created `.codex/tmp/run-summary.json`.
+- Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: hermetic-present-domain-tab-parity-smoke.

@@ -1,30 +1,24 @@
 {
   "slice": [
-    "domain-coverage-badge-tab-sync-ux",
     "research-missing-domain-prompt-ux",
     "hermetic-present-domain-tab-parity-smoke",
     "research-timeline-domain-result-crosslink-ux"
   ],
   "rationale_per_step": {
-    "domain-coverage-badge-tab-sync-ux": "Feature improvement (UI/UX + agent research): click present coverage checklist badges to switch to the matching multi-domain results tab. Chosen next after research-multi-domain-stream-contract-smoke locked the stream aggregation contract.",
-    "research-missing-domain-prompt-ux": "Feature improvement (agent research + UI/UX): clearer empty/missing-domain guidance when coverage checklist shows absent registry domains, after badge-tab sync.",
-    "hermetic-present-domain-tab-parity-smoke": "Testing/Observability: hermetic lock that present coverage domains, presentDomainIds, and enabled domain tab ids stay in registry-order parity after interactive badge navigation exists.",
-    "research-timeline-domain-result-crosslink-ux": "Feature improvement (UI/UX + agent research): light timeline ↔ domain-result cross-links once multi-domain tabs, stream contract, badge sync, and parity smoke exist."
+    "research-missing-domain-prompt-ux": "Feature improvement (agent research + UI/UX): compact missing-domain guidance under coverage checklist when registry domains are absent, with live vs completed copy. Chosen next after domain-coverage-badge-tab-sync-ux shipped present-badge tab navigation.",
+    "hermetic-present-domain-tab-parity-smoke": "Testing/Observability: hermetic lock that present coverage domains, presentDomainIds, and enabled domain tab ids stay in registry-order parity after interactive badge navigation and missing-domain prompt exist.",
+    "research-timeline-domain-result-crosslink-ux": "Feature improvement (UI/UX + agent research): light timeline ↔ domain-result cross-links once multi-domain tabs, stream contract, badge sync, missing-domain prompt, and parity smoke exist."
   },
   "category_mix": {
-    "feature_improvement": 3,
+    "feature_improvement": 2,
     "testing_observability": 1
   },
   "vision_refs": {
-    "domain-coverage-badge-tab-sync-ux": [
-      "UI/UX facet",
-      "Agent research facet",
-      "Reliable deep research"
-    ],
     "research-missing-domain-prompt-ux": [
       "UI/UX facet",
       "Agent research facet",
-      "Reliable deep research"
+      "Reliable deep research",
+      "High-quality evidence-backed intelligence"
     ],
     "hermetic-present-domain-tab-parity-smoke": [
       "Agent research facet",
@@ -35,6 +29,6 @@
       "Agent research facet"
     ]
   },
-  "generated_by_run": "continue-20260723-195258",
-  "notes": "Planner run 2026-07-23 in harness/continue-local-20260723-195258 @ 5777c16. Init: feature_list all 34 completed (through research-multi-domain-stream-contract-smoke priority 34); worktree clean tracking origin/main; dependency-security-audit completed but passes=false and excluded in-flight. Dropped completed research-multi-domain-stream-contract-smoke from prior horizon. Chosen domain-coverage-badge-tab-sync-ux (FI) as next; kept research-missing-domain-prompt-ux + research-timeline-domain-result-crosslink-ux; inserted hermetic-present-domain-tab-parity-smoke (TO) for category balance after two consecutive TO completes then multi-domain FI. In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals. Recon: ResearchViewer badges display-only; useResearchTabs exposes setActiveTab + presentDomainIds; getDomainCoverage + multi-domain-stream helpers hermetically locked. Ruflo memory store harness:horizon + harness:plan:20260723-195443 (CLI; MCP ruflo unavailable). Corridor analyzePlan on planning summary. Planning-only: no source/tests/feature_list edits."
+  "generated_by_run": "continue-20260724-002022",
+  "notes": "Planner run 2026-07-24 in harness/continue-local-20260724-002022 @ c6a4834. Init: feature_list all 35 completed (through domain-coverage-badge-tab-sync-ux priority 35); worktree clean tracking origin/main; dependency-security-audit completed but passes=false (excluded in-flight). Dropped completed domain-coverage-badge-tab-sync-ux from prior horizon. Chosen research-missing-domain-prompt-ux (FI) as next; kept hermetic-present-domain-tab-parity-smoke (TO) + research-timeline-domain-result-crosslink-ux (FI). In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals. Recon: present badges call setActiveTab; missing badges non-button · missing only; getDomainCoverage + multi-domain-stream hermetically locked. Ruflo memory store harness:horizon + harness:plan:20260724-002200 (CLI; MCP ruflo unavailable). Corridor analyzePlan on planning summary (UI copy only; no secrets/orchestrator/API). Planning-only: no source/tests/feature_list edits."
 }
