@@ -67,6 +67,13 @@ export function ResearchViewer({
     () => getDomainCoverage(presentDomainIds),
     [presentDomainIds],
   );
+  const missingDomainLabels = useMemo(
+    () => domainCoverage.filter((item) => !item.present).map((item) => item.label),
+    [domainCoverage],
+  );
+  const showMissingDomainPrompt =
+    missingDomainLabels.length > 0
+    && (isResearching || events.length > 0 || presentDomainIds.length > 0);
 
   useEffect(() => {
     if (timelineRef.current) {
@@ -139,6 +146,13 @@ export function ResearchViewer({
             ),
           )}
         </div>
+        {showMissingDomainPrompt && (
+          <p className="mt-1.5 text-[11px] leading-snug text-text-tertiary">
+            {isResearching
+              ? `Research may still be gathering: ${missingDomainLabels.join(', ')}.`
+              : `Not produced in this run: ${missingDomainLabels.join(', ')}.`}
+          </p>
+        )}
       </CardHeader>
       <CardContent>
         {vncUrl ? (

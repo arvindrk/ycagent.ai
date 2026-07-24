@@ -411,5 +411,18 @@
     "description": "Feature improvement (agent research + UI/UX): make present Research domain coverage checklist badges interactive so clicking a present badge switches the ResearchViewer multi-domain results tab to that domain (setActiveTab(domain) via existing useResearchTabs). Missing badges stay non-navigating (no tab switch; optional cursor/aria only). Wire only present badges (present=true from getDomainCoverage(presentDomainIds)); domain id equals tab id for registry domains already enabled as TabsContent. Preserve coverage labels, missing · missing styling, hostname sources, multi-domain tabs, stream-contract pure helpers. No orchestrator, Trigger, API, DB, ranking, SQL, score-constants, embedding, or schema changes; no new domains; no new dependencies; no lockfile churn; no network/.env.",
     "verify": "npm run lint && npm run typecheck && npm run build && npm run eval:smoke",
     "passes": true
+  },
+  {
+    "id": "research-missing-domain-prompt-ux",
+    "status": "completed",
+    "priority": 36,
+    "depends_on": [
+      "domain-coverage-badge-tab-sync-ux",
+      "research-domain-coverage-checklist-ux"
+    ],
+    "category": "feature_improvement",
+    "description": "Feature improvement (agent research + UI/UX): when ResearchViewer domain coverage has one or more DOMAIN_REGISTRY domains with present=false, show a clear, compact missing-domain guidance prompt under the coverage checklist (not only the · missing badge suffix). Derive state only from existing getDomainCoverage(presentDomainIds) and ResearchViewer props (isResearching, events length / presentDomainIds). List missing human labels (Founder Profile, Traction via coverage labels). While isResearching and any domain is missing, copy indicates research may still be gathering those domains; when !isResearching and the run has events (or at least one present domain) and some registry domains remain missing, copy states those domains were not produced in this run. Keep missing badges non-navigable (no setActiveTab; no button). Do not add TabsContent or TabsTrigger for missing domains. Preserve present badge → setActiveTab wiring, hostname sources, multi-domain tabs, stream-contract helpers, getDomainCoverage. No orchestrator, Trigger, API, DB, ranking, SQL, score-constants, embedding, or schema changes; no new domains; no new dependencies; no lockfile churn; no network/.env; never evaluate systemPrompt getters.",
+    "verify": "npm run lint && npm run typecheck && npm run build && npm run eval:smoke",
+    "passes": true
   }
 ]
