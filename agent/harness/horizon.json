@@ -1,34 +1,40 @@
 {
   "slice": [
-    "research-missing-domain-prompt-ux",
     "hermetic-present-domain-tab-parity-smoke",
-    "research-timeline-domain-result-crosslink-ux"
+    "research-timeline-domain-result-crosslink-ux",
+    "hermetic-missing-domain-prompt-gating-smoke",
+    "research-coverage-active-tab-highlight-ux"
   ],
   "rationale_per_step": {
-    "research-missing-domain-prompt-ux": "Feature improvement (agent research + UI/UX): compact missing-domain guidance under coverage checklist when registry domains are absent, with live vs completed copy. Chosen next after domain-coverage-badge-tab-sync-ux shipped present-badge tab navigation.",
-    "hermetic-present-domain-tab-parity-smoke": "Testing/Observability: hermetic lock that present coverage domains, presentDomainIds, and enabled domain tab ids stay in registry-order parity after interactive badge navigation and missing-domain prompt exist.",
-    "research-timeline-domain-result-crosslink-ux": "Feature improvement (UI/UX + agent research): light timeline ↔ domain-result cross-links once multi-domain tabs, stream contract, badge sync, missing-domain prompt, and parity smoke exist."
+    "hermetic-present-domain-tab-parity-smoke": "Testing/Observability: hermetic lock that presentDomainIds, present coverage domain ids, and enabled domain tab ids stay in registry-order parity after interactive badge navigation and missing-domain prompt exist. Chosen next after research-missing-domain-prompt-ux.",
+    "research-timeline-domain-result-crosslink-ux": "Feature improvement (UI/UX + agent research): light timeline ↔ domain-result cross-links once multi-domain tabs, stream contract, badge sync, missing-domain prompt, and present/tab parity smoke exist.",
+    "hermetic-missing-domain-prompt-gating-smoke": "Testing/Observability: hermetic lock of missing-domain prompt gating (missing labels + isResearching/events/presentDomainIds) after prompt UX shipped; pure extract only if needed.",
+    "research-coverage-active-tab-highlight-ux": "Feature improvement (UI/UX): strengthen active domain feedback on coverage badges when activeTab matches a present domain (beyond aria-current), once parity and crosslink foundations are in place."
   },
   "category_mix": {
-    "feature_improvement": 2,
-    "testing_observability": 1
+    "testing_observability": 2,
+    "feature_improvement": 2
   },
   "vision_refs": {
-    "research-missing-domain-prompt-ux": [
+    "hermetic-present-domain-tab-parity-smoke": [
+      "Agent research facet",
+      "Measurable research quality and coverage",
+      "Reliable deep research"
+    ],
+    "research-timeline-domain-result-crosslink-ux": [
       "UI/UX facet",
       "Agent research facet",
-      "Reliable deep research",
-      "High-quality evidence-backed intelligence"
+      "Reliable deep research"
     ],
-    "hermetic-present-domain-tab-parity-smoke": [
+    "hermetic-missing-domain-prompt-gating-smoke": [
       "Agent research facet",
       "Measurable research quality and coverage"
     ],
-    "research-timeline-domain-result-crosslink-ux": [
+    "research-coverage-active-tab-highlight-ux": [
       "UI/UX facet",
       "Agent research facet"
     ]
   },
-  "generated_by_run": "continue-20260724-002022",
-  "notes": "Planner run 2026-07-24 in harness/continue-local-20260724-002022 @ c6a4834. Init: feature_list all 35 completed (through domain-coverage-badge-tab-sync-ux priority 35); worktree clean tracking origin/main; dependency-security-audit completed but passes=false (excluded in-flight). Dropped completed domain-coverage-badge-tab-sync-ux from prior horizon. Chosen research-missing-domain-prompt-ux (FI) as next; kept hermetic-present-domain-tab-parity-smoke (TO) + research-timeline-domain-result-crosslink-ux (FI). In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals. Recon: present badges call setActiveTab; missing badges non-button · missing only; getDomainCoverage + multi-domain-stream hermetically locked. Ruflo memory store harness:horizon + harness:plan:20260724-002200 (CLI; MCP ruflo unavailable). Corridor analyzePlan on planning summary (UI copy only; no secrets/orchestrator/API). Planning-only: no source/tests/feature_list edits."
+  "generated_by_run": "continue-20260724-190120",
+  "notes": "Planner run 2026-07-24 in harness/continue-local-20260724-190120 @ fb0a993. Init: feature_list all 36 completed (through research-missing-domain-prompt-ux priority 36); worktree clean tracking origin/main; dependency-security-audit completed but passes=false (excluded in-flight). Dropped completed research-missing-domain-prompt-ux from prior horizon. Chosen hermetic-present-domain-tab-parity-smoke (TO) as next; kept research-timeline-domain-result-crosslink-ux (FI); added hermetic-missing-domain-prompt-gating-smoke (TO) + research-coverage-active-tab-highlight-ux (FI) for 4-step balanced slice. In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals. Recon: present badges setActiveTab; missing prompt under checklist; getDomainCoverage + multi-domain-stream hermetically locked; DOMAIN_REGISTRY founder_profile+traction. Ruflo memory store harness:horizon + harness:plan:20260724-133310 (CLI; MCP ruflo unavailable). Corridor analyzePlan on planning summary (hermetic eval; production pure helpers only; no secrets/orchestrator/API). Planning-only: no source/tests/feature_list edits."
 }

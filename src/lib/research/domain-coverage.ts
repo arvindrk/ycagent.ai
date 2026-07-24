@@ -31,3 +31,26 @@ export function getDomainCoverage(
     present: present.has(domain),
   }));
 }
+
+/**
+ * Enabled domain tabs from present coverage only (registry order).
+ * Matches useResearchTabs domain tabs: excludes timeline and Coming Soon
+ * (investor_profile / hiring).
+ */
+export function getPresentDomainTabs(
+  presentDomainIds: Iterable<string | null | undefined>,
+): Array<{ id: string; label: string }> {
+  return getDomainCoverage(presentDomainIds)
+    .filter((item) => item.present)
+    .map((item) => ({ id: item.domain, label: item.label }));
+}
+
+/**
+ * Enabled domain tab ids only (registry order).
+ * Pure SoT for presentDomainIds ↔ present coverage ↔ domain tab parity.
+ */
+export function getPresentDomainTabIds(
+  presentDomainIds: Iterable<string | null | undefined>,
+): string[] {
+  return getPresentDomainTabs(presentDomainIds).map((tab) => tab.id);
+}
