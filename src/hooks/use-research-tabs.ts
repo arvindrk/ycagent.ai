@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { StreamChunk, SSEEvent, ResearchResult } from '@/types/llm.types';
-import { getDomainCoverage } from '@/lib/research/domain-coverage';
+import { getPresentDomainTabs } from '@/lib/research/domain-coverage';
 import {
   buildResearchResultsByDomain,
   getDefaultActiveTab,
@@ -38,9 +38,7 @@ export function useResearchTabs(events: StreamChunk[]): UseResearchTabsResult {
   );
 
   const tabs = useMemo((): TabConfig[] => {
-    const domainTabs = getDomainCoverage(presentDomainIds)
-      .filter((item) => item.present)
-      .map((item) => ({ id: item.domain, label: item.label }));
+    const domainTabs = getPresentDomainTabs(presentDomainIds);
 
     return [
       { id: 'timeline', label: 'Timeline' },

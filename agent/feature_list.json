@@ -424,5 +424,20 @@
     "description": "Feature improvement (agent research + UI/UX): when ResearchViewer domain coverage has one or more DOMAIN_REGISTRY domains with present=false, show a clear, compact missing-domain guidance prompt under the coverage checklist (not only the · missing badge suffix). Derive state only from existing getDomainCoverage(presentDomainIds) and ResearchViewer props (isResearching, events length / presentDomainIds). List missing human labels (Founder Profile, Traction via coverage labels). While isResearching and any domain is missing, copy indicates research may still be gathering those domains; when !isResearching and the run has events (or at least one present domain) and some registry domains remain missing, copy states those domains were not produced in this run. Keep missing badges non-navigable (no setActiveTab; no button). Do not add TabsContent or TabsTrigger for missing domains. Preserve present badge → setActiveTab wiring, hostname sources, multi-domain tabs, stream-contract helpers, getDomainCoverage. No orchestrator, Trigger, API, DB, ranking, SQL, score-constants, embedding, or schema changes; no new domains; no new dependencies; no lockfile churn; no network/.env; never evaluate systemPrompt getters.",
     "verify": "npm run lint && npm run typecheck && npm run build && npm run eval:smoke",
     "passes": true
+  },
+  {
+    "id": "hermetic-present-domain-tab-parity-smoke",
+    "status": "completed",
+    "priority": 37,
+    "depends_on": [
+      "research-multi-domain-stream-contract-smoke",
+      "hermetic-domain-coverage-matrix-smoke",
+      "domain-coverage-badge-tab-sync-ux",
+      "research-missing-domain-prompt-ux"
+    ],
+    "category": "testing_observability",
+    "description": "Testing/Observability: add a hermetic (zero I/O) smoke eval that locks registry-order parity among (1) presentDomainIds from production getPresentDomainIds / multi-domain-stream helpers, (2) present coverage domain ids from getDomainCoverage(presentDomainIds).filter(item => item.present).map(item => item.domain), and (3) enabled domain tab ids derived the same way useResearchTabs builds domain tabs (getDomainCoverage(presentDomainIds) present items only; exclude timeline and Coming Soon investor_profile/hiring). Cover empty events, single present domain, both DOMAIN_REGISTRY domains (founder_profile then traction order), unknown non-registry ids ignored, last-wins multi-RESULT streams, and defaultActiveTab remaining first present or timeline. Prefer production imports only; optionally extract a pure getPresentDomainTabIds (or equivalent) as production SoT if needed to avoid mirroring useResearchTabs logic. Wire new eval script into package.json and eval:smoke. No UI redesign, orchestrator, Trigger, API, DB, ranking, SQL, score-constants, embedding, or schema changes; no new domains; no new dependencies; no lockfile churn; no network/.env; never evaluate systemPrompt getters.",
+    "verify": "npm run eval:present-domain-tab-parity-smoke && npm run eval:smoke && npm run lint && npm run typecheck && npm run build",
+    "passes": true
   }
 ]
