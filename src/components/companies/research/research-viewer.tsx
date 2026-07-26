@@ -12,7 +12,7 @@ import { ResearchViewerSkeleton } from './research-viewer-skeleton';
 import { ResearchViewerCardSkeleton } from './research-viewer-card-skeleton';
 import { ResearchSummary } from './research-summary';
 import { useResearchTabs } from '../../../hooks/use-research-tabs';
-import { getDomainCoverage } from '@/lib/research/domain-coverage';
+import { getDomainCoverage, getPresentDomainTabs } from '@/lib/research/domain-coverage';
 import { cn } from '@/lib/utils';
 
 interface ResearchViewerProps {
@@ -65,6 +65,10 @@ export function ResearchViewer({
 
   const domainCoverage = useMemo(
     () => getDomainCoverage(presentDomainIds),
+    [presentDomainIds],
+  );
+  const presentDomainTabs = useMemo(
+    () => getPresentDomainTabs(presentDomainIds),
     [presentDomainIds],
   );
   const missingDomainLabels = useMemo(
@@ -180,23 +184,49 @@ export function ResearchViewer({
                 </div>
 
                 <TabsContent value="timeline" className="flex-1 overflow-hidden mt-0">
-                  <div ref={timelineRef} className="h-full overflow-y-scroll" role="feed" aria-label="Research event timeline">
-                    {events.length === 0 ? (
-                      <ResearchViewerSkeleton />
-                    ) : (
-                      <div className="relative">
-                        <div className="absolute left-2.5 top-0 bottom-0 w-0.5 border-l-2 border-border-secondary" />
-                        <div className="space-y-4">
-                          {processedEvents.map((event, index) => (
-                            <TimelineEvent
-                              key={index}
-                              event={event}
-                              isLatest={index === processedEvents.length - 1 && isResearching}
-                            />
-                          ))}
-                        </div>
+                  <div className="flex flex-col h-full overflow-hidden">
+                    {presentDomainTabs.length > 0 && (
+                      <div
+                        className="flex flex-wrap items-center gap-1.5 shrink-0 pb-2"
+                        role="navigation"
+                        aria-label="Jump to domain research results"
+                      >
+                        <span className="text-[11px] text-text-tertiary mr-0.5">Results</span>
+                        {presentDomainTabs.map(({ id, label }) => (
+                          <button
+                            key={id}
+                            type="button"
+                            onClick={() => setActiveTab(id)}
+                            className={cn(
+                              badgeVariants({ variant: 'info' }),
+                              'text-[10px] px-1.5 py-0 cursor-pointer',
+                            )}
+                            title={`Open ${label} results tab`}
+                            aria-label={`Jump to ${label} research results`}
+                          >
+                            {label}
+                          </button>
+                        ))}
                       </div>
                     )}
+                    <div ref={timelineRef} className="flex-1 min-h-0 overflow-y-scroll" role="feed" aria-label="Research event timeline">
+                      {events.length === 0 ? (
+                        <ResearchViewerSkeleton />
+                      ) : (
+                        <div className="relative">
+                          <div className="absolute left-2.5 top-0 bottom-0 w-0.5 border-l-2 border-border-secondary" />
+                          <div className="space-y-4">
+                            {processedEvents.map((event, index) => (
+                              <TimelineEvent
+                                key={index}
+                                event={event}
+                                isLatest={index === processedEvents.length - 1 && isResearching}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </TabsContent>
 
@@ -205,6 +235,20 @@ export function ResearchViewer({
                   return (
                     <TabsContent key={domainId} value={domainId} className="flex-1 overflow-hidden mt-0">
                       <div className="h-full overflow-y-scroll">
+                        <div className="px-4 pt-3">
+                          <button
+                            type="button"
+                            onClick={() => setActiveTab('timeline')}
+                            className={cn(
+                              badgeVariants({ variant: 'outline' }),
+                              'text-[10px] px-1.5 py-0 cursor-pointer text-text-tertiary hover:text-text-secondary',
+                            )}
+                            title="Back to research timeline"
+                            aria-label="Back to research timeline"
+                          >
+                            Timeline
+                          </button>
+                        </div>
                         {domainResult ? (
                           <ResearchSummary result={domainResult} />
                         ) : (
