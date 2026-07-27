@@ -168,22 +168,106 @@ if [[ -f "$wt/.codex/tmp/run-summary.json" ]]; then
   [[ -n "$fid" ]] && emit_event feature.selected feature_id="$fid" title="$ftitle"
 fi
 
-if [[ -z "$(git -C "$wt" status --porcelain)" ]]; then
+commit_as_harness() {
+  git -C "$wt" -c user.name="Arvind Rk" -c user.email="arvindsuna10@gmail.com" commit --quiet "$@"
+}
+
+commits_ahead() {
+  git -C "$wt" rev-list --count origin/main..HEAD
+}
+
+# Semantic group for a changed path; drives fallback commit messages/order.
+commit_group_of() {
+  case "$1" in
+    agent/*) echo state ;;
+    *__tests__*|*.test.*|src/eval/*) echo test ;;
+    docs/*|*.md) echo docs ;;
+    package.json|package-lock.json|*.config.*|tsconfig*|.agents/*|.claude/*) echo config ;;
+    *) echo src ;;
+  esac
+}
+
+commit_group_message() {
+  case "$1" in
+    src) echo "feat: implement continuation task changes" ;;
+    test) echo "test: update tests and evals for continuation task" ;;
+    docs) echo "docs: update documentation for continuation task" ;;
+    config) echo "chore(config): update configuration for continuation task" ;;
+    state) echo "chore(agent): record progress and feature state" ;;
+  esac
+}
+
+if [[ -z "$(git -C "$wt" status --porcelain)" && "$(commits_ahead)" -eq 0 ]]; then
   log "no changes produced; no PR opened"
   emit_event run.end status=no-changes
   exit 0
 fi
 
-log "commit + push $branch"
-git -C "$wt" add -A
-git -C "$wt" -c user.name="Arvind Rk" -c user.email="arvindsuna10@gmail.com" \
-  commit -m "chore: continue work (local Ruflo + agent harness)"
+# The executor is instructed to commit incrementally; sweep up anything it left behind.
+if [[ -n "$(git -C "$wt" status --porcelain)" ]]; then
+  git -C "$wt" add -A
+  commit_as_harness -m "chore: commit remaining continuation changes"
+fi
+
+# Enforce a minimum number of commits per PR. If the executor under-delivered,
+# rebuild the (still local-only) branch as semantic-group commits, or per-file
+# commits when there are too few groups to reach the minimum.
+min_commits="${CONTINUE_MIN_COMMITS:-4}"
+
+rebuild_branch_as_split_commits() {
+  # Compute the recoverable file set BEFORE resetting so an all-empty-commit
+  # branch is never destroyed (tree is clean here; the sweep above committed residue).
+  changed_files=()
+  while IFS= read -r -d '' f; do changed_files+=("$f"); done \
+    < <(git -C "$wt" diff --name-only -z origin/main...HEAD)
+
+  if [[ "${#changed_files[@]}" -eq 0 ]]; then
+    log "warning: nothing to split (empty commits?); leaving branch as-is"
+    return 0
+  fi
+
+  log "only $(commits_ahead) commit(s) < min $min_commits; rebuilding branch as split commits"
+  git -C "$wt" reset --quiet origin/main
+
+  group_names=()
+  for f in "${changed_files[@]}"; do
+    g="$(commit_group_of "$f")"
+    case " ${group_names[*]-} " in *" $g "*) ;; *) group_names+=("$g") ;; esac
+  done
+
+  if [[ "${#group_names[@]}" -ge "$min_commits" ]]; then
+    for g in src test docs config state; do
+      files_in_group=()
+      for f in "${changed_files[@]}"; do
+        [[ "$(commit_group_of "$f")" == "$g" ]] && files_in_group+=("$f")
+      done
+      [[ "${#files_in_group[@]}" -eq 0 ]] && continue
+      git -C "$wt" add -A -- "${files_in_group[@]}"
+      commit_as_harness -m "$(commit_group_message "$g")"
+    done
+  else
+    for f in "${changed_files[@]}"; do
+      git -C "$wt" add -A -- "$f"
+      commit_as_harness -m "$(commit_group_message "$(commit_group_of "$f")")" -m "File: $f"
+    done
+  fi
+
+  if [[ "$(commits_ahead)" -lt "$min_commits" ]]; then
+    log "warning: only $(commits_ahead) commit(s) possible (fewer changed files than min $min_commits)"
+  fi
+}
+
+if [[ "$(commits_ahead)" -lt "$min_commits" ]]; then
+  rebuild_branch_as_split_commits
+fi
+
+log "push $branch ($(commits_ahead) commits)"
 git -C "$wt" push origin "$branch"
 
-adds="$(git -C "$wt" diff --numstat HEAD~1 | awk '{a+=$1} END{print a+0}')" || adds=0
-dels="$(git -C "$wt" diff --numstat HEAD~1 | awk '{d+=$2} END{print d+0}')" || dels=0
-files_json="$(git -C "$wt" diff --name-only HEAD~1 | jq -R . | jq -sc 'map(select(length>0))')" || files_json='[]'
-emit_event impl.changes files="$files_json" additions="$adds" deletions="$dels"
+adds="$(git -C "$wt" diff --numstat origin/main...HEAD | awk '{a+=$1} END{print a+0}')" || adds=0
+dels="$(git -C "$wt" diff --numstat origin/main...HEAD | awk '{d+=$2} END{print d+0}')" || dels=0
+files_json="$(git -C "$wt" diff --name-only origin/main...HEAD | jq -R . | jq -sc 'map(select(length>0))')" || files_json='[]'
+emit_event impl.changes files="$files_json" additions="$adds" deletions="$dels" commits="$(commits_ahead)"
 
 # Build a template-compliant, traceable PR title + body from the executor's
 # run summary (from agent/harness/executor-prompt.md). Fall back gracefully if absent.
@@ -201,7 +285,7 @@ fi
 title="[$feature_id] $pr_title"
 
 pkg_changed="no"
-git -C "$wt" diff --name-only HEAD~1 2>/dev/null | grep -qE '(^|/)package(-lock)?\.json$' && pkg_changed="yes"
+git -C "$wt" diff --name-only origin/main...HEAD 2>/dev/null | grep -qE '(^|/)package(-lock)?\.json$' && pkg_changed="yes"
 
 if [[ -z "$pr_desc" ]]; then
   pr_desc="### PR Description

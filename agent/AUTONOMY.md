@@ -19,7 +19,7 @@ a skip marker (`[skip harness]`, `[skip codex]`, etc.), it:
 1. Acquires a lock (`agent/brain/locks/`), then runs `agent/local/continue.sh`.
 2. Creates a git worktree off `origin/main` under `.codex/worktrees/`.
 3. Runs a headless agent instance (configurable via AGENT_CMD/AGENT_MODEL or harness-config.json; supports Grok, Claude, etc.) using the appropriate prompt(s) in agent/harness/ (or legacy continue-prompt.md) that orchestrates via Ruflo MCP (auto-discovered) and implements the next unblocked `feature_list.json` task (now via separate planner + executor runs when using the new prompts).
-4. If the worktree changed: commits, pushes `harness/continue-local-<ts>` (or legacy grok/codex prefix), and opens a draft PR with `gh`.
+4. If the worktree changed: ensures the branch has at least 4 commits (`CONTINUE_MIN_COMMITS` to override; the executor commits incrementally, and the wrapper splits into semantic-group or per-file commits as a fallback), pushes `harness/continue-local-<ts>` (or legacy grok/codex prefix), and opens a draft PR with `gh`.
 5. Removes the worktree and records the SHA.
 
 The system is autonomous (while the watcher runs) at the point a merge to `main`
