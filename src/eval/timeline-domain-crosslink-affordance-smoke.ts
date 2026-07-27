@@ -239,9 +239,9 @@ test('domain → timeline back target is always literal tab id timeline', () => 
     !getResearchDomains().includes(TIMELINE_BACK_TAB_ID),
     'timeline is not a registry domain',
   );
-  // Back target is independent of which domain tab is open
-  for (const domainId of ['founder_profile', 'traction'] as const) {
-    const backTarget = TIMELINE_BACK_TAB_ID;
+  // Back target is independent of which domain tab is open (not a domain id)
+  for (const domainId of getResearchDomains()) {
+    const backTarget: string = TIMELINE_BACK_TAB_ID;
     assert(backTarget === 'timeline', `back from ${domainId} is timeline`);
     assert(backTarget !== domainId, `back is not domain ${domainId}`);
   }
