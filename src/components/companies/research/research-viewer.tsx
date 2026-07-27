@@ -134,6 +134,8 @@ export function ResearchViewer({
                   className={cn(
                     badgeVariants({ variant: 'info' }),
                     'text-[10px] px-1.5 py-0 cursor-pointer',
+                    activeTab === domain &&
+                      'bg-blue/20 font-semibold ring-1 ring-blue/60',
                   )}
                   title={`${domain}: result present (switch to tab)`}
                   aria-label={`Show ${label} research results`}

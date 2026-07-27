@@ -950,3 +950,31 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Verification result: new smoke 8/8 pass. eval:smoke all 14 sub-evals pass (research 26, search-filter 16, build-filter-sql 17, parse 16, merged 10, semantic 8, orchestrator-mock 9, freshness 8, vector-ranking 13, search-path-decision 11, domain-coverage-matrix 11, stream-contract 9, present-domain-tab-parity 10, missing-domain-prompt-gating 8). lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes).
 - Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to domain-coverage SoT, ResearchViewer switch, new smoke, package.json scripts, feature_list, PROGRESS (+ run-summary). Created `.codex/tmp/run-summary.json`.
 - Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: research-coverage-active-tab-highlight-ux.
+
+## 2026-07-27 (planner run continue-20260727-194719)
+
+- Worktree: `continue-20260727-194719` (branch `harness/continue-local-20260727-194719` @ 9c6357a).
+- Planner-only. Init via `bash agent/init.sh`: feature_list all 39 completed (through hermetic-missing-domain-prompt-gating-smoke priority 39); worktree clean tracking origin/main; dependency-security-audit completed but passes=false (excluded in-flight).
+- Recon: vision 3 facets + 4 outcomes; prior horizon head hermetic-missing-domain-prompt-gating-smoke completed; ResearchViewer present coverage badges navigate via setActiveTab + aria-current but no visual active treatment; missing-prompt SoT locked; timeline↔domain crosslinks shipped; getPresentDomainTabs/TabIds + multi-domain stream hermetically locked; DOMAIN_REGISTRY founder_profile+traction.
+- In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals.
+- Horizon updated to ["research-coverage-active-tab-highlight-ux", "hermetic-timeline-domain-crosslink-affordance-smoke", "hermetic-coverage-active-tab-highlight-smoke", "research-timeline-jump-active-state-ux"] (FI active-tab highlight next; TO crosslink lock; TO active-state smoke; FI timeline jump active parity).
+- Chosen next: research-coverage-active-tab-highlight-ux (plan_id plan-20260727-141855). Rationale: prior handoff head; close visible multi-domain orientation gap after missing-prompt gate; restores FI after TO.
+- Artifacts: `.codex/tmp/plan-20260727-141855.json`, `.codex/tmp/plan-20260727-141855.md`, `agent/harness/horizon.json`.
+- Ruflo: memory store harness:horizon, harness:plan:20260727-141855, harness:planner:last (local CLI; MCP ruflo timed out).
+- No source code, tests, or feature_list.json edits.
+
+## 2026-07-27 (research-coverage-active-tab-highlight-ux)
+
+- Worktree: `continue-20260727-194719` (branch `harness/continue-local-20260727-194719` @ 9c6357a).
+- Task: `research-coverage-active-tab-highlight-ux` (plan_id: plan-20260727-141855 from Planner run continue-20260727-194719).
+- Plan link: `.codex/tmp/plan-20260727-141855.json` (authoritative); also `.codex/tmp/plan-20260727-141855.md`. Horizon after per plan: ["research-coverage-active-tab-highlight-ux", "hermetic-timeline-domain-crosslink-affordance-smoke", "hermetic-coverage-active-tab-highlight-smoke", "research-timeline-jump-active-state-ux"].
+- Selected per plan: Feature improvement for visual active-domain feedback on ResearchViewer coverage badges when activeTab matches a present registry domain.
+- Changes (only chosen_task):
+  1. `src/components/companies/research/research-viewer.tsx`: present coverage buttons keep `badgeVariants({ variant: 'info' })` + `aria-current`; when `activeTab === domain` add inline `bg-blue/20 font-semibold ring-1 ring-blue/60` (existing blue token; focus rings retained via badgeVariants). Missing badges unchanged (outline · missing, non-interactive).
+  2. `agent/feature_list.json`: completed feature_improvement priority 40.
+  No orchestrator/Trigger/API/DB/ranking/schema/deps/lockfile; no tab model, getDomainCoverage, missing-prompt SoT, timeline crosslinks, or DOMAIN_REGISTRY changes; no new helpers.
+- Decisions (first-principles + rules): (1) Read Plan artifact first. (2) Verbatim restated Plan principles, AGENTS.md, .agents/rules, vision BEFORE code edits. (3) Confirmed and obeyed execution_constraints. (4) Corridor analyzePlan before edits (presentational classNames only; no secrets/API). (5) Inline conditional classes only (minimal-code; no second caller). (6) Ring + weight for sighted active feedback without relying on color alone alongside aria-current. (7) Horizon later items not implemented.
+- Commands executed (post impl): `npm run lint && npm run typecheck && npm run build && npm run eval:smoke`.
+- Verification result: lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes). eval:smoke all 14 sub-evals pass (research 26, search-filter 16, build-filter-sql 17, parse 16, merged 10, semantic 8, orchestrator-mock 9, freshness 8, vector-ranking 13, search-path-decision 11, domain-coverage-matrix 11, stream-contract 9, present-domain-tab-parity 10, missing-domain-prompt-gating 8).
+- Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to research-viewer present-button className, feature_list, PROGRESS (+ run-summary). Created `.codex/tmp/run-summary.json`.
+- Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: hermetic-timeline-domain-crosslink-affordance-smoke.
