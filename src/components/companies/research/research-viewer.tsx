@@ -203,21 +203,30 @@ export function ResearchViewer({
                         aria-label="Jump to domain research results"
                       >
                         <span className="text-[11px] text-text-tertiary mr-0.5">Results</span>
-                        {presentDomainTabs.map(({ id, label }) => (
-                          <button
-                            key={id}
-                            type="button"
-                            onClick={() => setActiveTab(id)}
-                            className={cn(
-                              badgeVariants({ variant: 'info' }),
-                              'text-[10px] px-1.5 py-0 cursor-pointer',
-                            )}
-                            title={`Open ${label} results tab`}
-                            aria-label={`Jump to ${label} research results`}
-                          >
-                            {label}
-                          </button>
-                        ))}
+                        {presentDomainTabs.map(({ id, label }) => {
+                          const jumpActive = getCoverageBadgeActiveState(
+                            id,
+                            true,
+                            activeTab,
+                          );
+                          return (
+                            <button
+                              key={id}
+                              type="button"
+                              onClick={() => setActiveTab(id)}
+                              className={cn(
+                                badgeVariants({ variant: 'info' }),
+                                'text-[10px] px-1.5 py-0 cursor-pointer',
+                                jumpActive.activeClassName,
+                              )}
+                              title={`Open ${label} results tab`}
+                              aria-label={`Jump to ${label} research results`}
+                              aria-current={jumpActive.ariaCurrent}
+                            >
+                              {label}
+                            </button>
+                          );
+                        })}
                       </div>
                     )}
                     <div ref={timelineRef} className="flex-1 min-h-0 overflow-y-scroll" role="feed" aria-label="Research event timeline">
