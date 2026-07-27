@@ -67,6 +67,69 @@ export function getMissingDomainLabels(
     .map((item) => item.label);
 }
 
+/**
+ * Active visual class tokens for present coverage badges when activeTab matches.
+ * Pure SoT for ResearchViewer coverage row + hermetic smoke (no hand-mirrored strings).
+ */
+export const COVERAGE_BADGE_ACTIVE_CLASS_TOKENS = [
+  "bg-blue/20",
+  "font-semibold",
+  "ring-1",
+  "ring-blue/60",
+] as const;
+
+export const COVERAGE_BADGE_ACTIVE_CLASS =
+  COVERAGE_BADGE_ACTIVE_CLASS_TOKENS.join(" ");
+
+export type CoverageBadgeActiveState = {
+  active: boolean;
+  /** Matches ResearchViewer aria-current: 'true' when active, else undefined. */
+  ariaCurrent: "true" | undefined;
+  /** Active visual class string when active; empty when not. */
+  activeClassName: string;
+};
+
+/**
+ * Whether a coverage badge is interactive-active.
+ * Only present registry domains can be active; missing never is.
+ */
+export function isCoverageBadgeActive(
+  domain: string,
+  present: boolean,
+  activeTab: string,
+): boolean {
+  return present && activeTab === domain;
+}
+
+/**
+ * Pure SoT for present coverage badge active visual + aria contract.
+ */
+export function getCoverageBadgeActiveState(
+  domain: string,
+  present: boolean,
+  activeTab: string,
+): CoverageBadgeActiveState {
+  const active = isCoverageBadgeActive(domain, present, activeTab);
+  return {
+    active,
+    ariaCurrent: active ? "true" : undefined,
+    activeClassName: active ? COVERAGE_BADGE_ACTIVE_CLASS : "",
+  };
+}
+
+/**
+ * Present coverage domain ids that are active for the given activeTab (registry order).
+ * Unknown / Coming Soon never appear (getDomainCoverage is registry-only).
+ */
+export function getActiveCoverageDomainIds(
+  presentDomainIds: Iterable<string | null | undefined>,
+  activeTab: string,
+): string[] {
+  return getDomainCoverage(presentDomainIds)
+    .filter((item) => isCoverageBadgeActive(item.domain, item.present, activeTab))
+    .map((item) => item.domain);
+}
+
 export type MissingDomainPromptState = {
   show: boolean;
   labels: string[];
