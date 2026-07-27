@@ -26,8 +26,8 @@ Only after the above restatement may you begin implementation.
 ## Required Procedure (after restatement)
 1. Re-read the chosen task, vision_refs, risks, and verification_criteria from the Plan.
 2. Explore the current code (using tools, reads, searches) only as needed to implement the task.
-3. Implement the changes in the worktree.
-4. Update `agent/feature_list.json` and append to `agent/PROGRESS.md` (include link to the Plan, decisions, commands).
+3. Implement the changes in the worktree, committing incrementally per the Commit Discipline below.
+4. Update `agent/feature_list.json` and append to `agent/PROGRESS.md` (include link to the Plan, decisions, commands). Commit this as its own final commit.
 5. Run the task's `verify` command when safe. Record result.
 6. Write the run summary the wrapper uses:
    - Create `.codex/tmp/run-summary.json` (gitignored) with:
@@ -35,6 +35,17 @@ Only after the above restatement may you begin implementation.
      - `title`
      - `pr_body_md` (follow the repo PR template exactly)
    - End with a concise message: task implemented, files changed, verification result, plan compliance note.
+
+## Commit Discipline (required)
+- Commit your work incrementally with `git add <specific paths>` + `git commit` as you complete each logical unit. Never leave everything for one giant commit at the end.
+- The branch must end with **at least 4 commits**. Structure them by logical unit, for example:
+  1. `feat|fix|refactor: <first separable unit of the implementation>` (split the implementation further whenever units are separable)
+  2. `test: <tests or evals covering the change>`
+  3. `docs: ...` or `chore(config): ...` when the task touches docs or configuration
+  4. `chore(agent): record progress and feature state` (PROGRESS.md + feature_list.json, always the last commit)
+- Each message must describe the actual change in conventional-commit style. Never use generic messages like "WIP" or "update".
+- If the diff is genuinely small, still separate implementation, verification artifacts, and agent-state updates into distinct commits.
+- Commit only. Never push, never open PRs; the wrapper handles both.
 
 ## Hard Constraints
 - The wrapper will only act on *your* `run-summary.json`. The Planner's artifacts are for planning only.
