@@ -453,5 +453,19 @@
     "description": "Feature improvement (UI/UX + agent research): add light timeline \u2194 domain-result cross-links in ResearchViewer so users on the Timeline tab can jump to present domain result tabs (and optionally back to Timeline from a domain summary) without hunting tabs. Multi-domain tabs, stream contract, badge\u2192tab sync, missing-domain prompt, and present/tab parity smoke already exist. Implementation sketch (minimal, presentational only): (1) In research-viewer.tsx Timeline TabsContent, when presentDomainIds.length > 0, render a compact row of affordances (reuse badgeVariants or text buttons + getPresentDomainTabs/getDomainCoverage labels) that call existing setActiveTab(domainId) for each present registry domain only. (2) Optionally on each domain TabsContent (or inside ResearchSummary header), a single low-emphasis control that setActiveTab('timeline'). Do not re-introduce RESULT events into processedEvents/timeline feed; do not invent new domain ids; do not change orchestrator, Trigger, API, DB, ranking, SQL, embeddings, schema, or coverage/parity helpers' contracts. Prefer inline UI in ResearchViewer over new abstractions. Accessibility: semantic buttons with clear aria-labels; keyboard-reachable. No new dependencies; no lockfile churn; no network/.env.",
     "verify": "npm run lint && npm run typecheck && npm run build && npm run eval:smoke",
     "passes": true
+  },
+  {
+    "id": "hermetic-missing-domain-prompt-gating-smoke",
+    "status": "completed",
+    "priority": 39,
+    "depends_on": [
+      "research-missing-domain-prompt-ux",
+      "hermetic-domain-coverage-matrix-smoke",
+      "hermetic-present-domain-tab-parity-smoke"
+    ],
+    "category": "testing_observability",
+    "description": "Testing/Observability: add a hermetic (zero I/O) smoke eval that locks ResearchViewer missing-domain prompt gating. Contract under test: (1) missingDomainLabels = getDomainCoverage(presentDomainIds).filter(item => !item.present).map(item => item.label) in DOMAIN_REGISTRY order; (2) showMissingDomainPrompt = missingDomainLabels.length > 0 && (isResearching || events.length > 0 || presentDomainIds.length > 0); (3) copy branch is isResearching ? live gathering text : not-produced text (labels joined with ', '). Cover at least: idle empty (no prompt); isResearching with all registry missing; completed partial present (one domain present, other missing); events.length>0 with empty presentDomainIds; presentDomainIds non-empty without events; all present (no prompt). Prefer production pure SoT extract (e.g. getMissingDomainPromptState / getMissingDomainLabels) only if needed so the eval does not hand-mirror ResearchViewer. Wire new script into package.json and eval:smoke. No UI redesign; no orchestrator/Trigger/API/DB/ranking/SQL/embedding/schema changes; no new domains; no new dependencies; no lockfile churn; no network/.env; never evaluate systemPrompt getters.",
+    "verify": "npm run eval:missing-domain-prompt-gating-smoke && npm run eval:smoke && npm run lint && npm run typecheck && npm run build",
+    "passes": true
   }
 ]

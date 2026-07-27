@@ -54,3 +54,58 @@ export function getPresentDomainTabIds(
 ): string[] {
   return getPresentDomainTabs(presentDomainIds).map((tab) => tab.id);
 }
+
+/**
+ * Missing registry domain labels in DOMAIN_REGISTRY order.
+ * Pure SoT for ResearchViewer missing-domain prompt list (not Coming Soon).
+ */
+export function getMissingDomainLabels(
+  presentDomainIds: Iterable<string | null | undefined>,
+): string[] {
+  return getDomainCoverage(presentDomainIds)
+    .filter((item) => !item.present)
+    .map((item) => item.label);
+}
+
+export type MissingDomainPromptState = {
+  show: boolean;
+  labels: string[];
+  /** Full prompt copy when show; null when hidden. */
+  text: string | null;
+};
+
+function countNonEmptyIds(
+  presentDomainIds: Iterable<string | null | undefined>,
+): number {
+  let n = 0;
+  for (const key of presentDomainIds) {
+    if (typeof key === "string" && key.length > 0) n++;
+  }
+  return n;
+}
+
+/**
+ * Missing-domain prompt gate + copy for ResearchViewer.
+ * show when any registry domain missing AND research is live, has stream
+ * events, or has at least one present domain id.
+ */
+export function getMissingDomainPromptState(input: {
+  presentDomainIds: Iterable<string | null | undefined>;
+  isResearching: boolean;
+  eventCount: number;
+}): MissingDomainPromptState {
+  // Materialize once so one-shot iterables stay consistent across label + gate.
+  const presentList = Array.from(input.presentDomainIds);
+  const labels = getMissingDomainLabels(presentList);
+  const show =
+    labels.length > 0 &&
+    (input.isResearching ||
+      input.eventCount > 0 ||
+      countNonEmptyIds(presentList) > 0);
+  const text = show
+    ? input.isResearching
+      ? `Research may still be gathering: ${labels.join(", ")}.`
+      : `Not produced in this run: ${labels.join(", ")}.`
+    : null;
+  return { show, labels, text };
+}

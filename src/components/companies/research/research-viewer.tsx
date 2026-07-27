@@ -12,7 +12,11 @@ import { ResearchViewerSkeleton } from './research-viewer-skeleton';
 import { ResearchViewerCardSkeleton } from './research-viewer-card-skeleton';
 import { ResearchSummary } from './research-summary';
 import { useResearchTabs } from '../../../hooks/use-research-tabs';
-import { getDomainCoverage, getPresentDomainTabs } from '@/lib/research/domain-coverage';
+import {
+  getDomainCoverage,
+  getMissingDomainPromptState,
+  getPresentDomainTabs,
+} from '@/lib/research/domain-coverage';
 import { cn } from '@/lib/utils';
 
 interface ResearchViewerProps {
@@ -71,13 +75,15 @@ export function ResearchViewer({
     () => getPresentDomainTabs(presentDomainIds),
     [presentDomainIds],
   );
-  const missingDomainLabels = useMemo(
-    () => domainCoverage.filter((item) => !item.present).map((item) => item.label),
-    [domainCoverage],
+  const missingDomainPrompt = useMemo(
+    () =>
+      getMissingDomainPromptState({
+        presentDomainIds,
+        isResearching,
+        eventCount: events.length,
+      }),
+    [presentDomainIds, isResearching, events.length],
   );
-  const showMissingDomainPrompt =
-    missingDomainLabels.length > 0
-    && (isResearching || events.length > 0 || presentDomainIds.length > 0);
 
   useEffect(() => {
     if (timelineRef.current) {
@@ -150,11 +156,9 @@ export function ResearchViewer({
             ),
           )}
         </div>
-        {showMissingDomainPrompt && (
+        {missingDomainPrompt.show && missingDomainPrompt.text && (
           <p className="mt-1.5 text-[11px] leading-snug text-text-tertiary">
-            {isResearching
-              ? `Research may still be gathering: ${missingDomainLabels.join(', ')}.`
-              : `Not produced in this run: ${missingDomainLabels.join(', ')}.`}
+            {missingDomainPrompt.text}
           </p>
         )}
       </CardHeader>
