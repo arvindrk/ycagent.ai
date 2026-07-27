@@ -1039,3 +1039,33 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Verification result: new smoke 8/8 pass. eval:smoke all 16 sub-evals pass (research 26, search-filter 16, build-filter-sql 17, parse 16, merged 10, semantic 8, orchestrator-mock 9, freshness 8, vector-ranking 13, search-path-decision 11, domain-coverage-matrix 11, stream-contract 9, present-domain-tab-parity 10, missing-domain-prompt-gating 8, timeline-domain-crosslink-affordance 8, coverage-active-tab-highlight 8). lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes).
 - Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to domain-coverage SoT, ResearchViewer switch, new smoke, package.json scripts, feature_list, PROGRESS (+ run-summary). Created `.codex/tmp/run-summary.json`.
 - Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: research-timeline-jump-active-state-ux.
+
+## 2026-07-27 (planner run continue-20260728-003449)
+
+- Worktree: `continue-20260728-003449` (branch `harness/continue-local-20260728-003449` @ d9adb9f).
+- Planner-only. Init via `bash agent/init.sh`: feature_list all 42 completed (through hermetic-coverage-active-tab-highlight-smoke priority 42); worktree clean tracking origin/main; dependency-security-audit completed but passes=false (excluded in-flight).
+- Recon: vision 3 facets + 4 outcomes; prior horizon head hermetic-coverage-active-tab-highlight-smoke completed; Timeline Results jumps use getPresentDomainTabs + setActiveTab without active tokens/aria-current; coverage badges use getCoverageBadgeActiveState (bg-blue/20 font-semibold ring-1 ring-blue/60); crosslink targets + coverage active + missing-prompt + present tab parity hermetically locked; DOMAIN_REGISTRY founder_profile+traction; Radix TabsContent unmounts inactive panels so jump active styling only observable while Timeline mounted.
+- In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals.
+- Horizon updated to ["research-timeline-jump-active-state-ux", "hermetic-timeline-jump-active-state-smoke", "research-timeline-results-nav-always-visible-ux"] (FI jump active next after TO coverage lock; TO jump active smoke; FI always-visible Results nav after active+smoke).
+- Chosen next: research-timeline-jump-active-state-ux (plan_id plan-20260727-190557). Rationale: prior handoff head; reuse locked coverage active SoT on Timeline Results jumps before hermetic lock and optional hoist.
+- Artifacts: `.codex/tmp/plan-20260727-190557.json`, `.codex/tmp/plan-20260727-190557.md`, `agent/harness/horizon.json`.
+- Ruflo: MCP ruflo timed out; local CLI memory store for harness:horizon / harness:plan:20260727-190557 / harness:planner:last attempted.
+- Corridor analyzePlan on planning summary (presentational UI reuse of active SoT; no secrets/orchestrator/API).
+- No source code, tests, or feature_list.json edits.
+
+## 2026-07-28 (research-timeline-jump-active-state-ux)
+
+- Worktree: `continue-20260728-003449` (branch `harness/continue-local-20260728-003449`).
+- Task: `research-timeline-jump-active-state-ux` (plan_id: plan-20260727-190557 from Planner run continue-20260728-003449).
+- Plan link: `.codex/tmp/plan-20260727-190557.json` (authoritative); also `.codex/tmp/plan-20260727-190557.md`. Horizon after per plan: ["research-timeline-jump-active-state-ux", "hermetic-timeline-jump-active-state-smoke", "research-timeline-results-nav-always-visible-ux"].
+- Selected per plan: Feature improvement mirroring coverage active visual/aria on Timeline Results jump buttons for present domains.
+- Changes (only chosen_task):
+  1. `src/components/companies/research/research-viewer.tsx`: Timeline Results `presentDomainTabs` jumps use `getCoverageBadgeActiveState(id, true, activeTab)` for `activeClassName` + `aria-current` (same tokens as coverage badges).
+  2. `src/lib/research/domain-coverage.ts`: docs only (SoT comment notes Timeline jumps share active contract).
+  3. `agent/feature_list.json`: completed feature_improvement priority 43.
+  No hermetic-timeline-jump-active-state-smoke; no Results nav hoist/forceMount; no orchestrator/Trigger/API/DB/ranking/schema/deps/lockfile; no new domains; never systemPrompt.
+- Decisions (first-principles + rules): (1) Read Plan artifact first. (2) Verbatim restated Plan principles, AGENTS.md, .agents/rules, vision BEFORE code edits. (3) Confirmed and obeyed execution_constraints. (4) Corridor analyzePlan before edits (presentational SoT reuse; no secrets). (5) Reuse existing coverage active SoT with present=true for present-only jumps; no second class string or new helper. (6) Accept Radix TabsContent unmount (jump active mainly contract parity + future smoke/hoist). (7) Horizon later items not implemented.
+- Commands executed (post impl): `npm run eval:timeline-domain-crosslink-affordance-smoke && npm run eval:coverage-active-tab-highlight-smoke && npm run eval:smoke && npm run lint && npm run typecheck && npm run build`.
+- Verification result: crosslink smoke 8/8; coverage-active smoke 8/8; eval:smoke all 16 sub-evals pass; lint clean; typecheck clean; build succeeded (Next.js 16.1.6, 9 routes).
+- Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to ResearchViewer jump map, SoT doc comment, feature_list, PROGRESS/horizon (+ run-summary). Created `.codex/tmp/run-summary.json`.
+- Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: hermetic-timeline-jump-active-state-smoke.
