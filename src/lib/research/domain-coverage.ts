@@ -69,7 +69,8 @@ export function getMissingDomainLabels(
 
 /**
  * Active visual class tokens for present coverage badges when activeTab matches.
- * Pure SoT for ResearchViewer coverage row + hermetic smoke (no hand-mirrored strings).
+ * Pure SoT for ResearchViewer coverage row, Timeline Results jumps, and hermetic
+ * smoke (no hand-mirrored strings).
  */
 export const COVERAGE_BADGE_ACTIVE_CLASS_TOKENS = [
   "bg-blue/20",
@@ -102,7 +103,7 @@ export function isCoverageBadgeActive(
 }
 
 /**
- * Pure SoT for present coverage badge active visual + aria contract.
+ * Pure SoT for present coverage badge / Timeline Results jump active visual + aria.
  */
 export function getCoverageBadgeActiveState(
   domain: string,
