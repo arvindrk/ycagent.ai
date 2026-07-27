@@ -13,6 +13,7 @@ import { ResearchViewerCardSkeleton } from './research-viewer-card-skeleton';
 import { ResearchSummary } from './research-summary';
 import { useResearchTabs } from '../../../hooks/use-research-tabs';
 import {
+  getCoverageBadgeActiveState,
   getDomainCoverage,
   getMissingDomainPromptState,
   getPresentDomainTabs,
@@ -125,8 +126,13 @@ export function ResearchViewer({
           role="list"
           aria-label="Research domain coverage"
         >
-          {domainCoverage.map(({ domain, label, present }) =>
-            present ? (
+          {domainCoverage.map(({ domain, label, present }) => {
+            const activeState = getCoverageBadgeActiveState(
+              domain,
+              present,
+              activeTab,
+            );
+            return present ? (
               <span key={domain} role="listitem" className="inline-flex">
                 <button
                   type="button"
@@ -134,12 +140,11 @@ export function ResearchViewer({
                   className={cn(
                     badgeVariants({ variant: 'info' }),
                     'text-[10px] px-1.5 py-0 cursor-pointer',
-                    activeTab === domain &&
-                      'bg-blue/20 font-semibold ring-1 ring-blue/60',
+                    activeState.activeClassName,
                   )}
                   title={`${domain}: result present (switch to tab)`}
                   aria-label={`Show ${label} research results`}
-                  aria-current={activeTab === domain ? 'true' : undefined}
+                  aria-current={activeState.ariaCurrent}
                 >
                   {label}
                 </button>
@@ -155,8 +160,8 @@ export function ResearchViewer({
                   {' · missing'}
                 </Badge>
               </span>
-            ),
-          )}
+            );
+          })}
         </div>
         {missingDomainPrompt.show && missingDomainPrompt.text && (
           <p className="mt-1.5 text-[11px] leading-snug text-text-tertiary">
