@@ -1,24 +1,21 @@
 {
   "slice": [
-    "hermetic-missing-domain-prompt-gating-smoke",
     "research-coverage-active-tab-highlight-ux",
-    "hermetic-timeline-domain-crosslink-affordance-smoke"
+    "hermetic-timeline-domain-crosslink-affordance-smoke",
+    "hermetic-coverage-active-tab-highlight-smoke",
+    "research-timeline-jump-active-state-ux"
   ],
   "rationale_per_step": {
-    "hermetic-missing-domain-prompt-gating-smoke": "Testing/Observability: hermetic lock of missing-domain prompt gating (missing labels + isResearching/events/presentDomainIds gate + live vs completed copy). Chosen next after research-timeline-domain-result-crosslink-ux completed.",
-    "research-coverage-active-tab-highlight-ux": "Feature improvement (UI/UX): strengthen active domain feedback on coverage badges when activeTab matches a present domain (beyond aria-current), after missing-prompt gate is locked.",
-    "hermetic-timeline-domain-crosslink-affordance-smoke": "Testing/Observability: hermetic lock that present-domain crosslink targets equal getPresentDomainTabIds(presentDomainIds) and exclude timeline/Coming Soon; pure SoT only if needed after crosslink shipped."
+    "research-coverage-active-tab-highlight-ux": "Feature improvement (UI/UX): present coverage badges already navigate + aria-current but lack visual active state when activeTab matches. Chosen next after hermetic-missing-domain-prompt-gating-smoke completed.",
+    "hermetic-timeline-domain-crosslink-affordance-smoke": "Testing/Observability: hermetic lock that present-domain crosslink targets equal getPresentDomainTabIds(presentDomainIds) and exclude timeline/Coming Soon; pure SoT only if needed.",
+    "hermetic-coverage-active-tab-highlight-smoke": "Testing/Observability: hermetic lock of coverage badge active visual/aria contract after active-tab highlight ships (activeTab match on present registry domains only).",
+    "research-timeline-jump-active-state-ux": "Feature improvement (UI/UX): mirror active treatment on Timeline Results jump buttons when activeTab matches that domain, after coverage highlight is locked."
   },
   "category_mix": {
-    "testing_observability": 2,
-    "feature_improvement": 1
+    "feature_improvement": 2,
+    "testing_observability": 2
   },
   "vision_refs": {
-    "hermetic-missing-domain-prompt-gating-smoke": [
-      "Agent research facet",
-      "Measurable research quality and coverage",
-      "Reliable deep research"
-    ],
     "research-coverage-active-tab-highlight-ux": [
       "UI/UX facet",
       "Agent research facet"
@@ -27,8 +24,17 @@
       "Agent research facet",
       "Measurable research quality and coverage",
       "UI/UX facet"
+    ],
+    "hermetic-coverage-active-tab-highlight-smoke": [
+      "UI/UX facet",
+      "Measurable research quality and coverage",
+      "Agent research facet"
+    ],
+    "research-timeline-jump-active-state-ux": [
+      "UI/UX facet",
+      "Agent research facet"
     ]
   },
-  "generated_by_run": "continue-20260726-214608",
-  "notes": "Planner run 2026-07-26 in harness/continue-local-20260726-214608 @ 6486ce9. Init: feature_list all 38 completed (through research-timeline-domain-result-crosslink-ux priority 38); worktree clean tracking origin/main; dependency-security-audit completed but passes=false (excluded in-flight). Dropped completed research-timeline-domain-result-crosslink-ux from prior horizon. Chosen hermetic-missing-domain-prompt-gating-smoke (TO) as next; kept research-coverage-active-tab-highlight-ux (FI) + hermetic-timeline-domain-crosslink-affordance-smoke (TO). In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals. Recon: missing prompt gate in ResearchViewer uses getDomainCoverage labels + isResearching/events/presentDomainIds; crosslinks + present tabs/badges already shipped; multi-domain stream + present/tab parity hermetically locked. Ruflo memory store harness:horizon + harness:plan:20260726-161840 (CLI; MCP ruflo unavailable). Planning-only: no source/tests/feature_list edits."
+  "generated_by_run": "continue-20260727-194719",
+  "notes": "Planner run 2026-07-27 in harness/continue-local-20260727-194719 @ 9c6357a. Init: feature_list all 39 completed (through hermetic-missing-domain-prompt-gating-smoke priority 39); worktree clean tracking origin/main; dependency-security-audit completed but passes=false (excluded in-flight). Dropped completed hermetic-missing-domain-prompt-gating-smoke from prior horizon. Chosen research-coverage-active-tab-highlight-ux (FI) as next; kept hermetic-timeline-domain-crosslink-affordance-smoke (TO); added hermetic-coverage-active-tab-highlight-smoke (TO) + research-timeline-jump-active-state-ux (FI). In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals. Recon: coverage present buttons use info badgeVariants + aria-current only; missing-prompt SoT locked; crosslinks + present tabs shipped. Ruflo memory store harness:horizon + harness:plan:20260727-141855 (CLI; MCP ruflo timed out). Planning-only: no source/tests/feature_list edits."
 }
