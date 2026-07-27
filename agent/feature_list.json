@@ -481,5 +481,19 @@
     "description": "Feature improvement (UI/UX + agent research): strengthen active-domain feedback on ResearchViewer domain coverage badges when activeTab matches a present registry domain. Present badges already call setActiveTab(domain) and set aria-current when active, but use the same badgeVariants({ variant: 'info' }) classes whether active or not, so sighted users cannot tell which domain tab is selected from the coverage row. Implementation sketch (minimal, presentational only): in research-viewer.tsx coverage checklist, for present badges only, when activeTab === domain apply a clear visual active treatment via existing cn + badgeVariants (e.g. ring/border/stronger emphasis using design tokens already in badge focus styles, or switch to a more prominent existing variant while inactive present stays info). Keep aria-current for the active present badge; keep missing badges non-interactive outline \u00b7 missing; do not change tab model, presentDomainIds, getDomainCoverage, missing-prompt SoT, timeline crosslinks, or orchestrator/Trigger/API/DB/ranking/SQL/embeddings/schema. Prefer inline conditional classes over new helpers unless a second caller appears. Accessibility: retain keyboard-reachable buttons and visible focus; do not remove focus rings. No new domains; no new dependencies; no lockfile churn; no network/.env.",
     "verify": "npm run lint && npm run typecheck && npm run build && npm run eval:smoke",
     "passes": true
+  },
+  {
+    "id": "hermetic-timeline-domain-crosslink-affordance-smoke",
+    "status": "completed",
+    "priority": 41,
+    "depends_on": [
+      "research-timeline-domain-result-crosslink-ux",
+      "hermetic-present-domain-tab-parity-smoke",
+      "research-coverage-active-tab-highlight-ux"
+    ],
+    "category": "testing_observability",
+    "description": "Testing/Observability: add a hermetic (zero I/O) smoke eval that locks ResearchViewer timeline \u2194 domain-result crosslink affordance targets after research-timeline-domain-result-crosslink-ux shipped. Contract under test: (1) timeline Results jump target ids equal getPresentDomainTabIds(presentDomainIds) (same order as getPresentDomainTabs used by ResearchViewer Timeline TabsContent); (2) targets exclude timeline and Coming Soon (investor_profile / hiring); (3) empty presentDomainIds => empty jump targets (no Results row data); (4) domain\u2192timeline back target is the literal tab id 'timeline' (not a registry domain). Cover at least: empty present; single founder_profile; both DOMAIN_REGISTRY domains in registry order (founder_profile then traction); unknown non-registry ids ignored; label parity with getPresentDomainTabs; tab ids never include timeline/Coming Soon. Prefer production pure SoT imports only (getPresentDomainTabIds / getPresentDomainTabs / getPresentDomainIds from multi-domain stream as needed); extract a new helper only if a second production caller appears so the eval does not hand-mirror ResearchViewer. Wire new script into package.json and eval:smoke. No UI redesign; no orchestrator/Trigger/API/DB/ranking/SQL/embedding/schema changes; no new domains; no new dependencies; no lockfile churn; no network/.env; never evaluate systemPrompt getters.",
+    "verify": "npm run eval:timeline-domain-crosslink-affordance-smoke && npm run eval:smoke && npm run lint && npm run typecheck && npm run build",
+    "passes": true
   }
 ]
