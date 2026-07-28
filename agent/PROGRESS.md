@@ -1082,3 +1082,20 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Ruflo: MCP ruflo unavailable; local `ruflo memory init` + store harness:horizon / harness:plan:20260728-115322 / harness:planner:last at agent/brain/harness-memory.db.
 - Corridor analyzePlan on planning summary (hermetic SoT eval; no secrets/orchestrator/API).
 - No source code, tests, or feature_list.json edits.
+
+## 2026-07-28 (hermetic-timeline-jump-active-state-smoke)
+
+- Worktree: `continue-20260728-172137` (branch `harness/continue-local-20260728-172137`).
+- Task: `hermetic-timeline-jump-active-state-smoke` (plan_id: plan-20260728-115322 from Planner run continue-20260728-172137).
+- Plan link: `.codex/tmp/plan-20260728-115322.json` (authoritative); also `.codex/tmp/plan-20260728-115322.md`. Horizon after per plan: ["hermetic-timeline-jump-active-state-smoke", "research-timeline-results-nav-always-visible-ux", "hermetic-timeline-results-nav-always-visible-smoke"].
+- Selected per plan: Testing/Observability hermetic lock of Timeline Results jump active visual/aria contract after jump-active UX shipped.
+- Changes (only chosen_task):
+  1. `src/eval/timeline-jump-active-state-smoke.ts`: 8 zero-I/O cases via getPresentDomainTabIds / getPresentDomainTabs + getCoverageBadgeActiveState(id, true, activeTab) / isCoverageBadgeActive / COVERAGE_BADGE_ACTIVE_CLASS_TOKENS (semantic token presence, not full className equality).
+  2. `package.json`: `eval:timeline-jump-active-state-smoke` + chained in `eval:smoke`.
+  3. `agent/feature_list.json`: completed testing_observability priority 44.
+  No UI redesign; no Results nav hoist/forceMount; no orchestrator/Trigger/API/DB/ranking/schema/deps/lockfile; no new domains; never systemPrompt; no new pure helpers.
+- Decisions (first-principles + rules): (1) Read Plan artifact first. (2) Verbatim restated Plan principles, AGENTS.md, .agents/rules, vision BEFORE code edits. (3) Confirmed and obeyed execution_constraints. (4) Corridor analyzePlan before edits (hermetic SoT; no secrets). (5) Reuse production active SoT only; jumps always present=true; assert token includes not className equality. (6) Mirror sibling smoke runner pattern. (7) Horizon later items (always-visible Results nav + its smoke) not implemented.
+- Commands executed (post impl): `npm run eval:timeline-jump-active-state-smoke && npm run eval:smoke && npm run lint && npm run typecheck && npm run build`.
+- Verification result: timeline-jump-active-state smoke 8/8; eval:smoke all 17 sub-evals pass (includes new smoke); lint clean; typecheck clean; build succeeded (Next.js 16.1.6, 9 routes).
+- Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to new smoke eval, package.json scripts, feature_list, PROGRESS/horizon (+ run-summary). Created `.codex/tmp/run-summary.json`.
+- Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: research-timeline-results-nav-always-visible-ux.
