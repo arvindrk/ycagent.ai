@@ -1069,3 +1069,16 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Verification result: crosslink smoke 8/8; coverage-active smoke 8/8; eval:smoke all 16 sub-evals pass; lint clean; typecheck clean; build succeeded (Next.js 16.1.6, 9 routes).
 - Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to ResearchViewer jump map, SoT doc comment, feature_list, PROGRESS/horizon (+ run-summary). Created `.codex/tmp/run-summary.json`.
 - Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: hermetic-timeline-jump-active-state-smoke.
+
+## 2026-07-28 (planner run continue-20260728-172137)
+
+- Worktree: `continue-20260728-172137` (branch `harness/continue-local-20260728-172137` @ 71a8078).
+- Planner-only. Init via `bash agent/init.sh`: feature_list all 43 completed (through research-timeline-jump-active-state-ux priority 43); worktree clean tracking origin/main; dependency-security-audit completed but passes=false (excluded in-flight).
+- Recon: vision 3 facets + 4 outcomes; prior horizon head research-timeline-jump-active-state-ux completed; Timeline Results jumps use getPresentDomainTabs + getCoverageBadgeActiveState(id, true, activeTab) for activeClassName + aria-current; coverage active + crosslink + missing-prompt + present tab parity hermetically locked; DOMAIN_REGISTRY founder_profile+traction; Radix TabsContent unmounts inactive panels so jump active mainly contract parity until always-visible hoist.
+- In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals.
+- Horizon updated to ["hermetic-timeline-jump-active-state-smoke", "research-timeline-results-nav-always-visible-ux", "hermetic-timeline-results-nav-always-visible-smoke"] (TO jump-active lock next after FI jump-active UX; FI always-visible Results nav; TO always-visible nav smoke).
+- Chosen next: hermetic-timeline-jump-active-state-smoke (plan_id plan-20260728-115322). Rationale: prior handoff head; lock-after-ship for jump active SoT before hoist.
+- Artifacts: `.codex/tmp/plan-20260728-115322.json`, `.codex/tmp/plan-20260728-115322.md`, `agent/harness/horizon.json`.
+- Ruflo: MCP ruflo unavailable; local `ruflo memory init` + store harness:horizon / harness:plan:20260728-115322 / harness:planner:last at agent/brain/harness-memory.db.
+- Corridor analyzePlan on planning summary (hermetic SoT eval; no secrets/orchestrator/API).
+- No source code, tests, or feature_list.json edits.
