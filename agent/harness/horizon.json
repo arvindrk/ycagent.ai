@@ -1,35 +1,26 @@
 {
   "slice": [
-    "hermetic-timeline-jump-active-state-smoke",
-    "research-timeline-results-nav-always-visible-ux",
-    "hermetic-timeline-results-nav-always-visible-smoke"
+    "hermetic-timeline-results-nav-always-visible-smoke",
+    "research-viewer-results-nav-placement-docs-sot-smoke"
   ],
   "rationale_per_step": {
-    "hermetic-timeline-jump-active-state-smoke": "Testing/Observability: hermetic lock of Timeline Results jump active-state contract (present-only jumps, aria-current + COVERAGE_BADGE_ACTIVE tokens via getCoverageBadgeActiveState(id, true, activeTab), none active when activeTab is timeline). Chosen next after research-timeline-jump-active-state-ux completed.",
-    "research-timeline-results-nav-always-visible-ux": "Feature improvement (UI/UX): hoist Results jump row to always-visible chrome so domain active feedback is visible without relying on Timeline TabsContent mount (after jump active smoke).",
-    "hermetic-timeline-results-nav-always-visible-smoke": "Testing/Observability: hermetic lock of always-visible Results nav presence/target contract after hoist ships (present jump ids SoT + active state parity independent of Timeline panel mount assumptions)."
+    "hermetic-timeline-results-nav-always-visible-smoke": "Testing/Observability: hermetic lock of always-visible Results nav presence/target/active contract after hoist ships (present jump ids SoT + active state parity independent of Timeline panel mount assumptions).",
+    "research-viewer-results-nav-placement-docs-sot-smoke": "Testing/Observability: optional placement/SoT invariant smoke or replan pivot for category diversity after always-visible lock; keep multi-domain chrome sealed without over-scoping UI."
   },
   "category_mix": {
-    "testing_observability": 2,
-    "feature_improvement": 1
+    "testing_observability": 2
   },
   "vision_refs": {
-    "hermetic-timeline-jump-active-state-smoke": [
-      "Agent research facet",
-      "UI/UX facet",
-      "Measurable research quality and coverage"
-    ],
-    "research-timeline-results-nav-always-visible-ux": [
-      "UI/UX facet",
-      "Agent research facet",
-      "Reliable deep research"
-    ],
     "hermetic-timeline-results-nav-always-visible-smoke": [
       "Measurable research quality and coverage",
       "UI/UX facet",
       "Agent research facet"
+    ],
+    "research-viewer-results-nav-placement-docs-sot-smoke": [
+      "Measurable research quality and coverage",
+      "UI/UX facet"
     ]
   },
-  "generated_by_run": "continue-20260728-172137",
-  "notes": "Planner run 2026-07-28 in harness/continue-local-20260728-172137 @ 71a8078. Init: feature_list all 43 completed (through research-timeline-jump-active-state-ux priority 43); worktree clean tracking origin/main; dependency-security-audit completed but passes=false (excluded in-flight). Dropped completed research-timeline-jump-active-state-ux from prior horizon. Chosen hermetic-timeline-jump-active-state-smoke (TO) as next; kept research-timeline-results-nav-always-visible-ux (FI); added hermetic-timeline-results-nav-always-visible-smoke (TO) for lock-after-hoist. In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals. Recon: Timeline Results jumps use getPresentDomainTabs + getCoverageBadgeActiveState(id,true,activeTab); coverage active + crosslink + missing-prompt + present tab parity hermetically locked; Radix TabsContent unmounts inactive panels so jump active mainly contract parity until hoist. Ruflo memory init+store under agent/brain/harness-memory.db. Planning-only: no source/tests/feature_list edits."
+  "generated_by_run": "continue-20260728-201457",
+  "notes": "Executor 2026-07-28: shipped research-timeline-results-nav-always-visible-ux (hoist Results nav under TabsList above TabsContent). Dropped completed FI from slice. Next: hermetic-timeline-results-nav-always-visible-smoke (TO lock-after-ship), then research-viewer-results-nav-placement-docs-sot-smoke. In-flight excluded unchanged: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals."
 }

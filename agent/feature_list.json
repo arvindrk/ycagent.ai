@@ -538,5 +538,19 @@
     "description": "Testing/Observability: hermetic lock of ResearchViewer Timeline Results jump active visual/aria contract after research-timeline-jump-active-state-ux. Contract: (1) jump targets are present-only registry domains from getPresentDomainTabs / getPresentDomainTabIds(presentDomainIds) in registry order (exclude timeline and Coming Soon); (2) for each present jump id, ResearchViewer applies getCoverageBadgeActiveState(id, true, activeTab) so when activeTab === id the jump is active with ariaCurrent 'true' and activeClassName tokens including bg-blue/20, font-semibold, ring-1, ring-blue/60 (COVERAGE_BADGE_ACTIVE_CLASS_TOKENS); (3) when activeTab is timeline or a non-matching present domain, non-matching jumps are not active (no aria-current, empty activeClassName / no required tokens); (4) empty presentDomainIds => no jump ids (nothing to activate); (5) unknown / Coming Soon / timeline never appear as jump actives. Implementation: add src/eval/timeline-jump-active-state-smoke.ts (~8 cases) using production pure SoT only (getPresentDomainTabs and/or getPresentDomainTabIds + getCoverageBadgeActiveState / isCoverageBadgeActive / COVERAGE_BADGE_ACTIVE_CLASS_TOKENS from domain-coverage; getResearchDomains if needed). Assert semantic active token presence, not full className equality and not hand-mirrored ResearchViewer class strings. No new pure helpers unless a second caller truly needs extract (UI already uses getCoverageBadgeActiveState; prefer reuse). Wire package.json script eval:timeline-jump-active-state-smoke into eval:smoke. No UI redesign; no Results nav hoist/forceMount (reserved for research-timeline-results-nav-always-visible-ux); no orchestrator/Trigger/API/DB/ranking/SQL/embedding/schema changes; no new domains; no new dependencies; no lockfile churn; no network/.env; never evaluate systemPrompt getters. Zero I/O.",
     "verify": "npm run eval:timeline-jump-active-state-smoke && npm run eval:smoke && npm run lint && npm run typecheck && npm run build",
     "passes": true
+  },
+  {
+    "id": "research-timeline-results-nav-always-visible-ux",
+    "status": "completed",
+    "priority": 45,
+    "depends_on": [
+      "research-timeline-jump-active-state-ux",
+      "hermetic-timeline-jump-active-state-smoke",
+      "research-timeline-domain-result-crosslink-ux"
+    ],
+    "category": "feature_improvement",
+    "description": "Feature improvement (UI/UX + agent research): hoist ResearchViewer Timeline Results jump navigation out of timeline-only TabsContent so present-domain jumps stay always visible (and can show active state) regardless of which tab is mounted. Context: Results row previously lived inside TabsContent value=\"timeline\" and unmounted with inactive panels. Implementation: move Results navigation block (role=navigation, presentDomainTabs map with getCoverageBadgeActiveState jump active SoT) under TabsList/Stop row and above all TabsContent panels inside the Tabs root. Prefer hoist over forceMount. Keep: show only when presentDomainTabs.length > 0; jump targets getPresentDomainTabs order; active via getCoverageBadgeActiveState(id, true, activeTab); empty present => no row. Do not change SoT helpers, coverage checklist, missing-prompt, domain Timeline back, DOMAIN_REGISTRY, tab model, or useResearchTabs. No duplicate Results row; no hermetic smoke (reserved for hermetic-timeline-results-nav-always-visible-smoke). No orchestrator/Trigger/API/DB/ranking/SQL/embedding/schema; no new domains/deps/lockfile; no network/.env; never evaluate systemPrompt getters. Accessibility: keyboard-reachable buttons, visible focus, aria-label/title retained.",
+    "verify": "npm run eval:timeline-domain-crosslink-affordance-smoke && npm run eval:timeline-jump-active-state-smoke && npm run eval:coverage-active-tab-highlight-smoke && npm run eval:smoke && npm run lint && npm run typecheck && npm run build",
+    "passes": true
   }
 ]
