@@ -1,34 +1,35 @@
 {
   "slice": [
-    "research-timeline-jump-active-state-ux",
     "hermetic-timeline-jump-active-state-smoke",
-    "research-timeline-results-nav-always-visible-ux"
+    "research-timeline-results-nav-always-visible-ux",
+    "hermetic-timeline-results-nav-always-visible-smoke"
   ],
   "rationale_per_step": {
-    "research-timeline-jump-active-state-ux": "Feature improvement (UI/UX): mirror coverage active visual/aria treatment on Timeline Results jump buttons when activeTab matches that present domain (reuse getCoverageBadgeActiveState / COVERAGE_BADGE_ACTIVE_*). Chosen next after hermetic-coverage-active-tab-highlight-smoke completed.",
-    "hermetic-timeline-jump-active-state-smoke": "Testing/Observability: hermetic lock of Timeline Results jump active-state contract (present-only jumps, aria-current + active tokens, none active when activeTab is timeline) after jump active UX ships.",
-    "research-timeline-results-nav-always-visible-ux": "Feature improvement (UI/UX): hoist Results jump row to always-visible chrome so domain active feedback is visible without relying on Timeline TabsContent mount (after jump active + smoke)."
+    "hermetic-timeline-jump-active-state-smoke": "Testing/Observability: hermetic lock of Timeline Results jump active-state contract (present-only jumps, aria-current + COVERAGE_BADGE_ACTIVE tokens via getCoverageBadgeActiveState(id, true, activeTab), none active when activeTab is timeline). Chosen next after research-timeline-jump-active-state-ux completed.",
+    "research-timeline-results-nav-always-visible-ux": "Feature improvement (UI/UX): hoist Results jump row to always-visible chrome so domain active feedback is visible without relying on Timeline TabsContent mount (after jump active smoke).",
+    "hermetic-timeline-results-nav-always-visible-smoke": "Testing/Observability: hermetic lock of always-visible Results nav presence/target contract after hoist ships (present jump ids SoT + active state parity independent of Timeline panel mount assumptions)."
   },
   "category_mix": {
-    "feature_improvement": 2,
-    "testing_observability": 1
+    "testing_observability": 2,
+    "feature_improvement": 1
   },
   "vision_refs": {
-    "research-timeline-jump-active-state-ux": [
-      "UI/UX facet",
-      "Agent research facet"
-    ],
     "hermetic-timeline-jump-active-state-smoke": [
+      "Agent research facet",
       "UI/UX facet",
-      "Measurable research quality and coverage",
-      "Agent research facet"
+      "Measurable research quality and coverage"
     ],
     "research-timeline-results-nav-always-visible-ux": [
       "UI/UX facet",
       "Agent research facet",
       "Reliable deep research"
+    ],
+    "hermetic-timeline-results-nav-always-visible-smoke": [
+      "Measurable research quality and coverage",
+      "UI/UX facet",
+      "Agent research facet"
     ]
   },
-  "generated_by_run": "continue-20260728-003449",
-  "notes": "Planner run 2026-07-27 in harness/continue-local-20260728-003449 @ d9adb9f. Init: feature_list all 42 completed (through hermetic-coverage-active-tab-highlight-smoke priority 42); worktree clean tracking origin/main; dependency-security-audit completed but passes=false (excluded in-flight). Dropped completed hermetic-coverage-active-tab-highlight-smoke from prior horizon. Chosen research-timeline-jump-active-state-ux (FI) as next; kept hermetic-timeline-jump-active-state-smoke (TO); added research-timeline-results-nav-always-visible-ux (FI) for always-visible jump chrome after active+smoke. In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals. Recon: Timeline Results jumps use getPresentDomainTabs + setActiveTab without active tokens; coverage badges use getCoverageBadgeActiveState; crosslink targets + coverage active hermetically locked; DOMAIN_REGISTRY founder_profile+traction; Radix TabsContent unmounts inactive so jump active only visible while Timeline mounted. Ruflo MCP timed out; local ruflo memory store attempted. Planning-only: no source/tests/feature_list edits."
+  "generated_by_run": "continue-20260728-172137",
+  "notes": "Planner run 2026-07-28 in harness/continue-local-20260728-172137 @ 71a8078. Init: feature_list all 43 completed (through research-timeline-jump-active-state-ux priority 43); worktree clean tracking origin/main; dependency-security-audit completed but passes=false (excluded in-flight). Dropped completed research-timeline-jump-active-state-ux from prior horizon. Chosen hermetic-timeline-jump-active-state-smoke (TO) as next; kept research-timeline-results-nav-always-visible-ux (FI); added hermetic-timeline-results-nav-always-visible-smoke (TO) for lock-after-hoist. In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals. Recon: Timeline Results jumps use getPresentDomainTabs + getCoverageBadgeActiveState(id,true,activeTab); coverage active + crosslink + missing-prompt + present tab parity hermetically locked; Radix TabsContent unmounts inactive panels so jump active mainly contract parity until hoist. Ruflo memory init+store under agent/brain/harness-memory.db. Planning-only: no source/tests/feature_list edits."
 }
