@@ -1099,3 +1099,33 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Verification result: timeline-jump-active-state smoke 8/8; eval:smoke all 17 sub-evals pass (includes new smoke); lint clean; typecheck clean; build succeeded (Next.js 16.1.6, 9 routes).
 - Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to new smoke eval, package.json scripts, feature_list, PROGRESS/horizon (+ run-summary). Created `.codex/tmp/run-summary.json`.
 - Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: research-timeline-results-nav-always-visible-ux.
+
+## 2026-07-28 (planner run continue-20260728-201457)
+
+- Worktree: `continue-20260728-201457` (branch `harness/continue-local-20260728-201457` @ 40cdfd3).
+- Planner-only. Init via `bash agent/init.sh`: feature_list all 44 completed (through hermetic-timeline-jump-active-state-smoke priority 44); worktree clean tracking origin/main; dependency-security-audit completed but passes=false (excluded in-flight).
+- Recon: vision 3 facets + 4 outcomes; prior horizon head hermetic-timeline-jump-active-state-smoke completed; Results jump row still inside TabsContent value="timeline" with getPresentDomainTabs + getCoverageBadgeActiveState(id, true, activeTab); coverage active + crosslink + missing-prompt + present tab parity + jump-active hermetically locked; DOMAIN_REGISTRY founder_profile+traction; Radix TabsContent unmounts inactive panels so Results nav disappears on domain tabs until hoist.
+- In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals.
+- Horizon updated to ["research-timeline-results-nav-always-visible-ux", "hermetic-timeline-results-nav-always-visible-smoke", "research-viewer-results-nav-placement-docs-sot-smoke"] (FI always-visible Results nav next after TO jump-active lock; TO always-visible smoke; TO optional placement/SoT smoke or replan).
+- Chosen next: research-timeline-results-nav-always-visible-ux (plan_id plan-20260728-144553). Rationale: prior handoff head; ship hoist so active jumps and domain switching remain available off-Timeline; lock-after-ship smoke follows.
+- Artifacts: `.codex/tmp/plan-20260728-144553.json`, `.codex/tmp/plan-20260728-144553.md`, `agent/harness/horizon.json`.
+- Ruflo: MCP ruflo unavailable; local `ruflo memory init` + store harness:horizon / harness:plan:20260728-144553 / harness:planner:last at agent/brain/harness-memory.db.
+- Corridor analyzePlan on planning summary (presentational hoist; reuse SoT; no secrets/orchestrator/API).
+- No source code, tests, or feature_list.json edits.
+
+## 2026-07-28 (research-timeline-results-nav-always-visible-ux)
+
+- Worktree: `continue-20260728-201457` (branch `harness/continue-local-20260728-201457`).
+- Task: `research-timeline-results-nav-always-visible-ux` (plan_id: plan-20260728-144553 from Planner run continue-20260728-201457).
+- Plan link: `.codex/tmp/plan-20260728-144553.json` (authoritative); also `.codex/tmp/plan-20260728-144553.md`. Horizon after per plan: ["research-timeline-results-nav-always-visible-ux", "hermetic-timeline-results-nav-always-visible-smoke", "research-viewer-results-nav-placement-docs-sot-smoke"].
+- Selected per plan: Feature improvement hoist of Timeline Results jump nav into always-visible chrome under TabsList/Stop and above TabsContent panels.
+- Changes (only chosen_task):
+  1. `src/components/companies/research/research-viewer.tsx`: moved Results navigation (`role="navigation"` aria-label Jump to domain research results, presentDomainTabs + getCoverageBadgeActiveState jump active SoT) out of timeline TabsContent; single copy remains inside Tabs root above all TabsContent. Timeline panel is event feed only. No forceMount; no new helpers; SoT unchanged.
+  2. `agent/feature_list.json`: completed feature_improvement priority 45.
+  3. `agent/harness/horizon.json`: advanced past completed FI; next TO always-visible smoke.
+  No hermetic smoke (reserved); no orchestrator/Trigger/API/DB/ranking/schema/deps/lockfile; no new domains; never systemPrompt.
+- Decisions (first-principles + rules): (1) Read Plan artifact first. (2) Verbatim restated Plan principles, AGENTS.md, .agents/rules, vision BEFORE code edits. (3) Confirmed and obeyed execution_constraints. (4) Corridor analyzePlan before edits (presentational hoist; no secrets). (5) Prefer hoist over forceMount (minimal mount cost). (6) Reuse getPresentDomainTabs + getCoverageBadgeActiveState only. (7) No duplicate Results row. (8) Horizon later smokes not implemented.
+- Commands executed (post impl): `npm run eval:timeline-domain-crosslink-affordance-smoke && npm run eval:timeline-jump-active-state-smoke && npm run eval:coverage-active-tab-highlight-smoke && npm run eval:smoke && npm run lint && npm run typecheck && npm run build`.
+- Verification result: crosslink 8/8; jump-active 8/8; coverage-active 8/8; eval:smoke all 17 sub-evals pass; lint clean; typecheck clean; build succeeded (Next.js 16.1.6, 9 routes).
+- Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to research-viewer.tsx + feature_list/PROGRESS/horizon (+ run-summary). Created `.codex/tmp/run-summary.json`.
+- Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: hermetic-timeline-results-nav-always-visible-smoke.
