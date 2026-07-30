@@ -1253,3 +1253,36 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Verification result: lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes). eval:smoke all 19 sub-evals pass.
 - Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to pure helper + tiered-results-display + feature_list/PROGRESS/horizon (+ run-summary). Created `.codex/tmp/run-summary.json`.
 - Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: hermetic-empty-tier-bucket-messaging-smoke.
+
+## 2026-07-30 (planner run continue-20260730-220831)
+
+- Worktree: `continue-20260730-220831` (branch `harness/continue-local-20260730-220831` @ 68d9bfd).
+- Planner-only. Init via `bash agent/init.sh`: feature_list all 49 completed (through search-tier-empty-bucket-messaging-ux priority 49); worktree clean tracking origin/main; dependency-security-audit completed but passes=false (excluded in-flight).
+- Recon: vision 3 facets + 4 outcomes; empty-tier FI shipped pure `buildTierBucketModel` + TieredResultsDisplay gap rows; no hermetic smoke yet; eval:smoke has 19 sub-evals including relative-freshness but not empty-tier.
+- In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals.
+- Horizon updated to ["hermetic-empty-tier-bucket-messaging-smoke", "research-coverage-empty-state-discovery-ux", "hermetic-coverage-empty-state-discovery-smoke"] (TO lock-after-ship next; FI coverage empty-state; TO coverage lock).
+- Chosen next: hermetic-empty-tier-bucket-messaging-smoke (plan_id plan-20260730-163937). Rationale: seal gap-only empty tier contract before more research UX.
+- Artifacts: `.codex/tmp/plan-20260730-163937.json`, `.codex/tmp/plan-20260730-163937.md`, `agent/harness/horizon.json`.
+- Ruflo: MCP ruflo unavailable; local `ruflo memory init` + store harness:horizon / harness:plan:20260730-163937 / harness:planner:last at agent/brain/harness-memory.db.
+- Corridor analyzePlan on planning summary (hermetic pure SoT smoke; no secrets/API).
+- No source code, tests, or feature_list.json edits.
+
+## 2026-07-30 (hermetic-empty-tier-bucket-messaging-smoke)
+
+- Worktree: `continue-20260730-220831` (branch `harness/continue-local-20260730-220831`).
+- Task: `hermetic-empty-tier-bucket-messaging-smoke` (plan_id: plan-20260730-163937 from Planner run continue-20260730-220831).
+- Plan link: `.codex/tmp/plan-20260730-163937.json` (authoritative); also `.codex/tmp/plan-20260730-163937.md`. Horizon after per plan: ["hermetic-empty-tier-bucket-messaging-smoke", "research-coverage-empty-state-discovery-ux", "hermetic-coverage-empty-state-discovery-smoke"].
+- Selected per plan: Testing/Observability hermetic lock of empty higher-confidence tier gap model (`buildTierBucketModel`).
+- Changes (only chosen_task):
+  1. `src/eval/empty-tier-bucket-messaging-smoke.ts`: hermetic zero-I/O smoke (9 cases) importing production `buildTierBucketModel` only; minimal SearchResult fixtures; asserts empty=>[]; keyword-only gaps; exact-only; strong-only; multi-tier; unknown→keyword_match; emptyMessage strings; isEmpty/counts; never throws.
+  2. `package.json`: `eval:empty-tier-bucket-messaging-smoke` wired into composite `eval:smoke`.
+  3. `src/lib/semantic-search/build-tier-bucket-model.ts`: early `return []` when `results.length === 0` (blocking SoT bug: Infinity best order previously emitted all-empty five-tier wall; feature policy says empty total out of scope / SearchEmpty).
+  4. `agent/feature_list.json`: completed testing_observability priority 50.
+  5. `agent/harness/horizon.json`: advanced past completed TO lock.
+  No ranking/SQL/embedding/API/DB/schema/orchestrator/Trigger/auth/.env; no React/DOM assertions; no new deps/lockfile; horizon later FI/TO not implemented.
+- Decisions (first-principles + rules): (1) Read Plan artifact first. (2) Verbatim restated Plan principles, AGENTS.md, .agents/rules, vision BEFORE code edits. (3) Confirmed and obeyed execution_constraints. (4) Corridor analyzePlan before edits (hermetic pure SoT; no secrets). (5) Prefer production import only (no hand-mirrored gap tables). (6) Fixed empty-input SoT only when smoke proved all-empty wall (plan allowed clear production bug). (7) Horizon later items not implemented.
+- Commands executed (post impl): `npm run eval:empty-tier-bucket-messaging-smoke && npm run eval:smoke && npm run lint && npm run typecheck && npm run build`.
+- Verification result: empty-tier smoke 9/9 pass. eval:smoke all 20 sub-evals pass (includes new empty-tier). lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes).
+- Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to smoke + package.json + empty-input SoT fix + feature_list/PROGRESS/horizon (+ run-summary). Created `.codex/tmp/run-summary.json`.
+- Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: research-coverage-empty-state-discovery-ux.
+
