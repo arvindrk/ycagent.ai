@@ -1,24 +1,19 @@
 {
   "slice": [
-    "search-tier-empty-bucket-messaging-ux",
     "hermetic-empty-tier-bucket-messaging-smoke",
-    "research-coverage-empty-state-discovery-ux"
+    "research-coverage-empty-state-discovery-ux",
+    "hermetic-coverage-empty-state-discovery-smoke"
   ],
   "rationale_per_step": {
-    "search-tier-empty-bucket-messaging-ux": "Feature improvement (vector search + UI/UX): clearer empty/sparse tier messaging in TieredResultsDisplay so discovery feels less noisy when buckets have no hits. Next after relative freshness label lock.",
-    "hermetic-empty-tier-bucket-messaging-smoke": "Testing/Observability: hermetic lock of empty-tier display model after empty-bucket messaging ships.",
-    "research-coverage-empty-state-discovery-ux": "Feature improvement lookahead (UI/UX + agent research): optional empty-state clarity for coverage checklist when no domains present; replan if higher-value candidate appears."
+    "hermetic-empty-tier-bucket-messaging-smoke": "Testing/Observability: hermetic lock of empty-tier display model after empty-bucket messaging ships (buildTierBucketModel pure SoT).",
+    "research-coverage-empty-state-discovery-ux": "Feature improvement lookahead (UI/UX + agent research): empty-state clarity for coverage checklist when no domains present; replan if higher-value candidate appears.",
+    "hermetic-coverage-empty-state-discovery-smoke": "Testing/Observability lookahead: hermetic lock of coverage empty-state SoT after that FI ships; replan if slice reprioritized."
   },
   "category_mix": {
-    "feature_improvement": 2,
-    "testing_observability": 1
+    "feature_improvement": 1,
+    "testing_observability": 2
   },
   "vision_refs": {
-    "search-tier-empty-bucket-messaging-ux": [
-      "Vector search facet",
-      "UI/UX facet",
-      "Powerful intuitive discovery"
-    ],
     "hermetic-empty-tier-bucket-messaging-smoke": [
       "Vector search facet",
       "Measurable research quality and coverage"
@@ -26,8 +21,12 @@
     "research-coverage-empty-state-discovery-ux": [
       "UI/UX facet",
       "Agent research facet"
+    ],
+    "hermetic-coverage-empty-state-discovery-smoke": [
+      "Agent research facet",
+      "Measurable research quality and coverage"
     ]
   },
-  "generated_by_run": "continue-20260730-163125",
-  "notes": "Executor run 2026-07-30 completed hermetic-relative-freshness-label-smoke (priority 48). Advanced past TO lock-after-ship; next FI empty-tier discovery then TO empty-tier smoke. In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals."
+  "generated_by_run": "continue-20260730-164051",
+  "notes": "Executor completed search-tier-empty-bucket-messaging-ux (priority 49). Advanced past FI; next TO hermetic-empty-tier-bucket-messaging-smoke. Plan plan-20260730-164248."
 }
