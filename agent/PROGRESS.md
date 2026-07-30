@@ -1286,3 +1286,35 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to smoke + package.json + empty-input SoT fix + feature_list/PROGRESS/horizon (+ run-summary). Created `.codex/tmp/run-summary.json`.
 - Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: research-coverage-empty-state-discovery-ux.
 
+
+## 2026-07-30 (planner run continue-20260731-010002)
+
+- Worktree: `continue-20260731-010002` (branch `harness/continue-local-20260731-010002` @ 0d34c31).
+- Planner-only. Init via `bash agent/init.sh`: feature_list all 50 completed (through hermetic-empty-tier-bucket-messaging-smoke priority 50); worktree clean tracking origin/main; dependency-security-audit completed but passes=false (excluded in-flight).
+- Recon: vision 3 facets + 4 outcomes; empty-tier FI+TO shipped (`buildTierBucketModel` + 9-case smoke, eval:smoke 20); coverage checklist still labels idle empty domains as `· missing` while `getMissingDomainPromptState` hides prompt; Results nav / active-tab / missing-prompt hermetically locked.
+- In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals.
+- Horizon updated to ["research-coverage-empty-state-discovery-ux", "hermetic-coverage-empty-state-discovery-smoke", "search-result-count-summary-ux", "hermetic-search-result-count-summary-smoke"] (FI coverage empty-state next; TO lock; FI vector-search count summary diversity; TO count lock).
+- Chosen next: research-coverage-empty-state-discovery-ux (plan_id plan-20260730-193155). Rationale: prior handoff head after empty-tier TO; fix false failure wording on idle coverage badges via pure SoT.
+- Artifacts: `.codex/tmp/plan-20260730-193155.json`, `.codex/tmp/plan-20260730-193155.md`, `agent/harness/horizon.json`.
+- Ruflo: MCP ruflo unavailable; local `ruflo memory init` + store harness:horizon / harness:plan:20260730-193155 / harness:planner:last.
+- Corridor analyzePlan on planning summary (presentational empty-state; XSS-safe React text; pure SoT; no secrets/API).
+- No source code, tests, or feature_list.json edits.
+
+
+## 2026-07-31 (research-coverage-empty-state-discovery-ux)
+
+- Worktree: `continue-20260731-010002` (branch `harness/continue-local-20260731-010002`).
+- Task: `research-coverage-empty-state-discovery-ux` (plan_id: plan-20260730-193155 from Planner run continue-20260731-010002).
+- Plan link: `.codex/tmp/plan-20260730-193155.json` (authoritative); also `.codex/tmp/plan-20260730-193155.md`. Horizon after per plan: ["research-coverage-empty-state-discovery-ux", "hermetic-coverage-empty-state-discovery-smoke", "search-result-count-summary-ux", "hermetic-search-result-count-summary-smoke"].
+- Selected per plan: Feature improvement (UI/UX + agent research) pure coverage empty-state presentation SoT + ResearchViewer wire so idle pre-research does not look like failure "missing".
+- Changes (only chosen_task):
+  1. `src/lib/research/domain-coverage.ts`: `getCoverageBadgePresentationModel({ presentDomainIds, isResearching, eventCount })` returns per-registry badges (present vs pending / gathering / missing wording) + optional idle `discoveryLine`.
+  2. `src/components/companies/research/research-viewer.tsx`: coverage row + idle discovery line from pure model; present badges still use `getCoverageBadgeActiveState`; `getMissingDomainPromptState` unchanged for live/not-produced prompt.
+  3. `agent/feature_list.json`: completed feature_improvement priority 51.
+  4. `agent/harness/horizon.json`: advanced past completed FI head.
+  No orchestrator/Trigger/API/DB/schema/ranking/embedding/auth/.env; no hermetic smoke (horizon later); no new deps/lockfile; no dangerouslySetInnerHTML; never evaluate systemPrompt getters.
+- Decisions (first-principles + rules): (1) Read Plan artifact first. (2) Verbatim restated Plan principles, AGENTS.md, .agents/rules, vision BEFORE code edits. (3) Confirmed and obeyed execution_constraints. (4) Corridor analyzePlan before edits (XSS-safe React text; pure SoT). (5) Single pure helper preferred over multiple presentation helpers. (6) Reused missing-prompt SoT; discovery line only for idle empty (no live/not-produced copy duplication). (7) Horizon later hermetic smoke not implemented.
+- Commands executed (post impl): `npm run lint && npm run typecheck && npm run build && npm run eval:missing-domain-prompt-gating-smoke && npm run eval:coverage-active-tab-highlight-smoke && npm run eval:timeline-results-nav-always-visible-smoke && npm run eval:smoke`.
+- Verification result: lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes). missing-domain-prompt-gating 8/8. coverage-active-tab-highlight 8/8. timeline-results-nav-always-visible 8/8. eval:smoke all 20 sub-evals pass.
+- Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to domain-coverage pure SoT + ResearchViewer wire + feature_list/PROGRESS/horizon (+ run-summary). Created `.codex/tmp/run-summary.json`.
+- Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: hermetic-coverage-empty-state-discovery-smoke.
