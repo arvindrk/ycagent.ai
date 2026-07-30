@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import type { CompanyListItem } from '@/types/company.types';
+import { formatRelativeSyncedLabel } from '@/lib/format-relative-synced-label';
 import { Building2, MapPin, Zap } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -139,7 +140,7 @@ export function CompanyPreviewCard({ company }: CompanyPreviewCardProps) {
                 className="flex-shrink-0 text-[10px] px-1.5 py-0 tabular-nums"
                 title={`last_synced_at: ${company.last_synced_at} updated_at: ${company.updated_at || ''} created_at: ${company.created_at || ''}`}
               >
-                {company.last_synced_at.slice(0, 10)}
+                {formatRelativeSyncedLabel(company.last_synced_at)}
               </Badge>
             )}
             <Badge

@@ -1,34 +1,33 @@
 {
   "slice": [
-    "research-viewer-results-nav-placement-docs-sot-smoke",
-    "company-preview-relative-freshness-label-ux",
-    "search-tier-empty-bucket-messaging-ux"
+    "hermetic-relative-freshness-label-smoke",
+    "search-tier-empty-bucket-messaging-ux",
+    "hermetic-empty-tier-bucket-messaging-smoke"
   ],
   "rationale_per_step": {
-    "research-viewer-results-nav-placement-docs-sot-smoke": "Testing/Observability: optional placement/SoT invariant smoke or replan if redundant once always-visible chrome model is locked.",
-    "company-preview-relative-freshness-label-ux": "Feature improvement (UI/UX + freshness): improve company preview last_synced presentation toward relative freshness labels for trust and discovery; diversifies after multi-domain chrome TO stack.",
-    "search-tier-empty-bucket-messaging-ux": "Feature improvement (vector search + UI/UX): clearer empty tier/bucket messaging in tiered results so discovery feels less noisy when a tier has no hits."
+    "hermetic-relative-freshness-label-smoke": "Testing/Observability: hermetic lock of pure relative freshness formatter (injectable now) after company-preview-relative-freshness-label-ux shipped.",
+    "search-tier-empty-bucket-messaging-ux": "Feature improvement (vector search + UI/UX): clearer empty tier/bucket messaging in tiered results so discovery feels less noisy when a tier has no hits.",
+    "hermetic-empty-tier-bucket-messaging-smoke": "Testing/Observability: hermetic lock of empty-tier display model after empty-bucket messaging ships."
   },
   "category_mix": {
-    "testing_observability": 1,
-    "feature_improvement": 2
+    "feature_improvement": 1,
+    "testing_observability": 2
   },
   "vision_refs": {
-    "research-viewer-results-nav-placement-docs-sot-smoke": [
+    "hermetic-relative-freshness-label-smoke": [
       "Measurable research quality and coverage",
       "UI/UX facet"
-    ],
-    "company-preview-relative-freshness-label-ux": [
-      "UI/UX facet",
-      "High-quality evidence-backed intelligence (fresh)",
-      "Powerful intuitive discovery"
     ],
     "search-tier-empty-bucket-messaging-ux": [
       "Vector search facet",
       "UI/UX facet",
       "Powerful intuitive discovery"
+    ],
+    "hermetic-empty-tier-bucket-messaging-smoke": [
+      "Vector search facet",
+      "Measurable research quality and coverage"
     ]
   },
-  "generated_by_run": "continue-20260728-202447",
-  "notes": "Executor completed hermetic-timeline-results-nav-always-visible-smoke (priority 46). Horizon advanced past lock-after-ship TO; next optional placement TO then FI freshness + empty-tier messaging. In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals."
+  "generated_by_run": "continue-20260730-145723",
+  "notes": "Executor advanced horizon after completing company-preview-relative-freshness-label-ux (priority 47). Remaining: hermetic formatter lock, then empty-tier search FI + TO. In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals."
 }
