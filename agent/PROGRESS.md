@@ -1160,3 +1160,34 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Verification result: new smoke 8/8 pass. eval:smoke all 18 sub-evals pass (includes new smoke). lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes).
 - Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to smoke eval + package.json + feature_list/PROGRESS/horizon (+ run-summary). Created `.codex/tmp/run-summary.json`.
 - Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: research-viewer-results-nav-placement-docs-sot-smoke.
+
+## 2026-07-30 (planner run continue-20260730-145723)
+
+- Worktree: `continue-20260730-145723` (branch `harness/continue-local-20260730-145723` @ 1f0d667).
+- Planner-only. Init via `bash agent/init.sh`: feature_list all 46 completed (through hermetic-timeline-results-nav-always-visible-smoke priority 46); worktree clean tracking origin/main; dependency-security-audit completed but passes=false (excluded in-flight).
+- Recon: vision 3 facets + 4 outcomes; always-visible Results nav smoke locks pure presence+targets+active; placement/React mount out of hermetic scope; company preview still shows last_synced_at as YYYY-MM-DD slice; tiered results only render non-empty tiers.
+- In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals.
+- Horizon updated to ["company-preview-relative-freshness-label-ux", "hermetic-relative-freshness-label-smoke", "search-tier-empty-bucket-messaging-ux", "hermetic-empty-tier-bucket-messaging-smoke"] (dropped redundant placement TO; FI freshness next; TO lock; FI empty-tier discovery; TO empty-tier smoke).
+- Chosen next: company-preview-relative-freshness-label-ux (plan_id plan-20260730-092850). Rationale: pivot off multi-domain chrome stack to discovery freshness UX using existing last_synced surface.
+- Artifacts: `.codex/tmp/plan-20260730-092850.json`, `.codex/tmp/plan-20260730-092850.md`, `agent/harness/horizon.json`.
+- Ruflo: MCP ruflo timed out; local `ruflo memory init` + store harness:horizon / harness:plan:20260730-092850 / harness:planner:last.
+- Corridor analyzePlan on planning summary (presentational relative labels; no secrets/API).
+- No source code, tests, or feature_list.json edits.
+
+## 2026-07-30 (company-preview-relative-freshness-label-ux)
+
+- Worktree: `continue-20260730-145723` (branch `harness/continue-local-20260730-145723`).
+- Task: `company-preview-relative-freshness-label-ux` (plan_id: plan-20260730-092850 from Planner run continue-20260730-145723).
+- Plan link: `.codex/tmp/plan-20260730-092850.json` (authoritative). Horizon after per plan: ["company-preview-relative-freshness-label-ux", "hermetic-relative-freshness-label-smoke", "search-tier-empty-bucket-messaging-ux", "hermetic-empty-tier-bucket-messaging-smoke"].
+- Selected per plan: Feature improvement UI/UX freshness labels on company preview discovery cards.
+- Changes (only chosen_task):
+  1. `src/lib/format-relative-synced-label.ts`: pure `formatRelativeSyncedLabel(lastSyncedAt, now?)` with injectable `now`; labels `synced today` / `synced Nd ago` / `synced Nmo ago` / `synced Ny ago`; invalid Date.parse falls back to date slice / original string; never throws.
+  2. `src/components/companies/list/company-preview-card.tsx`: badge text uses formatter; title/tooltip keeps absolute last_synced_at/updated_at/created_at.
+  3. `agent/feature_list.json`: completed feature_improvement priority 47.
+  4. `agent/harness/horizon.json`: advanced past completed FI; next hermetic lock then empty-tier items.
+  No schema/API/DB/orchestrator/Trigger/ranking/embedding/auth/.env; no research-viewer; no new deps/lockfile; hermetic-relative-freshness-label-smoke NOT implemented (horizon later).
+- Decisions (first-principles + rules): (1) Read Plan artifact first and restated principles/AGENTS/rules/vision before code. (2) Confirmed and obeyed execution_constraints. (3) Corridor analyzePlan before edits (presentational only; XSS-safe React text; fail-safe fallback). (4) Pure helper colocated under src/lib with injectable now for later hermetic smoke; no second abstraction. (5) Compact badge copy matching plan examples; absolute precision stays in title. (6) Did not extract hero formatRelativeTime (different copy shape; second caller not required for this task).
+- Commands executed (post impl): `npm run lint && npm run typecheck && npm run build && npm run eval:freshness-smoke && npm run eval:smoke`.
+- Verification result: lint clean; typecheck clean; build succeeded (Next.js 16.1.6, 9 routes); freshness-smoke 8/8; eval:smoke all 18 sub-evals pass.
+- Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to pure formatter + preview card + feature_list/PROGRESS/horizon (+ run-summary). Created `.codex/tmp/run-summary.json`.
+- Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: hermetic-relative-freshness-label-smoke.
