@@ -578,5 +578,17 @@
     "description": "Feature improvement (UI/UX + freshness): replace the company preview card last_synced_at badge display from raw YYYY-MM-DD (company.last_synced_at.slice(0, 10) in company-preview-card.tsx) with a short relative freshness label (e.g. 'synced today', 'synced 3d ago', 'synced 2mo ago') so discovery cards communicate currency at a glance. Keep absolute ISO timestamps in the existing title/tooltip for precision. Prefer a small pure formatter with injectable `now` for hermetic tests; use existing last_synced_at only. Invalid/unparseable dates: safe fallback (keep date slice or omit relative text). No schema, API, DB, ranking, embedding, research-orchestrator, Trigger, or auth changes. No new dependencies or lockfile churn. Advances vision core outcome for fresh, evidence-backed intelligence and the UI/UX + discovery facets.",
     "verify": "npm run lint && npm run typecheck && npm run build && npm run eval:freshness-smoke && npm run eval:smoke",
     "passes": true
+  },
+  {
+    "id": "hermetic-relative-freshness-label-smoke",
+    "status": "completed",
+    "priority": 48,
+    "depends_on": [
+      "company-preview-relative-freshness-label-ux"
+    ],
+    "category": "testing_observability",
+    "description": "Testing/Observability: hermetic (zero I/O) smoke eval that locks the pure relative freshness label contract after company-preview-relative-freshness-label-ux shipped. Production SoT: formatRelativeSyncedLabel(lastSyncedAt, now?) from src/lib/format-relative-synced-label.ts (injectable now for determinism). Contract under test: (1) days < 1 (including future/clock-skew clamped via Math.max(0, now-synced)) => 'synced today'; (2) 1..29 days => 'synced Nd ago'; (3) 30..364 days => 'synced Nmo ago' with months = max(1, floor(days/30)); (4) >=365 days => 'synced Ny ago' with years = max(1, floor(days/365)); (5) unparseable lastSyncedAt => fallback slice(0,10) when length >= 10 else original string; (6) invalid now (NaN Date/number) => same fallback; (7) never throws on empty string, garbage, or extreme values; (8) Date | number accepted for now. Cover at least ~8 cases with fixed now (e.g. 2024-06-26T12:00:00.000Z): same-day ISO, 3d ago, 45d (~1mo), 400d (~1y), future timestamp treated as today, invalid 'not-a-date' fallback, short invalid string fallback, Date object now. Assert exact label strings against production helper only (no hand-mirrored copy tables, no UI class strings, no React render). Wire package.json script eval:relative-freshness-label-smoke into eval:smoke. Do not change company-preview-card.tsx presentation, hero formatRelativeTime, schema, API, DB, ranking, embedding, research-orchestrator, Trigger, or auth. No new dependencies or lockfile churn; no network/.env; never evaluate systemPrompt getters. Zero I/O. Advances vision measurable quality + freshness discovery trust.",
+    "verify": "npm run eval:relative-freshness-label-smoke && npm run eval:smoke && npm run lint && npm run typecheck && npm run build",
+    "passes": true
   }
 ]
