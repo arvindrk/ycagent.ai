@@ -1191,3 +1191,34 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Verification result: lint clean; typecheck clean; build succeeded (Next.js 16.1.6, 9 routes); freshness-smoke 8/8; eval:smoke all 18 sub-evals pass.
 - Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to pure formatter + preview card + feature_list/PROGRESS/horizon (+ run-summary). Created `.codex/tmp/run-summary.json`.
 - Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: hermetic-relative-freshness-label-smoke.
+
+## 2026-07-30 (planner run continue-20260730-163125)
+
+- Worktree: `continue-20260730-163125` (branch `harness/continue-local-20260730-163125` @ abad367).
+- Planner-only. Init via `bash agent/init.sh`: feature_list all 47 completed (through company-preview-relative-freshness-label-ux priority 47); worktree clean tracking origin/main; dependency-security-audit completed but passes=false (excluded in-flight).
+- Recon: vision 3 facets + 4 outcomes; relative freshness formatter shipped (`formatRelativeSyncedLabel` pure + injectable now; preview card badge uses relative labels, title keeps absolute); existing freshness-smoke covers schema dates only; TieredResultsDisplay only renders non-empty tier groups.
+- In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals.
+- Horizon updated to ["hermetic-relative-freshness-label-smoke", "search-tier-empty-bucket-messaging-ux", "hermetic-empty-tier-bucket-messaging-smoke", "research-coverage-empty-state-discovery-ux"] (TO lock-after-ship next; FI empty-tier discovery; TO empty-tier smoke; optional FI coverage empty-state lookahead).
+- Chosen next: hermetic-relative-freshness-label-smoke (plan_id plan-20260730-110242). Rationale: seal pure relative freshness contract before vector-search empty-tier FI.
+- Artifacts: `.codex/tmp/plan-20260730-110242.json`, `.codex/tmp/plan-20260730-110242.md`, `agent/harness/horizon.json`.
+- Ruflo: MCP ruflo unavailable; local `ruflo memory init` + store harness:horizon / harness:plan:20260730-110242 / harness:planner:last.
+- Corridor analyzePlan on planning summary (hermetic pure SoT smoke; no secrets/API).
+- No source code, tests, or feature_list.json edits.
+
+## 2026-07-30 (hermetic-relative-freshness-label-smoke)
+
+- Worktree: `continue-20260730-163125` (branch `harness/continue-local-20260730-163125`).
+- Task: `hermetic-relative-freshness-label-smoke` (plan_id: plan-20260730-110242 from Planner run continue-20260730-163125).
+- Plan link: `.codex/tmp/plan-20260730-110242.json` (authoritative); also `.codex/tmp/plan-20260730-110242.md`. Horizon after per plan: ["hermetic-relative-freshness-label-smoke", "search-tier-empty-bucket-messaging-ux", "hermetic-empty-tier-bucket-messaging-smoke", "research-coverage-empty-state-discovery-ux"].
+- Selected per plan: Testing/Observability hermetic lock of pure `formatRelativeSyncedLabel` after company-preview-relative-freshness-label-ux shipped.
+- Changes (only chosen_task):
+  1. `src/eval/relative-freshness-label-smoke.ts`: 10 zero-I/O cases against production helper only with fixed `now` 2024-06-26T12:00:00.000Z (same-day, 3d, 45d/1mo, 400d/1y, future=today, invalid fallbacks, Date now, NaN now, never-throws).
+  2. `package.json`: `eval:relative-freshness-label-smoke` + chained in `eval:smoke`.
+  3. `agent/feature_list.json`: completed testing_observability priority 48.
+  4. `agent/harness/horizon.json`: advanced past completed TO; next empty-tier FI then smoke.
+  No company-preview-card / formatter edits; no schema/API/DB/ranking/orchestrator/Trigger/auth/.env; no new deps/lockfile; never systemPrompt.
+- Decisions (first-principles + rules): (1) Read Plan artifact first. (2) Verbatim restated Plan principles, AGENTS.md, .agents/rules, vision BEFORE code edits. (3) Confirmed and obeyed execution_constraints. (4) Corridor analyzePlan before edits (hermetic pure SoT; no secrets). (5) Assert exact labels via production import only; fixed injectable now (no Date.now() in assertions). (6) Left existing freshness-smoke schema checks unchanged. (7) Horizon later FI/TO items not implemented.
+- Commands executed (post impl): `npm run eval:relative-freshness-label-smoke && npm run eval:smoke && npm run lint && npm run typecheck && npm run build`.
+- Verification result: new smoke 10/10 pass. eval:smoke all 19 sub-evals pass (includes new smoke). lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes).
+- Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to smoke eval + package.json + feature_list/PROGRESS/horizon (+ run-summary). Created `.codex/tmp/run-summary.json`.
+- Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: search-tier-empty-bucket-messaging-ux.
