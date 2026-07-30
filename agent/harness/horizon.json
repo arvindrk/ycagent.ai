@@ -1,23 +1,17 @@
 {
   "slice": [
-    "hermetic-coverage-empty-state-discovery-smoke",
     "search-result-count-summary-ux",
     "hermetic-search-result-count-summary-smoke"
   ],
   "rationale_per_step": {
-    "hermetic-coverage-empty-state-discovery-smoke": "Testing/Observability: hermetic lock of coverage empty-state pure SoT (getCoverageBadgePresentationModel) after FI ships (idle pending vs live gathering vs post-activity missing).",
     "search-result-count-summary-ux": "Feature improvement (vector search + UI/UX): surface a compact total + non-empty tier count summary above tier buckets for low-noise discovery; replan if higher-value candidate appears.",
     "hermetic-search-result-count-summary-smoke": "Testing/Observability: hermetic lock of search result count summary pure SoT after that FI ships; replan if slice reprioritized."
   },
   "category_mix": {
-    "feature_improvement": 1,
-    "testing_observability": 2
+    "testing_observability": 1,
+    "feature_improvement": 1
   },
   "vision_refs": {
-    "hermetic-coverage-empty-state-discovery-smoke": [
-      "Agent research facet",
-      "Measurable research quality and coverage"
-    ],
     "search-result-count-summary-ux": [
       "Vector search facet",
       "UI/UX facet",
@@ -28,6 +22,6 @@
       "Measurable research quality and coverage"
     ]
   },
-  "generated_by_run": "continue-20260731-010002",
-  "notes": "Executor advanced past research-coverage-empty-state-discovery-ux (completed FI priority 51). Next: hermetic-coverage-empty-state-discovery-smoke lock-after-ship, then vector-search count-summary FI+TO for diversity."
+  "generated_by_run": "continue-20260731-012215",
+  "notes": "Executor completed hermetic-coverage-empty-state-discovery-smoke (plan_id plan-20260731-012401). Advanced past TO lock-after-ship. Remaining slice: search-result-count-summary-ux then hermetic-search-result-count-summary-smoke for vector-search diversity."
 }
