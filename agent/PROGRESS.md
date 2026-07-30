@@ -1129,3 +1129,34 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Verification result: crosslink 8/8; jump-active 8/8; coverage-active 8/8; eval:smoke all 17 sub-evals pass; lint clean; typecheck clean; build succeeded (Next.js 16.1.6, 9 routes).
 - Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to research-viewer.tsx + feature_list/PROGRESS/horizon (+ run-summary). Created `.codex/tmp/run-summary.json`.
 - Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: hermetic-timeline-results-nav-always-visible-smoke.
+
+## 2026-07-28 (planner run continue-20260728-202447)
+
+- Worktree: `continue-20260728-202447` (branch `harness/continue-local-20260728-202447` @ 36fc569).
+- Planner-only. Init via `bash agent/init.sh`: feature_list all 45 completed (through research-timeline-results-nav-always-visible-ux priority 45); worktree clean tracking origin/main; dependency-security-audit completed but passes=false (excluded in-flight).
+- Recon: vision 3 facets + 4 outcomes; prior horizon head hermetic-timeline-results-nav-always-visible-smoke after FI hoist; Results nav lives under TabsList/Stop above TabsContent with getPresentDomainTabs + getCoverageBadgeActiveState; jump-active + coverage-active + crosslink hermetically locked; no always-visible smoke in feature_list yet.
+- In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals.
+- Horizon updated to ["hermetic-timeline-results-nav-always-visible-smoke", "research-viewer-results-nav-placement-docs-sot-smoke", "company-preview-relative-freshness-label-ux", "search-tier-empty-bucket-messaging-ux"] (TO lock-after-ship next; optional placement TO; FI freshness + empty-tier discovery for diversity).
+- Chosen next: hermetic-timeline-results-nav-always-visible-smoke (plan_id plan-20260728-145710). Rationale: seal always-visible Results chrome contract before pivoting off multi-domain chrome stack.
+- Artifacts: `.codex/tmp/plan-20260728-145710.json`, `.codex/tmp/plan-20260728-145710.md`, `agent/harness/horizon.json`.
+- Ruflo: MCP ruflo unavailable; local `ruflo memory init` + store harness:horizon / harness:plan:20260728-145710 / harness:planner:last at agent/brain/harness-memory.db (and default .claude/memory.db sync).
+- Corridor analyzePlan on planning summary (hermetic SoT smoke; no secrets/orchestrator/API).
+- No source code, tests, or feature_list.json edits.
+
+## 2026-07-28 (hermetic-timeline-results-nav-always-visible-smoke)
+
+- Worktree: `continue-20260728-202447` (branch `harness/continue-local-20260728-202447`).
+- Task: `hermetic-timeline-results-nav-always-visible-smoke` (plan_id: plan-20260728-145710 from Planner run continue-20260728-202447).
+- Plan link: `.codex/tmp/plan-20260728-145710.json` (authoritative); also `.codex/tmp/plan-20260728-145710.md`. Horizon after per plan: ["hermetic-timeline-results-nav-always-visible-smoke", "research-viewer-results-nav-placement-docs-sot-smoke", "company-preview-relative-freshness-label-ux", "search-tier-empty-bucket-messaging-ux"].
+- Selected per plan: Testing/Observability hermetic lock of always-visible Results nav presence + targets + active as one chrome model after UI hoist.
+- Changes (only chosen_task):
+  1. `src/eval/timeline-results-nav-always-visible-smoke.ts`: 8 zero-I/O cases via getPresentDomainTabs / getPresentDomainTabIds + getCoverageBadgeActiveState / isCoverageBadgeActive / COVERAGE_BADGE_ACTIVE_CLASS_TOKENS (semantic token presence; presence independent of activeTab; no hand-mirrored UI class strings).
+  2. `package.json`: `eval:timeline-results-nav-always-visible-smoke` + chained in `eval:smoke`.
+  3. `agent/feature_list.json`: completed testing_observability priority 46.
+  4. `agent/harness/horizon.json`: advanced past completed TO; next optional placement smoke then FI items.
+  No UI redesign; no new helpers; no forceMount; no orchestrator/Trigger/API/DB/ranking/schema/deps/lockfile; no new domains; never systemPrompt.
+- Decisions (first-principles + rules): (1) Read Plan artifact first. (2) Verbatim restated Plan principles, AGENTS.md, .agents/rules, vision BEFORE code edits. (3) Confirmed and obeyed execution_constraints. (4) Corridor analyzePlan before edits (hermetic SoT; no secrets). (5) Frame always-visible chrome model (presence + targets + active) as one contract distinct from jump-active-only smoke; reuse production SoT only. (6) Assert semantic active tokens, not full className equality. (7) Horizon later items not implemented.
+- Commands executed (post impl): `npm run eval:timeline-results-nav-always-visible-smoke && npm run eval:smoke && npm run lint && npm run typecheck && npm run build`.
+- Verification result: new smoke 8/8 pass. eval:smoke all 18 sub-evals pass (includes new smoke). lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes).
+- Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to smoke eval + package.json + feature_list/PROGRESS/horizon (+ run-summary). Created `.codex/tmp/run-summary.json`.
+- Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: research-viewer-results-nav-placement-docs-sot-smoke.

@@ -1,26 +1,34 @@
 {
   "slice": [
-    "hermetic-timeline-results-nav-always-visible-smoke",
-    "research-viewer-results-nav-placement-docs-sot-smoke"
+    "research-viewer-results-nav-placement-docs-sot-smoke",
+    "company-preview-relative-freshness-label-ux",
+    "search-tier-empty-bucket-messaging-ux"
   ],
   "rationale_per_step": {
-    "hermetic-timeline-results-nav-always-visible-smoke": "Testing/Observability: hermetic lock of always-visible Results nav presence/target/active contract after hoist ships (present jump ids SoT + active state parity independent of Timeline panel mount assumptions).",
-    "research-viewer-results-nav-placement-docs-sot-smoke": "Testing/Observability: optional placement/SoT invariant smoke or replan pivot for category diversity after always-visible lock; keep multi-domain chrome sealed without over-scoping UI."
+    "research-viewer-results-nav-placement-docs-sot-smoke": "Testing/Observability: optional placement/SoT invariant smoke or replan if redundant once always-visible chrome model is locked.",
+    "company-preview-relative-freshness-label-ux": "Feature improvement (UI/UX + freshness): improve company preview last_synced presentation toward relative freshness labels for trust and discovery; diversifies after multi-domain chrome TO stack.",
+    "search-tier-empty-bucket-messaging-ux": "Feature improvement (vector search + UI/UX): clearer empty tier/bucket messaging in tiered results so discovery feels less noisy when a tier has no hits."
   },
   "category_mix": {
-    "testing_observability": 2
+    "testing_observability": 1,
+    "feature_improvement": 2
   },
   "vision_refs": {
-    "hermetic-timeline-results-nav-always-visible-smoke": [
-      "Measurable research quality and coverage",
-      "UI/UX facet",
-      "Agent research facet"
-    ],
     "research-viewer-results-nav-placement-docs-sot-smoke": [
       "Measurable research quality and coverage",
       "UI/UX facet"
+    ],
+    "company-preview-relative-freshness-label-ux": [
+      "UI/UX facet",
+      "High-quality evidence-backed intelligence (fresh)",
+      "Powerful intuitive discovery"
+    ],
+    "search-tier-empty-bucket-messaging-ux": [
+      "Vector search facet",
+      "UI/UX facet",
+      "Powerful intuitive discovery"
     ]
   },
-  "generated_by_run": "continue-20260728-201457",
-  "notes": "Executor 2026-07-28: shipped research-timeline-results-nav-always-visible-ux (hoist Results nav under TabsList above TabsContent). Dropped completed FI from slice. Next: hermetic-timeline-results-nav-always-visible-smoke (TO lock-after-ship), then research-viewer-results-nav-placement-docs-sot-smoke. In-flight excluded unchanged: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals."
+  "generated_by_run": "continue-20260728-202447",
+  "notes": "Executor completed hermetic-timeline-results-nav-always-visible-smoke (priority 46). Horizon advanced past lock-after-ship TO; next optional placement TO then FI freshness + empty-tier messaging. In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals."
 }
