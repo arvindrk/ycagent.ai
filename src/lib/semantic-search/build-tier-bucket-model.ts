@@ -18,6 +18,11 @@ export interface TierBucket {
 export function buildTierBucketModel(
   results: readonly SearchResult[],
 ): TierBucket[] {
+  // Empty total is out of scope (SearchEmpty); never emit an all-empty tier wall.
+  if (results.length === 0) {
+    return [];
+  }
+
   const byTier = new Map<TierKey, SearchResult[]>();
 
   for (const result of results) {
