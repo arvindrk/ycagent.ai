@@ -1318,3 +1318,36 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Verification result: lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes). missing-domain-prompt-gating 8/8. coverage-active-tab-highlight 8/8. timeline-results-nav-always-visible 8/8. eval:smoke all 20 sub-evals pass.
 - Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to domain-coverage pure SoT + ResearchViewer wire + feature_list/PROGRESS/horizon (+ run-summary). Created `.codex/tmp/run-summary.json`.
 - Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: hermetic-coverage-empty-state-discovery-smoke.
+
+
+## 2026-07-31 (planner run continue-20260731-012215)
+
+- Worktree: `continue-20260731-012215` (branch `harness/continue-local-20260731-012215` @ 9b0b44c).
+- Planner-only. Init via `bash agent/init.sh`: feature_list all 51 completed (through research-coverage-empty-state-discovery-ux priority 51); worktree clean tracking origin/main; dependency-security-audit completed but passes=false (excluded in-flight).
+- Recon: vision 3 facets + 4 outcomes; coverage empty-state FI shipped (`getCoverageBadgePresentationModel` + ResearchViewer wire); no hermetic smoke yet; eval:smoke has 20 sub-evals including empty-tier but not coverage empty-state presentation.
+- In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals.
+- Horizon updated/reaffirmed to ["hermetic-coverage-empty-state-discovery-smoke", "search-result-count-summary-ux", "hermetic-search-result-count-summary-smoke"] (TO lock-after-ship next; FI vector-search count summary; TO count lock).
+- Chosen next: hermetic-coverage-empty-state-discovery-smoke (plan_id plan-20260731-012401). Rationale: prior handoff head after coverage empty-state FI; seal pure SoT before more UX.
+- Artifacts: `.codex/tmp/plan-20260731-012401.json`, `.codex/tmp/plan-20260731-012401.md`, `agent/harness/horizon.json`.
+- Ruflo: MCP ruflo unavailable; local `ruflo memory init` + store harness:horizon / harness:plan:20260731-012401 / harness:planner:last.
+- Corridor analyzePlan on planning summary (hermetic pure SoT smoke; no secrets/API).
+- No source code, tests, or feature_list.json edits.
+
+
+## 2026-07-31 (hermetic-coverage-empty-state-discovery-smoke)
+
+- Worktree: `continue-20260731-012215` (branch `harness/continue-local-20260731-012215`).
+- Task: `hermetic-coverage-empty-state-discovery-smoke` (plan_id: plan-20260731-012401 from Planner run continue-20260731-012215).
+- Plan link: `.codex/tmp/plan-20260731-012401.json` (authoritative); also `.codex/tmp/plan-20260731-012401.md`. Horizon after per plan: ["hermetic-coverage-empty-state-discovery-smoke", "search-result-count-summary-ux", "hermetic-search-result-count-summary-smoke"].
+- Selected per plan: Testing/Observability hermetic lock of coverage empty-state pure SoT (`getCoverageBadgePresentationModel`).
+- Changes (only chosen_task):
+  1. `src/eval/coverage-empty-state-discovery-smoke.ts`: hermetic zero-I/O smoke (8 cases) importing production `getCoverageBadgePresentationModel` + `getDomainCoverage` / `DOMAIN_REGISTRY` / `getResearchDomains` for expected labels/order only; asserts idle pending + discoveryLine; live gathering; post-activity missing; presentCount alone => absent missing; partial present switch title; all present; registry order no Coming Soon; never throws on nullish ids.
+  2. `package.json`: `eval:coverage-empty-state-discovery-smoke` wired into composite `eval:smoke`.
+  3. `agent/feature_list.json`: completed testing_observability priority 52.
+  4. `agent/harness/horizon.json`: advanced past completed TO lock.
+  No domain-coverage.ts production fix (SoT already satisfied contract). No React/DOM/ResearchViewer edits. No ranking/SQL/embedding/API/DB/schema/orchestrator/Trigger/auth/.env; no new deps/lockfile; never evaluate systemPrompt getters.
+- Decisions (first-principles + rules): (1) Read Plan artifact first. (2) Verbatim restated Plan principles, AGENTS.md, .agents/rules, vision BEFORE code edits. (3) Confirmed and obeyed execution_constraints. (4) Corridor analyzePlan before edits (hermetic pure SoT; no secrets). (5) Prefer production import only (no hand-mirrored badge tables). (6) Production SoT already correct; no domain-coverage fix needed. (7) Horizon later FI/TO not implemented.
+- Commands executed (post impl): `npm run eval:coverage-empty-state-discovery-smoke && npm run eval:smoke && npm run lint && npm run typecheck && npm run build`.
+- Verification result: coverage-empty-state-discovery smoke 8/8 pass. eval:smoke all 21 sub-evals pass (includes new coverage empty-state smoke). lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes).
+- Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to smoke + package.json + feature_list/PROGRESS/horizon (+ run-summary). Created `.codex/tmp/run-summary.json`.
+- Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: search-result-count-summary-ux.
