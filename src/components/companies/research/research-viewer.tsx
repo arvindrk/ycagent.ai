@@ -14,7 +14,7 @@ import { ResearchSummary } from './research-summary';
 import { useResearchTabs } from '../../../hooks/use-research-tabs';
 import {
   getCoverageBadgeActiveState,
-  getDomainCoverage,
+  getCoverageBadgePresentationModel,
   getMissingDomainPromptState,
   getPresentDomainTabs,
 } from '@/lib/research/domain-coverage';
@@ -68,13 +68,18 @@ export function ResearchViewer({
     ?? (presentDomainIds[0] ? researchResultsByDomain[presentDomainIds[0]] : undefined);
   const signalCount = headerResult ? signalCountForResult(headerResult) : 0;
 
-  const domainCoverage = useMemo(
-    () => getDomainCoverage(presentDomainIds),
-    [presentDomainIds],
-  );
   const presentDomainTabs = useMemo(
     () => getPresentDomainTabs(presentDomainIds),
     [presentDomainIds],
+  );
+  const coveragePresentation = useMemo(
+    () =>
+      getCoverageBadgePresentationModel({
+        presentDomainIds,
+        isResearching,
+        eventCount: events.length,
+      }),
+    [presentDomainIds, isResearching, events.length],
   );
   const missingDomainPrompt = useMemo(
     () =>
@@ -126,43 +131,49 @@ export function ResearchViewer({
           role="list"
           aria-label="Research domain coverage"
         >
-          {domainCoverage.map(({ domain, label, present }) => {
-            const activeState = getCoverageBadgeActiveState(
-              domain,
-              present,
-              activeTab,
-            );
-            return present ? (
-              <span key={domain} role="listitem" className="inline-flex">
-                <button
-                  type="button"
-                  onClick={() => setActiveTab(domain)}
-                  className={cn(
-                    badgeVariants({ variant: 'info' }),
-                    'text-[10px] px-1.5 py-0 cursor-pointer',
-                    activeState.activeClassName,
-                  )}
-                  title={`${domain}: result present (switch to tab)`}
-                  aria-label={`Show ${label} research results`}
-                  aria-current={activeState.ariaCurrent}
-                >
-                  {label}
-                </button>
-              </span>
-            ) : (
-              <span key={domain} role="listitem" className="inline-flex">
-                <Badge
-                  variant="outline"
-                  className="text-[10px] px-1.5 py-0 text-text-tertiary"
-                  title={`${domain}: missing from research results`}
-                >
-                  {label}
-                  {' · missing'}
-                </Badge>
-              </span>
-            );
-          })}
+          {coveragePresentation.badges.map(
+            ({ domain, label, present, badgeText, title }) => {
+              const activeState = getCoverageBadgeActiveState(
+                domain,
+                present,
+                activeTab,
+              );
+              return present ? (
+                <span key={domain} role="listitem" className="inline-flex">
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab(domain)}
+                    className={cn(
+                      badgeVariants({ variant: 'info' }),
+                      'text-[10px] px-1.5 py-0 cursor-pointer',
+                      activeState.activeClassName,
+                    )}
+                    title={title}
+                    aria-label={`Show ${label} research results`}
+                    aria-current={activeState.ariaCurrent}
+                  >
+                    {badgeText}
+                  </button>
+                </span>
+              ) : (
+                <span key={domain} role="listitem" className="inline-flex">
+                  <Badge
+                    variant="outline"
+                    className="text-[10px] px-1.5 py-0 text-text-tertiary"
+                    title={title}
+                  >
+                    {badgeText}
+                  </Badge>
+                </span>
+              );
+            },
+          )}
         </div>
+        {coveragePresentation.discoveryLine && (
+          <p className="mt-1.5 text-[11px] leading-snug text-text-tertiary">
+            {coveragePresentation.discoveryLine}
+          </p>
+        )}
         {missingDomainPrompt.show && missingDomainPrompt.text && (
           <p className="mt-1.5 text-[11px] leading-snug text-text-tertiary">
             {missingDomainPrompt.text}
