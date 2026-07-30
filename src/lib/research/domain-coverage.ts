@@ -173,3 +173,97 @@ export function getMissingDomainPromptState(input: {
     : null;
   return { show, labels, text };
 }
+
+/** Absent badge presentation tone (present domains have status null). */
+export type CoverageAbsentBadgeStatus = "pending" | "gathering" | "missing";
+
+export type CoverageBadgePresentationItem = {
+  domain: string;
+  label: string;
+  present: boolean;
+  /** null when present; drives absent badge wording. */
+  status: CoverageAbsentBadgeStatus | null;
+  /** Full visible badge text (label alone when present). */
+  badgeText: string;
+  title: string;
+};
+
+export type CoverageBadgePresentationModel = {
+  badges: CoverageBadgePresentationItem[];
+  /**
+   * Optional discovery line under the checklist (idle empty only).
+   * Live / post-activity copy stays on getMissingDomainPromptState.
+   */
+  discoveryLine: string | null;
+};
+
+/**
+ * Pure SoT for coverage checklist badge wording + idle discovery line.
+ * Present badges remain interactive via getCoverageBadgeActiveState.
+ * Does not replace getMissingDomainPromptState (live vs not-produced prompt).
+ */
+export function getCoverageBadgePresentationModel(input: {
+  presentDomainIds: Iterable<string | null | undefined>;
+  isResearching: boolean;
+  eventCount: number;
+}): CoverageBadgePresentationModel {
+  const presentList = Array.from(input.presentDomainIds);
+  const coverage = getDomainCoverage(presentList);
+  const presentCount = countNonEmptyIds(presentList);
+  const hasResearchActivity =
+    input.isResearching || input.eventCount > 0 || presentCount > 0;
+
+  const absentStatus: CoverageAbsentBadgeStatus = input.isResearching
+    ? "gathering"
+    : hasResearchActivity
+      ? "missing"
+      : "pending";
+
+  const badges: CoverageBadgePresentationItem[] = coverage.map((item) => {
+    if (item.present) {
+      return {
+        domain: item.domain,
+        label: item.label,
+        present: true,
+        status: null,
+        badgeText: item.label,
+        title: `${item.domain}: result present (switch to tab)`,
+      };
+    }
+    if (absentStatus === "pending") {
+      return {
+        domain: item.domain,
+        label: item.label,
+        present: false,
+        status: "pending",
+        badgeText: `${item.label} · not yet researched`,
+        title: `${item.domain}: not yet researched`,
+      };
+    }
+    if (absentStatus === "gathering") {
+      return {
+        domain: item.domain,
+        label: item.label,
+        present: false,
+        status: "gathering",
+        badgeText: `${item.label} · gathering`,
+        title: `${item.domain}: research may still be gathering`,
+      };
+    }
+    return {
+      domain: item.domain,
+      label: item.label,
+      present: false,
+      status: "missing",
+      badgeText: `${item.label} · missing`,
+      title: `${item.domain}: missing from research results`,
+    };
+  });
+
+  const discoveryLine =
+    !hasResearchActivity && coverage.some((item) => !item.present)
+      ? "Coverage domains appear when research produces results for them."
+      : null;
+
+  return { badges, discoveryLine };
+}
