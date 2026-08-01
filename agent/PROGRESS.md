@@ -1351,3 +1351,36 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Verification result: coverage-empty-state-discovery smoke 8/8 pass. eval:smoke all 21 sub-evals pass (includes new coverage empty-state smoke). lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes).
 - Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to smoke + package.json + feature_list/PROGRESS/horizon (+ run-summary). Created `.codex/tmp/run-summary.json`.
 - Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: search-result-count-summary-ux.
+
+
+## 2026-07-31 (planner run continue-20260731-023817)
+
+- Worktree: `continue-20260731-023817` (branch `harness/continue-local-20260731-023817` @ 70358d6).
+- Planner-only. Init via `bash agent/init.sh`: feature_list all 52 completed (through hermetic-coverage-empty-state-discovery-smoke priority 52); worktree clean tracking origin/main; dependency-security-audit completed but passes=false (excluded in-flight).
+- Recon: vision 3 facets + 4 outcomes; coverage empty-state FI+TO shipped (eval:smoke 21); SearchStats shows top-N only; TieredResultsDisplay has per-row tier counts + legend, no compact total/non-empty tier summary; ResearchViewer run badge is duration/live only (relative researched-ago still a later horizon FI).
+- In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals.
+- Horizon updated to ["search-result-count-summary-ux", "hermetic-search-result-count-summary-smoke", "research-run-relative-freshness-label-ux", "hermetic-research-run-relative-freshness-smoke"] (FI vector count summary next; TO lock; FI research relative freshness; TO lock).
+- Chosen next: search-result-count-summary-ux (plan_id plan-20260731-024130). Rationale: prior executor handoff head after coverage empty-state TO; pure SoT discovery UX before smoke lock.
+- Artifacts: `.codex/tmp/plan-20260731-024130.json`, `.codex/tmp/plan-20260731-024130.md`, `agent/harness/horizon.json`.
+- Ruflo: MCP ruflo unavailable; local `ruflo memory init` + store harness:horizon / harness:plan:20260731-024130 / harness:planner:last.
+- Corridor analyzePlan on planning summary (presentational count summary; XSS-safe React text; pure SoT; no secrets/API).
+- No source code, tests, or feature_list.json edits.
+
+
+## 2026-07-31 (search-result-count-summary-ux)
+
+- Worktree: `continue-20260731-023817` (branch `harness/continue-local-20260731-023817`).
+- Task: `search-result-count-summary-ux` (plan_id: plan-20260731-024130 from Planner run continue-20260731-023817).
+- Plan link: `.codex/tmp/plan-20260731-024130.json` (authoritative); also `.codex/tmp/plan-20260731-024130.md`. Horizon after per plan: ["search-result-count-summary-ux", "hermetic-search-result-count-summary-smoke", "research-run-relative-freshness-label-ux", "hermetic-research-run-relative-freshness-smoke"].
+- Selected per plan: Feature improvement (vector search + UI/UX) pure total + non-empty tier count summary above TieredResultsDisplay buckets.
+- Changes (only chosen_task):
+  1. `src/lib/semantic-search/build-search-result-count-summary.ts`: pure `buildSearchResultCountSummary(results)` SoT; reuses `buildTierBucketModel` non-empty buckets for TIER_META order/labels; returns `{ total, nonEmptyTiers, nonEmptyTierCount, summaryLine }`; omits empty gap buckets from compact summary.
+  2. `src/components/companies/semantic-search/tiered-results-display.tsx`: muted plain-text `summaryLine` above accordion buckets (tier-distribution focused; does not restate SearchStats query line).
+  3. `agent/feature_list.json`: completed feature_improvement priority 53.
+  4. `agent/harness/horizon.json`: advanced past completed FI.
+  No ranking/SQL/embedding/API/DB/schema/orchestrator/Trigger/auth/.env; no SearchEmpty change; no new deps/lockfile; no dangerouslySetInnerHTML; never evaluate systemPrompt getters. Hermetic count-summary smoke deferred to horizon next.
+- Decisions (first-principles + rules): (1) Read Plan artifact first. (2) Verbatim restated Plan principles, AGENTS.md, .agents/rules, vision BEFORE code edits. (3) Confirmed and obeyed execution_constraints. (4) Corridor analyzePlan before edits (plain React text; TIER_META via buildTierBucketModel; no secrets). (5) Pure model first for later TO lock. (6) Non-empty tiers only to keep summary low-noise. (7) Horizon later smoke/freshness items not implemented.
+- Commands executed (post impl): `npm run lint && npm run typecheck && npm run build && npm run eval:smoke`.
+- Verification result: lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes). eval:smoke all 21 sub-evals pass (empty-tier smoke still green).
+- Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to pure helper + TieredResultsDisplay wire + feature_list/PROGRESS/horizon (+ run-summary). Created `.codex/tmp/run-summary.json`.
+- Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: hermetic-search-result-count-summary-smoke.

@@ -3,6 +3,7 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
 import { CompanyListGrid } from '@/components/companies/list/company-list-grid';
+import { buildSearchResultCountSummary } from '@/lib/semantic-search/build-search-result-count-summary';
 import { buildTierBucketModel } from '@/lib/semantic-search/build-tier-bucket-model';
 import { TIER_META } from '@/lib/semantic-search/scoring/weights';
 import type { SearchResult } from '@/types/semantic-search.types';
@@ -13,10 +14,16 @@ interface TieredResultsDisplayProps {
 
 export function TieredResultsDisplay({ results }: TieredResultsDisplayProps) {
   const buckets = buildTierBucketModel(results);
+  const countSummary = buildSearchResultCountSummary(results);
   const defaultOpenTiers = buckets.filter((b) => !b.isEmpty).map((b) => b.tier);
 
   return (
     <div className="space-y-6">
+      {countSummary.total > 0 && (
+        <div className="text-xs text-text-tertiary mb-2">
+          {countSummary.summaryLine}
+        </div>
+      )}
       <div className="text-xs text-text-tertiary mb-2">{Object.values(TIER_META).sort((a, b) => a.order - b.order).map((t) => t.description).join(' • ')}. Higher final score ranks first (hover score badges on cards for breakdown).</div>
       <Accordion
         type="multiple"

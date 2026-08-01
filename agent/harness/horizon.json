@@ -1,27 +1,33 @@
 {
   "slice": [
-    "search-result-count-summary-ux",
-    "hermetic-search-result-count-summary-smoke"
+    "hermetic-search-result-count-summary-smoke",
+    "research-run-relative-freshness-label-ux",
+    "hermetic-research-run-relative-freshness-smoke"
   ],
   "rationale_per_step": {
-    "search-result-count-summary-ux": "Feature improvement (vector search + UI/UX): surface a compact total + non-empty tier count summary above tier buckets for low-noise discovery; replan if higher-value candidate appears.",
-    "hermetic-search-result-count-summary-smoke": "Testing/Observability: hermetic lock of search result count summary pure SoT after that FI ships; replan if slice reprioritized."
+    "hermetic-search-result-count-summary-smoke": "Testing/Observability: hermetic lock of search result count summary pure SoT after that FI ships.",
+    "research-run-relative-freshness-label-ux": "Feature improvement (agent research + freshness): surface relative researched-ago label from run completedAt (reuse relative-label patterns); diversifies facet after vector-search pair.",
+    "hermetic-research-run-relative-freshness-smoke": "Testing/Observability: hermetic lock of research-run relative freshness pure SoT after that FI ships."
   },
   "category_mix": {
-    "testing_observability": 1,
-    "feature_improvement": 1
+    "feature_improvement": 1,
+    "testing_observability": 2
   },
   "vision_refs": {
-    "search-result-count-summary-ux": [
-      "Vector search facet",
-      "UI/UX facet",
-      "Powerful, intuitive discovery"
-    ],
     "hermetic-search-result-count-summary-smoke": [
       "Vector search facet",
       "Measurable research quality and coverage"
+    ],
+    "research-run-relative-freshness-label-ux": [
+      "Agent research facet",
+      "UI/UX facet",
+      "High-quality evidence-backed intelligence freshness"
+    ],
+    "hermetic-research-run-relative-freshness-smoke": [
+      "Agent research facet",
+      "Measurable research quality and coverage"
     ]
   },
-  "generated_by_run": "continue-20260731-012215",
-  "notes": "Executor completed hermetic-coverage-empty-state-discovery-smoke (plan_id plan-20260731-012401). Advanced past TO lock-after-ship. Remaining slice: search-result-count-summary-ux then hermetic-search-result-count-summary-smoke for vector-search diversity."
+  "generated_by_run": "continue-20260731-023817",
+  "notes": "Executor completed search-result-count-summary-ux (plan_id plan-20260731-024130). Advanced past FI pure SoT + TieredResultsDisplay wire. Remaining slice: hermetic-search-result-count-summary-smoke then research-run relative freshness FI/TO."
 }
