@@ -1,23 +1,17 @@
 {
   "slice": [
-    "hermetic-search-result-count-summary-smoke",
     "research-run-relative-freshness-label-ux",
     "hermetic-research-run-relative-freshness-smoke"
   ],
   "rationale_per_step": {
-    "hermetic-search-result-count-summary-smoke": "Testing/Observability: hermetic lock of search result count summary pure SoT after that FI ships.",
-    "research-run-relative-freshness-label-ux": "Feature improvement (agent research + freshness): surface relative researched-ago label from run completedAt (reuse relative-label patterns); diversifies facet after vector-search pair.",
+    "research-run-relative-freshness-label-ux": "Feature improvement (agent research + UI/UX + freshness): surface relative researched-ago label from run.completedAt on ResearchViewer (beyond duration/live badge); diversifies facet after vector-search count-summary lock.",
     "hermetic-research-run-relative-freshness-smoke": "Testing/Observability: hermetic lock of research-run relative freshness pure SoT after that FI ships."
   },
   "category_mix": {
     "feature_improvement": 1,
-    "testing_observability": 2
+    "testing_observability": 1
   },
   "vision_refs": {
-    "hermetic-search-result-count-summary-smoke": [
-      "Vector search facet",
-      "Measurable research quality and coverage"
-    ],
     "research-run-relative-freshness-label-ux": [
       "Agent research facet",
       "UI/UX facet",
@@ -28,6 +22,6 @@
       "Measurable research quality and coverage"
     ]
   },
-  "generated_by_run": "continue-20260731-023817",
-  "notes": "Executor completed search-result-count-summary-ux (plan_id plan-20260731-024130). Advanced past FI pure SoT + TieredResultsDisplay wire. Remaining slice: hermetic-search-result-count-summary-smoke then research-run relative freshness FI/TO."
+  "generated_by_run": "continue-20260801-201943",
+  "notes": "Executor completed hermetic-search-result-count-summary-smoke (plan_id plan-20260801-145135). Horizon advanced past TO lock; next head research-run-relative-freshness-label-ux."
 }
