@@ -1,27 +1,27 @@
 {
   "slice": [
-    "research-run-relative-freshness-label-ux",
-    "hermetic-research-run-relative-freshness-smoke"
+    "hermetic-research-run-relative-freshness-smoke",
+    "company-hero-relative-synced-label-ux"
   ],
   "rationale_per_step": {
-    "research-run-relative-freshness-label-ux": "Feature improvement (agent research + UI/UX + freshness): surface relative researched-ago label from run.completedAt on ResearchViewer (beyond duration/live badge); diversifies facet after vector-search count-summary lock.",
-    "hermetic-research-run-relative-freshness-smoke": "Testing/Observability: hermetic lock of research-run relative freshness pure SoT after that FI ships."
+    "hermetic-research-run-relative-freshness-smoke": "Testing/Observability: hermetic zero-I/O lock of researched relative freshness pure SoT after research-run-relative-freshness-label-ux shipped.",
+    "company-hero-relative-synced-label-ux": "Feature improvement (discovery + freshness consistency): align company hero last_synced display with formatRelativeSyncedLabel (or equivalent pure path) instead of local formatRelativeTime when safe; diversifies surface after research-run freshness pair."
   },
   "category_mix": {
     "feature_improvement": 1,
     "testing_observability": 1
   },
   "vision_refs": {
-    "research-run-relative-freshness-label-ux": [
-      "Agent research facet",
-      "UI/UX facet",
-      "High-quality evidence-backed intelligence freshness"
-    ],
     "hermetic-research-run-relative-freshness-smoke": [
       "Agent research facet",
       "Measurable research quality and coverage"
+    ],
+    "company-hero-relative-synced-label-ux": [
+      "UI/UX facet",
+      "Vector search / discovery freshness",
+      "High-quality evidence-backed intelligence freshness"
     ]
   },
-  "generated_by_run": "continue-20260801-201943",
-  "notes": "Executor completed hermetic-search-result-count-summary-smoke (plan_id plan-20260801-145135). Horizon advanced past TO lock; next head research-run-relative-freshness-label-ux."
+  "generated_by_run": "continue-20260801-203458",
+  "notes": "Executor continue-20260801-203458 completed research-run-relative-freshness-label-ux (priority 55). Horizon advanced past FI; next is hermetic-research-run-relative-freshness-smoke TO lock, then company-hero-relative-synced-label-ux."
 }
