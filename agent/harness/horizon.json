@@ -1,24 +1,17 @@
 {
   "slice": [
-    "company-hero-relative-synced-label-ux",
     "research-viewer-live-vs-completed-badge-clarity-ux",
     "hermetic-research-viewer-run-badge-state-smoke"
   ],
   "rationale_per_step": {
-    "company-hero-relative-synced-label-ux": "Feature improvement (discovery + freshness consistency): company-hero.tsx still uses local formatRelativeTime for last_synced_at while company-preview uses formatRelativeSyncedLabel; align carefully so detail and list freshness feel consistent.",
-    "research-viewer-live-vs-completed-badge-clarity-ux": "Feature improvement (agent research + UI/UX): after researched-ago lock, tighten live vs completed header badge presentation if still ambiguous (duration + relative researched + live path).",
-    "hermetic-research-viewer-run-badge-state-smoke": "Testing/Observability: hermetic lock of any pure run-badge presentation model extracted for live vs completed clarity (or pure researched label already locked; only if new pure SoT appears)."
+    "research-viewer-live-vs-completed-badge-clarity-ux": "Feature improvement (agent research + UI/UX): after hero freshness, tighten live vs completed header badges; completed path currently shows researched-ago badge plus research Ndurs badge, which can feel redundant.",
+    "hermetic-research-viewer-run-badge-state-smoke": "Testing/Observability: hermetic lock of any pure run-badge presentation model extracted for live vs completed clarity; skip or thin if clarity stays JSX-only (researched * already locked)."
   },
   "category_mix": {
-    "feature_improvement": 2,
+    "feature_improvement": 1,
     "testing_observability": 1
   },
   "vision_refs": {
-    "company-hero-relative-synced-label-ux": [
-      "UI/UX facet",
-      "Vector search / discovery freshness",
-      "High-quality evidence-backed intelligence freshness"
-    ],
     "research-viewer-live-vs-completed-badge-clarity-ux": [
       "Agent research facet",
       "UI/UX facet"
@@ -28,6 +21,6 @@
       "Measurable research quality and coverage"
     ]
   },
-  "generated_by_run": "continue-20260803-122554",
-  "notes": "Executor continue-20260803-122554 completed hermetic-research-run-relative-freshness-smoke (priority 56). Advanced past TO lock; next horizon head company-hero-relative-synced-label-ux. plan_id plan-20260803-065657."
+  "generated_by_run": "continue-20260803-154256",
+  "notes": "Executor 2026-08-03 completed company-hero-relative-synced-label-ux (plan_id plan-20260803-101501). Advanced slice past hero freshness align; next FI research-viewer live vs completed badge clarity, then TO hermetic lock if pure model extracted."
 }
