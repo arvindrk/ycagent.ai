@@ -1,26 +1,26 @@
 {
   "slice": [
-    "research-viewer-live-vs-completed-badge-clarity-ux",
-    "hermetic-research-viewer-run-badge-state-smoke"
+    "hermetic-research-viewer-run-badge-state-smoke",
+    "research-viewer-run-status-aria-label-ux"
   ],
   "rationale_per_step": {
-    "research-viewer-live-vs-completed-badge-clarity-ux": "Feature improvement (agent research + UI/UX): after hero freshness, tighten live vs completed header badges; completed path currently shows researched-ago badge plus research Ndurs badge, which can feel redundant.",
-    "hermetic-research-viewer-run-badge-state-smoke": "Testing/Observability: hermetic lock of any pure run-badge presentation model extracted for live vs completed clarity; skip or thin if clarity stays JSX-only (researched * already locked)."
+    "hermetic-research-viewer-run-badge-state-smoke": "Testing/Observability: hermetic lock of getResearchRunHeaderBadgeModel none/live/completed primary labels + title duration policy; researched * wording stays locked by existing smoke.",
+    "research-viewer-run-status-aria-label-ux": "Feature improvement (UI/UX a11y): after visual clarity + smoke, add concise aria-label on the run-status Badge for live vs completed without changing visible copy."
   },
   "category_mix": {
     "feature_improvement": 1,
     "testing_observability": 1
   },
   "vision_refs": {
-    "research-viewer-live-vs-completed-badge-clarity-ux": [
-      "Agent research facet",
-      "UI/UX facet"
-    ],
     "hermetic-research-viewer-run-badge-state-smoke": [
       "Agent research facet",
       "Measurable research quality and coverage"
+    ],
+    "research-viewer-run-status-aria-label-ux": [
+      "UI/UX facet",
+      "Agent research facet"
     ]
   },
-  "generated_by_run": "continue-20260803-154256",
-  "notes": "Executor 2026-08-03 completed company-hero-relative-synced-label-ux (plan_id plan-20260803-101501). Advanced slice past hero freshness align; next FI research-viewer live vs completed badge clarity, then TO hermetic lock if pure model extracted."
+  "generated_by_run": "continue-20260803-155708",
+  "notes": "Executor completed research-viewer-live-vs-completed-badge-clarity-ux (plan_id plan-20260803-102918). Advanced slice past FI badge clarity; next TO hermetic lock of pure model, then FI aria-label."
 }
