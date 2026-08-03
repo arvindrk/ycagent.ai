@@ -1512,3 +1512,34 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Verification result: lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes). relative-freshness-label-smoke 10/10 pass (synced * intact). research-run-relative-freshness-smoke 12/12 pass (researched * intact). eval:smoke all sub-evals green.
 - Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to company-hero wire + feature_list/PROGRESS/horizon (+ run-summary). Created `.codex/tmp/run-summary.json`.
 - Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: research-viewer-live-vs-completed-badge-clarity-ux.
+
+## 2026-08-03 (planner run continue-20260803-155708)
+
+- Worktree: `continue-20260803-155708` (branch `harness/continue-local-20260803-155708` @ 04c2c6e).
+- Planner-only. Init via `bash agent/init.sh`: feature_list all 57 completed (through company-hero-relative-synced-label-ux priority 57); worktree clean tracking origin/main; dependency-security-audit completed but passes=false (excluded in-flight).
+- Recon: vision 3 facets + 4 outcomes; ResearchViewer completed path still dual-badges researched-ago + `research ${durS}s`; live shows `research live`; hero now uses formatRelativeSyncedLabel; researched * locked by eval:research-run-relative-freshness-smoke.
+- In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals.
+- Horizon updated to ["research-viewer-live-vs-completed-badge-clarity-ux", "hermetic-research-viewer-run-badge-state-smoke", "research-viewer-run-status-aria-label-ux"] (FI badge clarity next; TO pure model lock; FI a11y aria-label).
+- Chosen next: research-viewer-live-vs-completed-badge-clarity-ux (plan_id plan-20260803-102918). Rationale: executor handoff head after hero synced parity; remove redundant completed dual badges via pure SoT; FI after FI is ok given product urgency and following TO restores balance.
+- Artifacts: `.codex/tmp/plan-20260803-102918.json`, `.codex/tmp/plan-20260803-102918.md`, `agent/harness/horizon.json`.
+- Ruflo: local `ruflo memory init` + store harness:horizon / harness:plan:20260803-102918 / harness:planner:last / harness:vision (MCP ruflo handshake failed this session).
+- Corridor analyzePlan on planning summary (presentational badge model; plain React text; no secrets/API).
+- No source code, tests, or feature_list.json edits.
+
+## 2026-08-03 (research-viewer-live-vs-completed-badge-clarity-ux)
+
+- Worktree: `continue-20260803-155708` (branch `harness/continue-local-20260803-155708`).
+- Task: `research-viewer-live-vs-completed-badge-clarity-ux` (plan_id: plan-20260803-102918 from Planner run continue-20260803-155708).
+- Plan link: `.codex/tmp/plan-20260803-102918.json` (authoritative); also `.codex/tmp/plan-20260803-102918.md`. Horizon after per plan: ["research-viewer-live-vs-completed-badge-clarity-ux", "hermetic-research-viewer-run-badge-state-smoke", "research-viewer-run-status-aria-label-ux"] (advanced past chosen FI on complete).
+- Selected per plan: Feature improvement (agent research + UI/UX) removing dual completed run-status badges via pure header badge SoT.
+- Changes (only chosen_task):
+  1. `src/lib/get-research-run-header-badge-model.ts`: pure `getResearchRunHeaderBadgeModel({ startedAt, completedAt, now? })` with modes none/live/completed; primaryLabel only; durationSeconds + ISO in title; never throws.
+  2. `src/components/companies/research/research-viewer.tsx`: replace dual-Badge block with at most one outline Badge from the model; domain Xsig/Ysrc badge unchanged.
+  3. `agent/feature_list.json`: completed feature_improvement priority 58.
+  4. `agent/harness/horizon.json`: advanced past this FI (next: hermetic-research-viewer-run-badge-state-smoke).
+  No edits to `format-relative-researched-label.ts` or `format-relative-synced-label.ts`; no ranking/SQL/embedding/API/DB/schema/orchestrator/Trigger/auth/.env; no new deps/lockfile; no `dangerouslySetInnerHTML`; never evaluate systemPrompt getters. Horizon TO smoke + aria-label FI not implemented this run.
+- Decisions (first-principles + rules): (1) Read Plan artifact first and restated principles/AGENTS/rules/vision before code. (2) Confirmed and obeyed execution_constraints. (3) Corridor analyzePlan before edits (presentational only; plain React Badge text). (4) Pure model first for later hermetic lock. (5) Single human-facing primary; duration only in title. (6) Reuse formatRelativeResearchedLabel as-is.
+- Commands executed (post impl): `npm run lint && npm run typecheck && npm run build && npm run eval:relative-freshness-label-smoke && npm run eval:research-run-relative-freshness-smoke && npm run eval:smoke`.
+- Verification result: lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes). relative-freshness-label-smoke 10/10 pass (synced * intact). research-run-relative-freshness-smoke 12/12 pass (researched * intact). eval:smoke all sub-evals green.
+- Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to pure SoT helper + research-viewer wire + feature_list/PROGRESS/horizon (+ run-summary). Created `.codex/tmp/run-summary.json`.
+- Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`). Horizon next: hermetic-research-viewer-run-badge-state-smoke.

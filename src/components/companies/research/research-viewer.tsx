@@ -18,7 +18,7 @@ import {
   getMissingDomainPromptState,
   getPresentDomainTabs,
 } from '@/lib/research/domain-coverage';
-import { formatRelativeResearchedLabel } from '@/lib/format-relative-researched-label';
+import { getResearchRunHeaderBadgeModel } from '@/lib/get-research-run-header-badge-model';
 import { cn } from '@/lib/utils';
 
 interface ResearchViewerProps {
@@ -58,15 +58,14 @@ export function ResearchViewer({
     presentDomainIds,
   } = useResearchTabs(events);
 
-  const rs = run?.startedAt ? new Date(run.startedAt) : null;
-  const rc = run?.completedAt ? new Date(run.completedAt) : null;
-  const durS = (rs && rc && !isNaN(rs.getTime()) && !isNaN(rc.getTime()) && rc.getTime() >= rs.getTime())
-    ? Math.round((rc.getTime() - rs.getTime()) / 1000)
-    : null;
-  const researchedLabel =
-    run?.completedAt != null && rc && !isNaN(rc.getTime())
-      ? formatRelativeResearchedLabel(run.completedAt)
-      : '';
+  const runHeaderBadge = useMemo(
+    () =>
+      getResearchRunHeaderBadgeModel({
+        startedAt: run?.startedAt,
+        completedAt: run?.completedAt,
+      }),
+    [run?.startedAt, run?.completedAt],
+  );
 
   const headerResult =
     researchResultsByDomain[activeTab]
@@ -108,26 +107,15 @@ export function ResearchViewer({
         <CardTitle className="flex items-center gap-2">
           <Laptop className="w-5 h-5" aria-hidden="true" />
           Deep Research - {companyName}
-          {rs && !isNaN(rs.getTime()) && (
-            <>
-              {researchedLabel ? (
-                <Badge
-                  variant="outline"
-                  className="text-[10px] px-1.5 py-0"
-                  title={`started_at: ${rs.toISOString()}${rc && !isNaN(rc.getTime()) ? ` completed_at: ${rc.toISOString()}` : ''}${durS !== null ? ` dur: ${durS}s` : ''}`}
-                >
-                  {researchedLabel}
-                </Badge>
-              ) : null}
-              <Badge
-                variant="outline"
-                className="text-[10px] px-1.5 py-0 tabular-nums"
-                title={`started_at: ${rs.toISOString()}${rc && !isNaN(rc.getTime()) ? ` completed_at: ${rc.toISOString()}` : ''}${durS !== null ? ` dur: ${durS}s` : ''}`}
-              >
-                {rc && !isNaN(rc.getTime()) ? `research ${durS}s` : 'research live'}
-              </Badge>
-            </>
-          )}
+          {runHeaderBadge.mode !== 'none' && runHeaderBadge.primaryLabel ? (
+            <Badge
+              variant="outline"
+              className="text-[10px] px-1.5 py-0"
+              title={runHeaderBadge.title ?? undefined}
+            >
+              {runHeaderBadge.primaryLabel}
+            </Badge>
+          ) : null}
           {headerResult && (
             <Badge
               variant="outline"
