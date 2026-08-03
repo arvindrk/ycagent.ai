@@ -10,6 +10,7 @@ import {
   Briefcase,
 } from 'lucide-react';
 import type { Company } from '@/types/company.types';
+import { formatRelativeSyncedLabel } from '@/lib/format-relative-synced-label';
 import { CompanyLogo } from './company-logo';
 
 interface CompanyHeroProps {
@@ -17,20 +18,6 @@ interface CompanyHeroProps {
   onStartResearch?: () => void;
   onStopResearch?: () => void;
   isResearching?: boolean;
-}
-
-function formatRelativeTime(dateString: string): string {
-  const date = new Date(dateString);
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-  if (diffDays === 0) return 'today';
-  if (diffDays === 1) return 'yesterday';
-  if (diffDays < 7) return `${diffDays}\u00A0days ago`;
-  if (diffDays < 30) return `${Math.floor(diffDays / 7)}\u00A0weeks ago`;
-  if (diffDays < 365) return `${Math.floor(diffDays / 30)}\u00A0months ago`;
-  return `${Math.floor(diffDays / 365)}\u00A0years ago`;
 }
 
 export function CompanyHero({
@@ -137,8 +124,11 @@ export function CompanyHero({
           </div>
 
           {company.last_synced_at && (
-            <p className="text-[13px] text-text-tertiary">
-              Last updated {formatRelativeTime(company.last_synced_at)}
+            <p
+              className="text-[13px] text-text-tertiary"
+              title={`last_synced_at: ${company.last_synced_at} updated_at: ${company.updated_at || ''} created_at: ${company.created_at || ''}`}
+            >
+              {formatRelativeSyncedLabel(company.last_synced_at)}
             </p>
           )}
         </div>
