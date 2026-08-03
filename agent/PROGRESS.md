@@ -1417,3 +1417,35 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Verification result: smoke 8/8 pass. eval:smoke all sub-evals green including new count-summary. lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes).
 - Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to smoke + package.json scripts + feature_list/PROGRESS/horizon (+ run-summary). Created `.codex/tmp/run-summary.json`.
 - Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: research-run-relative-freshness-label-ux.
+
+
+## 2026-08-01 (planner run continue-20260801-203458)
+
+- Worktree: `continue-20260801-203458` (branch `harness/continue-local-20260801-203458` @ f163f83).
+- Planner-only. Init via `bash agent/init.sh`: feature_list all 54 completed (through hermetic-search-result-count-summary-smoke priority 54); worktree clean tracking origin/main; dependency-security-audit completed but passes=false (excluded in-flight).
+- Recon: vision 3 facets + 4 outcomes; count-summary FI+TO shipped (buildSearchResultCountSummary + eval:search-result-count-summary-smoke in eval:smoke); ResearchViewer run badge still duration/live only (`research ${durS}s` / `research live`); completedAt ISO only in title; formatRelativeSyncedLabel covers company preview synced * only.
+- In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals.
+- Horizon updated to ["research-run-relative-freshness-label-ux", "hermetic-research-run-relative-freshness-smoke", "company-hero-relative-synced-label-ux"] (FI research freshness next; TO lock; FI hero discovery align for surface diversity).
+- Chosen next: research-run-relative-freshness-label-ux (plan_id plan-20260801-150611). Rationale: executor handoff head after count-summary TO; pure researched-ago SoT before smoke lock; pivots facet from vector search to agent research freshness.
+- Artifacts: `.codex/tmp/plan-20260801-150611.json`, `.codex/tmp/plan-20260801-150611.md`, `agent/harness/horizon.json`.
+- Ruflo: MCP ruflo timed out; local `ruflo memory init` + store harness:horizon / harness:plan:20260801-150611 / harness:planner:last.
+- Corridor analyzePlan on planning summary (presentational relative labels; plain React text; no secrets/API).
+- No source code, tests, or feature_list.json edits.
+
+## 2026-08-01 (research-run-relative-freshness-label-ux)
+
+- Worktree: `continue-20260801-203458` (branch `harness/continue-local-20260801-203458`).
+- Task: `research-run-relative-freshness-label-ux` (plan_id: plan-20260801-150611 from Planner run continue-20260801-203458).
+- Plan link: `.codex/tmp/plan-20260801-150611.json` (authoritative); also `.codex/tmp/plan-20260801-150611.md`. Horizon after per plan: ["research-run-relative-freshness-label-ux", "hermetic-research-run-relative-freshness-smoke", "company-hero-relative-synced-label-ux"].
+- Selected per plan: Feature improvement (agent research + UI/UX + freshness): pure `formatRelativeResearchedLabel` + ResearchViewer header researched-ago label.
+- Changes (only chosen_task):
+  1. `src/lib/format-relative-researched-label.ts`: pure `formatRelativeResearchedLabel(completedAt, now?)` with injectable `now`; labels `researched today` / `researched Nd ago` / `researched Nmo ago` / `researched Ny ago`; accepts `string | Date`; never throws; unparseable falls back to ISO date slice or empty string.
+  2. `src/components/companies/research/research-viewer.tsx`: when `completedAt` is valid, outline Badge shows relative researched label beside existing duration badge; keeps `research live` when started and not completed; absolute `started_at`/`completed_at`/duration remain in title.
+  3. `agent/feature_list.json`: completed feature_improvement priority 55.
+  4. `agent/harness/horizon.json`: advanced past completed FI (next: hermetic researched-label smoke).
+  Did not change `formatRelativeSyncedLabel` or company preview. No ranking/SQL/embedding/API/DB/schema/orchestrator/Trigger/auth/.env; no new deps/lockfile; no `dangerouslySetInnerHTML`; never evaluate systemPrompt getters. Hermetic researched-label smoke deferred (horizon next).
+- Decisions (first-principles + rules): (1) Read Plan artifact first. (2) Verbatim restated Plan principles, AGENTS.md, .agents/rules, vision BEFORE code edits. (3) Confirmed and obeyed execution_constraints. (4) Corridor analyzePlan before edits (presentational labels; plain React text; no secrets). (5) Separate researched helper (not parameterize synced) to preserve company-preview `synced *` contract. (6) Show researched badge beside duration (duration + absolute times stay in title). (7) Horizon later hermetic smoke + hero align not implemented.
+- Commands executed (post impl): `npm run lint && npm run typecheck && npm run build && npm run eval:relative-freshness-label-smoke && npm run eval:smoke`.
+- Verification result: lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes). relative-freshness-label-smoke 10/10 pass (synced * contract intact). eval:smoke all sub-evals green.
+- Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to pure helper + research-viewer wire + feature_list/PROGRESS/horizon (+ run-summary). Created `.codex/tmp/run-summary.json`.
+- Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: hermetic-research-run-relative-freshness-smoke.
