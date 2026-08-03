@@ -112,6 +112,7 @@ export function ResearchViewer({
               variant="outline"
               className="text-[10px] px-1.5 py-0"
               title={runHeaderBadge.title ?? undefined}
+              aria-label={runHeaderBadge.ariaLabel ?? undefined}
             >
               {runHeaderBadge.primaryLabel}
             </Badge>
