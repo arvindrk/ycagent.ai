@@ -1449,3 +1449,35 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Verification result: lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes). relative-freshness-label-smoke 10/10 pass (synced * contract intact). eval:smoke all sub-evals green.
 - Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to pure helper + research-viewer wire + feature_list/PROGRESS/horizon (+ run-summary). Created `.codex/tmp/run-summary.json`.
 - Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: hermetic-research-run-relative-freshness-smoke.
+
+
+## 2026-08-03 (planner run continue-20260803-122554)
+
+- Worktree: `continue-20260803-122554` (branch `harness/continue-local-20260803-122554` @ f81ec6d).
+- Planner-only. Init via `bash agent/init.sh`: feature_list all 55 completed (through research-run-relative-freshness-label-ux priority 55); worktree clean tracking origin/main; dependency-security-audit completed but passes=false (excluded in-flight).
+- Recon: vision 3 facets + 4 outcomes; researched-ago FI shipped (`formatRelativeResearchedLabel` + ResearchViewer wire); no dedicated hermetic smoke yet (synced * smoke remains eval:relative-freshness-label-smoke only); company-hero still uses local `formatRelativeTime` for last_synced while preview uses `formatRelativeSyncedLabel`.
+- In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals.
+- Horizon updated to ["hermetic-research-run-relative-freshness-smoke", "company-hero-relative-synced-label-ux", "research-viewer-live-vs-completed-badge-clarity-ux", "hermetic-research-viewer-run-badge-state-smoke"] (TO lock-after-ship next; FI hero freshness align; FI live/completed badge clarity; TO lock if pure model).
+- Chosen next: hermetic-research-run-relative-freshness-smoke (plan_id plan-20260803-065657). Rationale: executor handoff head after researched-ago FI; seal pure SoT before hero discovery freshness UX.
+- Artifacts: `.codex/tmp/plan-20260803-065657.json`, `.codex/tmp/plan-20260803-065657.md`, `agent/harness/horizon.json`.
+- Ruflo: MCP ruflo timed out; local `ruflo memory init` + store harness:horizon / harness:plan:20260803-065657 / harness:planner:last / harness:vision.
+- Corridor analyzePlan on planning summary (hermetic pure SoT smoke; no secrets/API).
+- No source code, tests, or feature_list.json edits.
+
+## 2026-08-03 (hermetic-research-run-relative-freshness-smoke)
+
+- Worktree: `continue-20260803-122554` (branch `harness/continue-local-20260803-122554`).
+- Task: `hermetic-research-run-relative-freshness-smoke` (plan_id: plan-20260803-065657 from Planner run continue-20260803-122554).
+- Plan link: `.codex/tmp/plan-20260803-065657.json` (authoritative); also `.codex/tmp/plan-20260803-065657.md`. Horizon after per plan: ["hermetic-research-run-relative-freshness-smoke", "company-hero-relative-synced-label-ux", "research-viewer-live-vs-completed-badge-clarity-ux", "hermetic-research-viewer-run-badge-state-smoke"].
+- Selected per plan: Testing/Observability lock of pure `formatRelativeResearchedLabel` after research-run-relative-freshness-label-ux (p55).
+- Changes (only chosen_task):
+  1. `src/eval/research-run-relative-freshness-smoke.ts`: hermetic zero-I/O smoke; fixed `NOW_MS=2024-06-26T12:00:00.000Z`; imports production SoT only; 12 cases (today / 3d / 1mo / 1y / clock skew / unparseable fallbacks / invalid Date NaN / Date completedAt / Date now / invalid now / never-throws).
+  2. `package.json`: `eval:research-run-relative-freshness-smoke` + append to `eval:smoke` composite.
+  3. `agent/feature_list.json`: completed testing_observability priority 56.
+  4. `agent/harness/horizon.json`: advanced past this TO (next: company-hero-relative-synced-label-ux).
+  No production SoT edits (smoke asserted current helper). No ResearchViewer/ranking/SQL/API/DB/schema/orchestrator/Trigger/auth/.env; no new deps/lockfile; no React/DOM; never evaluate systemPrompt getters. Kept `eval:relative-freshness-label-smoke` (synced *) green.
+- Decisions (first-principles + rules): (1) Read Plan artifact first. (2) Verbatim restated Plan principles, AGENTS.md operating/safety/review, `.agents/rules` minimal-code + security, vision alignment BEFORE code. (3) Confirmed and obeyed execution_constraints. (4) Corridor analyzePlan before edits (hermetic pure SoT smoke; no secrets/API). (5) Mirrored sibling `relative-freshness-label-smoke` pattern for researched * wording only. (6) No production fix needed. (7) Horizon later FI/TO not implemented.
+- Commands executed (post impl): `npm run eval:research-run-relative-freshness-smoke && npm run eval:relative-freshness-label-smoke && npm run lint && npm run typecheck && npm run build && npm run eval:smoke`.
+- Verification result: research-run-relative-freshness-smoke 12/12 pass. relative-freshness-label-smoke 10/10 pass (synced * intact). lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes). eval:smoke all sub-evals green including new researched smoke last.
+- Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to new smoke + package.json scripts + feature_list/PROGRESS/horizon (+ run-summary). Created `.codex/tmp/run-summary.json`.
+- Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: company-hero-relative-synced-label-ux.
