@@ -1,23 +1,17 @@
 {
   "slice": [
-    "hermetic-research-viewer-run-status-aria-smoke",
     "research-domain-signal-badge-tooltip-ux",
     "hermetic-research-domain-signal-badge-tooltip-smoke"
   ],
   "rationale_per_step": {
-    "hermetic-research-viewer-run-status-aria-smoke": "Testing/Observability: hermetic zero-I/O lock of pure ariaLabel SoT (none/live/completed + duration phrase) after aria FI ships.",
-    "research-domain-signal-badge-tooltip-ux": "Feature improvement (agent research + UI/UX): clarify domain Xsig/Ysrc signal badge meaning via stable title/tooltip copy without changing count logic; diversifies surface after run-status chain.",
+    "research-domain-signal-badge-tooltip-ux": "Feature improvement (agent research + UI/UX): clarify domain Xsig/Ysrc signal badge meaning via stable title/tooltip copy without changing count logic; diversifies surface after run-status chain. Chosen next.",
     "hermetic-research-domain-signal-badge-tooltip-smoke": "Testing/Observability: hermetic lock of domain signal badge tooltip/title pure SoT after tooltip FI ships (lock-after-ship)."
   },
   "category_mix": {
     "feature_improvement": 1,
-    "testing_observability": 2
+    "testing_observability": 1
   },
   "vision_refs": {
-    "hermetic-research-viewer-run-status-aria-smoke": [
-      "Measurable research quality and coverage",
-      "UI/UX facet"
-    ],
     "research-domain-signal-badge-tooltip-ux": [
       "Agent research facet",
       "UI/UX facet"
@@ -27,6 +21,6 @@
       "Agent research facet"
     ]
   },
-  "generated_by_run": "continue-20260803-192618",
-  "notes": "Executor run continue-20260803-192618 completed research-viewer-run-status-aria-label-ux (plan_id plan-20260803-192755). Advanced past FI aria-label; next lock-after-ship TO hermetic-research-viewer-run-status-aria-smoke, then domain-signal tooltip FI + TO."
+  "generated_by_run": "continue-20260804-162428",
+  "notes": "Executor advanced past hermetic-research-viewer-run-status-aria-smoke (plan-20260804-105624) after ship. Horizon next: research-domain-signal-badge-tooltip-ux then hermetic-research-domain-signal-badge-tooltip-smoke."
 }
