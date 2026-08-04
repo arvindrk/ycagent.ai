@@ -1,26 +1,33 @@
 {
   "slice": [
-    "research-domain-signal-badge-tooltip-ux",
-    "hermetic-research-domain-signal-badge-tooltip-smoke"
+    "hermetic-research-domain-signal-badge-tooltip-smoke",
+    "search-score-breakdown-pure-sot-ux",
+    "hermetic-search-score-breakdown-smoke"
   ],
   "rationale_per_step": {
-    "research-domain-signal-badge-tooltip-ux": "Feature improvement (agent research + UI/UX): clarify domain Xsig/Ysrc signal badge meaning via stable title/tooltip copy without changing count logic; diversifies surface after run-status chain. Chosen next.",
-    "hermetic-research-domain-signal-badge-tooltip-smoke": "Testing/Observability: hermetic lock of domain signal badge tooltip/title pure SoT after tooltip FI ships (lock-after-ship)."
+    "hermetic-research-domain-signal-badge-tooltip-smoke": "Testing/Observability: hermetic lock of domain signal badge title/aria pure SoT after tooltip FI ships (lock-after-ship).",
+    "search-score-breakdown-pure-sot-ux": "Feature improvement (vector search + UI/UX): extract company preview score badge title/aria breakdown into pure SoT for trust and hermetic readiness; diversifies slice toward under-served vector search facet.",
+    "hermetic-search-score-breakdown-smoke": "Testing/Observability: hermetic lock of search score breakdown pure SoT after pure-sot FI ships."
   },
   "category_mix": {
     "feature_improvement": 1,
-    "testing_observability": 1
+    "testing_observability": 2
   },
   "vision_refs": {
-    "research-domain-signal-badge-tooltip-ux": [
-      "Agent research facet",
-      "UI/UX facet"
-    ],
     "hermetic-research-domain-signal-badge-tooltip-smoke": [
       "Measurable research quality and coverage",
       "Agent research facet"
+    ],
+    "search-score-breakdown-pure-sot-ux": [
+      "Vector search facet",
+      "UI/UX facet",
+      "Powerful, intuitive discovery"
+    ],
+    "hermetic-search-score-breakdown-smoke": [
+      "Vector search facet",
+      "Measurable research quality and coverage"
     ]
   },
-  "generated_by_run": "continue-20260804-162428",
-  "notes": "Executor advanced past hermetic-research-viewer-run-status-aria-smoke (plan-20260804-105624) after ship. Horizon next: research-domain-signal-badge-tooltip-ux then hermetic-research-domain-signal-badge-tooltip-smoke."
+  "generated_by_run": "continue-20260805-001236",
+  "notes": "Executor advanced past research-domain-signal-badge-tooltip-ux (plan-20260805-001458). Next: hermetic-research-domain-signal-badge-tooltip-smoke (lock-after-ship), then search-score pure-SoT + hermetic for vector-search balance."
 }
