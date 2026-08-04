@@ -1637,3 +1637,34 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Verification result: research-viewer-run-status-aria-smoke 8/8 pass. research-viewer-run-badge-state-smoke 8/8 pass. research-run-relative-freshness-smoke 12/12 pass. relative-freshness-label-smoke 10/10 pass. lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes). eval:smoke all sub-evals green including new aria smoke at end of chain.
 - Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to new smoke + package.json wire + feature_list/PROGRESS/horizon (+ run-summary). Created `.codex/tmp/run-summary.json`.
 - Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: research-domain-signal-badge-tooltip-ux.
+
+## 2026-08-05 (planner run continue-20260805-001236)
+
+- Worktree: `continue-20260805-001236` (branch `harness/continue-local-20260805-001236` @ b1b06f5).
+- Planner-only. Init via `bash agent/init.sh`: feature_list all 61 completed (through hermetic-research-viewer-run-status-aria-smoke priority 61); worktree clean tracking origin/main; dependency-security-audit completed but passes=false (excluded in-flight).
+- Recon: vision 3 facets + 4 outcomes; run-status badge pure SoT + aria hermetic shipped; domain signal Badge still uses local signalCountForResult + camelCase title dump in research-viewer.tsx (no pure SoT, no aria-label).
+- In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals.
+- Horizon updated to ["research-domain-signal-badge-tooltip-ux", "hermetic-research-domain-signal-badge-tooltip-smoke", "search-score-breakdown-pure-sot-ux", "hermetic-search-score-breakdown-smoke"] (FI domain tooltip next; TO tooltip smoke; FI vector search score pure-SoT; TO score smoke). Mix FI2+TO2.
+- Chosen next: research-domain-signal-badge-tooltip-ux (plan_id plan-20260805-001458). Rationale: horizon head after aria smoke; pure SoT title/tooltip + aria for Xsig/Ysrc badge; lock-after-ship TO ready; then diversify to vector search facet.
+- Artifacts: `.codex/tmp/plan-20260805-001458.json`, `.codex/tmp/plan-20260805-001458.md`, `agent/harness/horizon.json`.
+- Ruflo: local `ruflo memory init` + store harness:horizon / harness:plan:20260805-001458 / harness:planner:last / harness:vision (MCP ruflo timed out this session).
+- Corridor analyzePlan on planning summary (presentational pure SoT strings from ResearchResult counts; no secrets/API).
+- No source code, tests, or feature_list.json edits.
+
+## 2026-08-05 (research-domain-signal-badge-tooltip-ux)
+
+- Worktree: `continue-20260805-001236` (branch `harness/continue-local-20260805-001236`).
+- Task: `research-domain-signal-badge-tooltip-ux` (plan_id: plan-20260805-001458 from Planner run continue-20260805-001236).
+- Plan link: `.codex/tmp/plan-20260805-001458.json` (authoritative); also `.codex/tmp/plan-20260805-001458.md`. Horizon after per plan: ["research-domain-signal-badge-tooltip-ux", "hermetic-research-domain-signal-badge-tooltip-smoke", "search-score-breakdown-pure-sot-ux", "hermetic-search-score-breakdown-smoke"] (advanced past chosen FI on complete).
+- Selected per plan: Feature improvement (agent research + UI/UX) pure SoT for domain Xsig/Ysrc header badge title/tooltip + aria without changing count math or compact chrome.
+- Changes (only chosen_task):
+  1. `src/lib/get-domain-signal-badge-model.ts`: pure `getDomainSignalBadgeModel(result)` returning `{ primaryLabel, signalCount, sourceCount, title, ariaLabel }`. Count math matches prior tractionSignals.length / founder array sum + sources.length; missing optional arrays as 0; title human-readable (sig/src explained; founder plain-English breakdown); ariaLabel exact `Domain signals: {domain}, {N} signals, {M} sources`.
+  2. `src/components/companies/research/research-viewer.tsx`: domain Badge wired to model (primaryLabel, title, aria-label); removed local `signalCountForResult` and camelCase title dump; outline + `text-[10px] px-1.5 py-0` unchanged; run-status and coverage badges untouched.
+  3. `agent/feature_list.json`: completed feature_improvement priority 62, depends_on hermetic-research-viewer-run-status-aria-smoke, passes true.
+  4. `agent/harness/horizon.json`: advanced past this FI (next: hermetic-research-domain-signal-badge-tooltip-smoke).
+  No ranking/SQL/embedding/API/DB/schema/orchestrator/Trigger/auth/.env; no new deps/lockfile; no hermetic smoke this run; never evaluate systemPrompt getters.
+- Decisions (first-principles + rules): (1) Read Plan artifact first and restated principles/AGENTS/rules/vision before code. (2) Confirmed and obeyed execution_constraints. (3) Corridor analyzePlan before edits (presentational pure SoT; no secrets/API). (4) Pure model first for lock-after-ship hermetic readiness. (5) Stable exact ariaLabel/title shape for next TO; primaryLabel format frozen to prior chrome.
+- Commands executed (post impl): `npm run lint && npm run typecheck && npm run eval:research-viewer-run-status-aria-smoke && npm run eval:research-viewer-run-badge-state-smoke && npm run build && npm run eval:smoke`.
+- Verification result: lint clean. typecheck clean. research-viewer-run-status-aria-smoke 8/8 pass. research-viewer-run-badge-state-smoke 8/8 pass. build succeeded (Next.js 16.1.6, 9 routes). eval:smoke all sub-evals green including run-status aria/badge smokes.
+- Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to pure model + ResearchViewer domain Badge wire + feature_list/PROGRESS/horizon (+ run-summary). Created `.codex/tmp/run-summary.json`.
+- Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: hermetic-research-domain-signal-badge-tooltip-smoke.
