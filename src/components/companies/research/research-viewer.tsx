@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Badge, badgeVariants } from '@/components/ui/badge';
-import { StreamChunk, ResearchResult } from '@/types/llm.types';
+import { StreamChunk } from '@/types/llm.types';
 import { Laptop, Activity, Square } from 'lucide-react';
 import { TimelineEvent } from './timeline-event';
 import { ResearchViewerSkeleton } from './research-viewer-skeleton';
@@ -18,6 +18,7 @@ import {
   getMissingDomainPromptState,
   getPresentDomainTabs,
 } from '@/lib/research/domain-coverage';
+import { getDomainSignalBadgeModel } from '@/lib/get-domain-signal-badge-model';
 import { getResearchRunHeaderBadgeModel } from '@/lib/get-research-run-header-badge-model';
 import { cn } from '@/lib/utils';
 
@@ -28,16 +29,6 @@ interface ResearchViewerProps {
   isResearching: boolean;
   onStopResearch: () => void;
   run?: { startedAt?: string | Date; completedAt?: string | Date } | null;
-}
-
-function signalCountForResult(result: ResearchResult): number {
-  if (result.domain === 'traction') {
-    return result.tractionSignals.length;
-  }
-  return (result.founderRelationship?.length || 0)
-    + (result.complementarySkills?.length || 0)
-    + (result.socialPresence?.length || 0)
-    + (result.trackRecord?.length || 0);
 }
 
 export function ResearchViewer({
@@ -70,7 +61,9 @@ export function ResearchViewer({
   const headerResult =
     researchResultsByDomain[activeTab]
     ?? (presentDomainIds[0] ? researchResultsByDomain[presentDomainIds[0]] : undefined);
-  const signalCount = headerResult ? signalCountForResult(headerResult) : 0;
+  const domainSignalBadge = headerResult
+    ? getDomainSignalBadgeModel(headerResult)
+    : null;
 
   const presentDomainTabs = useMemo(
     () => getPresentDomainTabs(presentDomainIds),
@@ -117,19 +110,16 @@ export function ResearchViewer({
               {runHeaderBadge.primaryLabel}
             </Badge>
           ) : null}
-          {headerResult && (
+          {domainSignalBadge ? (
             <Badge
               variant="outline"
               className="text-[10px] px-1.5 py-0"
-              title={
-                headerResult.domain === 'traction'
-                  ? `domain: traction sources: ${headerResult.sources.length} tractionSignals: ${headerResult.tractionSignals.length}`
-                  : `domain: ${headerResult.domain} sources: ${headerResult.sources.length} founderRelationship: ${headerResult.founderRelationship?.length || 0} complementarySkills: ${headerResult.complementarySkills?.length || 0} socialPresence: ${headerResult.socialPresence?.length || 0} trackRecord: ${headerResult.trackRecord?.length || 0}`
-              }
+              title={domainSignalBadge.title}
+              aria-label={domainSignalBadge.ariaLabel}
             >
-              {headerResult.domain} {signalCount}sig/{headerResult.sources.length}src
+              {domainSignalBadge.primaryLabel}
             </Badge>
-          )}
+          ) : null}
         </CardTitle>
         <div
           className="flex flex-wrap items-center gap-1.5 mt-2"
