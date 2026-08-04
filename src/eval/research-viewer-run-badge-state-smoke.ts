@@ -225,6 +225,10 @@ test('never throws on garbage startedAt/completedAt/now', () => {
       'durationSeconds must be null or number',
     );
     assert(model.title === null || typeof model.title === 'string', 'title must be null or string');
+    assert(
+      model.ariaLabel === null || typeof model.ariaLabel === 'string',
+      'ariaLabel must be null or string',
+    );
   }
 });
 

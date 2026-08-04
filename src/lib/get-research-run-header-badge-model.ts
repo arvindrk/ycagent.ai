@@ -10,6 +10,12 @@ export interface ResearchRunHeaderBadgeModel {
   durationSeconds: number | null;
   /** Tooltip with absolute timestamps and optional duration; null when mode is none. */
   title: string | null;
+  /**
+   * Assistive-tech status framing; null when mode is none.
+   * live: "Research status: live"
+   * completed: "Research status: completed, {primaryLabel}" plus optional duration phrase.
+   */
+  ariaLabel: string | null;
 }
 
 function parseTimestamp(value: string | Date | null | undefined): Date | null {
@@ -56,6 +62,7 @@ export function getResearchRunHeaderBadgeModel(input: {
         primaryLabel: null,
         durationSeconds: null,
         title: null,
+        ariaLabel: null,
       };
     }
 
@@ -66,6 +73,7 @@ export function getResearchRunHeaderBadgeModel(input: {
         primaryLabel: 'research live',
         durationSeconds: null,
         title: buildTitle(started, null, null),
+        ariaLabel: 'Research status: live',
       };
     }
 
@@ -75,11 +83,17 @@ export function getResearchRunHeaderBadgeModel(input: {
 
     const primaryLabel = formatRelativeResearchedLabel(completed, input.now);
 
+    let ariaLabel = `Research status: completed, ${primaryLabel}`;
+    if (durationSeconds !== null) {
+      ariaLabel += `, duration ${durationSeconds}s`;
+    }
+
     return {
       mode: 'completed',
       primaryLabel,
       durationSeconds,
       title: buildTitle(started, completed, durationSeconds),
+      ariaLabel,
     };
   } catch {
     return {
@@ -87,6 +101,7 @@ export function getResearchRunHeaderBadgeModel(input: {
       primaryLabel: null,
       durationSeconds: null,
       title: null,
+      ariaLabel: null,
     };
   }
 }

@@ -1574,3 +1574,35 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Verification result: research-viewer-run-badge-state-smoke 8/8 pass. research-run-relative-freshness-smoke 12/12 pass. relative-freshness-label-smoke 10/10 pass. lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes). eval:smoke all sub-evals green including new badge-state smoke at end of chain.
 - Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to hermetic smoke + package.json wire + feature_list/PROGRESS/horizon (+ run-summary). Created `.codex/tmp/run-summary.json`.
 - Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: research-viewer-run-status-aria-label-ux.
+
+## 2026-08-03 (planner run continue-20260803-192618)
+
+- Worktree: `continue-20260803-192618` (branch `harness/continue-local-20260803-192618` @ e289222).
+- Planner-only. Init via `bash agent/init.sh`: feature_list all 59 completed (through hermetic-research-viewer-run-badge-state-smoke priority 59); worktree clean tracking origin/main; dependency-security-audit completed but passes=false (excluded in-flight).
+- Recon: vision 3 facets + 4 outcomes; pure `getResearchRunHeaderBadgeModel` + single ResearchViewer run-status Badge + hermetic badge-state smoke shipped; run-status Badge still has no aria-label (title only).
+- In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals.
+- Horizon updated to ["research-viewer-run-status-aria-label-ux", "hermetic-research-viewer-run-status-aria-smoke", "research-domain-signal-badge-tooltip-ux", "hermetic-research-domain-signal-badge-tooltip-smoke"] (FI a11y next; TO aria smoke; FI domain signal tooltip; TO tooltip smoke). Mix FI2+TO2.
+- Chosen next: research-viewer-run-status-aria-label-ux (plan_id plan-20260803-192755). Rationale: horizon head after badge-state smoke; extend pure SoT with ariaLabel + wire Badge; keeps primaryLabel/title contracts; enables lock-after-ship.
+- Artifacts: `.codex/tmp/plan-20260803-192755.json`, `.codex/tmp/plan-20260803-192755.md`, `agent/harness/horizon.json`.
+- Ruflo: local `ruflo memory init` + store harness:horizon / harness:plan:20260803-192755 / harness:planner:last / harness:vision (MCP ruflo handshake failed this session).
+- Corridor analyzePlan on planning summary (presentational aria-label; plain React string props; no secrets/API).
+- No source code, tests, or feature_list.json edits.
+
+## 2026-08-03 (research-viewer-run-status-aria-label-ux)
+
+- Worktree: `continue-20260803-192618` (branch `harness/continue-local-20260803-192618`).
+- Task: `research-viewer-run-status-aria-label-ux` (plan_id: plan-20260803-192755 from Planner run continue-20260803-192618).
+- Plan link: `.codex/tmp/plan-20260803-192755.json` (authoritative); also `.codex/tmp/plan-20260803-192755.md`. Horizon after per plan: ["research-viewer-run-status-aria-label-ux", "hermetic-research-viewer-run-status-aria-smoke", "research-domain-signal-badge-tooltip-ux", "hermetic-research-domain-signal-badge-tooltip-smoke"] (advanced past chosen FI on complete).
+- Selected per plan: Feature improvement (UI/UX a11y) extend pure getResearchRunHeaderBadgeModel with mode-aware ariaLabel and wire ResearchViewer run-status Badge.
+- Changes (only chosen_task):
+  1. `src/lib/get-research-run-header-badge-model.ts`: add `ariaLabel: string | null` to model; none => null; live => exactly `Research status: live`; completed => `Research status: completed, {primaryLabel}` plus `, duration {N}s` when durationSeconds non-null; never throw; primaryLabel/title/durationSeconds unchanged.
+  2. `src/components/companies/research/research-viewer.tsx`: `aria-label={runHeaderBadge.ariaLabel ?? undefined}` on run-status Badge only; class/variant/primaryLabel/title and domain Xsig/Ysrc badge untouched.
+  3. `src/eval/research-viewer-run-badge-state-smoke.ts`: never-throws path asserts ariaLabel is null|string only (no exact-copy hermetic; reserved for next TO).
+  4. `agent/feature_list.json`: completed feature_improvement priority 60, depends_on hermetic-research-viewer-run-badge-state-smoke, passes true.
+  5. `agent/harness/horizon.json`: advanced past this FI (next: hermetic-research-viewer-run-status-aria-smoke).
+  No ranking/SQL/embedding/API/DB/schema/orchestrator/Trigger/auth/.env; no new deps/lockfile; no dangerouslySetInnerHTML; never evaluate systemPrompt getters. Full aria hermetic + domain-signal tooltip not implemented this run.
+- Decisions (first-principles + rules): (1) Read Plan artifact first and restated principles/AGENTS/rules/vision before code. (2) Confirmed and obeyed execution_constraints. (3) Corridor analyzePlan before edits (plain React string aria-label; no secrets/API). (4) Prefer pure SoT extension over ad-hoc strings in the component. (5) Keep primaryLabel/title contracts so badge-state smoke stays green; exact aria copy lock deferred to next TO.
+- Commands executed (post impl): `npm run eval:research-viewer-run-badge-state-smoke && npm run eval:research-run-relative-freshness-smoke && npm run eval:relative-freshness-label-smoke && npm run lint && npm run typecheck && npm run build && npm run eval:smoke`.
+- Verification result: research-viewer-run-badge-state-smoke 8/8 pass. research-run-relative-freshness-smoke 12/12 pass. relative-freshness-label-smoke 10/10 pass. lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes). eval:smoke all sub-evals green.
+- Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to model + ResearchViewer wire + minimal never-throws type assert + feature_list/PROGRESS/horizon (+ run-summary). Created `.codex/tmp/run-summary.json`.
+- Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: hermetic-research-viewer-run-status-aria-smoke.
