@@ -75,7 +75,7 @@ function sparseTraction(overrides: Record<string, unknown> = {}): ResearchResult
     domain: 'traction',
     summary: 'sparse',
     ...overrides,
-  } as ResearchResult;
+  } as unknown as ResearchResult;
 }
 
 function sparseFounder(overrides: Record<string, unknown> = {}): ResearchResult {
@@ -85,7 +85,7 @@ function sparseFounder(overrides: Record<string, unknown> = {}): ResearchResult 
     executiveSummary: 'sparse',
     founders: [],
     ...overrides,
-  } as ResearchResult;
+  } as unknown as ResearchResult;
 }
 
 // ---- Test runner (exact pattern from src/eval/*-smoke.ts) --------------
