@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { SearchInput } from './search-input';
 import { SearchStats } from './search-stats';
 import { SearchEmpty } from './search-empty';
-import { TieredResultsDisplay } from './tiered-results-display';
+import { SearchResults } from './search-results';
 import { CompanyListSkeleton } from '@/components/companies/list/company-list-skeleton';
 import { useSearch } from '@/hooks/use-search';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
@@ -65,7 +65,7 @@ export function SearchContainer({ onSearchStateChange }: SearchContainerProps) {
           )}
 
           {!isLoading && data && data.total > 0 && (
-            <TieredResultsDisplay results={data.data} />
+            <SearchResults key={debouncedQuery} results={data.data} query={searchQuery} />
           )}
         </div>
       )}
