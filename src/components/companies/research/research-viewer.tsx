@@ -18,8 +18,6 @@ import {
   getMissingDomainPromptState,
   getPresentDomainTabs,
 } from '@/lib/research/domain-coverage';
-import { getDomainSignalBadgeModel } from '@/lib/get-domain-signal-badge-model';
-import { getResearchRunHeaderBadgeModel } from '@/lib/get-research-run-header-badge-model';
 import { cn } from '@/lib/utils';
 
 interface ResearchViewerProps {
@@ -27,8 +25,8 @@ interface ResearchViewerProps {
   vncUrl?: string;
   events: StreamChunk[];
   isResearching: boolean;
+  onStartResearch?: () => void;
   onStopResearch: () => void;
-  run?: { startedAt?: string | Date; completedAt?: string | Date } | null;
 }
 
 export function ResearchViewer({
@@ -36,8 +34,8 @@ export function ResearchViewer({
   vncUrl,
   events,
   isResearching,
+  onStartResearch,
   onStopResearch,
-  run
 }: ResearchViewerProps) {
   const timelineRef = useRef<HTMLDivElement>(null);
   const {
@@ -49,35 +47,24 @@ export function ResearchViewer({
     presentDomainIds,
   } = useResearchTabs(events);
 
-  const runHeaderBadge = useMemo(
-    () =>
-      getResearchRunHeaderBadgeModel({
-        startedAt: run?.startedAt,
-        completedAt: run?.completedAt,
-      }),
-    [run?.startedAt, run?.completedAt],
-  );
+  // Absence is only worth showing once something has run. Before that,
+  // "Founder Profile - not yet researched" advertises a gap the user has not
+  // asked us to fill yet.
+  const hasResearch = events.length > 0 || presentDomainIds.length > 0;
 
-  const headerResult =
-    researchResultsByDomain[activeTab]
-    ?? (presentDomainIds[0] ? researchResultsByDomain[presentDomainIds[0]] : undefined);
-  const domainSignalBadge = headerResult
-    ? getDomainSignalBadgeModel(headerResult)
-    : null;
-
-  const presentDomainTabs = useMemo(
-    () => getPresentDomainTabs(presentDomainIds),
-    [presentDomainIds],
-  );
   const coveragePresentation = useMemo(
-    () =>
-      getCoverageBadgePresentationModel({
+    () => getCoverageBadgePresentationModel({
         presentDomainIds,
         isResearching,
         eventCount: events.length,
       }),
     [presentDomainIds, isResearching, events.length],
   );
+  const presentDomainTabs = useMemo(
+    () => getPresentDomainTabs(presentDomainIds),
+    [presentDomainIds],
+  );
+
   const missingDomainPrompt = useMemo(
     () =>
       getMissingDomainPromptState({
@@ -100,27 +87,8 @@ export function ResearchViewer({
         <CardTitle className="flex items-center gap-2">
           <Laptop className="w-5 h-5" aria-hidden="true" />
           Deep Research - {companyName}
-          {runHeaderBadge.mode !== 'none' && runHeaderBadge.primaryLabel ? (
-            <Badge
-              variant="outline"
-              className="text-[10px] px-1.5 py-0"
-              title={runHeaderBadge.title ?? undefined}
-              aria-label={runHeaderBadge.ariaLabel ?? undefined}
-            >
-              {runHeaderBadge.primaryLabel}
-            </Badge>
-          ) : null}
-          {domainSignalBadge ? (
-            <Badge
-              variant="outline"
-              className="text-[10px] px-1.5 py-0"
-              title={domainSignalBadge.title}
-              aria-label={domainSignalBadge.ariaLabel}
-            >
-              {domainSignalBadge.primaryLabel}
-            </Badge>
-          ) : null}
         </CardTitle>
+        {hasResearch && (
         <div
           className="flex flex-wrap items-center gap-1.5 mt-2"
           role="list"
@@ -164,7 +132,8 @@ export function ResearchViewer({
             },
           )}
         </div>
-        {coveragePresentation.discoveryLine && (
+        )}
+        {hasResearch && coveragePresentation.discoveryLine && (
           <p className="mt-1.5 text-[11px] leading-snug text-text-tertiary">
             {coveragePresentation.discoveryLine}
           </p>
@@ -307,9 +276,17 @@ export function ResearchViewer({
         ) : isResearching ? (
           <ResearchViewerCardSkeleton />
         ) : (
-          <div className="flex flex-col items-center justify-center py-16 text-center h-[600px]">
-            <Activity className="w-12 h-12 text-text-tertiary mb-4" aria-hidden="true" />
-            <p className="text-text-secondary">Click &ldquo;Deep Research&rdquo; to start exploring this company</p>
+          <div className="flex flex-col items-center justify-center gap-4 py-12 text-center">
+            <Activity className="h-8 w-8 text-text-tertiary" aria-hidden="true" />
+            <p className="max-w-sm text-sm text-text-secondary">
+              Research the founders and traction behind {companyName} using live
+              browser automation and web crawling.
+            </p>
+            {onStartResearch && (
+              <Button onClick={onStartResearch} variant="accent" size="sm">
+                Start deep research
+              </Button>
+            )}
           </div>
         )}
       </CardContent>

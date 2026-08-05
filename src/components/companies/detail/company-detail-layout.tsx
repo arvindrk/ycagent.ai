@@ -32,7 +32,6 @@ export function CompanyDetailLayout({
     startResearch,
     stopResearch,
     researchContainerRef,
-    run
   } = useDeepResearchTrigger({ company, accessToken: researchAccessToken ?? "" });
 
   const handleStartResearch = () => {
@@ -75,8 +74,8 @@ export function CompanyDetailLayout({
           vncUrl={vncUrl}
           events={events}
           isResearching={isLoading || isResearching}
+          onStartResearch={handleStartResearch}
           onStopResearch={stopResearch}
-          run={run}
         />
       </div>
     </>
