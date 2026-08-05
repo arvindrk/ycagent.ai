@@ -1,23 +1,17 @@
 {
   "slice": [
-    "hermetic-research-domain-signal-badge-tooltip-smoke",
     "search-score-breakdown-pure-sot-ux",
     "hermetic-search-score-breakdown-smoke"
   ],
   "rationale_per_step": {
-    "hermetic-research-domain-signal-badge-tooltip-smoke": "Testing/Observability: hermetic lock of domain signal badge title/aria pure SoT after tooltip FI ships (lock-after-ship).",
-    "search-score-breakdown-pure-sot-ux": "Feature improvement (vector search + UI/UX): extract company preview score badge title/aria breakdown into pure SoT for trust and hermetic readiness; diversifies slice toward under-served vector search facet.",
+    "search-score-breakdown-pure-sot-ux": "Feature improvement (vector search + UI/UX): extract company preview score badge title/aria breakdown into pure SoT for trust and hermetic readiness; diversifies slice toward under-served vector search facet. Chosen next after domain signal tooltip smoke shipped.",
     "hermetic-search-score-breakdown-smoke": "Testing/Observability: hermetic lock of search score breakdown pure SoT after pure-sot FI ships."
   },
   "category_mix": {
     "feature_improvement": 1,
-    "testing_observability": 2
+    "testing_observability": 1
   },
   "vision_refs": {
-    "hermetic-research-domain-signal-badge-tooltip-smoke": [
-      "Measurable research quality and coverage",
-      "Agent research facet"
-    ],
     "search-score-breakdown-pure-sot-ux": [
       "Vector search facet",
       "UI/UX facet",
@@ -28,6 +22,6 @@
       "Measurable research quality and coverage"
     ]
   },
-  "generated_by_run": "continue-20260805-001236",
-  "notes": "Executor advanced past research-domain-signal-badge-tooltip-ux (plan-20260805-001458). Next: hermetic-research-domain-signal-badge-tooltip-smoke (lock-after-ship), then search-score pure-SoT + hermetic for vector-search balance."
+  "generated_by_run": "continue-20260805-002329",
+  "notes": "Executioner completed hermetic-research-domain-signal-badge-tooltip-smoke (plan-20260805-002459). Advanced past TO. Horizon next: search-score-breakdown-pure-sot-ux then hermetic-search-score-breakdown-smoke."
 }
