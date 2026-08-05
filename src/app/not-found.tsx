@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { SearchWrapper } from '@/components/companies/semantic-search/search-wrapper';
+import { SearchContainer } from '@/components/companies/semantic-search/search-container';
 import { FileQuestion, Home, Search } from 'lucide-react';
 import type { Metadata } from 'next';
 
@@ -37,11 +37,11 @@ export default function NotFound() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <SearchWrapper>
+              <SearchContainer>
                 <p className="text-sm text-muted-foreground mb-4">
                   Try searching for a company by name, batch, or description.
                 </p>
-              </SearchWrapper>
+              </SearchContainer>
             </CardContent>
           </Card>
 

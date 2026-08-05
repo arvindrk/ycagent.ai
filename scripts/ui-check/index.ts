@@ -22,6 +22,7 @@ const only = process.argv.find(a => a.startsWith('--only='))?.slice('--only='.le
 
 const SEARCH_INPUT = 'input[type="text"]';
 const CARD = 'a[aria-label^="View details for"]';
+const SKELETON = '.animate-pulse';
 
 /**
  * Console noise that is an artefact of running locally, not a defect.
@@ -37,6 +38,30 @@ function isRemoteImageProxy(url: string): boolean {
   if (!url.includes('/_next/image')) return false;
   const target = new URL(url).searchParams.get('url') ?? '';
   return /^https?:\/\//.test(target);
+}
+
+/**
+ * Waiting on a result card is not enough: the browse grid renders the same
+ * card selector, so the wait resolves instantly on stale content and the
+ * assertions then run against the loading skeleton. Wait for a resting state
+ * instead: no skeleton and cards, or a terminal empty/error message.
+ */
+async function waitForSearchToSettle(page: Page): Promise<void> {
+  await page
+    .waitForFunction(
+      ({ cardSel, skeletonSel }) => {
+        const text = document.body.innerText;
+        if (/No companies found|unavailable right now/i.test(text)) return true;
+        return (
+          document.querySelector(skeletonSel) === null &&
+          document.querySelectorAll(cardSel).length > 0
+        );
+      },
+      { cardSel: CARD, skeletonSel: SKELETON },
+      { timeout: 20_000 },
+    )
+    .catch(() => undefined);
+  await page.waitForTimeout(200);
 }
 
 async function runScenario(browser: Browser, scenario: Scenario) {
@@ -66,16 +91,17 @@ async function runScenario(browser: Browser, scenario: Scenario) {
   try {
     await page.goto(BASE_URL + scenario.path, { waitUntil: 'networkidle', timeout: 60_000 });
 
+    if (scenario.drive) {
+      const driven = await scenario.drive(page);
+      const slug = scenario.name.replace(/[^a-z0-9]+/gi, '-').toLowerCase();
+      await page.screenshot({ path: path.join(SHOT_DIR, `${slug}.png`), fullPage: true });
+      return driven;
+    }
+
     if (scenario.query) {
       await page.locator(SEARCH_INPUT).first().click();
       await page.locator(SEARCH_INPUT).first().type(scenario.query, { delay: 15 });
-      // Debounce, request, render. Settle on a card or give the empty state time.
-      await page
-        .locator(CARD)
-        .first()
-        .waitFor({ timeout: 15_000 })
-        .catch(() => undefined);
-      await page.waitForTimeout(600);
+      await waitForSearchToSettle(page);
     }
 
     const failures = await scenario.check(page);
