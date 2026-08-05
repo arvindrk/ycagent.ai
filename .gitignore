@@ -65,3 +65,5 @@ agent/brain/**
 *.db
 *.rvf*
 Repo Setup.md
+# chrome ui-check screenshots
+.ui-check/

@@ -11,7 +11,6 @@ import {
   generateEmbeddingBestEffort,
 } from '@/lib/semantic-search/embeddings/generate';
 import { searchInputSchema } from '@/lib/schemas/search.schema';
-import type { SearchPath } from '@/lib/schemas/search.schema';
 import type { ParsedFilters } from '@/lib/semantic-search/filters/parse';
 import { captureServerEvent } from '@/lib/analytics/posthog';
 import { getDistinctId, getIpAddress } from '@/lib/analytics/get-distinct-id';
