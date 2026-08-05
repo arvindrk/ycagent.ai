@@ -50,7 +50,11 @@ export async function GET(request: NextRequest) {
     let degraded = false;
 
     if (!skipVectorSearch) {
-      const attempt = await generateEmbeddingBestEffort(validatedParams.q, request.signal);
+      // Embed the residue, not the raw query. "W24 AI companies that are hiring"
+      // already had the batch and hiring tokens consumed into structured
+      // filters, so embedding them again pulls the vector toward wording the
+      // filters have handled.
+      const attempt = await generateEmbeddingBestEffort(cleanedQuery, request.signal);
       embedding = attempt.embedding;
 
       if (embedding === null) {
