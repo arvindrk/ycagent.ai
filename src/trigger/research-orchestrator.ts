@@ -4,6 +4,7 @@ import { DOMAIN_REGISTRY, getResearchDomains } from "@/lib/research/domain-regis
 import { DeepResearchAgentPayload, DomainResearchResult, ResearchOrchestratorPayload } from "@/types/trigger.types";
 import { getToolsForDomain } from "@/lib/schemas/tool.schema";
 import { updateResearchRunStatus } from "@/lib/db/queries/research-runs.queries";
+import { resolveResearchRunStatus } from "@/lib/research/resolve-research-run-status";
 
 export const researchOrchestrator = task({
   id: "research-orchestrator",
@@ -15,48 +16,66 @@ export const researchOrchestrator = task({
 
     logger.info("Research started", { companyId: payload.company.id, companyName: payload.company.name, domains });
 
-    try {
-      for (const domainKey of domains) {
-        const config = DOMAIN_REGISTRY[domainKey];
-        metadata.set("currentDomain", domainKey);
-        logger.info("Domain started", { domainKey, companyId: payload.company.id });
+    // A domain failure used to throw, which discarded every domain that had
+    // already succeeded. Failures are collected so a partial result still
+    // reaches the user.
+    const failures: { domain: string; error: string }[] = [];
 
-        const agentPayload: DeepResearchAgentPayload = {
-          ...payload,
-          domain: domainKey,
-          systemPrompt: config.systemPrompt,
-          tools: getToolsForDomain(domainKey),
-          initialMessage: config.generateInitialMessage(payload.company),
-        };
+    for (const domainKey of domains) {
+      const config = DOMAIN_REGISTRY[domainKey];
+      metadata.set("currentDomain", domainKey);
+      logger.info("Domain started", { domainKey, companyId: payload.company.id });
 
-        const result = await deepResearchAgent.triggerAndWait(agentPayload);
+      const agentPayload: DeepResearchAgentPayload = {
+        ...payload,
+        domain: domainKey,
+        systemPrompt: config.systemPrompt,
+        tools: getToolsForDomain(domainKey),
+        initialMessage: config.generateInitialMessage(payload.company),
+      };
 
-        if (!result.ok) {
-          logger.error("Domain agent failed", { domainKey, companyId: payload.company.id, error: result.error });
-          metadata.set("status", "failed");
-          await updateResearchRunStatus({ triggerRunId: ctx.run.id, status: "failed", errorMessage: `Agent failed on ${domainKey}: ${result.error}` });
-          throw new Error(`Agent failed on ${domainKey}: ${result.error}`);
-        }
+      const result = await deepResearchAgent.triggerAndWait(agentPayload);
 
-        logger.info("Domain complete", { domainKey, companyId: payload.company.id });
-        results.push({
-          domain: domainKey,
-          ...result.output
-        });
+      if (!result.ok) {
+        const error = String(result.error);
+        logger.error("Domain agent failed", { domainKey, companyId: payload.company.id, error });
+        failures.push({ domain: domainKey, error });
+        continue;
       }
-    } catch (error) {
-      await updateResearchRunStatus({
-        triggerRunId: ctx.run.id,
-        status: "failed",
-        errorMessage: error instanceof Error ? error.message : String(error),
+
+      logger.info("Domain complete", { domainKey, companyId: payload.company.id });
+      results.push({
+        domain: domainKey,
+        ...result.output
       });
-      throw error;
     }
 
-    logger.info("Research complete", { companyId: payload.company.id, domainCount: results.length });
-    metadata.set("status", "complete");
+    const status = resolveResearchRunStatus({
+      succeeded: results.length,
+      failed: failures.length,
+    });
 
-    await updateResearchRunStatus({ triggerRunId: ctx.run.id, status: "completed" });
+    logger.info("Research finished", {
+      companyId: payload.company.id,
+      status,
+      domainCount: results.length,
+      failedDomains: failures.map(f => f.domain),
+    });
+    metadata.set("status", status);
+
+    await updateResearchRunStatus({
+      triggerRunId: ctx.run.id,
+      status: status === "failed" ? "failed" : "completed",
+      ...(failures.length > 0
+        ? { errorMessage: failures.map(f => `${f.domain}: ${f.error}`).join("; ") }
+        : {}),
+    });
+
+    // Only a total loss is worth failing the run: with any domain complete the
+    // user has something to read.
+    if (status === "failed") {
+      throw new Error(failures.map(f => `Agent failed on ${f.domain}: ${f.error}`).join("; "));
+    }
 
     return results;
   }
