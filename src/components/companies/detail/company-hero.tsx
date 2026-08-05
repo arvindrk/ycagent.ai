@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import type { Company } from '@/types/company.types';
 import { formatRelativeSyncedLabel } from '@/lib/format-relative-synced-label';
-import { CompanyLogo } from './company-logo';
+import { CompanyLogo } from '@/components/companies/company-logo';
 
 interface CompanyHeroProps {
   company: Company;
@@ -55,9 +55,13 @@ export function CompanyHero({
   return (
     <header className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-[120px_1fr] lg:grid-cols-[120px_1fr_240px] gap-6">
-        <div className="w-[120px] h-[120px] rounded-lg bg-bg-secondary flex items-center justify-center flex-shrink-0 overflow-hidden">
-          <CompanyLogo logoUrl={company.logo_url} companyName={company.name} />
-        </div>
+        <CompanyLogo
+          logoUrl={company.logo_url}
+          companyName={company.name}
+          size={120}
+          priority
+          className="rounded-lg"
+        />
 
         <div className="flex-1 space-y-4 min-w-0">
           <div>

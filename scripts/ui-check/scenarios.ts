@@ -6,6 +6,7 @@ import {
   hasResults,
   noEmptyResultSections,
   noHorizontalOverflow,
+  noNestedInteractive,
   type Failure,
 } from './assertions';
 
@@ -31,7 +32,14 @@ export const scenarios: Scenario[] = [
     name: 'browse: desktop',
     path: '/',
     viewport: DESKTOP,
-    check: p => all(p, [noHorizontalOverflow, companyNamesLegible, hasResults, bodyNotBlank]),
+    check: p =>
+      all(p, [
+        noHorizontalOverflow,
+        companyNamesLegible,
+        noNestedInteractive,
+        hasResults,
+        bodyNotBlank,
+      ]),
   },
   {
     name: 'browse: mobile',
