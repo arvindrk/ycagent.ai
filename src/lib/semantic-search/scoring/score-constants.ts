@@ -22,6 +22,18 @@ export const TIER_HIGH_SEM = 0.7;
 export const TIER_STRONG_SEM = 0.5;
 export const TIER_RELEVANT_SEM = 0.3;
 
+/**
+ * Lexical path: ranks on the tsvector + name trigram only, with no embedding.
+ * Text dominates because trigram name similarity fires on incidental substrings
+ * ("climate tech" -> "Techmate"); the name floor keeps those out of the prefilter.
+ */
+export const W_LEX_TEXT = 0.85;
+export const W_LEX_NAME = 0.15;
+export const PREFILTER_LEX_NAME_MIN = 0.55;
+
+/** ts_rank_cd normalization flag 32: rank/(rank+1), bounding text_score to [0,1). */
+export const TS_RANK_NORMALIZATION = 32;
+
 /** Tier multipliers applied to weighted sum */
 export const MULT_EXACT = 2.5;
 export const MULT_HIGH = 1.5;
