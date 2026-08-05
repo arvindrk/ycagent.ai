@@ -2,9 +2,16 @@ import { NextRequest, NextResponse } from 'next/server';
 import { searchCompanies as dbSearchCompanies } from '@/lib/semantic-search/query';
 import { parseSearchFilters } from '@/lib/semantic-search/filters/parse';
 import { extractFiltersFromQuery } from '@/lib/semantic-search/filters/extract-from-query';
-import { resolveSearchPath } from '@/lib/semantic-search/resolve-search-path';
-import { generateEmbedding } from '@/lib/semantic-search/embeddings/generate';
+import {
+  resolveAchievedSearchPath,
+  resolveSearchPath,
+} from '@/lib/semantic-search/resolve-search-path';
+import {
+  EmbeddingAbortedError,
+  generateEmbeddingBestEffort,
+} from '@/lib/semantic-search/embeddings/generate';
 import { searchInputSchema } from '@/lib/schemas/search.schema';
+import type { SearchPath } from '@/lib/schemas/search.schema';
 import type { ParsedFilters } from '@/lib/semantic-search/filters/parse';
 import { captureServerEvent } from '@/lib/analytics/posthog';
 import { getDistinctId, getIpAddress } from '@/lib/analytics/get-distinct-id';
@@ -38,12 +45,31 @@ export async function GET(request: NextRequest) {
     const mergedFilters: ParsedFilters = { ...extractedFilters, ...definedExplicitFilters };
 
     // Skip vector when cleaned residue is empty (all tokens consumed or whitespace-only)
-    const search_path = resolveSearchPath(cleanedQuery);
-    const skipVectorSearch = search_path === 'keyword';
+    const skipVectorSearch = resolveSearchPath(cleanedQuery) === 'keyword';
 
-    const embedding = skipVectorSearch
-      ? null
-      : await generateEmbedding(validatedParams.q, request.signal);
+    let embedding: number[] | null = null;
+    let degraded = false;
+
+    if (!skipVectorSearch) {
+      const attempt = await generateEmbeddingBestEffort(validatedParams.q, request.signal);
+      embedding = attempt.embedding;
+
+      if (embedding === null) {
+        degraded = true;
+        console.error('[search] embedding provider unavailable, ranking on full text', {
+          reason: attempt.failureReason,
+        });
+        captureServerEvent(distinctId, 'search_embedding_degraded', {
+          query: validatedParams.q,
+          reason: attempt.failureReason,
+        });
+      }
+    }
+
+    const search_path = resolveAchievedSearchPath({
+      skipVectorSearch,
+      hasEmbedding: embedding !== null,
+    });
 
     const results = await dbSearchCompanies({
       query: validatedParams.q,
@@ -61,6 +87,7 @@ export async function GET(request: NextRequest) {
       query_time_ms: queryTime,
       has_results: results.length > 0,
       search_path,
+      degraded,
       results,
     });
 
@@ -70,21 +97,23 @@ export async function GET(request: NextRequest) {
       limit: validatedParams.limit,
       query_time_ms: queryTime,
       search_path,
+      ...(degraded ? { degraded } : {}),
     });
   } catch (error) {
-    if (error instanceof Error && error.name === 'AbortError') {
+    if (
+      error instanceof EmbeddingAbortedError ||
+      (error instanceof Error && error.name === 'AbortError')
+    ) {
       return new NextResponse('Request aborted', { status: 499 });
     }
 
+    const reason = error instanceof Error ? error.message : String(error);
+    // Upstream messages can carry account and billing detail, so they stay server-side.
+    console.error('[search] request failed', { reason });
     captureServerEvent(distinctId, 'semantic_search_failed', {
       query: q,
-      error: error instanceof Error ? error.message : String(error),
+      error: reason,
     });
-    return NextResponse.json(
-      {
-        error: error instanceof Error ? error.message : 'Search failed'
-      },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Search failed' }, { status: 500 });
   }
 }
