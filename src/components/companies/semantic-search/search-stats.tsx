@@ -53,6 +53,15 @@ export function SearchStats({
             Semantic
           </Badge>
         )}
+        {searchPath === 'lexical' && (
+          <Badge
+            variant="warning"
+            className="text-xs"
+            title="Semantic ranking is temporarily unavailable, so these results are ranked on full text"
+          >
+            Text ranked
+          </Badge>
+        )}
         {searchPath === 'keyword' && (
           <Badge
             variant="secondary"

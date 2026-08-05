@@ -20,15 +20,21 @@ export const searchInputSchema = z.object({
 
 export type SearchInput = z.infer<typeof searchInputSchema>;
 
-export const searchPathSchema = z.enum(['vector', 'keyword']);
+/**
+ * Ranking actually used for the response. `lexical` means a vector search was
+ * intended but the embedding provider was unavailable, so results were ranked
+ * on full text instead.
+ */
+export const searchPathSchema = z.enum(['vector', 'lexical', 'keyword']);
 
 export const searchResponseSchema = z.object({
   data: z.array(z.any()),
   total: z.number(),
   limit: z.number(),
   query_time_ms: z.number(),
-  /** Discovery mode: semantic/vector path vs filter-only when cleanedQuery is empty. */
   search_path: searchPathSchema.optional(),
+  /** True when semantic ranking was intended but unavailable. */
+  degraded: z.boolean().optional(),
 });
 
 export type SearchPath = z.infer<typeof searchPathSchema>;
