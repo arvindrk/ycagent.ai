@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import type { CompanyListItem } from '@/types/company.types';
 import { formatRelativeSyncedLabel } from '@/lib/format-relative-synced-label';
+import { getSearchScoreBreakdownModel } from '@/lib/get-search-score-breakdown-model';
 import { Building2, MapPin, Zap } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -48,18 +49,13 @@ export function CompanyPreviewCard({ company }: CompanyPreviewCardProps) {
   const displayTags = company.tags.slice(0, 3);
   const hasMoreTags = company.tags.length > 3;
   const tierDisplay = company.tier_label || company.tier;
-  const scoreBreakdown =
-    typeof company.final_score === 'number'
-      ? [
-          tierDisplay ? `tier: ${tierDisplay}` : null,
-          `semantic: ${company.semantic_score?.toFixed(2) ?? 'n/a'}`,
-          `name: ${company.name_score?.toFixed(2) ?? 'n/a'}`,
-          `text: ${company.text_score?.toFixed(2) ?? 'n/a'}`,
-          `final: ${company.final_score.toFixed(2)}`,
-        ]
-          .filter(Boolean)
-          .join(' ')
-      : null;
+  const scoreModel = getSearchScoreBreakdownModel({
+    final_score: company.final_score,
+    semantic_score: company.semantic_score,
+    name_score: company.name_score,
+    text_score: company.text_score,
+    tierDisplay,
+  });
 
   const handleDeepResearch = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -124,14 +120,14 @@ export function CompanyPreviewCard({ company }: CompanyPreviewCardProps) {
                 {tierDisplay}
               </Badge>
             )}
-            {typeof company.final_score === 'number' && scoreBreakdown && (
+            {scoreModel && (
               <Badge
                 variant="outline"
                 className="flex-shrink-0 text-[10px] px-1.5 py-0 tabular-nums"
-                title={scoreBreakdown}
-                aria-label={scoreBreakdown}
+                title={scoreModel.title}
+                aria-label={scoreModel.ariaLabel}
               >
-                {company.final_score.toFixed(2)}
+                {scoreModel.primaryLabel}
               </Badge>
             )}
             {company.last_synced_at && (

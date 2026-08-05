@@ -1699,3 +1699,34 @@ Append only. Record date, branch or worktree, task, decisions, commands, failure
 - Verification result: domain signal badge tooltip smoke 10/10 pass. lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes). eval:smoke all sub-evals green including new smoke at end of chain.
 - Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to smoke + package.json wire + feature_list/PROGRESS/horizon (+ run-summary). Created `.codex/tmp/run-summary.json`.
 - Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: search-score-breakdown-pure-sot-ux.
+
+## 2026-08-05 (planner run continue-20260805-105244)
+
+- Worktree: `continue-20260805-105244` (branch `harness/continue-local-20260805-105244` @ 65b56fb).
+- Planner-only. Init via `bash agent/init.sh`: feature_list all 63 completed (through hermetic-research-domain-signal-badge-tooltip-smoke priority 63); worktree clean tracking origin/main; dependency-security-audit completed but passes=false (excluded in-flight).
+- Recon: vision 3 facets + 4 outcomes; recent FI/TO streak on ResearchViewer chrome; CompanyPreviewCard still builds scoreBreakdown inline (tier/semantic/name/text/final join) for final_score badge title+aria; no pure SoT/hermetic for scores.
+- In-flight excluded: configurable-research-provider, dependency-security-audit, establish-vision-categories, surface-research-non-obvious-signals.
+- Horizon updated to ["search-score-breakdown-pure-sot-ux", "hermetic-search-score-breakdown-smoke", "company-preview-synced-badge-tooltip-ux", "hermetic-company-preview-synced-badge-tooltip-smoke"] (FI vector score pure-SoT next; TO score smoke; FI synced-badge tooltip; TO synced smoke). Mix FI2+TO2.
+- Chosen next: search-score-breakdown-pure-sot-ux (plan_id plan-20260805-052400). Rationale: horizon head after domain tooltip smoke; diversify to vector search facet; pure SoT enables lock-after-ship.
+- Artifacts: `.codex/tmp/plan-20260805-052400.json`, `.codex/tmp/plan-20260805-052400.md`, `agent/harness/horizon.json`.
+- Ruflo: local memory store harness:horizon / harness:plan:20260805-052400 / harness:planner:last (MCP ruflo unavailable this session).
+- Corridor analyzePlan on planning summary (presentational pure SoT; no secrets/API).
+- No source code, tests, or feature_list.json edits.
+
+## 2026-08-05 (search-score-breakdown-pure-sot-ux)
+
+- Worktree: `continue-20260805-105244` (branch `harness/continue-local-20260805-105244`).
+- Task: `search-score-breakdown-pure-sot-ux` (plan_id: plan-20260805-052400 from Planner run continue-20260805-105244).
+- Plan link: `.codex/tmp/plan-20260805-052400.json` (authoritative); also `.codex/tmp/plan-20260805-052400.md`. Horizon after per plan: ["search-score-breakdown-pure-sot-ux", "hermetic-search-score-breakdown-smoke", "company-preview-synced-badge-tooltip-ux", "hermetic-company-preview-synced-badge-tooltip-smoke"] (advanced past chosen FI on complete).
+- Selected per plan: Feature improvement pure SoT for CompanyPreviewCard final_score badge primaryLabel/title/ariaLabel.
+- Changes (only chosen_task):
+  1. `src/lib/get-search-score-breakdown-model.ts`: pure `getSearchScoreBreakdownModel`; null when final_score not finite; primaryLabel `final_score.toFixed(2)`; title prior field order (optional tier, semantic/name/text/final with n/a); ariaLabel `Search score: {primaryLabel}. {title}` (documented assistive framing).
+  2. `src/components/companies/list/company-preview-card.tsx`: score Badge wired to model only; removed inline scoreBreakdown join; batch/tier/synced/deep-research badges untouched; Badge classes unchanged.
+  3. `agent/feature_list.json`: completed feature_improvement priority 64, depends_on hermetic-research-domain-signal-badge-tooltip-smoke, passes true.
+  4. `agent/harness/horizon.json`: advanced past this FI (next: hermetic-search-score-breakdown-smoke).
+  No ranking/SQL/embedding/API/DB/schema/orchestrator/Trigger/auth/.env; no score math; no new deps/lockfile; no React hermetic this FI; never evaluate systemPrompt getters.
+- Decisions (first-principles + rules): (1) Read Plan artifact and restated principles/AGENTS/rules/vision before code. (2) Obeyed execution_constraints. (3) Corridor analyzePlan before edits (presentational pure SoT; no secrets/API). (4) Prefer distinct assistive ariaLabel framing over dual title/aria identity; document exact contract for next hermetic. (5) Finite-number gate for null (stricter than bare typeof number for NaN) while freezing primaryLabel/title shapes.
+- Commands executed (post impl): `npm run lint && npm run typecheck && npm run build && npm run eval:smoke`.
+- Verification result: lint clean. typecheck clean. build succeeded (Next.js 16.1.6, 9 routes). eval:smoke all sub-evals green.
+- Plan compliance note: Implemented exactly chosen_task within constraints. Diff limited to pure lib + CompanyPreviewCard wire + feature_list/PROGRESS/horizon (+ run-summary). Created `.codex/tmp/run-summary.json`.
+- Next handoff: harness wrapper (act only on `.codex/tmp/run-summary.json`; no commit/push/PR by executor). Horizon next: hermetic-search-score-breakdown-smoke.

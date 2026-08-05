@@ -1,27 +1,33 @@
 {
   "slice": [
-    "search-score-breakdown-pure-sot-ux",
-    "hermetic-search-score-breakdown-smoke"
+    "hermetic-search-score-breakdown-smoke",
+    "company-preview-synced-badge-tooltip-ux",
+    "hermetic-company-preview-synced-badge-tooltip-smoke"
   ],
   "rationale_per_step": {
-    "search-score-breakdown-pure-sot-ux": "Feature improvement (vector search + UI/UX): extract company preview score badge title/aria breakdown into pure SoT for trust and hermetic readiness; diversifies slice toward under-served vector search facet. Chosen next after domain signal tooltip smoke shipped.",
-    "hermetic-search-score-breakdown-smoke": "Testing/Observability: hermetic lock of search score breakdown pure SoT after pure-sot FI ships."
+    "hermetic-search-score-breakdown-smoke": "Testing/Observability: hermetic zero-I/O lock of search score breakdown pure SoT after pure-sot FI ships.",
+    "company-preview-synced-badge-tooltip-ux": "Feature improvement (UI/UX + freshness trust on discovery cards): pure SoT for company preview synced badge title/aria (today raw last_synced_at/updated_at/created_at dump) while keeping formatRelativeSyncedLabel primary chrome.",
+    "hermetic-company-preview-synced-badge-tooltip-smoke": "Testing/Observability: hermetic lock of company preview synced badge tooltip pure SoT after FI ships."
   },
   "category_mix": {
     "feature_improvement": 1,
-    "testing_observability": 1
+    "testing_observability": 2
   },
   "vision_refs": {
-    "search-score-breakdown-pure-sot-ux": [
-      "Vector search facet",
-      "UI/UX facet",
-      "Powerful, intuitive discovery"
-    ],
     "hermetic-search-score-breakdown-smoke": [
       "Vector search facet",
       "Measurable research quality and coverage"
+    ],
+    "company-preview-synced-badge-tooltip-ux": [
+      "UI/UX facet",
+      "Powerful, intuitive discovery",
+      "Users trust fresh, sourced profiles"
+    ],
+    "hermetic-company-preview-synced-badge-tooltip-smoke": [
+      "UI/UX facet",
+      "Measurable research quality and coverage"
     ]
   },
-  "generated_by_run": "continue-20260805-002329",
-  "notes": "Executioner completed hermetic-research-domain-signal-badge-tooltip-smoke (plan-20260805-002459). Advanced past TO. Horizon next: search-score-breakdown-pure-sot-ux then hermetic-search-score-breakdown-smoke."
+  "generated_by_run": "continue-20260805-105244",
+  "notes": "Executor completed search-score-breakdown-pure-sot-ux (plan_id plan-20260805-052400). Horizon advanced past pure-SoT FI; next hermetic-search-score-breakdown-smoke then synced-badge tooltip FI+TO."
 }
