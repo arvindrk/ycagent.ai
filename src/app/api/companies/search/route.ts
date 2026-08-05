@@ -47,6 +47,7 @@ export async function GET(request: NextRequest) {
 
     const results = await dbSearchCompanies({
       query: validatedParams.q,
+      textQuery: cleanedQuery,
       filters: mergedFilters,
       limit: validatedParams.limit,
       skipVectorSearch,
