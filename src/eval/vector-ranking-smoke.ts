@@ -1,33 +1,25 @@
 /**
- * Hermetic smoke for vector ranking + score composition invariants used by
- * searchCompanies in src/lib/semantic-search/query.ts (vector branch SQL).
+ * Hermetic smoke for vector ranking and score composition in searchCompanies
+ * (src/lib/semantic-search/query.ts, vector branch SQL).
  *
- * Imports shared pure score-constants (same source as production SQL). Distinct
- * from semantic-search-scenario-smoke (filter integration + partial ranking).
+ * Imports the same pure constants and tier registry the production SQL is
+ * generated from, so the mirror cannot drift silently.
  *
  * Zero I/O: no DB, embeddings API, network, or env.
  *
  * Run: npm run eval:vector-ranking-smoke
  */
 
-import { TIER_META, type TierKey } from "@/lib/semantic-search/scoring/weights";
+import { DEFAULT_TIER, EXACT_MATCH_TIER, TIERS, type TierKey } from '@/lib/semantic-search/scoring/tiers';
 import {
   EXACT_NAME_SIM_MIN,
   EXACT_PREFIX_MIN_LEN,
-  MULT_EXACT,
-  MULT_HIGH,
-  MULT_KEYWORD,
-  MULT_RELEVANT,
-  MULT_STRONG,
   PREFILTER_NAME_MIN,
   PREFILTER_SEMANTIC_MIN,
-  TIER_HIGH_SEM,
-  TIER_RELEVANT_SEM,
-  TIER_STRONG_SEM,
   W_NAME,
   W_SEMANTIC,
   W_TEXT,
-} from "@/lib/semantic-search/scoring/score-constants";
+} from '@/lib/semantic-search/scoring/score-constants';
 
 // ---- Pure ranking mirror (no SQL / no I/O) --------------------------------
 
@@ -35,7 +27,7 @@ type ScoreInput = {
   semantic: number;
   name: number;
   text: number;
-  /** When true, models prefix path: LOWER(name) LIKE LOWER(query)||'%' AND LENGTH(query) >= 3 */
+  /** Models the prefix path: LOWER(name) LIKE LOWER(query)||'%' AND LENGTH(query) >= 3 */
   namePrefixMatch?: boolean;
   queryLength?: number;
 };
@@ -46,50 +38,19 @@ function passesPrefilter(semantic: number, name: number): boolean {
 
 function isExactMatch(input: ScoreInput): boolean {
   if (input.name >= EXACT_NAME_SIM_MIN) return true;
-  if (
-    input.namePrefixMatch === true &&
-    (input.queryLength ?? 0) >= EXACT_PREFIX_MIN_LEN
-  ) {
-    return true;
-  }
-  return false;
+  return (
+    input.namePrefixMatch === true && (input.queryLength ?? 0) >= EXACT_PREFIX_MIN_LEN
+  );
 }
 
-function assignTierAndMult(input: ScoreInput): {
-  tier: TierKey;
-  mult: number;
-} {
-  if (isExactMatch(input)) {
-    return { tier: "exact_match", mult: MULT_EXACT };
-  }
-  if (input.semantic >= TIER_HIGH_SEM) {
-    return { tier: "high_confidence", mult: MULT_HIGH };
-  }
-  if (input.semantic >= TIER_STRONG_SEM) {
-    return { tier: "strong_match", mult: MULT_STRONG };
-  }
-  if (input.semantic >= TIER_RELEVANT_SEM) {
-    return { tier: "relevant", mult: MULT_RELEVANT };
-  }
-  return { tier: "keyword_match", mult: MULT_KEYWORD };
+function score(input: ScoreInput): { tier: TierKey; boost: number; weighted: number; final_score: number } {
+  const tier: TierKey = isExactMatch(input) ? EXACT_MATCH_TIER : DEFAULT_TIER;
+  const boost = TIERS[tier].boost;
+  const weighted = input.semantic * W_SEMANTIC + input.name * W_NAME + input.text * W_TEXT;
+  return { tier, boost, weighted, final_score: weighted * boost };
 }
 
-function weightedSum(semantic: number, name: number, text: number): number {
-  return semantic * W_SEMANTIC + name * W_NAME + text * W_TEXT;
-}
-
-function computeFinal(input: ScoreInput): {
-  tier: TierKey;
-  mult: number;
-  weighted: number;
-  final_score: number;
-} {
-  const { tier, mult } = assignTierAndMult(input);
-  const weighted = weightedSum(input.semantic, input.name, input.text);
-  return { tier, mult, weighted, final_score: weighted * mult };
-}
-
-// ---- Test runner (pattern from src/eval/*-smoke.ts) ----------------------
+// ---- Test runner ----------------------------------------------------------
 
 let passed = 0;
 let failed = 0;
@@ -100,8 +61,7 @@ function test(name: string, fn: () => void): void {
     console.log(`  pass  ${name}`);
     passed++;
   } catch (err) {
-    const msg = err instanceof Error ? err.message : String(err);
-    console.error(`  FAIL  ${name}: ${msg}`);
+    console.error(`  FAIL  ${name}: ${err instanceof Error ? err.message : String(err)}`);
     failed++;
   }
 }
@@ -110,168 +70,80 @@ function assert(condition: boolean, message: string): asserts condition {
   if (!condition) throw new Error(message);
 }
 
-function assertClose(actual: number, expected: number, label: string): void {
-  assert(
-    Math.abs(actual - expected) < 1e-9,
-    `${label}: got ${actual}, expected ${expected}`,
-  );
+function close(a: number, b: number, epsilon = 1e-9): boolean {
+  return Math.abs(a - b) < epsilon;
 }
 
-// ---- Tests ---------------------------------------------------------------
+console.log('\nvector-ranking eval: smoke\n');
 
-console.log("\nvector-ranking eval: smoke\n");
-
-test("component weights are 0.8 / 0.15 / 0.05 (query.ts literals)", () => {
-  assert(W_SEMANTIC === 0.8, "W_SEMANTIC");
-  assert(W_NAME === 0.15, "W_NAME");
-  assert(W_TEXT === 0.05, "W_TEXT");
-  assertClose(weightedSum(1, 1, 1), 1.0, "weights sum to 1.0");
-  assertClose(weightedSum(0.5, 0.2, 0.1), 0.5 * 0.8 + 0.2 * 0.15 + 0.1 * 0.05, "weighted sample");
+test('component weights are 0.8 / 0.15 / 0.05', () => {
+  assert(close(W_SEMANTIC, 0.8), `W_SEMANTIC=${W_SEMANTIC}`);
+  assert(close(W_NAME, 0.15), `W_NAME=${W_NAME}`);
+  assert(close(W_TEXT, 0.05), `W_TEXT=${W_TEXT}`);
+  assert(close(W_SEMANTIC + W_NAME + W_TEXT, 1), 'weights must sum to 1');
 });
 
-test("prefilter: semantic >= 0.25 OR name >= 0.7 (query.ts WHERE)", () => {
-  assert(passesPrefilter(0.25, 0) === true, "semantic at 0.25 passes");
-  assert(passesPrefilter(0.249, 0) === false, "semantic below 0.25 fails alone");
-  assert(passesPrefilter(0, 0.7) === true, "name at 0.7 passes");
-  assert(passesPrefilter(0, 0.699) === false, "name below 0.7 fails alone");
-  assert(passesPrefilter(0.1, 0.7) === true, "low semantic + high name passes");
-  assert(passesPrefilter(0.3, 0.1) === true, "high enough semantic alone");
-  assert(passesPrefilter(0.24, 0.69) === false, "both below fail");
+test('prefilter: semantic >= 0.25 OR name >= 0.7', () => {
+  assert(passesPrefilter(0.25, 0), 'semantic at the floor passes');
+  assert(!passesPrefilter(0.24, 0.69), 'below both floors is excluded');
+  assert(passesPrefilter(0, 0.7), 'name at the floor passes');
 });
 
-test("tier: name sim >= 0.9 => exact_match * 2.5", () => {
-  const r = computeFinal({ semantic: 0.1, name: 0.9, text: 0 });
-  assert(r.tier === "exact_match", `tier=${r.tier}`);
-  assert(r.mult === MULT_EXACT, `mult=${r.mult}`);
-  assertClose(r.final_score, weightedSum(0.1, 0.9, 0) * 2.5, "final at name=0.9");
+test('exact match: name similarity >= 0.9', () => {
+  assert(score({ semantic: 0.3, name: 0.9, text: 0 }).tier === EXACT_MATCH_TIER, 'at threshold');
+  assert(score({ semantic: 0.3, name: 0.89, text: 0 }).tier === DEFAULT_TIER, 'just below');
 });
 
-test("tier: name sim just below 0.9 is not exact_match (boundary)", () => {
-  const r = computeFinal({ semantic: 0.1, name: 0.899, text: 0 });
-  assert(r.tier !== "exact_match", `tier should not be exact, got ${r.tier}`);
-  assert(r.tier === "keyword_match", `low semantic => keyword, got ${r.tier}`);
+test('exact match: prefix path requires a query of at least 3 characters', () => {
+  const long = score({ semantic: 0.1, name: 0.2, text: 0, namePrefixMatch: true, queryLength: 3 });
+  const short = score({ semantic: 0.1, name: 0.2, text: 0, namePrefixMatch: true, queryLength: 2 });
+  assert(long.tier === EXACT_MATCH_TIER, 'length 3 qualifies');
+  assert(short.tier === DEFAULT_TIER, 'length 2 must not qualify');
 });
 
-test("tier: prefix path (namePrefixMatch + queryLength >= 3) => exact_match * 2.5", () => {
-  const r = computeFinal({
-    semantic: 0.2,
-    name: 0.1,
-    text: 0,
-    namePrefixMatch: true,
-    queryLength: 3,
-  });
-  assert(r.tier === "exact_match", `tier=${r.tier}`);
-  assertClose(r.final_score, weightedSum(0.2, 0.1, 0) * 2.5, "prefix exact mult");
+test('final_score is the weighted sum times the tier boost', () => {
+  const r = score({ semantic: 0.5, name: 0.2, text: 0.4 });
+  assert(close(r.weighted, 0.5 * 0.8 + 0.2 * 0.15 + 0.4 * 0.05), `weighted=${r.weighted}`);
+  assert(close(r.final_score, r.weighted * TIERS[DEFAULT_TIER].boost), `final=${r.final_score}`);
 });
 
-test("tier: prefix path requires queryLength >= 3", () => {
-  const short = computeFinal({
-    semantic: 0.2,
-    name: 0.1,
-    text: 0,
-    namePrefixMatch: true,
-    queryLength: 2,
-  });
-  assert(short.tier !== "exact_match", "len 2 must not exact");
-});
-
-test("tier boundaries: high_confidence at semantic 0.7 * 1.5", () => {
-  const at = computeFinal({ semantic: 0.7, name: 0.1, text: 0.05 });
-  assert(at.tier === "high_confidence", `at 0.7 got ${at.tier}`);
-  assert(at.mult === MULT_HIGH, "mult 1.5");
-  assertClose(
-    at.final_score,
-    weightedSum(0.7, 0.1, 0.05) * 1.5,
-    "high final",
-  );
-  const below = computeFinal({ semantic: 0.699, name: 0.1, text: 0.05 });
-  assert(below.tier === "strong_match", `0.699 => strong, got ${below.tier}`);
-});
-
-test("tier boundaries: strong_match at semantic 0.5 * 1.0", () => {
-  const at = computeFinal({ semantic: 0.5, name: 0.2, text: 0 });
-  assert(at.tier === "strong_match", `at 0.5 got ${at.tier}`);
-  assert(at.mult === MULT_STRONG, "mult 1.0");
-  assertClose(at.final_score, weightedSum(0.5, 0.2, 0) * 1.0, "strong final");
-  const below = computeFinal({ semantic: 0.499, name: 0.2, text: 0 });
-  assert(below.tier === "relevant", `0.499 => relevant, got ${below.tier}`);
-});
-
-test("tier boundaries: relevant at semantic 0.3 * 0.8", () => {
-  const at = computeFinal({ semantic: 0.3, name: 0.1, text: 0.1 });
-  assert(at.tier === "relevant", `at 0.3 got ${at.tier}`);
-  assert(at.mult === MULT_RELEVANT, "mult 0.8");
-  assertClose(at.final_score, weightedSum(0.3, 0.1, 0.1) * 0.8, "relevant final");
-  const below = computeFinal({ semantic: 0.299, name: 0.1, text: 0.1 });
-  assert(below.tier === "keyword_match", `0.299 => keyword, got ${below.tier}`);
-  assert(below.mult === MULT_KEYWORD, "mult 0.5");
-});
-
-test("final_score = weighted sum * mult for each tier mult", () => {
-  const cases: Array<{ input: ScoreInput; mult: number }> = [
-    { input: { semantic: 0.4, name: 0.95, text: 0.1 }, mult: 2.5 },
-    { input: { semantic: 0.8, name: 0.2, text: 0.05 }, mult: 1.5 },
-    { input: { semantic: 0.55, name: 0.2, text: 0.05 }, mult: 1.0 },
-    { input: { semantic: 0.35, name: 0.2, text: 0.05 }, mult: 0.8 },
-    { input: { semantic: 0.2, name: 0.2, text: 0.05 }, mult: 0.5 },
-  ];
-  for (const c of cases) {
-    const r = computeFinal(c.input);
-    assert(r.mult === c.mult, `expected mult ${c.mult}, got ${r.mult}`);
-    const expected =
-      weightedSum(c.input.semantic, c.input.name, c.input.text) * c.mult;
-    assertClose(r.final_score, expected, `mult ${c.mult}`);
-  }
-});
-
-test("exact_match wins over high semantic (CASE order)", () => {
-  const r = computeFinal({ semantic: 0.95, name: 0.92, text: 0 });
-  assert(r.tier === "exact_match", "name >= 0.9 takes exact before high_confidence");
-  assert(r.mult === 2.5, "exact mult");
-});
-
-test("TIER_META label and order for every TierKey", () => {
-  const expected: Record<TierKey, { label: string; order: number }> = {
-    exact_match: { label: "Exact Match", order: 1 },
-    high_confidence: { label: "Highly Relevant", order: 2 },
-    strong_match: { label: "Strong Match", order: 3 },
-    relevant: { label: "Relevant", order: 4 },
-    keyword_match: { label: "Keyword Match", order: 5 },
-  };
-  const keys = Object.keys(expected) as TierKey[];
-  assert(keys.length === 5, "five tiers");
-  for (const key of keys) {
-    const meta = TIER_META[key];
-    assert(meta.label === expected[key].label, `${key} label`);
-    assert(meta.order === expected[key].order, `${key} order`);
-  }
-  const orders = keys.map((k) => TIER_META[k].order).sort((a, b) => a - b);
+test('an exact match outranks a stronger semantic match', () => {
+  const exact = score({ semantic: 0.36, name: 1, text: 0.58 });
+  const semantic = score({ semantic: 0.65, name: 0, text: 0.2 });
+  assert(exact.tier === EXACT_MATCH_TIER, 'name match is exact');
   assert(
-    orders.join(",") === "1,2,3,4,5",
-    `orders must be 1..5 contiguous, got ${orders.join(",")}`,
+    exact.final_score > semantic.final_score,
+    `exact ${exact.final_score} should beat semantic ${semantic.final_score}`,
   );
 });
 
-test("assignTierAndMult covers all five TierKeys with documented mults", () => {
-  const samples: Array<{ input: ScoreInput; tier: TierKey; mult: number }> = [
-    { input: { semantic: 0, name: 0.91, text: 0 }, tier: "exact_match", mult: 2.5 },
-    { input: { semantic: 0.75, name: 0.1, text: 0 }, tier: "high_confidence", mult: 1.5 },
-    { input: { semantic: 0.55, name: 0.1, text: 0 }, tier: "strong_match", mult: 1.0 },
-    { input: { semantic: 0.4, name: 0.1, text: 0 }, tier: "relevant", mult: 0.8 },
-    { input: { semantic: 0.1, name: 0.1, text: 0 }, tier: "keyword_match", mult: 0.5 },
-  ];
-  const seen = new Set<TierKey>();
-  for (const s of samples) {
-    const r = assignTierAndMult(s.input);
-    assert(r.tier === s.tier, `expected ${s.tier}, got ${r.tier}`);
-    assert(r.mult === s.mult, `expected mult ${s.mult}, got ${r.mult}`);
-    seen.add(r.tier);
+test('ranking is continuous: no boost cliff between neighbouring scores', () => {
+  // The five-tier model multiplied 0.70 by 1.5 and 0.69 by 1.0, so a hundredth
+  // of a point in similarity swung the final score by roughly half.
+  const steps = [0.29, 0.3, 0.31, 0.49, 0.5, 0.51, 0.69, 0.7, 0.71];
+  const scores = steps.map(semantic => score({ semantic, name: 0, text: 0 }).final_score);
+
+  for (let i = 1; i < scores.length; i++) {
+    const jump = scores[i] - scores[i - 1];
+    const gap = steps[i] - steps[i - 1];
+    assert(jump > 0, `score must increase across ${steps[i - 1]} -> ${steps[i]}`);
+    assert(
+      close(jump, gap * W_SEMANTIC, 1e-9),
+      `score should move proportionally to similarity at ${steps[i]}, moved ${jump}`,
+    );
   }
-  assert(seen.size === 5, "all tiers exercised");
 });
 
-// ---- Summary -------------------------------------------------------------
+test('every tier has a label and a boost, and only exact match is boosted', () => {
+  const keys = Object.keys(TIERS) as TierKey[];
+  assert(keys.length === 2, `expected 2 tiers, got ${keys.length}: ${keys.join(', ')}`);
+  for (const key of keys) {
+    assert(TIERS[key].label.length > 0, `${key} needs a label`);
+    assert(TIERS[key].boost > 0, `${key} needs a positive boost`);
+  }
+  assert(TIERS[DEFAULT_TIER].boost === 1, 'the default tier must not scale the score');
+  assert(TIERS[EXACT_MATCH_TIER].boost > 1, 'an exact match must be boosted');
+});
 
-const total = passed + failed;
-console.log(`\n${total} tests: ${passed} passed, ${failed} failed\n`);
+console.log(`\n  ${passed} passed, ${failed} failed\n`);
 if (failed > 0) process.exit(1);
