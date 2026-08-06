@@ -114,10 +114,20 @@ export async function noNestedInteractive(page: Page): Promise<Failure[]> {
   return found.map(detail => ({ rule: 'no-nested-interactive', detail }));
 }
 
-/** A page that never blanks: body text must not collapse below a floor. */
-export async function bodyNotBlank(page: Page, minChars = 400): Promise<Failure[]> {
-  const len = await page.evaluate(() => document.body.innerText.replace(/\s+/g, ' ').trim().length);
-  return len < minChars
-    ? [{ rule: 'body-not-blank', detail: `body rendered ${len} chars (min ${minChars})` }]
+/**
+ * The page must always be showing something. Measured structurally rather than
+ * by text length, because a skeleton is a legitimate loading state and renders
+ * no text at all.
+ */
+export async function pageNotBlank(page: Page, minElements = 20): Promise<Failure[]> {
+  const painted = await page.evaluate(() => {
+    const main = document.querySelector('main') ?? document.body;
+    return [...main.querySelectorAll('*')].filter(el => {
+      const r = el.getBoundingClientRect();
+      return r.width > 8 && r.height > 8;
+    }).length;
+  });
+  return painted < minElements
+    ? [{ rule: 'page-not-blank', detail: `only ${painted} painted elements in main (min ${minElements})` }]
     : [];
 }

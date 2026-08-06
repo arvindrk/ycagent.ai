@@ -5,7 +5,7 @@ import { getCompanies } from '@/lib/api/companies/get-companies';
 import { CompanyListGrid } from '@/components/companies/list/company-list-grid';
 import { CompanyListSkeleton } from '@/components/companies/list/company-list-skeleton';
 import { CompanyListPagination } from '@/components/companies/list/company-list-pagination';
-import { SearchWrapper } from '@/components/companies/semantic-search/search-wrapper';
+import { SearchContainer } from '@/components/companies/semantic-search/search-container';
 import { PageHeader } from '@/components/layout/page-header';
 import { generateHomeMetadata } from '@/lib/seo/metadata';
 import { captureServerEvent } from '@/lib/analytics/posthog';
@@ -14,6 +14,7 @@ import { getSession } from '@/lib/session';
 
 interface SearchParams {
   page?: string;
+  q?: string;
 }
 
 interface HomePageProps {
@@ -52,7 +53,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       />
 
       <main className="container mx-auto px-4 py-8">
-        <SearchWrapper>
+        <SearchContainer initialQuery={params.q}>
           <Suspense fallback={<CompanyListSkeleton />}>
             <CompanyListGrid companies={companies} />
           </Suspense>
@@ -63,7 +64,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             totalCount={total}
             pageSize={limit}
           />
-        </SearchWrapper>
+        </SearchContainer>
       </main>
     </div>
   );
