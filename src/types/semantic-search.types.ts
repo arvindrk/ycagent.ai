@@ -23,7 +23,6 @@ export interface SearchResult {
   final_score: number;
   tier: string;
   tier_label: string;
-  tier_order: number;
 }
 
 export interface SearchCompaniesParams {

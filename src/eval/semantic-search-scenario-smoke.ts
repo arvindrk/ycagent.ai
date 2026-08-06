@@ -16,17 +16,14 @@ import { parseSearchFilters } from "@/lib/semantic-search/filters/parse";
 import { buildFilterSQL } from "@/lib/semantic-search/filters/build";
 import type { ParsedFilters } from "@/lib/semantic-search/filters/parse";
 import type { SearchInput } from "@/lib/schemas/search.schema";
-import type { TierKey } from "@/lib/semantic-search/scoring/weights";
+import {
+  DEFAULT_TIER,
+  EXACT_MATCH_TIER,
+  TIERS,
+  type TierKey,
+} from "@/lib/semantic-search/scoring/tiers";
 import {
   EXACT_NAME_SIM_MIN,
-  MULT_EXACT,
-  MULT_HIGH,
-  MULT_KEYWORD,
-  MULT_RELEVANT,
-  MULT_STRONG,
-  TIER_HIGH_SEM,
-  TIER_RELEVANT_SEM,
-  TIER_STRONG_SEM,
   W_NAME,
   W_SEMANTIC,
   W_TEXT,
@@ -60,26 +57,10 @@ function computeTierAndFinal(
   nameScore: number,
   textScore: number,
 ): { tier: TierKey; final_score: number } {
-  let tier: TierKey;
-  let mult: number;
-
-  // exact_match condition (name sim or prefix like) driven via provided nameScore in scenarios
-  if (nameScore >= EXACT_NAME_SIM_MIN) {
-    tier = "exact_match";
-    mult = MULT_EXACT;
-  } else if (semanticScore >= TIER_HIGH_SEM) {
-    tier = "high_confidence";
-    mult = MULT_HIGH;
-  } else if (semanticScore >= TIER_STRONG_SEM) {
-    tier = "strong_match";
-    mult = MULT_STRONG;
-  } else if (semanticScore >= TIER_RELEVANT_SEM) {
-    tier = "relevant";
-    mult = MULT_RELEVANT;
-  } else {
-    tier = "keyword_match";
-    mult = MULT_KEYWORD;
-  }
+  // Exact match is driven by the provided nameScore in these scenarios; the
+  // prefix path is covered in vector-ranking-smoke.
+  const tier: TierKey = nameScore >= EXACT_NAME_SIM_MIN ? EXACT_MATCH_TIER : DEFAULT_TIER;
+  const mult = TIERS[tier].boost;
 
   const weighted =
     semanticScore * W_SEMANTIC + nameScore * W_NAME + textScore * W_TEXT;
@@ -90,7 +71,7 @@ function computeTierAndFinal(
 // Non-vector path (as in searchCompanies when !useVector)
 function computeKeywordPath(): { tier: TierKey; final_score: number; semantic_score: number; name_score: number; text_score: number } {
   return {
-    tier: "keyword_match",
+    tier: DEFAULT_TIER,
     final_score: 0,
     semantic_score: 0,
     name_score: 0,
@@ -128,7 +109,7 @@ test("nl query with batch alias extracts filter + triggers vector path (offset 2
   // simulate searchCompanies vector call with mock embedding
   const scores = { semantic: 0.65, name: 0.25, text: 0.1 };
   const { tier, final_score } = computeTierAndFinal(scores.semantic, scores.name, scores.text);
-  assert(tier === "strong_match", `tier=${tier}`);
+  assert(tier === DEFAULT_TIER, `tier=${tier}`);
   assert(final_score > 0.5 && final_score < 0.7, `final_score=${final_score}`);
 });
 
@@ -163,42 +144,41 @@ test("pure filter query skips vector and uses keyword path (final=0)", () => {
   assert(!sql.includes("$2") || sql.includes("embedding"), "only one param before sentinel");
 
   const kw = computeKeywordPath();
-  assert(kw.tier === "keyword_match", "keyword tier");
+  assert(kw.tier === DEFAULT_TIER, "filter path uses the default tier");
   assert(kw.final_score === 0 && kw.semantic_score === 0, "zeros on keyword");
 });
 
-// Scenario 4: vector branch tier assignment + final_score with mocked scores (high semantic)
-test("vector branch high semantic yields high_confidence and correct final_score", () => {
-  const sem = 0.82;
-  const name = 0.35;
-  const text = 0.05;
-  const { tier, final_score } = computeTierAndFinal(sem, name, text);
-  assert(tier === "high_confidence", `got ${tier}`);
-  const expected =
-    (0.82 * W_SEMANTIC + 0.35 * W_NAME + 0.05 * W_TEXT) * MULT_HIGH;
+// Scenario 4: a strong semantic hit with no name match is an unboosted match
+test("vector branch high semantic yields the default tier and an unboosted score", () => {
+  const { tier, final_score } = computeTierAndFinal(0.82, 0.35, 0.05);
+  assert(tier === DEFAULT_TIER, `got ${tier}`);
+  const expected = 0.82 * W_SEMANTIC + 0.35 * W_NAME + 0.05 * W_TEXT;
   assert(Math.abs(final_score - expected) < 0.0001, `final ${final_score} != ${expected}`);
 });
 
 // Scenario 5: exact name match multiplier and tier
-test("name sim >=0.9 yields exact_match * 2.5", () => {
+test("name sim >=0.9 yields an exact match with the registry boost", () => {
   const { tier, final_score } = computeTierAndFinal(0.4, 0.93, 0.2);
-  assert(tier === "exact_match", "tier exact");
+  assert(tier === EXACT_MATCH_TIER, "tier exact");
   const base = 0.4 * W_SEMANTIC + 0.93 * W_NAME + 0.2 * W_TEXT;
-  assert(Math.abs(final_score - base * MULT_EXACT) < 0.0001, "final exact mult");
+  const expected = base * TIERS[EXACT_MATCH_TIER].boost;
+  assert(Math.abs(final_score - expected) < 0.0001, "final exact boost");
 });
 
-// Scenario 6: scoring invariants across tiers
-test("final_score ordering: exact > high > strong > relevant > keyword for same base", () => {
-  const baseSem = 0.6;
+// Scenario 6: score ordering follows similarity, with exact matches on top
+test("final_score ordering tracks semantic score, and an exact match outranks all", () => {
   const name = 0.2;
   const text = 0;
-  const e = computeTierAndFinal(0.85, name, text); // high
-  const s = computeTierAndFinal(baseSem, name, text); // strong
-  const r = computeTierAndFinal(0.35, name, text); // relevant
-  const k = computeKeywordPath();
-  assert(e.final_score > s.final_score, "exact > high");
-  assert(s.final_score > r.final_score, "high > strong");
-  assert(r.final_score > k.final_score, "strong > keyword");
+  const exact = computeTierAndFinal(0.3, 0.95, text);
+  const high = computeTierAndFinal(0.85, name, text);
+  const mid = computeTierAndFinal(0.6, name, text);
+  const low = computeTierAndFinal(0.35, name, text);
+  const filterOnly = computeKeywordPath();
+
+  assert(exact.final_score > high.final_score, "exact beats the best semantic hit");
+  assert(high.final_score > mid.final_score, "ordering follows semantic score");
+  assert(mid.final_score > low.final_score, "ordering follows semantic score");
+  assert(low.final_score > filterOnly.final_score, "any ranked hit beats the unranked path");
 });
 
 // Scenario 7: buildFilterSQL vector offset invariant (re-exercise for search path)

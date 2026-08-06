@@ -1,19 +1,11 @@
 import { getDBClient } from '../db/client';
-import { TIER_META, type TierKey } from './scoring/weights';
+import { DEFAULT_TIER, EXACT_MATCH_TIER, TIERS, type TierKey } from './scoring/tiers';
 import {
   EXACT_NAME_SIM_MIN,
   EXACT_PREFIX_MIN_LEN,
-  MULT_EXACT,
-  MULT_HIGH,
-  MULT_KEYWORD,
-  MULT_RELEVANT,
-  MULT_STRONG,
   PREFILTER_LEX_NAME_MIN,
   PREFILTER_NAME_MIN,
   PREFILTER_SEMANTIC_MIN,
-  TIER_HIGH_SEM,
-  TIER_RELEVANT_SEM,
-  TIER_STRONG_SEM,
   TS_RANK_NORMALIZATION,
   W_LEX_NAME,
   W_LEX_TEXT,
@@ -58,7 +50,6 @@ export interface SearchResult {
   final_score: number;
   tier: TierKey;
   tier_label: string;
-  tier_order: number;
 }
 
 /** Which ranking strategy a request resolves to. */
@@ -90,17 +81,19 @@ const exactMatchSQL = (p: string) => `(
   OR (LOWER(name) LIKE LOWER(${p}) || '%' AND LENGTH(${p}) >= ${EXACT_PREFIX_MIN_LEN})
 )`;
 
+const tierSQL = (p: string) =>
+  `CASE WHEN ${exactMatchSQL(p)} THEN '${EXACT_MATCH_TIER}' ELSE '${DEFAULT_TIER}' END`;
+
+const boostSQL = (p: string) =>
+  `CASE WHEN ${exactMatchSQL(p)} THEN ${TIERS[EXACT_MATCH_TIER].boost} ELSE ${TIERS[DEFAULT_TIER].boost} END`;
+
 const textScoreSQL = (p: string) =>
   `ts_rank_cd(search_vector, websearch_to_tsquery('english', ${p}), ${TS_RANK_NORMALIZATION})`;
 
 function withTierMeta(rows: Record<string, unknown>[]): SearchResult[] {
   return rows.map(row => {
     const tier = row.tier as TierKey;
-    return {
-      ...row,
-      tier_label: TIER_META[tier].label,
-      tier_order: TIER_META[tier].order,
-    };
+    return { ...row, tier_label: TIERS[tier].label };
   }) as SearchResult[];
 }
 
@@ -136,20 +129,8 @@ export async function searchCompanies(
     const limitParam = `$${values.length}`;
 
     const semantic = `(1 - (embedding <=> $1::vector))`;
-    const tier = `CASE
-          WHEN ${exactMatchSQL('$2')} THEN 'exact_match'
-          WHEN ${semantic} >= ${TIER_HIGH_SEM} THEN 'high_confidence'
-          WHEN ${semantic} >= ${TIER_STRONG_SEM} THEN 'strong_match'
-          WHEN ${semantic} >= ${TIER_RELEVANT_SEM} THEN 'relevant'
-          ELSE 'keyword_match'
-        END`;
-    const multiplier = `CASE
-          WHEN ${exactMatchSQL('$2')} THEN ${MULT_EXACT}
-          WHEN ${semantic} >= ${TIER_HIGH_SEM} THEN ${MULT_HIGH}
-          WHEN ${semantic} >= ${TIER_STRONG_SEM} THEN ${MULT_STRONG}
-          WHEN ${semantic} >= ${TIER_RELEVANT_SEM} THEN ${MULT_RELEVANT}
-          ELSE ${MULT_KEYWORD}
-        END`;
+    const tier = tierSQL('$2');
+    const multiplier = boostSQL('$2');
 
     const rows = await sql.query(
       `
@@ -193,11 +174,11 @@ export async function searchCompanies(
         0 AS semantic_score,
         similarity(name, $1) AS name_score,
         ${textScoreSQL('$1')} AS text_score,
-        CASE WHEN ${exactMatchSQL('$1')} THEN 'exact_match' ELSE 'keyword_match' END AS tier,
+        ${tierSQL('$1')} AS tier,
         (
           ${textScoreSQL('$1')} * ${W_LEX_TEXT} +
           similarity(name, $1) * ${W_LEX_NAME}
-        ) * CASE WHEN ${exactMatchSQL('$1')} THEN ${MULT_EXACT} ELSE 1 END AS final_score
+        ) * ${boostSQL('$1')} AS final_score
       FROM companies
       WHERE ${filterConditions.sql}
         AND (
@@ -225,7 +206,7 @@ export async function searchCompanies(
       0 AS semantic_score,
       0 AS name_score,
       0 AS text_score,
-      'keyword_match' AS tier,
+      '${DEFAULT_TIER}' AS tier,
       0 AS final_score
     FROM companies
     WHERE ${filterConditions.sql}
