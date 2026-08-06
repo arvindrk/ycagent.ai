@@ -33,6 +33,12 @@ const IGNORED_CONSOLE = [
   /^Failed to load resource:/,
 ];
 
+function isRemoteImageProxy(url: string): boolean {
+  if (!url.includes('/_next/image')) return false;
+  const target = new URL(url).searchParams.get('url') ?? '';
+  return /^https?:\/\//.test(target);
+}
+
 async function runScenario(browser: Browser, scenario: Scenario) {
   const context = await browser.newContext({
     viewport: scenario.viewport ?? { width: 1440, height: 900 },
@@ -49,9 +55,12 @@ async function runScenario(browser: Browser, scenario: Scenario) {
   });
   page.on('pageerror', e => consoleErrors.push(String(e).slice(0, 160)));
   page.on('response', r => {
-    if (r.status() >= 400 && r.url().startsWith(BASE_URL)) {
-      failedRequests.push(`${r.status()} ${r.url().replace(BASE_URL, '').slice(0, 90)}`);
-    }
+    if (r.status() < 400 || !r.url().startsWith(BASE_URL)) return;
+    // The image proxy faithfully reports upstream rot (~2.5% of YC's S3 objects
+    // are gone) and the logo component falls back. Only count it when the
+    // proxied target is our own origin, which means we built a bad URL.
+    if (isRemoteImageProxy(r.url())) return;
+    failedRequests.push(`${r.status()} ${r.url().replace(BASE_URL, '').slice(0, 90)}`);
   });
 
   try {
