@@ -2,7 +2,8 @@ import { task, logger } from "@trigger.dev/sdk/v3";
 import { Sandbox } from "@e2b/desktop";
 import { researchStream } from "./streams";
 import { StreamerFactory } from "@/lib/llm/factory";
-import { LLMProvider, SSEEvent } from "@/types/llm.types";
+import { SSEEvent } from "@/types/llm.types";
+import { resolveResearchProvider } from "@/lib/research/resolve-research-provider";
 import { DEFAULT_RESOLUTION } from "@/types/sandbox.types";
 import { DeepResearchAgentPayload } from "@/types/trigger.types";
 
@@ -36,8 +37,17 @@ export const deepResearchAgent = task({
       throw new Error(`Sandbox connection failed: ${errorMessage}`);
     }
 
+    const { provider, usedFallback } = resolveResearchProvider();
+    if (usedFallback) {
+      logger.warn("Unrecognised RESEARCH_LLM_PROVIDER, using the default", {
+        configured: process.env.RESEARCH_LLM_PROVIDER,
+        provider,
+      });
+    }
+    logger.info("Agent provider resolved", { provider, domain: payload.domain });
+
     const streamer = StreamerFactory.getStreamer({
-      provider: LLMProvider.OPENAI,
+      provider,
       desktop,
       resolution,
       systemPrompt,
